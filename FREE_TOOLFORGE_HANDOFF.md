@@ -31,3 +31,7 @@ Everything else must remain explicitly catalogued until a real engine is impleme
 3. Add object-storage + worker flow for files larger than serverless request limits.
 4. Add directory ingestion schema + refresh jobs for public business listings.
 5. Add per-tool privacy, input-size, retention and processing badges.
+
+## Current continuation state — 2026-09-25
+
+The PDF engine has been expanded to 40 live browser/hybrid tools. See `TEST_REPORT.md` and `tests/pdf-engine-coverage.mjs` for the current coverage. Complex conversion tools remain catalogued until a suitable backend/engine is attached.
