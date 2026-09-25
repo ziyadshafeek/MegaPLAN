@@ -1,0 +1,29 @@
+# Copies GitHub Actions NVIDIA secrets onto the Vercel project.
+# Vercel does not inherit GitHub secrets. Instant /api/ai needs this copy.
+name: Sync hosted AI env to Vercel
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [sync-ai-env]
+permissions:
+  contents: read
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      NVIDIA_AGENT_MODEL: ${{ secrets.NVIDIA_AGENT_MODEL }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
+      VERCEL_PROJECT_NAME: ${{ secrets.VERCEL_PROJECT_NAME }}
+      VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+      ALLOW_SKIP: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - name: Copy hosted writing env to Vercel
+        run: node scripts/sync-github-ai-to-vercel.mjs

@@ -15,8 +15,9 @@ Vercel variables:
 - `AGENT_SETUP_TOKEN`
 - `GITHUB_SECRETS_TOKEN`
 
-GitHub Actions secrets:
+GitHub Actions secrets (source of truth for the hosted writing assistant):
 - `NVIDIA_API_KEY`
 - `NVIDIA_AGENT_MODEL`
+- optional `VERCEL_TOKEN` (+ `VERCEL_PROJECT_ID` / `VERCEL_ORG_ID`) so `.github/workflows/sync-ai-env.yml` can copy the two NVIDIA names onto Vercel for instant `/api/ai`
 
 The autonomous workflow has only `contents: write`. The agent step is allowed to change only `data/agent-pages/*.json` and `data/agent-pages.json`; any other diff fails the job.

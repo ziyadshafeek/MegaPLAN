@@ -45,5 +45,9 @@ This file exists so the next agent does not have to reconstruct the chat.
 - Audio “denoise” is a noise gate, not an unnamed magic model.
 - Directory (Trivandrum) agentic ingest is still not a live crawler; it was removed from the customer home so it would not look like a broken search box. Re-add under a folder when a worker exists.
 
+## 2026-09-26 later
+- Confirmed NVIDIA secrets live in **GitHub Actions**, not Vercel. Added `scripts/sync-github-ai-to-vercel.mjs` and workflow `sync-ai-env.yml`. Wiki Agent instant Build falls through to the GitHub runner when the website has no copy.
+- PDF studio rewrite: thumbs, preview, n-up, booklet, fill, sign/annotate placement, OCR via tesseract.js, real Office/EPUB wrap. Not title-string coverage.
+
 ## Deploy notes
-Vercel project homepage: `https://mega-plan.vercel.app` (from GitHub repo metadata). After merge to `main`, confirm env vars `NVIDIA_API_KEY` and `NVIDIA_AGENT_MODEL` are present on the Vercel project. This sandbox could not read GitHub Actions secrets (403) and could not TLS-connect to the existing Vercel host.
+Vercel project homepage: `https://mega-plan.vercel.app`. **NVIDIA secrets were added in GitHub, not Vercel.** Instant `/api/ai` on the website stays 503 until `scripts/sync-github-ai-to-vercel.mjs` copies them (GitHub secret `VERCEL_TOKEN`) or they are pasted in the Vercel dashboard. Wiki Agent Build falls through to the GitHub runner when the website has no copy. This sandbox cannot list GitHub Actions secrets (403).

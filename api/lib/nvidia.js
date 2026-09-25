@@ -4,9 +4,15 @@
  * NEVER import this file from public/ frontend code.
  * NEVER return the model id, provider name, or raw upstream errors to the browser.
  *
- * Env (Vercel + GitHub Actions secrets — not committed):
+ * Env (never committed, never returned to the browser):
  *   NVIDIA_API_KEY
  *   NVIDIA_AGENT_MODEL   e.g. deepseek-ai/deepseek-v4-flash
+ *
+ * Source of truth: GitHub Actions secrets (autonomous Wiki Agent runner).
+ * Vercel does not inherit GitHub secrets. Instant /api/ai and /api/agent-plan
+ * only work after the same two names exist on the Vercel project — run
+ * `.github/workflows/sync-ai-env.yml` (needs VERCEL_TOKEN) or paste them in
+ * the Vercel dashboard.
  *
  * Endpoint: https://integrate.api.nvidia.com/v1/chat/completions
  */

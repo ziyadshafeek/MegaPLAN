@@ -34,15 +34,13 @@ python3 scripts/validate_registry.py
 
 Vercel serves `public/` as the website and `api/` as serverless functions.
 
-Required Vercel env (never put these in frontend code):
+**Hosted writing key lives in GitHub Actions secrets** (`NVIDIA_API_KEY`, `NVIDIA_AGENT_MODEL`). Vercel cannot read those. Instant `/api/ai` needs a copy on Vercel — add GitHub secret `VERCEL_TOKEN` and run **Sync hosted AI env to Vercel**, or paste the same two names in the Vercel dashboard. See `VERCEL_AGENT_SETUP.md`.
 
-- `NVIDIA_API_KEY`
-- `NVIDIA_AGENT_MODEL` (example: `deepseek-ai/deepseek-v4-flash`)
+Optional Vercel env:
+
 - `GITHUB_TOKEN`, `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_BRANCH` for wiki publish
-- `GITHUB_ACTIONS_DISPATCH_TOKEN` for autonomous runs
+- `GITHUB_ACTIONS_DISPATCH_TOKEN` for the website’s Run autonomously button
 - `AGENT_SETUP_TOKEN`, `GITHUB_SECRETS_TOKEN` for `/agent/setup.html`
-
-GitHub Actions secrets (autonomous path): `NVIDIA_API_KEY`, `NVIDIA_AGENT_MODEL`.
 
 ## Continue work
 

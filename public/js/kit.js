@@ -214,19 +214,28 @@ export function mountShell(root, tool, inner) {
   return root.querySelector('#tool-body');
 }
 
-export function wireDrop(root) {
+export function wireDrop(root, { onChange } = {}) {
   const drop = root.querySelector('#drop');
   const input = root.querySelector('#file');
   if (!drop || !input) return { getFiles: () => [] };
   const files = [];
+  const chips = root.querySelector('#file-chips');
   const show = () => {
     drop.classList.toggle('has', files.length > 0);
-    drop.querySelector('.dz-label').textContent = files.length
-      ? files.map(f => f.name).join(', ')
+    const label = drop.querySelector('.dz-label');
+    if (label) label.textContent = files.length
+      ? `${files.length} file${files.length === 1 ? '' : 's'} ready — drop more to replace`
       : drop.dataset.label || 'Choose file(s)';
+    if (chips) {
+      chips.innerHTML = files.map((f, i) =>
+        `<span class="file-chip">${esc(f.name)} · ${Math.max(1, Math.round(f.size / 1024))} KB</span>`
+      ).join('');
+    }
+    onChange?.(files.slice());
   };
   drop.addEventListener('click', () => input.click());
-  drop.addEventListener('dragover', e => { e.preventDefault(); });
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('has'); });
+  drop.addEventListener('dragleave', () => { if (!files.length) drop.classList.remove('has'); });
   drop.addEventListener('drop', e => {
     e.preventDefault();
     files.splice(0, files.length, ...e.dataTransfer.files);
@@ -236,7 +245,11 @@ export function wireDrop(root) {
     files.splice(0, files.length, ...input.files);
     show();
   });
-  return { getFiles: () => files.slice(), input };
+  return {
+    getFiles: () => files.slice(),
+    input,
+    setFiles(next) { files.splice(0, files.length, ...next); show(); }
+  };
 }
 
 export function setOut(root, text) {
@@ -244,21 +257,51 @@ export function setOut(root, text) {
   if (out) out.textContent = text;
 }
 
+export function setProgress(root, pct, label) {
+  const wrap = root.querySelector('#progress');
+  const bar = root.querySelector('#progress-bar');
+  const txt = root.querySelector('#progress-label');
+  if (!wrap) return;
+  wrap.classList.toggle('hidden', pct == null);
+  if (bar) bar.style.width = `${Math.max(0, Math.min(100, pct || 0))}%`;
+  if (txt) txt.textContent = label || '';
+}
+
 export function textForm(extra = '') {
   return `
-    <textarea id="tool-in" class="input-area" placeholder="Paste or type here…"></textarea>
-    ${extra}
-    <div class="button-row">
-      <button class="btn primary" id="run">Run</button>
-      <button class="btn secondary" id="copy">Copy</button>
-    </div>
-    <pre id="tool-out" class="out" style="margin-top:12px"></pre>`;
+    <div class="work-grid">
+      <div>
+        <textarea id="tool-in" class="input-area" placeholder="Paste or type here…"></textarea>
+        <div class="live-stats muted" id="live-stats">0 characters · 0 words</div>
+      </div>
+      <div>
+        ${extra}
+        <div class="button-row">
+          <button class="btn primary" id="run">Run</button>
+          <button class="btn secondary" id="copy">Copy result</button>
+          <button class="btn ghost" id="download-out">Download</button>
+        </div>
+        <pre id="tool-out" class="out" style="margin-top:12px;min-height:180px"></pre>
+      </div>
+    </div>`;
+}
+
+export function wireLiveStats(root) {
+  const ta = root.querySelector('#tool-in');
+  const st = root.querySelector('#live-stats');
+  if (!ta || !st) return;
+  const tick = () => {
+    const s = ta.value;
+    const w = s.trim() ? s.trim().split(/\s+/u).length : 0;
+    st.textContent = `${s.length} characters · ${w} words · ${s ? s.split(/\r?\n/).length : 0} lines`;
+  };
+  ta.addEventListener('input', tick); tick();
 }
 
 export function calcForm(fields) {
   return `
     <div class="field-row">
-      ${fields.map((f, i) => `<input class="num" id="n${i}" type="number" step="any" placeholder="${esc(f)}">`).join('')}
+      ${fields.map((f, i) => `<label class="field-label">${esc(f)}<input class="num" id="n${i}" type="number" step="any" placeholder="${esc(f)}"></label>`).join('')}
     </div>
     <div class="button-row"><button class="btn primary" id="run">Calculate</button></div>
     <pre id="tool-out" class="out" style="margin-top:12px"></pre>
@@ -268,9 +311,12 @@ export function calcForm(fields) {
 export function fileForm({ accept = '*/*', multiple = false, extra = '', label = 'Choose file(s)', run = 'Run' } = {}) {
   return `
     <div class="dropzone" id="drop" data-label="${esc(label)}"><div class="dz-label">${esc(label)}</div>
+      <div class="muted" style="margin-top:6px">Drop files here or click to browse. They stay on this device.</div>
       <input id="file" class="hidden" type="file" accept="${esc(accept)}" ${multiple ? 'multiple' : ''}>
     </div>
+    <div id="file-chips" class="chip-row"></div>
     ${extra}
+    <div id="progress" class="progress hidden"><div id="progress-bar"></div><span id="progress-label"></span></div>
     <div class="button-row"><button class="btn primary" id="run">${esc(run)}</button></div>
     <pre id="tool-out" class="out" style="margin-top:12px"></pre>`;
 }

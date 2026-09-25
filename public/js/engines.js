@@ -7,17 +7,21 @@ import { mountPdf } from './pdf-engine.js';
 
 const { esc, downloadBlob, downloadText, askAssistant, inspect, loadPdfLib, loadJSZip,
   randomString, sha, utf8ToBase64, base64ToUtf8, parseCsv, toCsv, md5, clamp,
-  mountShell, wireDrop, setOut, textForm, calcForm, fileForm, nums, loadImageFile,
+  mountShell, wireDrop, setOut, setProgress, textForm, calcForm, fileForm, nums, loadImageFile,
   canvasToFile, MORSE, UNMORSE, NATO } = kit;
 
 const words = s => s.trim() ? s.trim().split(/\s+/u).length : 0;
 
 function textTool(root, tool, fn, extra = '') {
   const body = mountShell(root, tool, textForm(extra));
+  kit.wireLiveStats(body);
   body.querySelector('#copy').onclick = async () => {
     await navigator.clipboard?.writeText(body.querySelector('#tool-out').textContent || '');
     kit.toast('Copied');
   };
+  body.querySelector('#download-out')?.addEventListener('click', () => {
+    kit.downloadText(body.querySelector('#tool-out').textContent || '', 'megaplan-result.txt');
+  });
   body.querySelector('#run').onclick = async () => {
     try {
       const s = body.querySelector('#tool-in').value;
@@ -38,8 +42,12 @@ function fileTool(root, tool, opts, fn) {
   const body = mountShell(root, tool, fileForm(opts));
   const drop = wireDrop(body);
   body.querySelector('#run').onclick = async () => {
-    try { setOut(body, (await fn(drop.getFiles(), body)) || 'Done.'); }
-    catch (e) { setOut(body, 'Error: ' + e.message); }
+    try {
+      setProgress(body, 15, 'Working…');
+      setOut(body, (await fn(drop.getFiles(), body)) || 'Done.');
+      setProgress(body, 100, 'Done');
+      setTimeout(() => setProgress(body, null), 700);
+    } catch (e) { setProgress(body, null); setOut(body, 'Error: ' + e.message); }
   };
   return body;
 }
@@ -135,10 +143,24 @@ function gstinValid(s) {
 }
 
 async function imageOp(root, tool, extra, fn) {
-  const body = fileTool(root, tool, { accept: 'image/*', extra, label: 'Choose an image', run: 'Process' }, async (files, body) => {
+  const body = fileTool(root, tool, { accept: 'image/*', extra: (extra || '') + '<div class="preview-stage" id="img-preview"><span class="muted">Preview after you choose an image.</span></div>', label: 'Choose an image', run: 'Process' }, async (files, body) => {
     if (!files[0]) throw Error('Choose an image first.');
     const c = await loadImageFile(files[0]);
     return await fn(c, body, files[0]);
+  });
+  body.querySelector('#file')?.addEventListener('change', async () => {
+    const f = body.querySelector('#file').files?.[0]; if (!f) return;
+    try {
+      const c = await loadImageFile(f);
+      const stage = body.querySelector('#img-preview'); if (!stage) return;
+      const view = document.createElement('canvas');
+      const scale = Math.min(1, 520 / Math.max(1, c.width));
+      view.width = Math.max(1, Math.round(c.width * scale));
+      view.height = Math.max(1, Math.round(c.height * scale));
+      view.getContext('2d').drawImage(c, 0, 0, view.width, view.height);
+      stage.innerHTML = ''; stage.appendChild(view);
+      setOut(body, `${f.name} · ${c.width}×${c.height} · ${Math.max(1, Math.round(f.size / 1024))} KB`);
+    } catch (e) { setOut(body, 'Could not preview: ' + e.message); }
   });
   return body;
 }

@@ -10,7 +10,7 @@
   <main class="tool-pane" style="max-width:640px;margin:0 auto">
     <a class="muted" href="/agent/">← Wiki Agent</a>
     <h1>Secure runner setup</h1>
-    <p class="lede">This page is for operators. It stores the hosted writing-assistant credential as a GitHub Actions secret. Customers never see this unless you send them here. The value is encrypted with GitHub’s repository public key before it leaves MegaPLAN.</p>
+    <p class="lede">This page is for operators. It stores the hosted writing-assistant credential as a <b>GitHub Actions secret</b> (source of truth). Vercel does not inherit GitHub secrets. After saving here, run the GitHub workflow “Sync hosted AI env to Vercel” (needs GitHub secret VERCEL_TOKEN) so instant website Build works. Customers never see this page unless you send them here. The value is encrypted with GitHub’s repository public key before it leaves MegaPLAN.</p>
     <section class="panel">
       <label>Setup token<input id="setup" class="field" type="password" autocomplete="off"></label>
       <label>Secret name<select id="name" class="sel"><option value="NVIDIA_API_KEY">Hosted API key</option><option value="NVIDIA_AGENT_MODEL">Hosted model id</option></select></label>

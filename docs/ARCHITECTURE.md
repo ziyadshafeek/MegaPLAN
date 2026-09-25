@@ -25,6 +25,8 @@ Self Agent ──────► user /v1/chat/completions (no MegaPLAN server)
 
 Vercel: `public/` is the static root. `api/*.js` are Node serverless functions except `api/split-pdf.js` (Web `POST` handler for StudyBridge).
 
+Hosted writing key: **GitHub Actions secrets**. Vercel serverless `process.env` does not see GitHub secrets. Copy with `.github/workflows/sync-ai-env.yml` (`VERCEL_TOKEN`) or the Vercel dashboard. Until then Wiki Agent instant Build falls through to the GitHub runner when dispatch is configured.
+
 ## Identity hiding
 `api/lib/nvidia.js` reads `NVIDIA_API_KEY` + `NVIDIA_AGENT_MODEL`. Responses to the browser are `{ text }` or `{ spec }`. Health returns `aiConfigured: boolean` only.
 
@@ -35,7 +37,7 @@ Customer copy may say “writing assistant”. It must not say DeepSeek, NVIDIA,
 
 `engines-rest.js` mutates the shared `HANDLERS` map (imported after `engines.js` in `app.js` — do not reverse that order).
 
-PDF tools go through `pdf-engine.js` (pdf-lib + pdf.js from a public CDN).
+PDF tools go through `pdf-engine.js` + `pdf-ops.js` (pdf-lib + pdf.js from a public CDN). Studio UI: page thumbs, click-select, drag-redact, n-up, booklet imposition, AcroForm fill, in-browser OCR.
 
 OCR image tools use tesseract.js quietly (“Read text”), never “download model”.
 

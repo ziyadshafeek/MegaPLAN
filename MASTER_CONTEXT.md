@@ -23,6 +23,7 @@ A tool in the registry should have a runner. If the real job cannot be done in-b
 ## Compute
 - Browser for PDF/image/text/calc/csv/audio-gate.
 - `/api/ai` + `/api/agent-plan` for writing/wiki (env key, hidden identity).
+- NVIDIA key/model live in **GitHub Actions secrets**. Vercel does not inherit them; sync with `scripts/sync-github-ai-to-vercel.mjs`.
 - Self Agent never sends the user’s key to MegaPLAN.
 - No customer-facing model downloads.
 

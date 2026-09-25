@@ -24,6 +24,7 @@ Pinned apps on the home screen:
 - **Never** show a local-model shelf, Hugging Face repos, “downloading TrOCR”, cache-clear for models, or provider names (NVIDIA, DeepSeek, etc.) on customer pages.
 - **Never** put `NVIDIA_API_KEY` or `NVIDIA_AGENT_MODEL` in `public/`.
 - `api/lib/nvidia.js` is the only place that reads those env vars for chat.
+- Those env vars’ **source of truth is GitHub Actions secrets**. Vercel does not inherit them. Instant website AI needs the sync workflow (`.github/workflows/sync-ai-env.yml`) or a manual Vercel copy.
 - Do not label a tool live if its runner is a fake. Prefer an honest limited engine (e.g. noise gate, public YouTube thumbnail URL) over a pretend download.
 - YouTube/SlideShare **downloaders must not** fetch private media or bypass platform controls. Keep the rights notice.
 - Ads: tasteful slots only, no fake AdSense IDs.
@@ -42,7 +43,8 @@ public/app.js              router, tabs, folders, home apps
 public/js/kit.js           shared helpers (no model names)
 public/js/engines.js       text/calc/dev dispatch
 public/js/engines-rest.js  image/audio/video/ai/business/…
-public/js/pdf-engine.js    PDF family
+public/js/pdf-engine.js    PDF studio (thumbs, n-up, booklet, fill, OCR)
+public/js/pdf-ops.js       PDF algorithms used by the studio
 public/agent/              Wiki Agent + Self Agent
 api/lib/nvidia.js          server-only provider client
 api/ai.js                  writing assistant (identity hidden)

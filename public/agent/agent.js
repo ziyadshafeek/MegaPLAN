@@ -112,7 +112,7 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
             ${mode === 'hosted' ? '<button class="btn secondary" id="autonomous">Run autonomously</button>' : ''}
             <label class="muted"><input id="autopublish" type="checkbox"> Publish when tests pass</label>
           </div>
-          <div id="status" class="note" style="margin-top:12px">Ready.</div>
+          <div id="status" class="note" style="margin-top:12px">Checking hosted assistant…</div>
         </section>
         <section class="panel" style="padding:0;overflow:hidden;min-height:420px;display:flex;flex-direction:column">
           <div style="display:flex;gap:8px;padding:8px 12px;border-bottom:1px solid #e0d5c4;font-size:12px">
@@ -208,6 +208,19 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
     } catch (e) { timeline(e.message); }
   }
 
+  async function health() {
+    try { return await (await fetch('/api/agent-health', { cache: 'no-store' })).json(); }
+    catch { return {}; }
+  }
+
+  async function describeHost() {
+    if (mode === 'self') return timeline('Self Agent uses only the key stored in this browser.');
+    const h = await health();
+    if (h.aiConfigured) return timeline('Ready. Instant Build uses the hosted writing assistant on this website.');
+    if (h.actionsConfigured) return timeline('Ready. This website does not hold the hosted writing key (that key lives in GitHub Actions secrets). Instant Build will queue the GitHub runner.');
+    timeline('Ready. This website does not hold the hosted writing key. Use Self Agent, or run Wiki Agent from the GitHub Actions tab if you already stored the key there.');
+  }
+
   async function build() {
     const p = $('prompt').value.trim();
     if (!p) return timeline('Enter a task first.');
@@ -233,6 +246,14 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
         const raw = await r.text(); if (!r.ok) throw Error('Self Agent HTTP ' + r.status);
         specOut = JSON.parse(JSON.parse(raw).choices[0].message.content);
       } else {
+        const h = await health();
+        if (!h.aiConfigured && h.actionsConfigured) {
+          timeline('This website does not hold the hosted writing key. Queueing the GitHub runner, which does…');
+          return autonomous();
+        }
+        if (!h.aiConfigured) {
+          throw Error('The hosted writing assistant is not on this website. The key lives in GitHub Actions secrets, which Vercel cannot read. Use Self Agent, add a Vercel token as GitHub secret VERCEL_TOKEN and run “Sync hosted AI env to Vercel”, or run Wiki Agent from the Actions tab.');
+        }
         const r = await fetch('/api/agent-plan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: p, existingPages: list.map(x => ({ slug: x.slug, title: x.title })) }) });
         const j = await r.json(); if (!r.ok) throw Error(j.error || 'Build failed.'); specOut = j.spec;
       }
@@ -268,6 +289,7 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
 
   $('build').onclick = build;
   $('autonomous')?.addEventListener('click', autonomous);
+  describeHost();
   root.querySelectorAll('[data-fill]').forEach(b => b.onclick = () => { $('prompt').value = b.dataset.fill; });
   root.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
     $('preview').classList.toggle('hidden', b.dataset.view !== 'preview');
