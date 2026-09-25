@@ -1,0 +1,55 @@
+{
+  "update_id": "freetoolforge-2026-09-25-core-image-browser-v0.5",
+  "type": "incremental-update",
+  "base_repository": "ziyadshafeek/MegaPLAN",
+  "base_branch": "main",
+  "replace_entire_project": false,
+  "deletions": [],
+  "commit_message": "expand browser image tools and rigorous browser regression testing",
+  "resulting_registry_size": 555,
+  "resulting_live_tools": 180,
+  "live_breakdown": {
+    "PDF": 53,
+    "Images": 27,
+    "Developer": 36,
+    "Calculators": 36,
+    "Text": 28
+  },
+  "changed_paths": [
+    "ADDON_MANIFEST.json",
+    "README_UPDATE.md",
+    "MASTER_CONTEXT.md",
+    "AGENTS.md",
+    "TEST_REPORT.md",
+    "browser-harness.html",
+    "public/app.js",
+    "public/styles.css",
+    "data/tools.json",
+    "public/tools-registry.json",
+    "scripts/sync_live_status.py",
+    "scripts/build_browser_harness.py",
+    "tests/smoke.mjs",
+    "tests/pdf-engine-coverage.mjs",
+    "tests/pdf-capabilities.mjs",
+    "tests/pdf-comprehensive.mjs",
+    "tests/browser-e2e.py",
+    "docs/BROWSER_TESTING.md",
+    "docs/IMAGE_TOOL_MATRIX.md"
+  ],
+  "repair_notes": [
+    "public/tools-registry.json must be valid JSON and mirror data/tools.json",
+    "restore tests/pdf-capabilities.mjs and tests/pdf-comprehensive.mjs",
+    "public/app.js is a complete replacement of the existing app.js file because the prior repository copy was stale/inconsistent; unrelated repository files remain untouched"
+  ],
+  "verification": {
+    "node_check_public_app": "PASS",
+    "registry_validation": "PASS",
+    "smoke": "PASS",
+    "pdf_engine_coverage": "PASS",
+    "pdf_capabilities": "PASS",
+    "pdf_comprehensive": "PASS",
+    "browser_e2e": "50/50 PASS",
+    "browser_page_errors": 0,
+    "browser_console_errors": 0
+  }
+}
