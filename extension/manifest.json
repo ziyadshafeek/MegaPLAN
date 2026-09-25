@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "FreeToolForge StudyBridge",
+  "version": "0.1.0",
+  "description": "A simple YouTube, NotebookLM and document-study workflow side panel.",
+  "minimum_chrome_version": "114",
+  "permissions": ["sidePanel", "storage", "activeTab", "scripting", "tabs", "downloads"],
+  "host_permissions": ["https://www.youtube.com/*", "https://youtube.com/*", "https://youtu.be/*", "https://freetoolforge-ocr-ziyadshafeeks-projects.vercel.app/*"],
+  "action": {"default_title": "Open StudyBridge"},
+  "side_panel": {"default_path": "sidepanel.html"},
+  "background": {"service_worker": "service-worker.js", "type": "module"},
+  "content_scripts": [{
+    "matches": ["https://www.youtube.com/*", "https://youtube.com/*"],
+    "js": ["youtube-content.js"],
+    "run_at": "document_idle"
+  }]
+}
