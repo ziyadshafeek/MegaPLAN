@@ -1,14 +1,27 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "rewrites": [
+    { "source": "/folder/:path*", "destination": "/index.html" },
+    { "source": "/tools/:path*", "destination": "/index.html" },
+    { "source": "/wiki/:path*", "destination": "/index.html" },
+    { "source": "/self", "destination": "/index.html" },
+    { "source": "/desk/:path*", "destination": "/index.html" }
+  ],
+  "headers": [
     {
-      "source": "/tools/:path*",
-      "destination": "/index.html"
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
     }
   ],
   "functions": {
-    "api/split-pdf.js": {
-      "maxDuration": 60
-    }
+    "api/split-pdf.js": { "maxDuration": 60 },
+    "api/ai.js": { "maxDuration": 60 },
+    "api/agent-plan.js": { "maxDuration": 60 },
+    "api/inspect.js": { "maxDuration": 15 }
   }
 }

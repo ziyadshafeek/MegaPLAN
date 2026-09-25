@@ -1,16 +1,58 @@
-# Vercel setup for GitHub Actions agent
+# Hosted writing assistant — secrets
 
-Set these Environment Variables in the Vercel Project (Production; Preview if you need previews):
+**Source of truth is GitHub Actions secrets, not Vercel.**
 
-`GITHUB_ACTIONS_DISPATCH_TOKEN` — GitHub token with Actions: write for this repo.
-`GITHUB_OWNER=ziyadshafeek`
-`GITHUB_REPO=MegaPLAN`
-`GITHUB_BRANCH=main`
-`GITHUB_AGENT_WORKFLOW=agent-online-store.yml` (optional)
-`AGENT_SETUP_TOKEN` — long random setup password used by `/agent/setup.html`.
-`GITHUB_SECRETS_TOKEN` — GitHub token with repository Secrets: write and Metadata: read, used only by the protected secret setup endpoint.
+Vercel serverless functions (`/api/ai`, `/api/agent-plan`) cannot read GitHub secrets. If the key only lives in GitHub, instant Build on the website is unconfigured until a copy exists on Vercel.
 
-Do not add the provider API key to frontend source. Put it into GitHub Actions Secrets as `NVIDIA_API_KEY`.
-Store the provider model identifier as `NVIDIA_AGENT_MODEL` in GitHub Actions Secrets so it is not displayed in the product.
+## GitHub Actions secrets (required)
 
-After changing Vercel variables, redeploy so the functions receive the new values. Vercel documents Project Settings -> Environment Variables as the place for runtime variables, with environment scoping; sensitive production variables can be stored as write-only values. GitHub pushes to the connected Vercel project can then deploy updated `main` content.
+- `NVIDIA_API_KEY`
+- `NVIDIA_AGENT_MODEL` — example `deepseek-ai/deepseek-v4-flash`. Never return this value to the browser.
+
+These power:
+
+- `.github/workflows/agent-online-store.yml` (Wiki Agent autonomous runner)
+- `.github/workflows/sync-ai-env.yml` (copy onto Vercel)
+
+`/agent/setup.html` writes those two names into GitHub (operator page).
+
+## Copy onto Vercel (for instant website Build)
+
+Add **one more** GitHub Actions secret:
+
+- `VERCEL_TOKEN` — a Vercel token that can write project env
+
+Optional GitHub secrets:
+
+- `VERCEL_PROJECT_ID`
+- `VERCEL_ORG_ID` or `VERCEL_TEAM_ID`
+- `VERCEL_PROJECT_NAME` (default `mega-plan`)
+- `VERCEL_DEPLOY_HOOK_URL`
+
+Then run the workflow **Sync hosted AI env to Vercel**. It upserts the two hosted writing vars as encrypted Vercel env (production + preview + development) and never prints them.
+
+Until that copy exists:
+
+- Instant `/api/ai` and `/api/agent-plan` return 503
+- Wiki Agent **Build** falls through to **Run autonomously** when the GitHub runner is connected
+- **Self Agent** still works (browser-only key)
+
+## Other Vercel env (optional product features)
+
+Wiki publish:
+
+- `GITHUB_TOKEN`
+- `GITHUB_OWNER=ziyadshafeek`
+- `GITHUB_REPO=MegaPLAN`
+- `GITHUB_BRANCH=main`
+
+Autonomous button on the website:
+
+- `GITHUB_ACTIONS_DISPATCH_TOKEN`
+- `GITHUB_AGENT_WORKFLOW=agent-online-store.yml` (optional)
+- `AGENT_SETUP_TOKEN`
+- `GITHUB_SECRETS_TOKEN`
+
+Customers can skip all of this and use **Self Agent**.
+
+Never put provider keys or model ids in `public/`.

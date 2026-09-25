@@ -1,5 +1,5 @@
 {
-  "name": "freetoolforge-site",
+  "name": "megaplan",
   "private": true,
   "type": "module",
   "engines": {
@@ -11,6 +11,10 @@
     "libsodium-wrappers": "^0.7.15"
   },
   "scripts": {
-    "test:agent-actions": "node tests/agent-actions-static.mjs"
+    "dev": "node scripts/dev-server.mjs",
+    "start": "node scripts/dev-server.mjs",
+    "test": "node tests/smoke.mjs && node tests/agent-static.mjs && node tests/agent-actions-static.mjs && node tests/pdf-engine-coverage.mjs",
+    "test:agent-actions": "node tests/agent-actions-static.mjs",
+    "validate": "python3 scripts/validate_registry.py"
   }
 }

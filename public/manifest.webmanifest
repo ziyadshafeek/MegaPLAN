@@ -1,0 +1,12 @@
+{
+  "name": "MegaPLAN",
+  "short_name": "MegaPLAN",
+  "description": "A desktop of free tools, a wiki you can write, and an agent you can run yourself.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1c1916",
+  "theme_color": "#1c1916",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

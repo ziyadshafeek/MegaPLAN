@@ -1,68 +1,37 @@
-# FreeToolForge — Continuation Context
+# MegaPLAN — continuation context
 
-Mission: build a massive free-first tool encyclopedia: useful utilities first, ordinary productivity branding, ads as primary monetization, optional paid/AI infrastructure, and agentically maintained public local-business directory.
+Mission: a large free-first utility **desk** (not a marketing clone of freetoolforge.org): hundreds of real tools in folders, ads as optional monetization later, Wiki Agent for pages the user writes, Self Agent for BYOK.
 
 ## Source of truth
-GitHub repository: `ziyadshafeek/MegaPLAN` (public, user-owned, empty at project start).
-Current deployment prototypes are not the source of truth. Future AI agents should pull this repository and work from it.
+GitHub: `ziyadshafeek/MegaPLAN`
+Public brand: **MegaPLAN**
+Do not ship customer UI under the FreeToolForge name.
 
-## Current repo structure
-- public/index.html — shell and semantic layout
-- public/styles.css — design system
-- public/app.js — catalog/search/routing and initial live tool engines
-- data/tools.json — 555 tool registry entries
-- backend/app.py — optional FastAPI public-data utilities
-- worker/index.js + wrangler.toml — optional Cloudflare lightweight adapter
-- hf-space/app.py + README.md — optional Hugging Face AI worker shell
-- scripts/generate_registry.py — registry generator
-- scripts/validate_registry.py — registry validation
-- tests/smoke.mjs — structural test
-
-## Product direction
-Never collapse this into one niche tool. Expand into a library of hundreds/thousands of useful utilities across PDF, image, audio, video, OCR/AI, text, developer, calculators, business, education, India, privacy/security, OSINT/public data, files/data, productivity, design/web, finance, media/downloads, health/medical and miscellaneous.
+## Current tree (after 2026-09-26 rebuild)
+- `public/` — deployed static desk (desktop file manager + Android Files)
+- `public/js/` — tool engines
+- `public/agent/` — Wiki Agent / Self Agent
+- `data/tools.json` — 555 tool registry (mirrored to `public/data/tools.json`)
+- `api/` — Vercel functions (`ai`, `inspect`, wiki agent, StudyBridge split-pdf)
+- `api/lib/nvidia.js` — server-only provider client
+- `extension/` — StudyBridge Manifest V3
+- `scripts/dev-server.mjs` — local preview with APIs
 
 ## Quality gate
-A tool can be `live`, `beta`, or `catalogued`. Published pages must not masquerade as implemented. Do not use thin mass-generated SEO pages.
+A tool in the registry should have a runner. If the real job cannot be done in-browser (DRM media, full video transcode, WHOIS), the runner must say so — never pretend.
 
-## Ad model
-Every tool page gets tasteful ad slots. Use real AdSense only after publisher approval and insert the exact publisher code supplied by Google. No fabricated publisher IDs, no fake download buttons, no ad-click inducement.
-
-## Compute architecture
-- Browser/local for lightweight transforms, privacy-sensitive tasks, and models that work well in Transformers.js/ONNX.
-- Cloudflare Workers Free is suitable for edge routing/caching/light public metadata, but its current free CPU limit is 10ms/request, so it is not a heavy media/ML compute layer.
-- Hugging Face ZeroGPU can provide free on-demand GPU for up to 2 Spaces on qualifying personal free accounts, with current free quota of 5 min/day; use as a best-effort heavy AI backend, not a guaranteed SLA.
-- Large model caches should use explicit opt-in download, progress, cache status, clear-cache, and automatic cleanup after 30 days of inactivity. Browser eviction is outside app control.
-
-## Model shelf
-Current HF research:
-- GLM-OCR — complex document OCR/table/formula extraction.
-- TrOCR Small Printed / Handwritten — browser-friendly OCR candidates.
-- Nougat Small ONNX — scientific document extraction.
-- Kokoro 82M ONNX — browser TTS candidate.
-- Whisper Tiny EN ONNX — browser ASR candidate.
-- Clear — speech enhancement/denoise; verify commercial license before shipping.
-Always re-check model card, license, hardware requirements, and download size immediately before integrating.
+## Compute
+- Browser for PDF/image/text/calc/csv/audio-gate.
+- `/api/ai` + `/api/agent-plan` for writing/wiki (env key, hidden identity).
+- NVIDIA key/model live in **GitHub Actions secrets**. Vercel does not inherit them; sync with `scripts/sync-github-ai-to-vercel.mjs`.
+- Self Agent never sends the user’s key to MegaPLAN.
+- No customer-facing model downloads.
 
 ## OSINT boundary
-Public, lawful information only. Safe tools include URL metadata, DNS, TLS, HTTP headers, redirects, robots/sitemap, public profile URL checks, public social link extraction, EXIF and hashes. No private account access, credential attacks, bypasses, hidden data extraction, or stalking workflows.
+Public, lawful information only. `api/inspect.js` rejects localhost and RFC1918. No credential attacks, no private-account access.
 
 ## Directory
-Trivandrum directory must be agent-driven: discover -> fetch public source -> normalize -> dedupe -> confidence -> publish -> refresh -> stale marking. Categories should cover the broad local economy.
+Trivandrum public-directory ingest is **not** on the customer home in this build. Keep it as a future worker; do not show a search box that queues nothing.
 
-## Media/downloader boundary
-Only support downloads the user is authorized to make and comply with platform/copyright terms. Show a rights notice. Do not build DRM circumvention, login bypass, private media extraction, or other access-control bypasses.
-
-## StudyBridge extension addition (2026-09-25)
-User-specific workflow based on uploaded example slides: long-source -> numbered PDF sections -> one PPTX per section -> merge -> compress. Extension provides a simple side panel rather than an AI-branded experience.
-
-Features implemented in extension/:
-- YouTube side panel
-- NotebookLM handoff
-- AI Studio handoff
-- prompt shortcuts for summary / complete lecture notes / granular line-by-line notes / MCQ generation
-- YouTube transcript panel capture when available
-- batch visible YouTube link collector
-- PDF section splitting via server endpoint with per-part prompts and MANIFEST.json
-- background OCR via FreeToolForge server
-
-The PDF splitter is `site/api/split-pdf.js` and uses `pdf-lib` + `jszip` at deployment time, so model/library weights are not put on the user's device.
+## StudyBridge
+See `extension/README.md`. PDF splitter: `api/split-pdf.js`.

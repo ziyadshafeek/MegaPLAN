@@ -1,1 +1,40 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agent Online Store Setup</title><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/agent/agent.css"></head><body><main class="container agent-shell"><a class="back" href="/agent/">← Agent Online Store</a><section class="panel setup-card"><h1>Secure GitHub Actions setup</h1><p>Save the runtime provider credential as a GitHub Actions secret. The server encrypts the value with the repository public key before sending it to GitHub.</p><label>Setup token<input id="setup" type="password" autocomplete="off"></label><label>Secret name<select id="name"><option value="NVIDIA_API_KEY">AI provider API key</option><option value="NVIDIA_AGENT_MODEL">Agent model ID</option></select></label><label>Secret value<input id="value" type="password" autocomplete="off"></label><button id="save" class="btn primary">Save to GitHub Actions</button><pre id="out" class="out"></pre><p class="muted">Use HTTPS only. Rotate credentials that were previously exposed. This page does not put the credential into source control.</p></section></main><script>const $=id=>document.getElementById(id);$('save').onclick=async()=>{const o=$('out');o.textContent='Saving…';try{const r=await fetch('/api/github-secret-setup',{method:'POST',headers:{'Content-Type':'application/json','x-agent-setup-token':$('setup').value},body:JSON.stringify({name:$('name').value,value:$('value').value})}),j=await r.json();if(!r.ok)throw Error(j.error||'Save failed');$('value').value='';o.textContent='Saved '+j.name+' to GitHub Actions secrets.'}catch(e){o.textContent='Error: '+e.message}}</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Wiki Agent setup — MegaPLAN</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body style="background:#f4efe6">
+  <main class="tool-pane" style="max-width:640px;margin:0 auto">
+    <a class="muted" href="/agent/">← Wiki Agent</a>
+    <h1>Secure runner setup</h1>
+    <p class="lede">This page is for operators. It stores the hosted writing-assistant credential as a <b>GitHub Actions secret</b> (source of truth). Vercel does not inherit GitHub secrets. After saving here, run the GitHub workflow “Sync hosted AI env to Vercel” (needs GitHub secret VERCEL_TOKEN) so instant website Build works. Customers never see this page unless you send them here. The value is encrypted with GitHub’s repository public key before it leaves MegaPLAN.</p>
+    <section class="panel">
+      <label>Setup token<input id="setup" class="field" type="password" autocomplete="off"></label>
+      <label>Secret name<select id="name" class="sel"><option value="NVIDIA_API_KEY">Hosted API key</option><option value="NVIDIA_AGENT_MODEL">Hosted model id</option></select></label>
+      <label>Secret value<input id="value" class="field" type="password" autocomplete="off"></label>
+      <div class="button-row"><button id="save" class="btn primary">Save</button></div>
+      <pre id="out" class="out" style="margin-top:12px"></pre>
+    </section>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    $('save').onclick = async () => {
+      $('out').textContent = 'Saving…';
+      try {
+        const r = await fetch('/api/github-secret-setup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-agent-setup-token': $('setup').value },
+          body: JSON.stringify({ name: $('name').value, value: $('value').value })
+        });
+        const j = await r.json();
+        if (!r.ok) throw Error(j.error || 'Save failed');
+        $('value').value = '';
+        $('out').textContent = 'Saved ' + j.name + '.';
+      } catch (e) { $('out').textContent = 'Error: ' + e.message; }
+    };
+  </script>
+</body>
+</html>

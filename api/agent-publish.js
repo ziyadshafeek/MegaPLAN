@@ -1,7 +1,7 @@
 const PAGE_PATH = slug => `data/agent-pages/${slug}.json`;
 const PUBLIC_PAGE_PATH = slug => `public/data/agent-pages/${slug}.json`;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+){2,69}$/;
-const BLOCKS = new Set(['hero','text','markdown','list','table','note','tool-link','calculator','faq']);
+const BLOCKS = new Set(['hero','text','markdown','list','table','note','tool-link','calculator','faq','api']);
 const OPS = new Set(['percentage','discount','tip','gst','bmi','markup','margin','profit','break-even']);
 
 function json(res,status,body){res.statusCode=status;res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(JSON.stringify(body))}
@@ -10,7 +10,7 @@ function validate(spec){
   if(!SLUG.test(spec.slug||'')) throw Error('Invalid slug.');
   if(!spec.title||String(spec.title).length>140) throw Error('Invalid title.');
   if(!Array.isArray(spec.blocks)||!spec.blocks.length||spec.blocks.length>24) throw Error('Invalid blocks.');
-  for(const b of spec.blocks){if(!BLOCKS.has(b?.type))throw Error('Unsupported block.');if(b.type==='calculator'&&!OPS.has(b.operation))throw Error('Unsupported calculator.');const raw=JSON.stringify(b);if(raw.length>10000||/<script|javascript:|document\.cookie|localStorage|sessionStorage|fetch\(|XMLHttpRequest/i.test(raw))throw Error('Unsafe generated content rejected.')} 
+  for(const b of spec.blocks){if(!BLOCKS.has(b?.type))throw Error('Unsupported block.');if(b.type==='calculator'&&!OPS.has(b.operation))throw Error('Unsupported calculator.');if(b.type==='api'&&(!Array.isArray(b.inputs)||!/^[0-9a-zA-Z_+\-*/().\s]+$/.test(String(b.expression||''))))throw Error('Unsupported API block.');const raw=JSON.stringify(b);if(raw.length>10000||/<script|javascript:|document\.cookie|localStorage|sessionStorage|fetch\(|XMLHttpRequest/i.test(raw))throw Error('Unsafe generated content rejected.')} 
   if(!Array.isArray(spec.tests)||!spec.tests.length)throw Error('Browser-test proof missing.');
 }
 async function gh(path,options={}){
@@ -31,7 +31,7 @@ export default async function handler(req,res){
     const commit=await gh(`/repos/${owner}/${repo}/git/commits/${parent}`);const baseTree=commit.tree.sha;
     const slug=body.spec.slug;
     const pagePath=PAGE_PATH(slug); const publicPagePath=PUBLIC_PAGE_PATH(slug);
-    const page={...body.spec,publishedAt:new Date().toISOString(),source:'agent-online-store'};
+    const page={...body.spec,publishedAt:new Date().toISOString(),source:'wiki-agent'};
     const pageBlob=await gh(`/repos/${owner}/${repo}/git/blobs`,{method:'POST',body:JSON.stringify({content:JSON.stringify(page,null,2)+'\n',encoding:'utf-8'})});
     let index=[];
     try{
