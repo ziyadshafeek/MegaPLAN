@@ -1,0 +1,8 @@
+{
+  "name": "freetoolforge-site",
+  "private": true,
+  "type": "module",
+  "engines": {"node": ">=24"},
+  "dependencies": {"pdf-lib": "1.17.1", "jszip": "3.10.1", "libsodium-wrappers": "^0.7.15"},
+  "scripts": {"test:agent-actions": "node tests/agent-actions-static.mjs"}
+}
