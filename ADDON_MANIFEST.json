@@ -1,0 +1,20 @@
+{
+  "name": "FreeToolForge / MegaPLAN PDF Add-on",
+  "version": "0.4-pdf",
+  "base": "existing MegaPLAN main branch; incremental update only",
+  "target_repository": "ziyadshafeek/MegaPLAN",
+  "target_branch": "main",
+  "mode": "overwrite-or-add-only",
+  "files": [
+    "FREE_TOOLFORGE_HANDOFF.md",
+    "TEST_REPORT.md",
+    "data/tools.json",
+    "docs/ROADMAP.md",
+    "public/app.js",
+    "public/styles.css",
+    "public/tools-registry.json",
+    "tests/pdf-engine-coverage.mjs",
+    "tests/smoke.mjs"
+  ],
+  "note": "Do not replace the whole repository. Upload this ZIP through the existing GitHub Push v4 bridge; it updates only these paths. No files are deleted by this add-on."
+}
