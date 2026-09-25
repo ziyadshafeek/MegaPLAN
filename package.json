@@ -1,16 +1,9 @@
 {
-  "name": "freetoolforge-site",
+  "name": "freetoolforge-github-push-v5-2",
   "private": true,
-  "type": "module",
-  "engines": {
-    "node": "24.x"
-  },
-  "dependencies": {
-    "pdf-lib": "1.17.1",
-    "jszip": "3.10.1",
-    "libsodium-wrappers": "^0.7.15"
-  },
+  "version": "5.2.0",
+  "description": "Atomic browser-to-GitHub ZIP push bridge using Git Data API.",
   "scripts": {
-    "test:agent-actions": "node tests/agent-actions-static.mjs"
+    "test": "node --check verify-script.mjs"
   }
 }
