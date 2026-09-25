@@ -4,8 +4,8 @@
 - [x] Text utility family
 - [x] Basic calculator family
 - [x] PDF merge/split/page operations
-- [x] Structural PDF compression / reserialization (image recompression remains a future backend task)
-- [x] PDF rendering / PDF-to-images
+- [ ] Real PDF compression
+- [ ] PDF rendering / PDF-to-images
 - [ ] Image format conversion matrix
 
 ## Phase B — Heavy processing
@@ -27,7 +27,3 @@
 - [x] AI Studio handoff
 - [x] Visible YouTube URL collection
 - [ ] Browser-packaged extension release ZIP generated automatically from the repository
-
-## 2026-09-25 PDF engine pass
-
-Completed 40 browser/hybrid PDF tools with a shared engine shell. Remaining PDF work is concentrated in specialized conversion/object pipelines: faithful Office conversion, EPUB/RTF conversion, true PDF/A conformance, and PDF outline/bookmark authoring.
