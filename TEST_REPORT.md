@@ -1,19 +1,63 @@
-# FreeToolForge / StudyBridge test report — 2026-09-25
+# FreeToolForge Test Report — PDF Engine Expansion
 
-## Automated checks passed
-- Extension Manifest V3 JSON parsed successfully.
-- `node --check` passed for service worker, YouTube content script, sidepanel script and PDF splitter.
-- YouTube content-script smoke test passed for context extraction, empty-link handling and transcript failure handling.
-- Sidepanel mock test passed for NotebookLM tab creation, AI Studio tab creation, clipboard handoff, transcript copy and batch-link collection.
-- Registry structural check passed with 555 entries.
-- A generated 200-page PDF was partitioned into exactly 20 contiguous 10-page ranges with no gaps/duplicates using the same partition math used by the server splitter.
-- Required StudyBridge buttons/IDs were present in the sidepanel HTML.
+## Automated checks
 
-## Browser verification limitation
-This environment could not launch/use Chromium against local or deployed pages because browser navigation is blocked by sandbox policy. Therefore a real Chrome interaction test is still required before Chrome Web Store publication.
+- `node --check public/app.js` — PASS
+- `python scripts/validate_registry.py` — PASS; registry contains 555 tools
+- `node tests/smoke.mjs` — PASS
+- `node tests/pdf-engine-coverage.mjs` — PASS; 40 PDF tools are marked live and have matching mount/execution references
 
-## Deployment verification limitation
-The Vercel deployment tool can create production deployments, but the connected Vercel read endpoint currently returns 403 for this project's scope, so this environment cannot independently inspect the final deployment logs/health endpoint after deployment. No runtime pass is claimed on that basis.
+## Completed browser/hybrid PDF tools in this build
 
-## Known operational limit
-The Vercel serverless splitter deliberately caps direct PDF uploads at ~4 MB because Vercel Functions enforce a 4.5 MB request-body limit. A later direct-to-object-storage flow should be added for larger PDFs.
+
+1. Merge PDFs
+2. Split PDF
+3. Compress PDF
+4. Repair PDF
+5. OCR PDF
+6. Redact PDF
+7. Rotate PDF
+8. Reorder PDF Pages
+9. Extract PDF Pages
+10. Delete PDF Pages
+11. Extract PDF Images
+12. PDF Metadata Viewer
+13. Remove PDF Metadata
+14. Add PDF Watermark
+15. Add PDF Page Numbers
+16. Overlay PDFs
+17. Compare PDFs
+18. Crop PDF
+19. Resize PDF Pages
+20. PDF to Images
+21. PDF to Text
+22. PDF to Markdown
+23. PDF to HTML
+24. Fill PDF
+25. Annotate PDF
+26. Sign PDF
+27. PDF Form Field Viewer
+28. Images to PDF
+29. JPG to PDF
+30. PNG to PDF
+31. WEBP to PDF
+32. Text to PDF
+33. Markdown to PDF
+34. Pages per Sheet
+35. Two Pages per Sheet
+36. Booklet PDF Maker
+37. PDF Page Counter
+38. PDF Page Extractor
+39. PDF Batch Rename
+40. Invoice PDF Maker
+
+## Deliberately not marked live yet
+
+- Word/Excel/PowerPoint conversion tools: need a real document conversion backend for faithful editable output.
+- EPUB-to-PDF / HTML-to-PDF / PDF-to-EPUB / PDF-to-RTF: need dedicated conversion engines.
+- PDF/A Helper: conformance validation/generation needs a standards-aware backend.
+- PDF Bookmark Helper: true PDF outline creation needs low-level outline tree handling.
+
+## Browser end-to-end note
+
+Static syntax and registry tests pass. Full interactive browser execution against the production site depends on external CDN access and browser runtime/network policy in the test environment; this environment blocked local HTTP browser navigation during the final manual browser test. No claim of full production browser E2E validation is made here.
