@@ -1,71 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Agent Online Store — FreeToolForge</title>
-<link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/agent/agent.css">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Wiki Agent — MegaPLAN</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/agent/agent.css">
 </head>
-<body class="agent-app">
-<div class="os-shell">
-  <aside class="os-sidebar" id="sidebar">
-    <div class="os-brand"><span class="brand-mark">F</span><div><b>Agent Online Store</b><small>FreeToolForge workspace</small></div></div>
-    <button class="os-new" id="new-task">＋ New task</button>
-    <nav class="os-nav">
-      <button class="active" data-pane="build">⌘ Build</button>
-      <button data-pane="files">▱ Pages</button>
-      <button data-pane="history">◷ History</button>
-      <button data-pane="settings">⚙ Settings</button>
-    </nav>
-    <div class="os-project"><small>PROJECT</small><b>MegaPLAN</b><span>main</span></div>
-    <div class="os-health"><span class="dot"></span><span id="health-text">Checking agent…</span></div>
-  </aside>
-
-  <section class="os-main">
-    <header class="os-topbar">
-      <button class="mobile-menu" id="mobile-menu">☰</button>
-      <div class="crumb"><b>Agent Online Store</b><span>/</span><span id="top-status">Ready</span></div>
-      <button class="command" id="command" title="Command palette">⌘K</button>
-    </header>
-
-    <main class="workspace">
-      <section class="pane pane-left">
-        <div class="pane-tabs"><button class="tab active" data-pane="build">Build</button><button class="tab" data-pane="history">Runs</button></div>
-        <div class="pane-body" id="build-pane">
-          <div class="intro"><div class="eyebrow">GOVERNED AUTONOMOUS BUILDER</div><h1>Build a new page.</h1><p>Describe what the site should add. The agent drafts a page, renders it in the browser, exercises declared interactions, then commits only the generated-page data.</p></div>
-          <label class="label">Task</label>
-          <textarea id="prompt" class="prompt" maxlength="7000" placeholder="Example: Create a reference page explaining GST invoices for small businesses in India, with a glossary, checklist and a simple GST calculator."></textarea>
-          <div class="quick-row"><button data-fill="Create a study reference page with an outline, glossary, checklist and FAQ.">Study page</button><button data-fill="Create a calculator page for discount, markup and profit with short explanations.">Business calculator</button><button data-fill="Create a troubleshooting guide with symptoms, checks and an FAQ.">Troubleshooting</button></div>
-          <div class="runbar"><button class="btn primary" id="build">Build + test</button><button class="btn secondary" id="autonomous">Run autonomously</button><label><input id="autopublish" type="checkbox" checked> Publish automatically when tests pass</label></div>
-          <details class="premium"><summary>Premium / OpenAI-compatible provider</summary><div class="provider-grid"><input id="byok-url" placeholder="Base URL /v1"><input id="byok-model" placeholder="Model ID"><input id="byok-key" type="password" placeholder="API key (browser only)" autocomplete="off"></div><p>The premium provider is optional. Credentials stay in this browser and are never written to GitHub.</p></details>
-          <div id="status" class="status-box">Ready.</div><div class="guardrail-box"><b>Publish guardrails</b><span>Only generated Agent Wiki data is publishable. Core app code and secrets are outside this agent boundary.</span></div>
-        </div>
-        <div class="pane-body hidden" id="history-pane"><div class="section-title">Recent runs</div><div id="runs" class="run-list"></div></div>
-        <div class="pane-body hidden" id="files-pane"><div class="section-title">Published pages</div><div id="pages-side" class="page-list"></div></div>
-        <div class="pane-body hidden" id="settings-pane"><div class="section-title">Workspace settings</div><div class="setting"><b>Autonomous publish</b><span>Only generated Agent Wiki data paths can be published by this surface.</span></div><div class="setting"><b>Browser proof</b><span>Preview is isolated and deterministic checks run before publication.</span></div><div class="setting"><b>Secrets</b><span>AI runtime credentials can live in GitHub Actions secrets. <a href="/agent/setup.html">Open secure setup</a>.</span></div></div>
-      </section>
-
-      <section class="pane pane-center">
-        <div class="pane-tabs"><button class="tab active" data-view="preview">Browser</button><button class="tab" data-view="editor">Editor</button><button class="tab" data-view="diff">Diff</button><button class="tab" data-view="terminal">Terminal</button></div>
-        <div class="preview-head"><span id="preview-title">Untitled draft</span><span id="test-state" class="pill">Not tested</span></div>
-        <div id="browser-view" class="center-view"><iframe id="preview" title="Sandboxed generated page preview" sandbox="allow-scripts"></iframe></div>
-        <div id="editor-view" class="center-view hidden"><textarea id="spec-editor" class="spec-editor" spellcheck="false" aria-label="Generated page JSON"></textarea><div class="editor-help">Edit the JSON only when you need to refine the draft, then use <b>Re-test draft</b>.</div><button id="retest" class="btn primary">Re-test draft</button></div>
-        <div id="diff-view" class="center-view hidden"><pre id="diff-output" class="terminal diff"></pre></div>
-        <div id="terminal-view" class="center-view hidden"><pre id="test-log" class="terminal full-terminal"></pre></div>
-      </section>
-
-      <aside class="pane pane-right">
-        <div class="pane-tabs"><button class="tab active">Agent</button><button class="tab">Activity</button></div>
-        <div class="activity">
-          <div class="agent-card"><div class="agent-avatar">F</div><div><b>Builder</b><p>Plans constrained pages, validates the schema, and prepares a browser test plan.</p></div></div>
-          <div class="timeline" id="timeline"><div><i></i><span>Waiting for a task</span></div></div>
-          <div class="git-card"><small>GIT PUBLISH TARGET</small><b>data/agent-pages/</b><span>One commit per published page</span></div>
-        </div>
-      </aside>
-    </main>
-
-    <footer class="os-statusbar"><span>Agent Online Store</span><span id="footer-status">Browser test gate: armed</span><span>Mobile compatible</span></footer>
-  </section>
-</div>
-<div class="command-modal hidden" id="command-modal"><div class="command-box"><input id="command-input" placeholder="Search commands…"><div id="command-list"></div></div></div>
-<script src="/agent/agent.js" defer></script>
-</body></html>
+<body class="agent-standalone">
+  <div id="wiki-agent-root"></div>
+  <script type="module" src="/agent/agent.js"></script>
+</body>
+</html>

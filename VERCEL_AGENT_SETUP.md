@@ -1,16 +1,26 @@
-# Vercel setup for GitHub Actions agent
+# Vercel setup for MegaPLAN Wiki Agent
 
-Set these Environment Variables in the Vercel Project (Production; Preview if you need previews):
+Set these on the Vercel project (Production; Preview if needed). Never put them in `public/`.
 
-`GITHUB_ACTIONS_DISPATCH_TOKEN` — GitHub token with Actions: write for this repo.
-`GITHUB_OWNER=ziyadshafeek`
-`GITHUB_REPO=MegaPLAN`
-`GITHUB_BRANCH=main`
-`GITHUB_AGENT_WORKFLOW=agent-online-store.yml` (optional)
-`AGENT_SETUP_TOKEN` — long random setup password used by `/agent/setup.html`.
-`GITHUB_SECRETS_TOKEN` — GitHub token with repository Secrets: write and Metadata: read, used only by the protected secret setup endpoint.
+Hosted writing assistant / Wiki Agent:
 
-Do not add the provider API key to frontend source. Put it into GitHub Actions Secrets as `NVIDIA_API_KEY`.
-Store the provider model identifier as `NVIDIA_AGENT_MODEL` in GitHub Actions Secrets so it is not displayed in the product.
+- `NVIDIA_API_KEY`
+- `NVIDIA_AGENT_MODEL` — example `deepseek-ai/deepseek-v4-flash`. This value must not be returned to the browser.
 
-After changing Vercel variables, redeploy so the functions receive the new values. Vercel documents Project Settings -> Environment Variables as the place for runtime variables, with environment scoping; sensitive production variables can be stored as write-only values. GitHub pushes to the connected Vercel project can then deploy updated `main` content.
+Wiki publish (optional):
+
+- `GITHUB_TOKEN`
+- `GITHUB_OWNER=ziyadshafeek`
+- `GITHUB_REPO=MegaPLAN`
+- `GITHUB_BRANCH=main`
+
+Autonomous GitHub Actions path:
+
+- `GITHUB_ACTIONS_DISPATCH_TOKEN`
+- `GITHUB_AGENT_WORKFLOW=agent-online-store.yml` (optional)
+- `AGENT_SETUP_TOKEN`
+- `GITHUB_SECRETS_TOKEN`
+
+Customers can skip all of this and use **Self Agent** with their own key, which never leaves the browser.
+
+After changing Vercel variables, redeploy. GitHub Actions also needs `NVIDIA_API_KEY` and `NVIDIA_AGENT_MODEL` as repository Actions secrets for autonomous runs.
