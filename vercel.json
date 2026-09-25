@@ -1,8 +1,14 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/tools/:path*",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/split-pdf.js": {
+      "maxDuration": 60
+    }
+  }
 }
