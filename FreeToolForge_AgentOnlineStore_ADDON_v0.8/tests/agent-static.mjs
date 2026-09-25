@@ -1,0 +1,11 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const files=['public/agent/index.html','public/agent/agent.css','public/agent/agent.js','public/agent/view.html','api/agent-plan.js','api/agent-publish.js','api/agent-health.js','data/agent-pages.json'];
+for(const f of files)assert.ok(fs.existsSync(new URL('../'+f, import.meta.url)),`missing ${f}`);
+const html=fs.readFileSync(new URL('../public/agent/index.html',import.meta.url),'utf8');
+for(const t of ['Agent Online Store','Build + test','Browser','Command palette','Mobile compatible'])assert.ok(html.includes(t),`missing UI string ${t}`);
+const css=fs.readFileSync(new URL('../public/agent/agent.css',import.meta.url),'utf8');
+assert.match(css,/max-width:760px/);assert.match(css,/os-sidebar/);
+const js=fs.readFileSync(new URL('../public/agent/agent.js',import.meta.url),'utf8');
+for(const t of ['sandbox','runBrowserTests','agent-publish','localStorage','CSS.escape'])assert.ok(js.includes(t),`missing ${t}`);
+console.log('agent-static ok');
