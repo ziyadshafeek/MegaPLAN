@@ -1,4 +1,5 @@
 const PAGE_PATH = slug => `data/agent-pages/${slug}.json`;
+const PUBLIC_PAGE_PATH = slug => `public/data/agent-pages/${slug}.json`;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+){2,69}$/;
 const BLOCKS = new Set(['hero','text','markdown','list','table','note','tool-link','calculator','faq']);
 const OPS = new Set(['percentage','discount','tip','gst','bmi','markup','margin','profit','break-even']);
@@ -29,7 +30,7 @@ export default async function handler(req,res){
     const ref=await gh(`/repos/${owner}/${repo}/git/ref/heads/${encodeURIComponent(branch)}`);const parent=ref.object.sha;
     const commit=await gh(`/repos/${owner}/${repo}/git/commits/${parent}`);const baseTree=commit.tree.sha;
     const slug=body.spec.slug;
-    const pagePath=PAGE_PATH(slug);
+    const pagePath=PAGE_PATH(slug); const publicPagePath=PUBLIC_PAGE_PATH(slug);
     const page={...body.spec,publishedAt:new Date().toISOString(),source:'agent-online-store'};
     const pageBlob=await gh(`/repos/${owner}/${repo}/git/blobs`,{method:'POST',body:JSON.stringify({content:JSON.stringify(page,null,2)+'\n',encoding:'utf-8'})});
     let index=[];
@@ -40,7 +41,14 @@ export default async function handler(req,res){
     if(!Array.isArray(index))index=[];
     index=[...index.filter(x=>x.slug!==slug),{slug,title:page.title,summary:page.summary||'',path:pagePath}].sort((a,b)=>a.title.localeCompare(b.title));
     const indexBlob=await gh(`/repos/${owner}/${repo}/git/blobs`,{method:'POST',body:JSON.stringify({content:JSON.stringify(index,null,2)+'\n',encoding:'utf-8'})});
-    const tree=await gh(`/repos/${owner}/${repo}/git/trees`,{method:'POST',body:JSON.stringify({base_tree:baseTree,tree:[{path:pagePath,mode:'100644',type:'blob',sha:pageBlob.sha},{path:'data/agent-pages.json',mode:'100644',type:'blob',sha:indexBlob.sha}]})});
+    const publicPageBlob=pageBlob;
+    const publicIndexBlob=indexBlob;
+    const tree=await gh(`/repos/${owner}/${repo}/git/trees`,{method:'POST',body:JSON.stringify({base_tree:baseTree,tree:[
+      {path:pagePath,mode:'100644',type:'blob',sha:pageBlob.sha},
+      {path:publicPagePath,mode:'100644',type:'blob',sha:publicPageBlob.sha},
+      {path:'data/agent-pages.json',mode:'100644',type:'blob',sha:indexBlob.sha},
+      {path:'public/data/agent-pages.json',mode:'100644',type:'blob',sha:publicIndexBlob.sha}
+    ]})});
     const newCommit=await gh(`/repos/${owner}/${repo}/git/commits`,{method:'POST',body:JSON.stringify({message:`agent wiki: publish ${page.title}`,tree:tree.sha,parents:[parent]})});
     await gh(`/repos/${owner}/${repo}/git/refs/heads/${encodeURIComponent(branch)}`,{method:'PATCH',body:JSON.stringify({sha:newCommit.sha,force:false})});
     let deploymentTriggered=false;
