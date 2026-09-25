@@ -1,0 +1,67 @@
+name: Agent Online Store Autonomous
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: Build request
+        required: true
+        type: string
+  repository_dispatch:
+    types: [agent-online-store]
+concurrency:
+  group: agent-online-store-main
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      NVIDIA_AGENT_MODEL: ${{ secrets.NVIDIA_AGENT_MODEL }}
+      AGENT_PROMPT: ${{ github.event.inputs.prompt || github.event.client_payload.prompt }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 2}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24}
+      - name: Core validation
+        run: |
+          node --check scripts/agent-actions-runner.mjs
+          python3 scripts/validate_registry.py
+          node tests/smoke.mjs
+      - name: Generate constrained page
+        run: node scripts/agent-actions-runner.mjs
+      - name: Install real browser test runtime
+        run: |
+          npm install --no-save playwright@latest
+          npx playwright install --with-deps chromium
+      - name: Prepare test site
+        run: |
+          rm -rf .agent-test-site
+          mkdir .agent-test-site
+          ln -s "$GITHUB_WORKSPACE/public/agent" .agent-test-site/agent
+          ln -s "$GITHUB_WORKSPACE/public/styles.css" .agent-test-site/styles.css
+          ln -s "$GITHUB_WORKSPACE/data" .agent-test-site/data
+          python3 -m http.server 4173 --directory .agent-test-site >/tmp/agent-site.log 2>&1 &
+          echo $! >/tmp/agent-site.pid
+          sleep 2
+      - name: Discover generated page
+        run: |
+          node -e "const fs=require('fs');const files=fs.readdirSync('data/agent-pages').filter(f=>f.endsWith('.json')).sort((a,b)=>fs.statSync('data/agent-pages/'+b).mtimeMs-fs.statSync('data/agent-pages/'+a).mtimeMs);if(!files.length)process.exit(1);fs.appendFileSync(process.env.GITHUB_ENV,'AGENT_SLUG='+files[0].slice(0,-5)+'\n');"
+      - name: Browser regression gate
+        run: node scripts/agent-actions-browser.mjs
+      - name: Enforce autonomous write boundary
+        run: |
+          changed=$(git diff --name-only)
+          echo "$changed"
+          if echo "$changed" | grep -vE '^data/agent-pages(/.*)?$|^data/agent-pages\.json$' | grep -q .; then exit 1; fi
+      - name: Publish one commit
+        run: |
+          git config user.name "agent-online-store[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/agent-pages data/agent-pages.json
+          git diff --cached --quiet && exit 0
+          git commit -m "agent wiki: autonomous page update"
+          git push origin HEAD:main
