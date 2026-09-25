@@ -1,4 +1,8 @@
 {
-  "rewrites": [{"source":"/(.*)","destination":"/index.html"}],
-  "functions": {"api/split-pdf.js": {"runtime":"nodejs24.x","maxDuration":60}}
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
