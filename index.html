@@ -1,238 +1,41 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FreeToolForge → GitHub Push Bridge v5.2</title>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-<style>
-:root{color-scheme:dark;--bg:#090b10;--panel:#111621;--panel2:#0d121b;--border:#273143;--text:#eef2f7;--muted:#97a4b5;--accent:#64d2ff;--good:#7ee2a8;--bad:#ff8f8f;--warn:#ffd27a}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0%,#152033 0,#090b10 45%);color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-.wrap{max-width:1000px;margin:0 auto;padding:24px 16px 56px}.card{background:rgba(17,22,33,.94);border:1px solid var(--border);border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 16px 50px #0005}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.badge{display:inline-flex;padding:4px 9px;border:1px solid var(--border);border-radius:999px;color:var(--muted);font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}.badge.good{color:var(--good)}
-h1{margin:8px 0 6px;font-size:30px;letter-spacing:-.03em}h2{margin:0 0 10px;font-size:18px}p{margin:6px 0;color:var(--muted)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-weight:800;font-size:12px;margin-bottom:6px;color:#cbd5e1}.field input{width:100%;padding:12px 13px;border-radius:11px;border:1px solid var(--border);background:#0a0f17;color:var(--text);font:inherit}
-.row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button{border:1px solid var(--border);background:#192233;color:var(--text);padding:11px 15px;border-radius:11px;font-weight:800;cursor:pointer}button.primary{background:#174d64;border-color:#2a7f9e}button:disabled{opacity:.45;cursor:not-allowed}
-.progress{height:13px;background:#0a0f17;border:1px solid var(--border);border-radius:999px;overflow:hidden}.bar{height:100%;width:0;background:#64d2ff;transition:width .18s ease}.status{margin-top:10px;font-weight:750}.ok{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}.muted{color:var(--muted)}.mono{font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word}
-.log{margin-top:12px;background:#080c12;border:1px solid var(--border);padding:12px;border-radius:12px;min-height:140px;max-height:340px;overflow:auto}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.stat{background:#0c121c;border:1px solid var(--border);border-radius:12px;padding:10px}.stat b{display:block;font-size:20px}.small{font-size:11px;color:var(--muted)}.danger{color:var(--warn)}a{color:var(--accent)}
-@media(max-width:720px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}h1{font-size:25px}.top{display:block}}
-</style>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>FreeToolForge — Free Online Tools</title>
+  <meta name="description" content="A large, fast collection of free online PDF, image, audio, text, developer, business, education, India, privacy and public-information tools.">
+  <meta name="theme-color" content="#0b1020">
+  <link rel="stylesheet" href="/public/styles.css">
 </head>
 <body>
-<div class="wrap">
-  <div class="card">
-    <div class="top"><div>
-      <span class="badge good">V5.2 · ATOMIC GIT DATA</span>
-      <h1>Push a ZIP to GitHub safely</h1>
-      <p>Replaces the old file-by-file Contents API uploader with Git's blob → tree → commit → branch flow. Existing repository files are preserved; only the ZIP's paths are changed.</p>
-    </div></div>
-  </div>
-
-  <div class="card">
-    <h2>1. GitHub</h2>
-    <div class="grid">
-      <div class="field"><label>Repository</label><input id="repo" value="ziyadshafeek/MegaPLAN" autocomplete="off"></div>
-      <div class="field"><label>Branch</label><input id="branch" value="main" autocomplete="off"></div>
-      <div class="field" style="grid-column:1/-1"><label>Fine-grained GitHub token</label><input id="token" type="password" autocomplete="off" placeholder="github_pat_…"></div>
-    </div>
-    <div class="row"><button id="verify">Check GitHub access</button><a href="https://github.com/settings/personal-access-tokens/fine-grained/new" target="_blank" rel="noreferrer">Create a fine-grained token</a></div>
-    <p class="small">Required permission: <b>Contents → Read and write</b> for the target repository. The token is kept only in this page and is sent directly to GitHub's API.</p>
-    <div id="verifyStatus" class="status muted">Not verified.</div>
-  </div>
-
-  <div class="card">
-    <h2>2. ZIP</h2>
-    <input id="zip" type="file" accept=".zip,application/zip">
-    <div id="zipInfo" class="log muted">No ZIP selected.</div>
-    <div class="row"><button id="inspect" disabled>Inspect ZIP</button></div>
-    <div id="stats" class="stats" style="display:none"></div>
-  </div>
-
-  <div class="card">
-    <h2>3. Push</h2>
-    <div class="progress"><div class="bar" id="bar"></div></div>
-    <div id="progressText" class="status muted">Waiting for verification and ZIP inspection.</div>
-    <button id="push" class="primary" disabled>Push ZIP atomically</button>
-    <div id="pushStatus" class="log muted">Nothing has been pushed yet.</div>
-  </div>
-
-  <div class="card">
-    <h2>What this fixes</h2>
-    <p><b>Old bridge:</b> one GitHub commit per file, with a stale-SHA propagation bug causing errors such as “is at SHA A but expected SHA B”.</p>
-    <p><b>V5.2:</b> no per-file update SHA is used. It reads the current branch once, builds one new Git tree, creates one commit, then advances the branch with a fast-forward-only update.</p>
-    <p class="danger"><b>Important:</b> this bridge does not delete unrelated files. It also does not overwrite the project history to “clean up” the earlier partial commits.</p>
-  </div>
-</div>
-
-<script>
-const $=id=>document.getElementById(id);
-let selectedZip=null, entries=[];
-
-function repoParts(){
-  const v=$('repo').value.trim();
-  const p=v.split('/');
-  if(p.length!==2||!p[0]||!p[1])throw new Error('Repository must look like owner/name.');
-  return p;
-}
-function branch(){return $('branch').value.trim()||'main'}
-function token(){return $('token').value.trim()}
-function baseApi(){const [o,n]=repoParts();return 'https://api.github.com/repos/'+encodeURIComponent(o)+'/'+encodeURIComponent(n)}
-function headers(extra={}){return {'Accept':'application/vnd.github+json','Authorization':'Bearer '+token(),'X-GitHub-Api-Version':'2022-11-28',...extra}}
-async function gh(path,opts={}){
-  const r=await fetch(baseApi()+path,{...opts,headers:{...headers(),...(opts.headers||{})}});
-  const body=await r.text();let data=null;try{data=body?JSON.parse(body):null}catch{}
-  return {ok:r.ok,status:r.status,data,text:body};
-}
-function requireOk(x,label){if(!x.ok)throw new Error(label+': '+(x.data?.message||x.text||('HTTP '+x.status))+' [HTTP '+x.status+']');return x.data}
-function setProgress(done,total,msg){const pct=total?Math.round(done/total*100):0;$('bar').style.width=pct+'%';$('progressText').textContent=msg+' · '+done+'/'+total+' ('+pct+'%)'}
-function log(msg,cls=''){const el=$('pushStatus');el.className='log '+cls;el.textContent+=(el.textContent==='Nothing has been pushed yet.'?'':el.textContent+'\n')+msg;el.scrollTop=el.scrollHeight}
-function status(el,msg,cls='muted'){el.textContent=msg;el.className='status '+cls}
-function resetStats(){const s=$('stats');s.style.display='none';s.innerHTML=''}
-function renderStats(c){const s=$('stats');s.style.display='grid';s.innerHTML=[['Total',c.total],['New',c.created],['Updated',c.updated],['Unchanged',c.skipped]].map(([k,v])=>'<div class="stat"><b>'+v+'</b><span class="small">'+k+'</span></div>').join('')}
-
-$('zip').addEventListener('change',()=>{
-  selectedZip=$('zip').files[0]||null;entries=[];$('inspect').disabled=!selectedZip;$('push').disabled=true;resetStats();
-  $('zipInfo').textContent=selectedZip?('Selected: '+selectedZip.name+' · '+(selectedZip.size/1024).toFixed(1)+' KB'):'No ZIP selected.';
-  $('progressText').textContent='Waiting for ZIP inspection.';$('bar').style.width='0%';
-});
-
-$('verify').onclick=async()=>{
-  const el=$('verifyStatus');
-  try{
-    if(!token())throw new Error('Enter the GitHub token.');
-    repoParts();
-    status(el,'Checking repository and branch access…');
-    const r=requireOk(await gh(''),'Repository access check');
-    const rr=await gh('/git/ref/heads/'+encodeURIComponent(branch()));
-    let branchText=rr.ok?'exists':'does not exist';
-    if(!rr.ok&&rr.status!==404)throw new Error('Branch check: '+(rr.data?.message||rr.text)+' [HTTP '+rr.status+']');
-    status(el,'Repository: '+r.full_name+' · visibility: '+r.visibility+' · branch '+branch()+': '+branchText,'ok');
-  }catch(e){status(el,'Verification failed: '+e.message,'bad')}
-};
-
-async function sha1GitBlob(bytes){
-  const header=new TextEncoder().encode('blob '+bytes.byteLength+'\0');
-  const all=new Uint8Array(header.length+bytes.length);all.set(header);all.set(bytes,header.length);
-  const digest=await crypto.subtle.digest('SHA-1',all);
-  return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-function toBase64(bytes){let out='';const chunk=0x8000;for(let i=0;i<bytes.length;i+=chunk)out+=String.fromCharCode(...bytes.subarray(i,i+chunk));return btoa(out)}
-function safePath(path){
-  if(!path||path.startsWith('/')||path.includes('\\')||path.split('/').some(p=>p==='..'||p===''))return false;
-  if(path.includes('\0'))return false;
-  return true;
-}
-function normalizedEntries(raw){
-  if(!raw.length)throw new Error('ZIP contains no files.');
-  const first=raw[0].split('/')[0];
-  const wrapper=raw.every(n=>n.startsWith(first+'/'))?first+'/':'';
-  const out=raw.map(n=>wrapper&&n.startsWith(wrapper)?n.slice(wrapper.length):n).filter(Boolean).map(path=>path.replace(/^\.\//,''));
-  if(out.some(p=>!safePath(p)))throw new Error('ZIP contains an unsafe path.');
-  const seen=new Set();for(const p of out){if(seen.has(p))throw new Error('ZIP contains duplicate path: '+p);seen.add(p)}
-  return {wrapper,out};
-}
-
-$('inspect').onclick=async()=>{
-  if(!selectedZip)return;
-  try{
-    const zip=await JSZip.loadAsync(selectedZip);
-    const raw=Object.values(zip.files).filter(f=>!f.dir).map(f=>f.name);
-    const {wrapper,out}=normalizedEntries(raw);
-    entries=out.map((path,i)=>({path,zipName:raw[i]}));
-    const list=entries.map(x=>x.path).slice(0,80).join('\n');
-    $('zipInfo').textContent='ZIP ready.\n\nFiles: '+entries.length+'\nCommon wrapper stripped: '+(wrapper||'(none)')+'\n\n'+list+(entries.length>80?'\n…':'');
-    $('push').disabled=false;
-    setProgress(0,entries.length,'Ready to push');
-  }catch(e){entries=[];$('push').disabled=true;$('zipInfo').textContent='ZIP inspection failed: '+e.message}
-};
-
-async function getSnapshot(){
-  const ref=await gh('/git/ref/heads/'+encodeURIComponent(branch()));
-  if(ref.ok){
-    const commitSha=ref.data.object.sha;
-    const commit=requireOk(await gh('/git/commits/'+commitSha),'Read branch commit');
-    const treeSha=commit.tree.sha;
-    const tree=requireOk(await gh('/git/trees/'+treeSha+'?recursive=1'),'Read repository tree');
-    const map=new Map();for(const x of (tree.tree||[])){if(x.type==='blob')map.set(x.path,x.sha)}
-    return {exists:true,commitSha,treeSha,map};
-  }
-  if(ref.status===404)return {exists:false,commitSha:null,treeSha:null,map:new Map()};
-  throw new Error('Read branch: '+(ref.data?.message||ref.text)+' [HTTP '+ref.status+']');
-}
-
-async function createBlob(bytes){
-  return requireOk(await gh('/git/blobs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:toBase64(bytes),encoding:'base64'})}),'Create blob');
-}
-async function makeTree(baseTreeSha,changes){
-  const body={tree:changes};if(baseTreeSha)body.base_tree=baseTreeSha;
-  return requireOk(await gh('/git/trees',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),'Create tree');
-}
-async function makeCommit(treeSha,parentSha){
-  const body={message:'merge ZIP: MegaPLAN update',tree:treeSha};if(parentSha)body.parents=[parentSha];
-  return requireOk(await gh('/git/commits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),'Create commit');
-}
-async function moveRef(commitSha,exists){
-  if(exists)return requireOk(await gh('/git/refs/heads/'+encodeURIComponent(branch()),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({sha:commitSha,force:false})}),'Advance branch');
-  return requireOk(await gh('/git/refs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ref:'refs/heads/'+branch(),sha:commitSha})}),'Create branch');
-}
-
-$('push').onclick=async()=>{
-  if(!entries.length||!token())return;
-  $('push').disabled=true;$('verify').disabled=true;$('inspect').disabled=true;$('pushStatus').textContent='';$('pushStatus').className='log';$('bar').style.width='0%';
-  try{
-    const zip=await JSZip.loadAsync(selectedZip);
-    let attempt=0, final=null;
-    while(attempt<2 && !final){
-      attempt++;
-      log('Attempt '+attempt+': reading current Git state…');
-      const snap=await getSnapshot();
-      const changes=[];let created=0,updated=0,skipped=0,done=0;
-      setProgress(0,entries.length,'Comparing ZIP to current tree');
-      for(const entry of entries){
-        const bytes=new Uint8Array(await zip.files[entry.zipName].async('arraybuffer'));
-        const blobSha=await sha1GitBlob(bytes);
-        const oldSha=snap.map.get(entry.path);
-        if(oldSha===blobSha){skipped++;done++;setProgress(done,entries.length,'Comparing ZIP to current tree');log('· unchanged '+entry.path);continue}
-        const blob=await createBlob(bytes);
-        changes.push({path:entry.path,mode:'100644',type:'blob',sha:blob.sha});
-        if(oldSha)updated++;else created++;
-        done++;setProgress(done,entries.length,'Uploading changed blobs');log('✓ '+(oldSha?'updated ':'added ')+entry.path);
-      }
-      renderStats({total:entries.length,created,updated,skipped});
-      if(!changes.length){
-        setProgress(entries.length,entries.length,'Nothing to change');
-        $('pushStatus').className='log ok';
-        log('COMPLETE — repository already contains these exact files. No commit created.','ok');
-        final={noop:true};break;
-      }
-      changes.sort((a,b)=>a.path.localeCompare(b.path));
-      log('Building one Git tree from '+changes.length+' changed file(s)…');
-      const tree=await makeTree(snap.treeSha,changes);
-      log('Creating one commit…');
-      const commit=await makeCommit(tree.sha,snap.commitSha);
-      log('Advancing '+branch()+' with fast-forward-only update…');
-      const move=await gh(snap.exists?('/git/refs/heads/'+encodeURIComponent(branch())):'/git/refs',{method:snap.exists?'PATCH':'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(snap.exists?{sha:commit.sha,force:false}:{ref:'refs/heads/'+branch(),sha:commit.sha})});
-      if(!move.ok&&(move.status===409||move.status===422)&&snap.exists&&attempt<2){log('Branch moved while pushing; rebuilding once from the new head…','warn');continue}
-      requireOk(move,'Advance branch');
-      const [o,n]=repoParts();
-      setProgress(entries.length,entries.length,'COMPLETE');
-      $('pushStatus').className='log ok';
-      log('PUSH COMPLETE');
-      log('Commit: '+commit.sha);
-      log('Repository: https://github.com/'+o+'/'+n);
-      log('Branch: '+branch());
-      log('Files: '+entries.length+' · added '+created+' · updated '+updated+' · unchanged '+skipped);
-      log('One new commit moved the branch. Earlier partial commits remain in history but were not rewritten.');
-      final={noop:false};
-    }
-    if(!final)throw new Error('The repository changed during the push twice. No branch update was applied by this run. Run the push again.');
-  }catch(e){
-    setProgress(0,entries.length,'FAILED');
-    $('pushStatus').className='log bad';
-    log('PUSH FAILED: '+e.message,'bad');
-    log('No per-file partial branch updates are performed by V5.2.','bad');
-  }finally{
-    $('push').disabled=false;$('verify').disabled=false;$('inspect').disabled=!selectedZip;
-  }
-};
-</script>
+<header class="site-header"><div class="container header-row">
+  <a class="brand" href="/"><span class="brand-mark">F</span><span>FreeToolForge</span></a>
+  <nav><a href="#tools">Tools</a><a href="#categories">Categories</a><a href="#directory">Trivandrum</a><a href="#models">Models</a><a href="/extension/">StudyBridge</a><a href="/blog/how-to-write-code-with-chatgpt.html">Blog</a></nav>
+</div></header>
+<main class="container">
+<section class="hero">
+  <div class="eyebrow">FREE UTILITIES • PRIVATE WHERE PRACTICAL • AD SUPPORTED</div>
+  <h1>Thousands of useful things,<br><em>one toolbox.</em></h1>
+  <p class="hero-copy">Convert, calculate, clean, inspect, generate, transcribe and organize everyday files and information without installing a desktop suite.</p>
+  <div class="search-wrap"><span>⌕</span><input id="search" placeholder="Search tools, e.g. compress PDF, GST, OCR, JSON…" autocomplete="off"></div>
+  <div class="hero-meta"><span>⚡ Browser-first</span><span>🔐 Local processing where possible</span><span>🆓 Free core tools</span></div>
+</section>
+<div class="ad" data-ad-slot="home-top">ADVERTISEMENT</div>
+<section id="tools" class="section"><div class="section-head"><div><h2>Tool library</h2><p>Find the exact job instead of hunting through software suites.</p></div><span id="count" class="count"></span></div>
+  <div id="cats" class="chips"></div><div id="tool-grid" class="tool-grid"></div>
+</section>
+<section id="categories" class="section"><div class="section-head"><div><h2>Browse by category</h2><p>Organized like a reference library, not a list of AI products.</p></div></div><div id="category-grid" class="category-grid"></div></section>
+<section id="models" class="section"><div class="section-head"><div><h2>Local model shelf</h2><p>Models are downloaded only when a feature needs them. The browser stores them locally when supported.</p></div></div>
+  <div class="model-grid" id="model-grid"></div>
+  <div class="cache-card"><div><strong>Model cache</strong><p id="cache-note">No model is downloaded until you explicitly start a model-powered tool.</p></div><button class="btn secondary" id="clear-cache">Clear local model cache</button></div>
+</section>
+<section id="directory" class="section"><div class="section-head"><div><h2>Trivandrum public directory</h2><p>The directory engine is designed to discover, normalize, deduplicate and refresh public business information automatically.</p></div></div>
+<div class="directory-card"><div class="directory-search"><input id="dir-q" placeholder="Search a Trivandrum category…"><button class="btn primary" id="dir-search">Search directory</button></div><div class="directory-status" id="dir-status">Discovery backend not connected in this static build. The schema is ready for an agentic ingestion worker.</div><div class="directory-tags"><span>Clinics</span><span>DTP & printing</span><span>Hostels / PGs</span><span>Repair</span><span>Restaurants</span><span>Education</span><span>Salons</span><span>Local services</span></div></div>
+</section>
+<section class="section"><div class="section-head"><div><h2>StudyBridge</h2><p>YouTube → transcript → NotebookLM / AI Studio, plus a 20-part PDF-to-slides preparation workflow.</p></div><a class="btn primary" href="/extension/">Open the extension guide</a></div><div class="directory-card"><p style="margin-top:0">A normal productivity extension—not an AI directory. It gives students and researchers a one-click handoff from YouTube, and turns long PDFs into numbered study sections with matching prompts.</p></div></section>
+<div class="ad" data-ad-slot="home-bottom">ADVERTISEMENT</div>
+</main>
+<footer><div class="container footer-row"><span>FreeToolForge</span><span>Tool registry: <b id="footer-count">555+</b> entries</span><span>Free-first, ad-supported</span></div></footer>
+<script src="/public/app.js" defer></script>
 </body>
 </html>

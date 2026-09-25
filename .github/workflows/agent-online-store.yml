@@ -52,16 +52,22 @@ jobs:
           node -e "const fs=require('fs');const files=fs.readdirSync('data/agent-pages').filter(f=>f.endsWith('.json')).sort((a,b)=>fs.statSync('data/agent-pages/'+b).mtimeMs-fs.statSync('data/agent-pages/'+a).mtimeMs);if(!files.length)process.exit(1);fs.appendFileSync(process.env.GITHUB_ENV,'AGENT_SLUG='+files[0].slice(0,-5)+'\n');"
       - name: Browser regression gate
         run: node scripts/agent-actions-browser.mjs
+      - name: Mirror published agent data into public output
+        run: |
+          mkdir -p public/data/agent-pages
+          cp data/tools.json public/data/tools.json
+          cp data/agent-pages.json public/data/agent-pages.json
+          rsync -a data/agent-pages/ public/data/agent-pages/
       - name: Enforce autonomous write boundary
         run: |
           changed=$(git diff --name-only)
           echo "$changed"
-          if echo "$changed" | grep -vE '^data/agent-pages(/.*)?$|^data/agent-pages\.json$' | grep -q .; then exit 1; fi
+          if echo "$changed" | grep -vE '^data/agent-pages(/.*)?$|^data/agent-pages\.json$|^public/data/agent-pages(/.*)?$|^public/data/agent-pages\.json$|^public/data/tools\.json$' | grep -q .; then exit 1; fi
       - name: Publish one commit
         run: |
           git config user.name "agent-online-store[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/agent-pages data/agent-pages.json
+          git add data/agent-pages data/agent-pages.json public/data/agent-pages public/data/agent-pages.json public/data/tools.json
           git diff --cached --quiet && exit 0
           git commit -m "agent wiki: autonomous page update"
           git push origin HEAD:main

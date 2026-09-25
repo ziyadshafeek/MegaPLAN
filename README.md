@@ -1,29 +1,33 @@
-# FreeToolForge GitHub Push Bridge v5.2
+# FreeToolForge
 
-This is the replacement for the buggy v5.1 file-by-file Contents API bridge.
+A large, free-first utility platform designed as a "tool Wikipedia": many genuinely useful tools under one coherent search/category experience, with local-first processing where practical and ad-supported access.
 
-## Core fix
+## Continue development
+Read `MASTER_CONTEXT.md` first. The project source of truth is the public GitHub repository `ziyadshafeek/MegaPLAN`.
 
-v5.2 uses the Git Data API:
+## Run locally
+```bash
+python -m http.server 8080 --directory public
+```
+Open http://localhost:8080
 
-`ZIP → existing tree → blobs → one tree → one commit → fast-forward branch update`
+## Validate
+```bash
+python scripts/validate_registry.py
+node tests/smoke.mjs
+```
 
-It never carries a previous file's SHA into the next file update.
+## Optional backend
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app:app --reload --port 8081
+```
 
-## Safety / behavior
-
-- Existing repository files not present in the ZIP are preserved.
-- The ZIP can contain a single top-level wrapper folder; that wrapper is stripped.
-- Unsafe paths and duplicate paths are rejected before pushing.
-- Unchanged files are skipped by comparing Git blob SHA values.
-- Changed/new files are uploaded as blobs, then one tree and one commit are created.
-- The branch is updated only after the entire commit is ready.
-- If the branch moves during the operation, v5.2 rebuilds once from the new head.
-- Tokens are held only in the browser tab and sent directly to GitHub's API.
-- No token is written to localStorage, cookies, or a server endpoint.
-
-## Deploy on Vercel
-
-Use Vercel Drop with this ZIP/folder. This project is intentionally static and has no serverless functions or Vercel runtime configuration.
-
-After deployment, open the bridge URL, enter a fine-grained GitHub token with **Contents: Read and write** on `ziyadshafeek/MegaPLAN`, select the V4 MegaPLAN ZIP, inspect it, then push.
+## Design principles
+- ordinary productivity brand, not AI-first branding
+- free core tools + tasteful ads
+- no manual fulfillment
+- honest live/beta/catalogued status
+- privacy-first processing where feasible
+- model licensing verified before commercial use
