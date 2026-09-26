@@ -6,7 +6,7 @@ import { planDeck, makePresentation } from '../lib/presentation-deck.js';
 import { presentationTopic } from '../public/js/presentation-tool.js';
 import { snapshotReferences } from '../lib/presentation-context.js';
 assert.equal(snapshotReferences('music around Trivandrum')[0]?.title, 'Trivandrum OSM music places');
-assert.equal(snapshotReferences('music worldwide').length, 0, 'an empty open music snapshot must not be treated as the local music places');
+assert.equal(snapshotReferences('music worldwide')[0]?.source, 'MegaPLAN MusicBrainz CC0 snapshot', 'worldwide music must not use local OSM places');
 
 assert.equal(presentationTopic('Create a PPT about solar energy'), 'solar energy');
 assert.equal(presentationTopic('Search for solar energy'), null);
