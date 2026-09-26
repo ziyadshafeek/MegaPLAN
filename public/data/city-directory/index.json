@@ -4,16 +4,17 @@
     "lat": 8.524139,
     "lon": 76.936638
   },
-  "radiusMeters": 6500,
+  "radiusMeters": 2500,
   "indexedAt": null,
   "source": "OpenStreetMap via Overpass",
   "license": "Open Database License (ODbL)",
   "attributionUrl": "https://www.openstreetmap.org/copyright",
-  "note": "Not indexed yet. No records have been verified; use Run on the collector workflow. Bounded city sample, not a complete directory.",
+  "note": "Not indexed yet. No records have been verified. Bounded OSM node samples (shops within 2.5 km, music-related within 6.5 km); not a complete directory.",
   "shops": [],
   "music": [],
   "counts": {
     "shops": 0,
     "music": 0
-  }
+  },
+  "musicRadiusMeters": 6500
 }

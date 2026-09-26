@@ -6,8 +6,9 @@ function mountCityDirectory(root, tool, type) {
   const body = mountShell(root, tool, `
     <div class="panel" style="padding:18px;max-width:1000px;margin:0 auto">
       <h2>${type === 'music' ? 'Music places' : 'Shops'} in Thiruvananthapuram</h2>
-      <p class="muted">A bounded OpenStreetMap sample within 6.5 km of central Trivandrum. These are ${type === 'music' ? 'music-related venues, clubs and stores—not Spotify songs' : 'mapped shops—not an inventory, product listing or endorsement'}. Only verified published records appear here; coverage and details may be incomplete.</p>
+      <p class="muted">A bounded OpenStreetMap node sample within ${type === 'music' ? '6.5' : '2.5'} km of central Trivandrum. These are ${type === 'music' ? 'music-related venues, clubs and stores—not Spotify songs' : 'mapped shops—not an inventory, product listing or endorsement'}. Only verified published records appear here; coverage and details may be incomplete.</p>
       <div id="${prefix}-status" class="note" aria-live="polite">Loading published snapshot…</div>
+      <div id="${prefix}-job" class="note" aria-live="polite">Checking last collection attempt…</div>
       <div class="field-row" style="margin:12px 0"><input id="${prefix}-search" class="field" type="search" placeholder="Filter published ${type === 'music' ? 'music places' : 'shops'}" aria-label="Filter published listings"><button id="${prefix}-refresh" class="btn secondary">Refresh</button></div>
       <div id="${prefix}-results" aria-live="polite"></div>
       <p class="muted" style="margin-top:14px">© OpenStreetMap contributors · <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">ODbL and attribution</a>. Report corrections to OpenStreetMap. Refreshed data is published by a repository job, not by your browser.</p>
@@ -31,6 +32,26 @@ function mountCityDirectory(root, tool, type) {
   }
   async function load() {
     $(`status`).textContent = 'Loading published snapshot…';
+    try {
+      const statusResponse = await fetch('/data/city-directory/status.json', { cache: 'no-store' });
+      if (!statusResponse.ok) throw Error('Collector status unavailable');
+      const report = await statusResponse.json();
+      const job = $(`job`);
+      job.replaceChildren();
+      const label = document.createElement('span');
+      label.textContent = report.attemptedAt
+        ? `Last attempt: ${new Date(report.attemptedAt).toLocaleString()} · city: ${report.outcomes?.city || 'unknown'} · map: ${report.outcomes?.map || 'unknown'} · product: ${report.outcomes?.product || 'unknown'} · music tracks: ${report.outcomes?.music || 'unknown'}. `
+        : 'No collection attempt has been recorded for this published snapshot. ';
+      job.append(label);
+      if (typeof report.runUrl === 'string' && /^https:\/\/github\.com\/ziyadshafeek\/MegaPLAN\/actions\/runs\/\d+$/.test(report.runUrl)) {
+        const link = document.createElement('a');
+        link.href = report.runUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'Inspect or rerun this GitHub Actions job';
+        job.append(link);
+      }
+    } catch { $(`job`).textContent = 'Collection status is not yet available on this deployment.'; }
     try {
       const response = await fetch('/data/city-directory/index.json', { cache: 'no-store' });
       if (!response.ok) throw Error(`HTTP ${response.status}`);

@@ -1,0 +1,18 @@
+{
+  "attemptedAt": null,
+  "branch": "arena/01a0dd3c-megaplan",
+  "outcomes": {
+    "city": "not run",
+    "map": "not run",
+    "product": "not run",
+    "music": "not run"
+  },
+  "published": {
+    "cityShops": 0,
+    "cityMusicPlaces": 0,
+    "mapPlaces": 0,
+    "products": 0,
+    "musicTracks": 0
+  },
+  "note": "No verified collection trial has been recorded yet on this snapshot."
+}

@@ -2,7 +2,7 @@
 
 ## Trivandrum directories
 
-`/tools/trivandrum-music-places` lists OSM-tagged music venues, clubs, and music/instrument shops, **not recorded tracks**. `/tools/trivandrum-shop-directory` lists OSM-tagged shops. Both read the same bounded, attributed OpenStreetMap snapshot at `public/data/city-directory/index.json`. This is a sample within 6.5 km of the city center, not comprehensive coverage, live availability, current prices, or a Spotify catalogue. Both start empty until a verified scan succeeds.
+`/tools/trivandrum-music-places` lists OSM-tagged music venues, clubs, and music/instrument shops, **not recorded tracks**. `/tools/trivandrum-shop-directory` lists OSM-tagged shops. They use bounded attributed OpenStreetMap node samples: shops within 2.5 km and music-related places within 6.5 km, from the same snapshot at `public/data/city-directory/index.json`. This is a sample within 6.5 km of the city center, not comprehensive coverage, live availability, current prices, or a Spotify catalogue. Both start empty until a verified scan succeeds; the initial network trial indexed ten Spotify tracks, but city OSM and Flipkart did not produce publishable records.
 
 Run `node scripts/city-directory-runner.mjs` in a network-enabled checkout to attempt a one-shot collection. A failure does not replace the last verified snapshot. The source is OpenStreetMap via Overpass; attribution and ODbL are displayed next to the data. The run attempts two mirrors but does not bypass rate limits.
 

@@ -94,7 +94,8 @@ out center 100;`;
       const r = await fetchWithTimeout(url, {}, 25000);
       if (!r.ok) throw Error(`Overpass ${mirror} ${r.status}`);
       const data = await r.json();
-      const places = (data.elements || []).map(el => ({
+      if (!Array.isArray(data.elements)) throw Error('Invalid Overpass response');
+      const places = data.elements.map(el => ({
         id: `${el.type}/${el.id}`,
         lat: el.lat || el.center?.lat,
         lng: el.lon || el.center?.lon,
@@ -105,6 +106,7 @@ out center 100;`;
         road: el.tags?.['addr:street'] || null
       })).filter(p => p.lat && p.lng);
       
+      if (!places.length && index === 0) throw Error('Trivandrum center returned no verified places');
       return { index, lat, lng, dx, dy, grid, radius, places, roads: [], mirror };
     } catch (e) {
       console.log(`  Mirror ${mirror} failed for cell ${index}: ${e.message}, trying next...`);
