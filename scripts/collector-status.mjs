@@ -7,7 +7,7 @@ const read = name => {
   try { return JSON.parse(fs.readFileSync(path.join(root, 'data', name, 'index.json'), 'utf8')); }
   catch { return {}; }
 };
-const allowed = status => status === 'success' ? 'success' : 'failure';
+const allowed = status => status === 'success' ? 'success' : status === 'skipped-policy' ? 'skipped-policy' : 'failure';
 const city = read('city-directory');
 const map = read('map-directory');
 const product = read('product-directory');

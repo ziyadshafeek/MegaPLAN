@@ -6,6 +6,8 @@ on:
       - '.github/workflows/collect-now.yml'
       - 'lib/city-directory.mjs'
       - 'scripts/city-directory-runner.mjs'
+      - 'scripts/open-music-runner.mjs'
+      - 'scripts/image-links-runner.mjs'
   workflow_dispatch:
 permissions:
   contents: write
@@ -31,14 +33,18 @@ jobs:
         id: map
         run: |
           if node scripts/kerala-expansion-runner.mjs --phase 1 --batch 1 --workers 1; then echo 'result=success' >> "$GITHUB_OUTPUT"; else echo 'result=failure' >> "$GITHUB_OUTPUT"; fi
-      - name: Collect Flipkart results, if verifiable
+      - name: Product ingestion requires authorized retailer feed
         id: product
         run: |
-          if node scripts/product-scraper-runner.mjs --batch 5 --platform flipkart --category mobiles; then echo 'result=success' >> "$GITHUB_OUTPUT"; else echo 'result=failure' >> "$GITHUB_OUTPUT"; fi
-      - name: Collect Spotify tracks, if verifiable
+          echo 'No approved Flipkart/Amazon feed configured; zero verified products must remain visible.'
+          echo 'result=skipped-policy' >> "$GITHUB_OUTPUT"
+      - name: Collect open MusicBrainz recordings, if verifiable
         id: music
         run: |
-          if node scripts/music-scraper-runner.mjs --batch 10 --query malayalam; then echo 'result=success' >> "$GITHUB_OUTPUT"; else echo 'result=failure' >> "$GITHUB_OUTPUT"; fi
+          if node scripts/open-music-runner.mjs; then echo 'result=success' >> "$GITHUB_OUTPUT"; else echo 'result=failure' >> "$GITHUB_OUTPUT"; fi
+      - name: Collect image-link candidates (never publish without review)
+        continue-on-error: true
+        run: node scripts/image-links-runner.mjs
       - name: Record source outcomes (not just job start)
         env:
           CITY: ${{ steps.city.outputs.result }}
@@ -50,7 +56,7 @@ jobs:
         run: |
           git config user.name 'megaplan-collector[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/city-directory public/data/city-directory data/map-directory public/data/map-directory data/product-directory public/data/product-directory data/music-directory public/data/music-directory
+          git add data/city-directory public/data/city-directory data/map-directory public/data/map-directory data/product-directory public/data/product-directory data/music-directory public/data/music-directory data/image-links/
           if git diff --cached --quiet; then echo 'No verified data changes'; exit 0; fi
           git commit -m 'data: publish verified directory snapshots and status [skip ci]'
           git fetch origin "${GITHUB_REF_NAME}"

@@ -1,0 +1,62 @@
+import assert from 'node:assert/strict';
+import JSZip from 'jszip';
+import handler from '../lib/api/presentation.js';
+import { cleanTopic, normalizeImageLinks, researchTopic } from '../lib/presentation-sources.js';
+import { planDeck, makePresentation } from '../lib/presentation-deck.js';
+import { presentationTopic } from '../public/js/presentation-tool.js';
+import { snapshotReferences } from '../lib/presentation-context.js';
+assert.equal(snapshotReferences('music around Trivandrum')[0]?.title, 'Trivandrum OSM music places');
+assert.equal(snapshotReferences('music worldwide').length, 0, 'an empty open music snapshot must not be treated as the local music places');
+
+assert.equal(presentationTopic('Create a PPT about solar energy'), 'solar energy');
+assert.equal(presentationTopic('Search for solar energy'), null);
+assert.equal(presentationTopic('Make a PPT'), '');
+assert.throws(() => cleanTopic('explicit nude content'), /Adult/);
+const candidate = { id: '123', mature: false, license: 'by', title: 'mountains', creator: 'A Person', tags: [], url: 'https://upload.wikimedia.org/sample.jpg', foreign_landing_url: 'https://commons.wikimedia.org/wiki/File:Sample.jpg' };
+assert.equal(normalizeImageLinks([candidate]).length, 1);
+assert.equal(normalizeImageLinks([{ ...candidate, mature: true }]).length, 0);
+assert.equal(normalizeImageLinks([{ ...candidate, title: 'nude mountains' }]).length, 0);
+assert.equal(normalizeImageLinks([{ ...candidate, url: 'https://unsafe.test/photo.jpg' }]).length, 0);
+assert.equal(normalizeImageLinks([{ ...candidate, license: 'all-rights-reserved' }]).length, 0);
+
+const original = globalThis.fetch;
+try {
+  globalThis.fetch = async url => {
+    if (String(url).includes('wikipedia.org')) return new Response(JSON.stringify({ query: { search: [{ title: 'Solar power', pageid: 123, snippet: 'Sunlight becomes electricity.' }] } }), { status: 200 });
+    return new Response(JSON.stringify({ results: [candidate] }), { status: 200 });
+  };
+  const research = await researchTopic('solar energy', globalThis.fetch);
+  assert.equal(research.articles[0].url, 'https://en.wikipedia.org/?curid=123');
+  assert.equal(research.images.length, 1);
+  const res = () => ({ statusCode: 200, headers: {}, setHeader(k, v) { this.headers[k.toLowerCase()] = v; }, end(x) { this.body = x; } });
+  const r = res();
+  await handler({ method: 'GET', url: '/api/presentation?q=solar%20energy', headers: {}, socket: { remoteAddress: 'test-get' } }, r);
+  assert.equal(r.statusCode, 200);
+  const j = JSON.parse(r.body);
+  assert.equal(j.articles.length, 1);
+  assert.equal(j.images.length, 0, 'unreviewed live Openverse images must never be published');
+  const deckRes = res();
+  await handler({ method: 'POST', url: '/api/presentation', headers: {}, socket: { remoteAddress: 'test-post' }, body: { topic: 'solar energy' } }, deckRes);
+  assert.equal(deckRes.statusCode, 200);
+  assert.match(deckRes.headers['content-type'], /presentationml/);
+  const ppt = await JSZip.loadAsync(deckRes.body);
+  assert.ok(ppt.file('ppt/presentation.xml'));
+  const slidePaths = Object.keys(ppt.files).filter(x => /^ppt\/slides\/slide\d+\.xml$/.test(x));
+  assert.ok(slidePaths.length >= 3);
+  const combined = (await Promise.all(slidePaths.map(x => ppt.file(x).async('string')))).join(' ');
+  assert.match(combined, /Sunlight becomes electricity/);
+  assert.match(combined, /Sources &amp; image references/);
+  const bad = res();
+  await handler({ method: 'POST', url: '/api/presentation', headers: {}, socket: { remoteAddress: 'test-bad' }, body: { topic: 'porn pictures' } }, bad);
+  assert.equal(bad.statusCode, 400);
+  globalThis.fetch = async () => { throw Error('offline'); };
+  const offline = res();
+  await handler({ method: 'POST', url: '/api/presentation', headers: {}, socket: { remoteAddress: 'test-offline' }, body: { topic: 'Local notes', notes: 'This note comes from my own research.' } }, offline);
+  assert.equal(offline.statusCode, 200, 'user notes still yield PPTX when network is down');
+  const unavailable = res();
+  await handler({ method: 'POST', url: '/api/presentation', headers: {}, socket: { remoteAddress: 'test-unavailable' }, body: { topic: 'No source' } }, unavailable);
+  assert.equal(unavailable.statusCode, 503, 'do not fabricate research');
+  const planned = planDeck({ topic: 'T', notes: 'One important point.', research: { articles: [] } });
+  assert.ok((await makePresentation(planned)).length > 1000);
+} finally { globalThis.fetch = original; }
+console.log('Presentation: source filtering, direct agent intent, offline fallback, real PPTX ZIP, refusal, and review gate OK');

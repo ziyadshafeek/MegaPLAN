@@ -14,6 +14,7 @@ import { mountInceptionTool } from './inception-tool.js';
 import { mountProductDirectory } from './product-directory.js';
 import { mountMusicDirectory } from './music-directory.js';
 import { mountCityMusicDirectory, mountCityShopDirectory } from './city-directory.js';
+import { mountPresentationTool } from './presentation-tool.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -793,12 +794,14 @@ Object.assign(HANDLERS, {
   'Kerala AI — Map Intelligence': (r, t) => mountKeralaDirectoryFull(r, { ...t, title: 'Kerala AI — Map Intelligence' }),
   'Spatial Index — Geohash Grid System': (r, t) => mountKeralaDirectoryFull(r, { ...t, title: 'Spatial Index — Geohash Grid System' }),
   'Inception Labs — Mercury Diffusion LLM': (r, t) => mountInceptionTool(r, t),
-  'Product Directory — Amazon & Flipkart Massive': (r, t) => mountProductDirectory(r, t),
-  'Product Scraper — Amazon Flipkart': (r, t) => mountProductDirectory(r, { ...t, title: 'Product Scraper — Amazon Flipkart' }),
-  'Music Directory — Spotify Full Dataset': (r, t) => mountMusicDirectory(r, t),
+  'Product Directory — Nationwide (Limited)': (r, t) => mountProductDirectory(r, t),
+  'Product Search — Retail Sources (Limited)': (r, t) => mountProductDirectory(r, { ...t, title: 'Product Search — Retail Sources (Limited)' }),
+  'Music Directory — Worldwide Open Search': (r, t) => mountMusicDirectory(r, t),
   'Trivandrum Music Places Directory': (r, t) => mountCityMusicDirectory(r, t),
   'Trivandrum Shop Directory': (r, t) => mountCityShopDirectory(r, t),
-  'Music Scraper — Spotify': (r, t) => mountMusicDirectory(r, { ...t, title: 'Music Scraper — Spotify' })
+  'Music Search — Open Recordings': (r, t) => mountMusicDirectory(r, { ...t, title: 'Music Search — Open Recordings' }),
+  'Presentation Creator — Research to PPTX': (r, t) => mountPresentationTool(r, t),
+  'Reviewed Image Link Directory': (r, t) => mountPresentationTool(r, { ...t, title: 'Reviewed Image Link Directory' })
 });
 
 for (const title of ['APA Citation Helper', 'MLA Citation Helper', 'Chicago Citation Helper', 'Vancouver Citation Helper']) {

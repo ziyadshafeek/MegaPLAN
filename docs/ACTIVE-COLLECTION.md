@@ -1,3 +1,5 @@
+> **2026-09-26 update:** Previous trial counts and workflows described below are historical. This branch now disables unauthorised Spotify scraping and keeps music collection independent of Trivandrum music places. The historical ten-track Spotify snapshot is removed; a bounded MusicBrainz CC0 collection replaces it after a successful run. Product collection awaits an authorized retailer feed; the branch workflow records `skipped-policy`. Image-link candidates require human review before publication. See [DATA-SOURCES.md](DATA-SOURCES.md) for the current paths and limitations.
+
 # Active collection controls and provenance
 
 ## Trivandrum directories

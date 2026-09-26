@@ -8160,9 +8160,9 @@
   },
   {
     "slug": "product-directory",
-    "title": "Product Directory \u2014 Amazon & Flipkart Massive",
+    "title": "Product Directory \u2014 Nationwide (Limited)",
     "category": "Business",
-    "description": "Search verified published product records, with an experimental on-demand Flipkart lookup when no indexed match is found. Prices are not guaranteed current. Amazon live search is not connected.",
+    "description": "Search verified nationwide product records. The published snapshot currently contains no verified products. Prices, sellers and coverage require authorized retailer feeds.",
     "keywords": [
       "product",
       "amazon",
@@ -8177,9 +8177,9 @@
   },
   {
     "slug": "product-scraper",
-    "title": "Product Scraper \u2014 Amazon Flipkart",
+    "title": "Product Search \u2014 Retail Sources (Limited)",
     "category": "Business",
-    "description": "Product scraper for Amazon & Flipkart millions of products \u2014 free Flipkart scraper API Rust dvishal485 no auth, Amazon needs rotating proxies ScraperAPI. Systematic categories \u2192 subcategories \u2192 product URLs \u2192 details. Free storage GitHub+Vercel+IndexedDB.",
+    "description": "Experimental on-demand product lookup; no verified nationwide inventory. Bulk Flipkart/Amazon details require authorized affiliate or retailer feeds, not bypass scraping.",
     "keywords": [
       "product",
       "scraper",
@@ -8191,9 +8191,9 @@
   },
   {
     "slug": "music-directory",
-    "title": "Music Directory \u2014 Spotify Full Dataset",
+    "title": "Music Directory \u2014 Worldwide Open Search",
     "category": "Audio",
-    "description": "Search published music records or try an on-demand Spotify track lookup when no indexed match is found. No complete catalogue, audio-feature dataset, or third-party availability is guaranteed.",
+    "description": "On-demand MusicBrainz recording search worldwide (not Trivandrum and not a complete Spotify catalogue). Spotify links open an unverified search; no Spotify tracks stored.",
     "keywords": [
       "music",
       "spotify",
@@ -8207,9 +8207,9 @@
   },
   {
     "slug": "music-scraper",
-    "title": "Music Scraper \u2014 Spotify",
+    "title": "Music Search \u2014 Open Recordings",
     "category": "Audio",
-    "description": "Music scraper Spotify \u2014 extract public Spotify data without official API, no key, sync+async, typed models, one dependency, bootstraps anonymous token from public embed pages. Features: all core entities + podcasts, search, charts, cover colors, credits, two-tier resilience GraphQL+embed fallback, anti-ban.",
+    "description": "On-demand open MusicBrainz recording search; unlicensed Spotify scraping disabled. No full Spotify dataset or verified Spotify ID matching.",
     "keywords": [
       "music",
       "scraper",
@@ -8247,6 +8247,32 @@
       "shops",
       "local",
       "directory"
+    ]
+  },
+  {
+    "slug": "presentation-creator",
+    "title": "Presentation Creator \u2014 Research to PPTX",
+    "category": "AI",
+    "status": "live",
+    "processing": "server",
+    "description": "Search Wikipedia and optional web sources, combine source snippets or your notes, and download a real PowerPoint deck with citations. Reviewed image links only; no image bytes stored.",
+    "privacy": "Topic and notes sent to the MegaPLAN server; no file uploads.",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "reviewed-image-link-directory",
+    "title": "Reviewed Image Link Directory",
+    "category": "Images",
+    "status": "live",
+    "processing": "server",
+    "description": "Search for source links to human-reviewed, licensed, non-explicit Wikimedia image records. Link-only index; unreviewed candidates never published.",
+    "privacy": "Query sent to MegaPLAN server; metadata links only.",
+    "adSlots": [
+      "top",
+      "bottom"
     ]
   }
 ]

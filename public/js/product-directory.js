@@ -14,7 +14,7 @@ export function mountProductDirectory(root, tool) {
       <aside style="background:#efe6d8;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:12px;border-right:1px solid #e0d5c4">
         <div>
           <b>Product Directory</b>
-          <p class="muted" style="margin:4px 0 8px;font-size:12px">Search the published product snapshot. If no match is indexed, try an on-demand public lookup; coverage and prices may be incomplete or outdated.</p>
+          <p class="muted" style="margin:4px 0 8px;font-size:12px">Nationwide product inventory is not populated yet (zero verified products). On-demand third-party lookup is experimental and may fail; prices are not verified. Detailed nationwide listings require authorized retailer feeds.</p>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             <button class="btn primary" id="${id}-scan" style="font-size:12px">About indexing</button>
             <button class="btn secondary" id="${id}-stop" style="font-size:12px">⏸ Stop</button>
@@ -49,7 +49,7 @@ export function mountProductDirectory(root, tool) {
           <div id="${id}-class" style="margin-top:8px;max-height:200px;overflow:auto;font-size:11px"></div>
         </div>
 
-        <div id="${id}-log" class="note" style="font-size:11px;max-height:100px;overflow:auto">Published records are produced by scheduled repository jobs. Browser searches are on demand and do not publish.</div>
+        <div id="${id}-log" class="note" style="font-size:11px;max-height:100px;overflow:auto">Published records require authorized retailer feeds. Browser searches do not publish.</div>
       </aside>
 
       <div style="padding:12px;overflow:auto;background:#fffaf2">
@@ -58,7 +58,7 @@ export function mountProductDirectory(root, tool) {
         <div id="${id}-products" style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
       </div>
     </div>
-    <div class="note" style="margin-top:10px;font-size:11px">Published product data is a snapshot created by scheduled repository jobs. Search can try a live public lookup when there is no indexed match; live results are not automatically saved to the site. Coverage and third-party availability vary.</div>
+    <div class="note" style="margin-top:10px;font-size:11px">Current snapshot has zero verified products. A live experimental lookup is not a licensed nationwide product database. Sellers, prices and product details need permissioned source feeds and periodic verification.</div>
   `);
 
   const $ = sid => body.querySelector('#' + id + '-' + sid);
@@ -129,7 +129,7 @@ export function mountProductDirectory(root, tool) {
   }
 
   function startScraper() {
-    log('Continuous browser scraping is disabled. Published data is indexed by scheduled repository jobs. Use Search for an on-demand lookup.');
+    log('Bulk retail scraping is disabled. Import an authorized affiliate feed after verifying rights. On-demand lookup is experimental.');
     toast('Use Search for on-demand results');
   }
 

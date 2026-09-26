@@ -9,7 +9,7 @@
  */
 
 // Literal imports are required for Vercel @vercel/nft to bundle every handler.
-const ROUTES = ["agent-dispatch", "agent-health", "agent-plan", "agent-publish", "agent-status", "ai", "auto-master", "github-secret-setup", "inception", "inception-labs", "inspect", "kerala-ai", "kerala", "kerala-expansion", "map-auto", "map-directory", "map-scraper-v2", "map-scraper", "maps", "music-directory", "music-scraper", "osint", "product-directory", "product-scraper", "rate-limiter", "split-pdf", "youtube-playlist", "youtube-transcript"];
+const ROUTES = ["agent-dispatch", "agent-health", "agent-plan", "agent-publish", "agent-status", "ai", "auto-master", "github-secret-setup", "inception", "inception-labs", "inspect", "kerala-ai", "kerala", "kerala-expansion", "map-auto", "map-directory", "map-scraper-v2", "map-scraper", "maps", "music-directory", "music-scraper", "open-music", "osint", "product-directory", "product-scraper", "presentation", "rate-limiter", "split-pdf", "youtube-playlist", "youtube-transcript"];
 const handlerCache = new Map();
 
 async function getHandler(route) {
@@ -38,9 +38,11 @@ async function getHandler(route) {
     case 'maps': mod = await import('../lib/api/maps.js'); break;
     case 'music-directory': mod = await import('../lib/api/music-directory.js'); break;
     case 'music-scraper': mod = await import('../lib/api/music-scraper.js'); break;
+    case 'open-music': mod = await import('../lib/api/open-music.js'); break;
     case 'osint': mod = await import('../lib/api/osint.js'); break;
     case 'product-directory': mod = await import('../lib/api/product-directory.js'); break;
     case 'product-scraper': mod = await import('../lib/api/product-scraper.js'); break;
+    case 'presentation': mod = await import('../lib/api/presentation.js'); break;
     case 'rate-limiter': mod = await import('../lib/api/rate-limiter.js'); break;
     case 'split-pdf': mod = await import('../lib/api/split-pdf.js'); break;
     case 'youtube-playlist': mod = await import('../lib/api/youtube-playlist.js'); break;

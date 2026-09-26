@@ -19,7 +19,7 @@ try {
   for (const name of ['map-directory', 'product-directory', 'music-directory']) {
     const response = await call('POST', `/api/${name}`, { products: [], tracks: [], places: [] });
     assert.equal(response.status, 405, `${name} must be read-only on Vercel`);
-    assert.match(response.data.error, /scheduled jobs/i);
+    assert.match(response.data.error, name === 'music-directory' ? /disabled pending authorized access/i : /scheduled jobs/i);
   }
   for (const name of ['map-auto', 'auto-master']) {
     assert.equal((await call('GET', `/api/${name}?action=run`)).status, 405, `${name} GET cannot launch work`);
@@ -33,7 +33,7 @@ try {
   delete process.env.DATA_INGEST_TOKEN;
   assert.equal((await call('POST', '/api/map-directory')).status, 503, 'local writes need an operator token');
   process.env.DATA_INGEST_TOKEN = 'test-only';
-  assert.equal((await call('POST', '/api/music-directory')).status, 401, 'wrong local token cannot write');
+  assert.equal((await call('POST', '/api/music-directory')).status, 405, 'unlicensed music ingest is disabled even with local token');
 } finally {
   previousIngest === undefined ? delete process.env.DATA_INGEST_TOKEN : process.env.DATA_INGEST_TOKEN = previousIngest;
 }

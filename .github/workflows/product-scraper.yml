@@ -1,51 +1,10 @@
-name: Product Directory Auto Scraper — verified Flipkart results
-
+name: Authorized product feed readiness
 on:
-  schedule:
-    - cron: '0 */3 * * *' # Every 3 hours
   workflow_dispatch:
-    inputs:
-      batch:
-        description: 'Products to scrape per run'
-        default: '50'
-        type: string
-      platform:
-        description: 'Platform: flipkart, amazon, both'
-        default: 'flipkart'
-        type: string
-      category:
-        description: 'Category to scrape'
-        default: 'mobiles'
-        type: string
-
 jobs:
-  scrape:
+  readiness:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install
-        run: npm ci || npm install
-      - name: Run product scraper
-        env:
-          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-        run: |
-          BATCH="${{ inputs.batch || '50' }}"
-          PLATFORM="${{ inputs.platform || 'flipkart' }}"
-          CATEGORY="${{ inputs.category || 'mobiles' }}"
-          echo "Scraping $BATCH products from $PLATFORM category $CATEGORY"
-          node scripts/product-scraper-runner.mjs --batch $BATCH --platform $PLATFORM --category $CATEGORY
-      - name: Commit
-        run: |
-          git config user.name "product-scraper-bot"
-          git config user.email "bot@megaplan.local"
-          git add data/product-directory/ public/data/product-directory/ || true
-          if git diff --cached --quiet; then echo "No new data"; exit 0; fi
-          TOTAL=$(jq -r '.totalProducts // 0' data/product-directory/index.json 2>/dev/null || echo "0")
-          git commit -m "product: auto scrape batch ${{ inputs.batch || '50' }} $PLATFORM $CATEGORY total ${TOTAL} [skip ci]"
-          git push origin HEAD:${{ github.ref_name || 'main' }}
+      - run: |
+          echo 'No nationwide product feed is configured. Request retailer/affiliate permission first.'
+          echo 'Import an authorized JSON feed locally with scripts/import-authorized-products.mjs; publish only verified records.'

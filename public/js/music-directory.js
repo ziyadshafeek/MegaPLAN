@@ -12,7 +12,7 @@ export function mountMusicDirectory(root, tool) {
       <aside style="background:#efe6d8;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:12px;border-right:1px solid #e0d5c4">
         <div>
           <b>Music Directory</b>
-          <p class="muted" style="margin:4px 0 8px;font-size:12px">Browse the published snapshot, or search on demand when no indexed match is found. No complete catalogue or audio-feature coverage is guaranteed.</p>
+          <p class="muted" style="margin:4px 0 8px;font-size:12px">Search the independent MusicBrainz recording catalogue on demand. This is worldwide music, unrelated to Trivandrum places and NOT a complete Spotify catalogue. No scraped Spotify snapshot is published.</p>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             <button class="btn primary" id="${id}-scan" style="font-size:12px">About indexing</button>
           </div>
@@ -22,9 +22,6 @@ export function mountMusicDirectory(root, tool) {
           </div>
           <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
             <button class="btn ghost" data-type="track" style="font-size:11px">🎵 Tracks</button>
-            <button class="btn ghost" data-type="artist" style="font-size:11px">👤 Artists</button>
-            <button class="btn ghost" data-type="album" style="font-size:11px">💿 Albums</button>
-            <button class="btn ghost" data-type="playlist" style="font-size:11px">📋 Playlists</button>
           </div>
         </div>
 
@@ -39,7 +36,7 @@ export function mountMusicDirectory(root, tool) {
           <div id="${id}-features" style="font-size:11px;margin-top:6px">Loading features…</div>
         </div>
 
-        <div id="${id}-log" class="note" style="font-size:11px;max-height:100px;overflow:auto">Published records come from scheduled repository jobs. Live searches are on demand and do not publish.</div>
+        <div id="${id}-log" class="note" style="font-size:11px;max-height:100px;overflow:auto">No mass Spotify indexing. Open music search is on demand and is never published automatically.</div>
       </aside>
 
       <div style="padding:12px;overflow:auto;background:#fffaf2">
@@ -48,7 +45,7 @@ export function mountMusicDirectory(root, tool) {
         <div id="${id}-tracks" style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
       </div>
     </div>
-    <div class="note" style="margin-top:10px;font-size:11px">Published music data is a snapshot created by scheduled repository jobs. Search can try a live public lookup when there is no indexed match; live results are not automatically saved to the site. Coverage and third-party availability vary.</div>
+    <div class="note" style="margin-top:10px;font-size:11px">MusicBrainz is an independent open recording search. Spotify search links are not verified Spotify matches; authorized Spotify catalog access requires a separate approved integration. Trivandrum music places are a different map tool.</div>
   `);
 
   const $ = sid => body.querySelector('#' + id + '-' + sid);
@@ -69,8 +66,8 @@ export function mountMusicDirectory(root, tool) {
       $(`info`).innerHTML = `
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px">
           <div class="panel" style="padding:6px"><b>Total Tracks</b><br>${idx.totalTracks||0}</div>
-          <div class="panel" style="padding:6px"><b>GitHub</b><br>AliAkhtari78/SpotifyScraper</div>
-          <div class="panel" style="padding:6px"><b>Dataset</b><br>msr8/spotify 7.4M</div>
+          <div class="panel" style="padding:6px"><b>Source</b><br>MusicBrainz (on demand)</div>
+          <div class="panel" style="padding:6px"><b>Spotify snapshot</b><br>Not collected</div>
         </div>
       `;
     } catch (e) {
@@ -84,29 +81,23 @@ export function mountMusicDirectory(root, tool) {
 
   async function search(term, type='track') {
     if (!term) return toast('Enter term');
-    $(`info`).innerHTML = `Searching Spotify for "${esc(term)}" (${esc(type)})… via public embed token, no key`;
+    $(`info`).innerHTML = `Searching worldwide MusicBrainz recordings for "${esc(term)}"…`;
     try {
-      let r = await fetch(`/api/music-directory?action=search&q=${encodeURIComponent(term)}`);
-      let j = await r.json();
-      if (!r.ok) throw Error(j.error || 'Published music search failed');
-      let tracks = j.results || [];
-      
-      if (!tracks.length) {
-        r = await fetch(`/api/music-scraper?action=search&q=${encodeURIComponent(term)}&type=${type}`);
-        j = await r.json();
-        if (!r.ok) throw Error(j.error || 'Live music lookup unavailable');
-        tracks = j.results || [];
-        // Live search results are ephemeral; repository snapshots come from scheduled jobs.
-      }
+      if (type !== 'track') throw Error('This live search currently supports recordings only.');
+      const r = await fetch(`/api/open-music?q=${encodeURIComponent(term)}`);
+      const j = await r.json();
+      if (!r.ok) throw Error(j.error || 'Open music search unavailable');
+      const tracks = j.results || [];
+      $(`info`).textContent = `${tracks.length} MusicBrainz recordings · Spotify links are searches, not verified matches.`;
 
       $(`tracks`).innerHTML = tracks.slice(0, 20).map(t => `
         <div style="border:1px solid #e0d5c4;border-radius:10px;padding:10px;background:#fff">
           <b style="font-size:13px">${esc(t.name||'Unnamed')}</b><br>
           <div style="font-size:12px;margin-top:4px">
             <div>👤 ${esc(t.artists||'')} · 💿 ${esc(t.album||'')}</div>
-            <div>⏱ ${Math.floor((t.duration_ms||0)/60000)}:${String(Math.floor((t.duration_ms||0)%60000/1000)).padStart(2,'0')} · ⭐ ${t.popularity||0}</div>
+            <div>⏱ ${Math.floor((t.duration_ms||0)/60000)}:${String(Math.floor((t.duration_ms||0)%60000/1000)).padStart(2,'0')} · source: MusicBrainz</div>
             ${t.danceability != null ? `<div>💃 Danceability ${esc(t.danceability)} · ⚡ Energy ${esc(t.energy ?? '—')} · 😊 Valence ${esc(t.valence ?? '—')} · 🎵 Tempo ${esc(t.tempo ?? '—')}</div>` : ''}
-            <div style="margin-top:4px"><a href="${esc(t.external_url||'')}" target="_blank" style="font-size:11px">Open Spotify</a> ${t.preview_url ? `· <a href="${esc(t.preview_url)}" target="_blank" style="font-size:11px">Preview</a>` : ''}</div>
+            <div style="margin-top:4px"><a href="${esc(t.external_url||'')}" target="_blank" style="font-size:11px">Open MusicBrainz</a> ${t.spotifySearchUrl ? `· <a href="${esc(t.spotifySearchUrl)}" target="_blank" rel="noopener noreferrer" style="font-size:11px">Search Spotify (unverified)</a>` : ''} ${t.preview_url ? `· <a href="${esc(t.preview_url)}" target="_blank" style="font-size:11px">Preview</a>` : ''}</div>
           </div>
         </div>
       `).join('') || 'No tracks found';
@@ -117,7 +108,7 @@ export function mountMusicDirectory(root, tool) {
   }
 
   function startScraper() {
-    log('Continuous browser scraping is disabled. Published data is indexed by scheduled repository jobs. Use Search for an on-demand lookup.');
+    log('Continuous browser scraping is disabled. Unofficial Spotify indexing is disabled. Use MusicBrainz search on demand.');
     toast('Use Search for on-demand results');
   }
 
