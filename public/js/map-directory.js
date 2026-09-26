@@ -191,12 +191,18 @@ export function mountMapDirectory(root, tool) {
   async function updateProgressUI() {
     const prog = getProgress();
     const idb = await getIDBStats();
-    // Fetch server index
+    // Fetch server index and Kerala expansion progress
     let serverIdx = null;
+    let keralaProgress = null;
     try {
       const r = await fetch('/api/map-directory?action=stats');
       const j = await r.json();
       if (j.ok) serverIdx = j.index;
+    } catch {}
+    try {
+      const r = await fetch('/api/kerala-expansion?action=progress');
+      const j = await r.json();
+      if (j.ok) keralaProgress = j.progress;
     } catch {}
 
     const total = serverIdx ? serverIdx.totalCells : prog.totalCells;
@@ -207,18 +213,21 @@ export function mountMapDirectory(root, tool) {
       <div>Last index: <b>${lastIdx}</b> · Cells: <b>${total}</b> · Places: <b>${places}</b></div>
       <div>Local IDB: ${idb.cellsCount} cells, ${idb.placesCount} places</div>
       <div>Next: ${lastIdx+1} → lat ${(8.524139 + (Math.floor((lastIdx+1)/5)-2)*0.01).toFixed(4)} (spiral)</div>
-      <div style="margin-top:4px">Status: ${isAutoRunning ? '<span style="color:#2f7d4a">● Auto running</span>' : 'Paused'}</div>
+      <div style="margin-top:4px">Status: ${isAutoRunning ? '<span style="color:#2f7d4a">● Auto running — Kerala 10-day sprint</span>' : 'Paused'}</div>
+      ${keralaProgress ? `<div style="margin-top:6px;padding:6px;background:#f7ead3;border-radius:6px"><b>Kerala 10-day:</b> ${keralaProgress.keralaPercent}% (${total}/${keralaProgress.keralaTarget} cells) · Phase ${keralaProgress.currentPhase} · ${keralaProgress.daysElapsed}d elapsed, ${keralaProgress.daysRemaining}d remaining · Est finish ${keralaProgress.estimatedDaysToFinish}d</div>` : ''}
     `;
-    const pct = Math.min(100, ((lastIdx+1) / 2000) * 100); // 2000 cells for Trivandrum district estimate
+    const pct = keralaProgress ? keralaProgress.keralaPercent : Math.min(100, ((lastIdx+1) / 2000) * 100);
     $(`bar`).style.width = pct.toFixed(1) + '%';
     $(`stats`).innerHTML = `
-      Trivandrum district ~2000 cells (0.01°). World infinite spiral.<br>
+      <b>Kerala 10-day plan:</b> 17000 cells adaptive (0.01° Trivandrum 2000 + 0.02° rest Kerala 10000 + 0.05° gaps 5000)<br>
+      Trivandrum district ~2000 cells (0.01°). Kerala ~126k at 0.01°, but adaptive 17k for 10 days feasible with 4 parallel workers + 3 Overpass mirrors.<br>
       Server: ${serverIdx ? `${serverIdx.totalCells} cells, ${serverIdx.totalPlaces} places, last ${serverIdx.lastIndex}` : 'no data yet'}<br>
-      Business types: ${serverIdx ? Object.keys(serverIdx.businessTypes||{}).length : 0} · Roads: ${serverIdx ? Object.keys(serverIdx.roadWise||{}).length : 0}
+      Business types: ${serverIdx ? Object.keys(serverIdx.businessTypes||{}).length : 0} · Roads: ${serverIdx ? Object.keys(serverIdx.roadWise||{}).length : 0}<br>
+      ${keralaProgress ? `Phase ${keralaProgress.currentPhase}: ${keralaProgress.nextPhase?.name || ''} — ${keralaProgress.phaseProgress} cells in phase` : ''}
     `;
     $(`dir`).innerHTML = serverIdx ? `
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px">
-        <div class="panel" style="padding:8px"><b>Total cells</b><br>${serverIdx.totalCells}</div>
+        <div class="panel" style="padding:8px"><b>Total cells</b><br>${serverIdx.totalCells} / 17000 Kerala target</div>
         <div class="panel" style="padding:8px"><b>Total places</b><br>${serverIdx.totalPlaces}</div>
         <div class="panel" style="padding:8px"><b>Business types</b><br>${Object.keys(serverIdx.businessTypes||{}).length}</div>
         <div class="panel" style="padding:8px"><b>Roads</b><br>${Object.keys(serverIdx.roadWise||{}).length}</div>
@@ -227,6 +236,7 @@ export function mountMapDirectory(root, tool) {
         <div class="panel" style="padding:8px"><b>Temples</b><br>${serverIdx.religious?.temple||0}</div>
         <div class="panel" style="padding:8px"><b>Last scanned</b><br>${serverIdx.lastScannedAt ? new Date(serverIdx.lastScannedAt).toLocaleString() : 'never'}</div>
       </div>
+      ${keralaProgress ? `<div style="margin-top:12px"><b>Kerala Districts Progress (14 districts):</b><br><small>Trivandrum → Kollam → Pathanamthitta → Alappuzha → Kottayam → Idukki → Ernakulam → Thrissur → Palakkad → Malappuram → Kozhikode → Wayanad → Kannur → Kasaragod — 10 days</small></div>` : ''}
     ` : 'No server data yet — start auto scraper to begin building directory from Trivandrum.';
   }
 

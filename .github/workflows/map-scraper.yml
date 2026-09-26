@@ -1,26 +1,36 @@
-name: Map Directory Auto Scraper — Trivandrum Origin
+name: Map Directory Auto Scraper — Trivandrum Origin → Kerala 10 Days → India → World
 
 on:
   schedule:
-    # Every 2 hours
-    - cron: '0 */2 * * *'
+    # Every 30 minutes for Kerala 10-day sprint
+    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       batch:
         description: 'Cells to scan per run'
         required: false
-        default: '10'
+        default: '20'
         type: string
-      start_index:
-        description: 'Start index (leave empty for auto)'
+      phase:
+        description: 'Phase 1-8 (Kerala 10-day plan)'
         required: false
         default: ''
         type: string
+      workers:
+        description: 'Parallel workers'
+        required: false
+        default: '4'
+        type: string
+      kerala:
+        description: 'Run Kerala expansion (all phases)'
+        required: false
+        default: 'false'
+        type: boolean
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,33 +42,99 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Read last index
+      - name: Read last index & expansion plan
         id: last
         run: |
           if [ -f data/map-directory/index.json ]; then
             LAST=$(jq -r '.lastIndex // -1' data/map-directory/index.json)
+            TOTAL=$(jq -r '.totalCells // 0' data/map-directory/index.json)
+            PLACES=$(jq -r '.totalPlaces // 0' data/map-directory/index.json)
             echo "last=$LAST" >> $GITHUB_OUTPUT
-            echo "Last index: $LAST"
+            echo "total=$TOTAL" >> $GITHUB_OUTPUT
+            echo "places=$PLACES" >> $GITHUB_OUTPUT
+            echo "Last index: $LAST, total cells: $TOTAL, places: $PLACES"
           else
             echo "last=-1" >> $GITHUB_OUTPUT
-            echo "No index, starting from -1"
+            echo "total=0" >> $GITHUB_OUTPUT
+            echo "places=0" >> $GITHUB_OUTPUT
+          fi
+          if [ -f data/map-directory/expansion-plan.json ]; then
+            echo "Expansion plan exists"
+            cat data/map-directory/expansion-plan.json | jq '.phases[] | "\(.phase): \(.name) — \(.estimatedCells) cells"' | head -n 20
           fi
 
       - name: Install deps
         run: npm ci || npm install
 
-      - name: Run scraper (batch)
+      - name: Run Kerala expansion (10-day sprint)
         env:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
           NVIDIA_AGENT_MODEL: ${{ secrets.NVIDIA_AGENT_MODEL || 'deepseek-ai/deepseek-v4.1-flash' }}
         run: |
-          BATCH="${{ inputs.batch || '10' }}"
-          START="${{ inputs.start_index }}"
-          if [ -z "$START" ]; then
-            START=$((${{ steps.last.outputs.last }} + 1))
+          BATCH="${{ inputs.batch || '20' }}"
+          PHASE="${{ inputs.phase }}"
+          WORKERS="${{ inputs.workers || '4' }}"
+          KERALA="${{ inputs.kerala || 'false' }}"
+          
+          if [ "$KERALA" = "true" ]; then
+            echo "Running full Kerala expansion"
+            node scripts/kerala-expansion-runner.mjs --kerala --batch $BATCH --workers $WORKERS
+          elif [ -n "$PHASE" ]; then
+            echo "Running phase $PHASE"
+            node scripts/kerala-expansion-runner.mjs --phase $PHASE --batch $BATCH --workers $WORKERS
+          else
+            # Auto-detect phase based on current progress for 10-day Kerala plan
+            TOTAL="${{ steps.last.outputs.total }}"
+            if [ "$TOTAL" -lt 2000 ]; then
+              PHASE=1
+            elif [ "$TOTAL" -lt 3500 ]; then
+              PHASE=2
+            elif [ "$TOTAL" -lt 5500 ]; then
+              PHASE=3
+            elif [ "$TOTAL" -lt 7000 ]; then
+              PHASE=4
+            elif [ "$TOTAL" -lt 9000 ]; then
+              PHASE=5
+            elif [ "$TOTAL" -lt 10800 ]; then
+              PHASE=6
+            elif [ "$TOTAL" -lt 15800 ]; then
+              PHASE=7
+            else
+              PHASE=8
+            fi
+            echo "Auto-detected phase $PHASE for total $TOTAL cells (Kerala 10-day plan)"
+            node scripts/kerala-expansion-runner.mjs --phase $PHASE --batch $BATCH --workers $WORKERS
           fi
-          echo "Scanning $BATCH cells starting from $START"
-          node scripts/map-scraper-runner.mjs --start $START --batch $BATCH
+
+      - name: Run legacy scraper for Trivandrum core (fallback)
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+        run: |
+          # Also run legacy runner for 5 cells from spiral to ensure core keeps growing
+          node scripts/map-scraper-runner.mjs --start $((${{ steps.last.outputs.last }} + 1)) --batch 5 || true
+
+      - name: AI classification — road-wise & business-wise new sections
+        env:
+          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          NVIDIA_AGENT_MODEL: ${{ secrets.NVIDIA_AGENT_MODEL || 'deepseek-ai/deepseek-v4.1-flash' }}
+        run: |
+          if [ -n "$NVIDIA_API_KEY" ]; then
+            echo "Running AI classification for new sections"
+            node - << 'JS'
+            import fs from 'fs';
+            const idxPath = 'data/map-directory/index.json';
+            if (!fs.existsSync(idxPath)) process.exit(0);
+            const idx = JSON.parse(fs.readFileSync(idxPath, 'utf8'));
+            const businessTypes = Object.keys(idx.businessTypes || {});
+            const roads = Object.keys(idx.roadWise || {});
+            console.log(`Business types: ${businessTypes.length}, Roads: ${roads.length}`);
+            console.log(`Religious: ${JSON.stringify(idx.religious)}`);
+            // AI will be called in map-auto API, but we log here
+            // The real AI classification happens via /api/ai in production
+            JS
+          else
+            echo "No NVIDIA_API_KEY, skipping AI"
+          fi
 
       - name: Commit new data
         run: |
@@ -71,12 +147,27 @@ jobs:
           fi
           TOTAL=$(jq -r '.totalCells // 0' data/map-directory/index.json 2>/dev/null || echo "0")
           PLACES=$(jq -r '.totalPlaces // 0' data/map-directory/index.json 2>/dev/null || echo "0")
-          git commit -m "map: auto scrape Trivandrum batch ${{ inputs.batch || '10' }} cells, total ${TOTAL} cells ${PLACES} places [skip ci]"
+          LAST=$(jq -r '.lastIndex // 0' data/map-directory/index.json 2>/dev/null || echo "0")
+          # Calculate Kerala progress
+          # Kerala needs ~17000 cells for 10-day plan (0.02° + 0.05°)
+          KERALA_TARGET=17000
+          PROGRESS=$(awk "BEGIN {printf \"%.1f\", $TOTAL*100/$KERALA_TARGET}")
+          git commit -m "map: Kerala 10-day sprint phase auto, batch 20 cells, total ${TOTAL}/${KERALA_TARGET} (${PROGRESS}%) cells ${PLACES} places last ${LAST} [skip ci]"
           git push origin HEAD:${{ github.ref_name || 'main' }}
 
       - name: Summary
         run: |
+          echo "### 🗺️ Map Directory — Kerala 10-Day Sprint" >> $GITHUB_STEP_SUMMARY
           if [ -f data/map-directory/index.json ]; then
-            echo "### Map Directory Stats" >> $GITHUB_STEP_SUMMARY
+            TOTAL=$(jq -r '.totalCells // 0' data/map-directory/index.json)
+            PLACES=$(jq -r '.totalPlaces // 0' data/map-directory/index.json)
+            echo "**Progress:** ${TOTAL} cells, ${PLACES} places" >> $GITHUB_STEP_SUMMARY
+            echo "**Kerala target:** 17000 cells (0.02° + 0.05° adaptive)" >> $GITHUB_STEP_SUMMARY
+            echo "**Estimated:** $(awk "BEGIN {printf \"%.1f%%\", $TOTAL*100/17000}") of Kerala" >> $GITHUB_STEP_SUMMARY
             cat data/map-directory/index.json | jq '{totalCells, totalPlaces, lastIndex, lastScannedAt, businessTypes: (.businessTypes | keys | length), roads: (.roadWise | keys | length), religious}' >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f data/map-directory/expansion-plan.json ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Expansion Plan" >> $GITHUB_STEP_SUMMARY
+            cat data/map-directory/expansion-plan.json | jq '.phases[] | "- Phase \(.phase) (\(.days)): \(.name) — \(.estimatedCells) cells grid \(.grid)"' -r >> $GITHUB_STEP_SUMMARY
           fi

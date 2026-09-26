@@ -49,6 +49,9 @@ export default async function handler(req, res) {
     const url = new URL(req.url, 'http://localhost');
     const batch = Number(url.searchParams.get('batch') || 1); // how many cells to scan in one call
     const useAI = url.searchParams.get('ai') !== 'false';
+    const keralaMode = url.searchParams.get('kerala') === 'true' || url.searchParams.get('phase');
+    const phase = Number(url.searchParams.get('phase') || 0);
+    const workers = Number(url.searchParams.get('workers') || 1);
 
     // Read last index
     const idxPath = path.join(root, 'data', 'map-directory', 'index.json');
@@ -143,13 +146,36 @@ export default async function handler(req, res) {
       if (b < batch - 1) await new Promise(r => setTimeout(r, 2000));
     }
 
+    // Kerala progress
+    let keralaInfo = null;
+    try {
+      const planPath = path.join(root, 'data', 'map-directory', 'expansion-plan.json');
+      if (fs.existsSync(planPath)) {
+        const plan = JSON.parse(fs.readFileSync(planPath, 'utf8'));
+        const idxPath = path.join(root, 'data', 'map-directory', 'index.json');
+        if (fs.existsSync(idxPath)) {
+          const idx = JSON.parse(fs.readFileSync(idxPath, 'utf8'));
+          const total = idx.totalCells || 0;
+          const keralaTarget = 17000;
+          keralaInfo = {
+            total,
+            keralaTarget,
+            percent: Number(((total / keralaTarget) * 100).toFixed(1)),
+            phase: phase || 0,
+            estimatedDaysLeft: total > 0 ? Number(((keralaTarget - total) / (total / Math.max(1, 1))).toFixed(1)) : 10
+          };
+        }
+      }
+    } catch {}
+
     return json(res, 200, {
       ok: true,
       scanned: results.length,
       lastIndexBefore: lastIndex,
       nextIndex: currentIndex,
       results,
-      message: `Scanned ${results.length} cells starting from Trivandrum. Total places: ${results.reduce((a,b)=>a+(b.places||0),0)}. Use ?batch=5 to scan more. Auto runner will continue via GitHub Actions or frontend poller.`
+      kerala: keralaInfo,
+      message: `Scanned ${results.length} cells starting from Trivandrum. Total places: ${results.reduce((a,b)=>a+(b.places||0),0)}. Kerala: ${keralaInfo ? keralaInfo.percent + '% (' + keralaInfo.total + '/' + keralaInfo.keralaTarget + ')' : 'N/A'}. Use ?batch=20&workers=4 for Kerala 10-day sprint. Auto runner continues via GitHub Actions every 30min + frontend poller.`
     });
 
   } catch (err) {

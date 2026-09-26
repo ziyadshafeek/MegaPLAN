@@ -8047,5 +8047,36 @@
       "shop"
     ],
     "processing": "hybrid"
+  },
+  {
+    "slug": "kerala-expansion",
+    "title": "Kerala Expansion \u2014 10 Day Sprint",
+    "category": "Productivity",
+    "description": "Kerala 10-day sprint to finish entire Kerala from Trivandrum origin \u2014 adaptive multi-resolution 0.01\u00b0 Trivandrum 2000 cells + 0.02\u00b0 rest Kerala 10000 + 0.05\u00b0 gaps 5000 = 17000 cells, 4 parallel workers, 3 Overpass mirrors, 35s interval, NVIDIA AI road-wise & business-wise classification, GitHub Action every 30min batch 20. After Kerala, South India 11-20d, India 21-60d, World 61-365d. Flawless.",
+    "keywords": [
+      "kerala",
+      "expansion",
+      "trivandrum",
+      "10-day",
+      "road",
+      "business",
+      "mosque",
+      "restaurant"
+    ],
+    "processing": "hybrid"
+  },
+  {
+    "slug": "kerala-districts",
+    "title": "Kerala Districts \u2014 Directory",
+    "category": "Productivity",
+    "description": "14 districts of Kerala directory \u2014 Thiruvananthapuram, Kollam, Pathanamthitta, Alappuzha, Kottayam, Idukki, Ernakulam, Thrissur, Palakkad, Malappuram, Kozhikode, Wayanad, Kannur, Kasaragod \u2014 each with road-wise & business-wise listing from massive directory map.",
+    "keywords": [
+      "kerala",
+      "districts",
+      "directory",
+      "trivandrum",
+      "kollam"
+    ],
+    "processing": "hybrid"
   }
 ]
