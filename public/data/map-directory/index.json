@@ -5,11 +5,11 @@
     "lng": 76.936638,
     "name": "Trivandrum"
   },
-  "totalCells": 0,
+  "totalCells": 1,
   "totalPlaces": 0,
   "totalRoads": 0,
-  "lastIndex": -1,
-  "lastScannedAt": null,
+  "lastIndex": 0,
+  "lastScannedAt": "2026-09-26T11:01:38.646Z",
   "businessTypes": {},
   "roadWise": {},
   "religious": {
@@ -18,5 +18,7 @@
     "temple": 0,
     "other": 0
   },
-  "cells": []
+  "cells": [
+    0
+  ]
 }

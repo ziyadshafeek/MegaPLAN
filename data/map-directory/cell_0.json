@@ -1,0 +1,32 @@
+{
+  "index": 0,
+  "lat": 8.3,
+  "lng": 76.7,
+  "dx": 0,
+  "dy": 0,
+  "grid": 0.01,
+  "scannedAt": "2026-09-26T11:01:38.646Z",
+  "places": [],
+  "roads": [],
+  "classification": {
+    "roadWise": {},
+    "businessWise": {},
+    "religious": {
+      "mosque": [],
+      "church": [],
+      "temple": [],
+      "other": []
+    }
+  },
+  "stats": {
+    "placesCount": 0,
+    "roadsCount": 0
+  },
+  "current": {
+    "lat": 8.3,
+    "lng": 76.7,
+    "index": 0,
+    "dx": 0,
+    "dy": 0
+  }
+}
