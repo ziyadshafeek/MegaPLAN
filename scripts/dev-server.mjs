@@ -48,7 +48,7 @@ async function serveStatic(urlPath, res) {
 }
 
 async function serveApi(req, res, url) {
-  let name = url.pathname.replace(/^\/api\//, '').replace(/\/$/, '');
+  let name = url.pathname === '/api' ? 'index' : url.pathname.replace(/^\/api\//, '').replace(/\/$/, '');
   // Handle router: if file doesn't exist, try api/index.js with route param
   let file = path.join(root, 'api', name + '.js');
   let routeParam = null;
@@ -79,7 +79,8 @@ async function serveApi(req, res, url) {
   const mod = await import(pathToFileURL(file).href + '?t=' + Date.now());
   const chunks = [];
   for await (const c of req) chunks.push(c);
-  const raw = Buffer.concat(chunks).toString('utf8');
+  req.rawBody = Buffer.concat(chunks);
+  const raw = req.rawBody.toString('utf8');
   if (raw) {
     try { req.body = JSON.parse(raw); } catch { req.body = raw; }
   } else req.body = {};
@@ -107,7 +108,7 @@ async function serveApi(req, res, url) {
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, `http://${req.headers.host}`);
-    if (url.pathname.startsWith('/api/')) return serveApi(req, res, url);
+    if (url.pathname === '/api' || url.pathname.startsWith('/api/')) return serveApi(req, res, url);
     return serveStatic(url.pathname, res);
   } catch (err) {
     send(res, 500, String(err.message || err));

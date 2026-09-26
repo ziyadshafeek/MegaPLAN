@@ -14,7 +14,6 @@ import { esc, mountShell, toast } from './kit.js';
 
 const LS_PROGRESS = 'mp-map-dir-progress';
 const LS_DIRECTORY = 'mp-map-directory';
-const LS_AUTO = 'mp-map-auto-enabled';
 
 let leafletLoaded = null;
 async function loadLeaflet() {
@@ -85,9 +84,9 @@ export function mountMapDirectory(root, tool) {
       <aside style="background:#efe6d8;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:12px;border-right:1px solid #e0d5c4">
         <div>
           <b>Massive Directory Map — Trivandrum origin</b>
-          <p class="muted" style="margin:4px 0 8px;font-size:12px">Auto scraper point by point from Trivandrum (8.5241,76.9366), spiral outward, 0.01° grid (~1.1km). Classifies road-wise & business-wise (mosques, restaurants etc) via NVIDIA AI. Runs continuously in background.</p>
+          <p class="muted" style="margin:4px 0 8px;font-size:12px">Browse published map data or scan a cell into your browser. Scheduled repository jobs, not visitor devices, update the published directory.</p>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <button class="btn primary" id="${id}-start" style="font-size:12px">▶ Start Auto Scraper</button>
+            <button class="btn primary" id="${id}-start" style="font-size:12px">About indexing</button>
             <button class="btn secondary" id="${id}-stop" style="font-size:12px">⏸ Stop</button>
             <button class="btn ghost" id="${id}-scan1" style="font-size:12px">Scan 1 cell now</button>
           </div>
@@ -134,7 +133,7 @@ export function mountMapDirectory(root, tool) {
           <div id="${id}-class" style="margin-top:8px;max-height:200px;overflow:auto;font-size:11px"></div>
         </div>
 
-        <div id="${id}-log" class="note" style="font-size:11px;max-height:120px;overflow:auto">Auto scraper log will appear here…<br>• Uses Overpass API (free, no key, fair use)<br>• NVIDIA AI for classification<br>• Stores in IndexedDB + localStorage<br>• GitHub Action also runs hourly</div>
+        <div id="${id}-log" class="note" style="font-size:11px;max-height:120px;overflow:auto">Manual scans query public map data and save locally. Site indexing runs separately.</div>
       </aside>
 
       <div style="position:relative;min-height:400px;background:#efe6d8;display:flex;flex-direction:column">
@@ -142,14 +141,14 @@ export function mountMapDirectory(root, tool) {
         <div style="padding:12px;overflow:auto;flex:1;background:#fffaf2">
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between">
             <b>Directory — Trivandrum & beyond</b>
-            <span class="muted" style="font-size:11px">Grid 0.01° spiral from 8.5241,76.9366 · Overpass free · AI NVIDIA</span>
+            <span class="muted" style="font-size:11px">Published directory snapshot · local manual scanning</span>
           </div>
           <div id="${id}-dir" style="margin-top:8px;font-size:12px">Loading directory…</div>
           <div id="${id}-places" style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px"></div>
         </div>
       </div>
     </div>
-    <div class="note" style="margin-top:10px;font-size:11px">Massive Directory Map: Starts at Trivandrum, scans point by point (0.01° grid), entire map covered by one point via spiral. Classifies a) road-wise b) business-wise (mosques, restaurants etc) using AI agent NVIDIA that creates new sections automatically. Auto scraper runs continuously in background (frontend poller + GitHub Action hourly). Data: OSM Overpass free, no API key. Flawless engineering: retry, rate limit handling, IndexedDB, progress persistence, export.</div>
+    <div class="note" style="margin-top:10px;font-size:11px">Published directory data is a snapshot from scheduled repository jobs. Scan a cell on demand to keep an IndexedDB copy on this device; it does not publish to the site. Coverage depends on completed jobs and public Overpass availability.</div>
     <style>
       @media (max-width: 900px) { #${id}-main { grid-template-columns: 1fr !important; } }
     </style>
@@ -158,8 +157,6 @@ export function mountMapDirectory(root, tool) {
   const $ = sid => body.querySelector('#' + id + '-' + sid);
   let map = null;
   let markers = [];
-  let autoInterval = null;
-  let isAutoRunning = localStorage.getItem(LS_AUTO) === '1';
 
   function log(msg) {
     const el = $(`log`);
@@ -213,7 +210,7 @@ export function mountMapDirectory(root, tool) {
       <div>Last index: <b>${lastIdx}</b> · Cells: <b>${total}</b> · Places: <b>${places}</b></div>
       <div>Local IDB: ${idb.cellsCount} cells, ${idb.placesCount} places</div>
       <div>Next: ${lastIdx+1} → lat ${(8.524139 + (Math.floor((lastIdx+1)/5)-2)*0.01).toFixed(4)} (spiral)</div>
-      <div style="margin-top:4px">Status: ${isAutoRunning ? '<span style="color:#2f7d4a">● Auto running — Kerala 10-day sprint</span>' : 'Paused'}</div>
+      <div style="margin-top:4px">Status: Published snapshot; manual scans stay on this device</div>
       ${keralaProgress ? `<div style="margin-top:6px;padding:6px;background:#f7ead3;border-radius:6px"><b>Kerala 10-day:</b> ${keralaProgress.keralaPercent}% (${total}/${keralaProgress.keralaTarget} cells) · Phase ${keralaProgress.currentPhase} · ${keralaProgress.daysElapsed}d elapsed, ${keralaProgress.daysRemaining}d remaining · Est finish ${keralaProgress.estimatedDaysToFinish}d</div>` : ''}
     `;
     const pct = keralaProgress ? keralaProgress.keralaPercent : Math.min(100, ((lastIdx+1) / 2000) * 100);
@@ -237,7 +234,7 @@ export function mountMapDirectory(root, tool) {
         <div class="panel" style="padding:8px"><b>Last scanned</b><br>${serverIdx.lastScannedAt ? new Date(serverIdx.lastScannedAt).toLocaleString() : 'never'}</div>
       </div>
       ${keralaProgress ? `<div style="margin-top:12px"><b>Kerala Districts Progress (14 districts):</b><br><small>Trivandrum → Kollam → Pathanamthitta → Alappuzha → Kottayam → Idukki → Ernakulam → Thrissur → Palakkad → Malappuram → Kozhikode → Wayanad → Kannur → Kasaragod — 10 days</small></div>` : ''}
-    ` : 'No server data yet — start auto scraper to begin building directory from Trivandrum.';
+    ` : 'No published map data yet. Try a manual local scan.';
   }
 
   async function scanOne(index = null) {
@@ -257,19 +254,7 @@ export function mountMapDirectory(root, tool) {
       // Save to IDB
       await saveCellToIDB(j);
 
-      // Save to server directory
-      try {
-        const saveRes = await fetch('/api/map-directory', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(j)
-        });
-        const saveJ = await saveRes.json();
-        if (!saveRes.ok) log(`Server save failed: ${saveJ.error}`);
-        else log(`Saved to server directory: cell ${j.current.index}, total ${saveJ.index?.totalCells||'?'} cells`);
-      } catch (e) {
-        log(`Server save error: ${e.message} — data kept locally in IDB`);
-      }
+      log('Saved locally in this browser. Published directories update from scheduled jobs, not visitor scans.');
 
       // Update progress
       const newProg = {
@@ -293,33 +278,13 @@ export function mountMapDirectory(root, tool) {
 
       addMarkers(j.places);
 
-      // AI classification
-      if (j.places && j.places.length > 0) {
-        try {
-          const aiRes = await fetch('/api/ai', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              task: 'custom',
-              text: `Classify ${j.places.length} places from Trivandrum cell ${targetIndex} into road-wise and business-wise sections. Sample: ${JSON.stringify(j.places.slice(0,10).map(p=>({name:p.name, amenity:p.amenity, shop:p.shop, road:p.road, tags:p.tags})).slice(0,2000))}. Return short JSON with new sections if any.`,
-              extra: 'You are map directory AI. Classify roads, business types like mosque, restaurant, etc. Create new sections automatically.'
-            })
-          });
-          const aiJ = await aiRes.json();
-          if (aiRes.ok) {
-            log(`AI classified cell ${targetIndex}: ${(aiJ.result||'').slice(0,120)}…`);
-          }
-        } catch {}
-      }
-
       await updateProgressUI();
       return j;
 
     } catch (e) {
-      log(`Scan failed cell ${targetIndex}: ${e.message} — retry in 5s (Overpass rate limit?)`);
-      $(`dir`).innerHTML = `Scan failed: ${esc(e.message)}<br>Overpass API may be rate-limited. Retrying…`;
+      log(`Scan failed cell ${targetIndex}: ${e.message}`);
+      $(`dir`).innerHTML = `Scan failed: ${esc(e.message)}. Check the API response and retry manually.`;
       // Retry with backoff
-      await new Promise(r => setTimeout(r, 5000));
       throw e;
     }
   }
@@ -337,27 +302,11 @@ export function mountMapDirectory(root, tool) {
   }
 
   function startAuto() {
-    if (autoInterval) return;
-    isAutoRunning = true;
-    localStorage.setItem(LS_AUTO, '1');
-    log('Auto scraper started — will scan every 35s continuously, building massive directory from Trivandrum');
-    autoInterval = setInterval(async () => {
-      try { await scanOne(); } catch {}
-    }, 35000); // 35s to respect Overpass fair use (max 2 requests per minute)
-    $(`start`).textContent = '● Running';
-    updateProgressUI();
-    toast('Auto scraper started — runs in background, builds directory');
+    log('Continuous browser scraping is disabled. The published directory is updated by scheduled repository jobs. Scan one cell to keep a local copy.');
+    toast('Use Scan 1 cell for a local scan');
   }
 
-  function stopAuto() {
-    if (autoInterval) clearInterval(autoInterval);
-    autoInterval = null;
-    isAutoRunning = false;
-    localStorage.setItem(LS_AUTO, '0');
-    log('Auto scraper paused');
-    $(`start`).textContent = '▶ Start Auto Scraper';
-    updateProgressUI();
-  }
+  function stopAuto() { log('No browser background scan is running.'); }
 
   // Bindings
   $(`start`).onclick = startAuto;
@@ -465,62 +414,13 @@ export function mountMapDirectory(root, tool) {
     } catch (e) { $(`class`).innerHTML = `Failed: ${esc(e.message)}`; }
   };
 
-  // Service Worker for background continuous scraping
-  async function registerSW() {
-    if ('serviceWorker' in navigator) {
-      try {
-        const reg = await navigator.serviceWorker.register('/sw-map-scraper.js');
-        console.log('Map SW registered', reg);
-        log('Service Worker registered for background scraping — will continue even when tab closed (if browser supports)');
-        // Request background sync permission
-        if ('SyncManager' in window) {
-          try {
-            await reg.sync.register('map-scraper-sync');
-            log('Background Sync registered — auto scraper will run in background');
-          } catch (e) { log('Background Sync not supported, using interval fallback'); }
-        }
-        // Listen for messages from SW
-        navigator.serviceWorker.addEventListener('message', event => {
-          if (event.data.type === 'CELL_SCANNED') {
-            log(`SW scanned cell ${event.data.index}: ${event.data.places} places`);
-            updateProgressUI();
-          }
-        });
-      } catch (e) {
-        log(`SW registration failed: ${e.message} — using interval fallback`);
-      }
-    }
-  }
-
-  // Fully automatic: auto-enable if not set
-  function ensureAutoEnabled() {
-    if (localStorage.getItem(LS_AUTO) === null) {
-      localStorage.setItem(LS_AUTO, '1');
-      log('Fully automatic enabled by default — no manual start needed, will run in background');
-      return true;
-    }
-    return localStorage.getItem(LS_AUTO) === '1';
-  }
-
-  // Init
-  initMap();
+  // Dataset ingestion runs in scheduled jobs. Browser scans are explicitly initiated
+  // with Scan 1 / Scan 5 and remain in IndexedDB on this device.
+  initMap().catch(e => log(`Map unavailable: ${e.message}`));
   updateProgressUI();
-  registerSW();
-  const shouldAuto = ensureAutoEnabled();
-  if (shouldAuto || isAutoRunning) startAuto();
-
-  // Auto resume if was running
-  log(`Directory tool loaded. Last index: ${getProgress().lastIndex}. ${shouldAuto ? 'Fully automatic enabled — auto running Kerala 10-day sprint' : 'Click Start Auto Scraper to begin building massive directory from Trivandrum.'}`);
-  log('Flawless engineering: SW + IndexedDB + localStorage + GitHub Action every 30min + Overpass free + NVIDIA AI classification');
-  log('Free storage: GitHub data/map-directory/ + Vercel public + IndexedDB + search-index fully indexable for AI multi-tool');
-  log('Flawless engineering: SW + IndexedDB + localStorage + GitHub Action hourly + Overpass free + NVIDIA AI classification');
+  log('Published data comes from scheduled repository jobs; manual scans stay on this device.');
 }
 
 export function mountMapAutoScraper(root, tool) {
-  // Alias to directory tool but auto start
-  mountMapDirectory(root, { ...tool, title: tool.title + ' — Auto Scraper' });
-  setTimeout(() => {
-    const btn = root.querySelector('button[id$=\"-start\"]');
-    if (btn && localStorage.getItem(LS_AUTO) !== '0') btn.click();
-  }, 1000);
+  mountMapDirectory(root, tool);
 }

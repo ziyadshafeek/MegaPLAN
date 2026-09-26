@@ -20,7 +20,6 @@ jobs:
       VERCEL_TEAM_ID: ${{ secrets.VERCEL_TEAM_ID }}
       VERCEL_PROJECT_NAME: ${{ secrets.VERCEL_PROJECT_NAME }}
       VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
-      ALLOW_SKIP: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

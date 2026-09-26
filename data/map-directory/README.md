@@ -30,7 +30,7 @@ function spiralToCoords(index) {
 ### 2. Data Sources — Free, No API Key
 - **Overpass API** (`overpass-api.de`): free, fair use, queries `nwr["amenity"]`, `["shop"]`, `["tourism"]`, etc + `way["highway"]` for roads
 - **Nominatim**: reverse geocode for road classification (optional, rate limited)
-- **Seed data**: fallback when Overpass offline (10 known Trivandrum places)
+- **Upstream failure**: no data published when Overpass is offline; check the job logs.
 
 ### 3. APIs
 - `POST /api/map-scraper?index=0` — scans one cell, returns places, roads, classification, next cell
@@ -58,7 +58,7 @@ function spiralToCoords(index) {
 
 ### 7. Flawless Handling
 - **Rate limit:** 35-40s interval, 2s delay between batch, 5s retry backoff, 429 handling
-- **Offline:** fallback to seed data for Trivandrum within 20km, IDB cache, SW cache
+- **Offline:** no new data can be fetched; prior local IndexedDB records (if any) remain on the device
 - **Dedup:** by OSM id `type/id`, index tracks cells array
 - **Error handling:** try/catch, errors array in response, retry
 - **Mobile:** responsive grid, touch targets 40px, Leaflet map
@@ -77,7 +77,7 @@ function spiralToCoords(index) {
 - Add Vercel Cron for server-side continuous
 
 ## Stats
-- Seed: 10 places, 5 roads, 1 cell (Trivandrum center)
+- Initial verified index: empty until a scheduled Overpass job completes successfully
 - Target: 2000 cells for Trivandrum district, 10k for Kerala, infinite for world
 - Each cell ~0-100 places, ~5-20 roads
 - At 2 cells per minute, 2000 cells = ~16 hours for district

@@ -4,210 +4,1772 @@
   "lng": 76.936638,
   "dx": 0,
   "dy": 0,
-  "scannedAt": "2026-09-26T00:00:00Z",
+  "grid": 0.01,
+  "scannedAt": "2026-09-26T11:06:07.099Z",
   "places": [
     {
-      "id": "node/1",
-      "name": "Sree Padmanabhaswamy Temple",
-      "amenity": "place_of_worship",
-      "tags": {
-        "amenity": "place_of_worship",
-        "religion": "hindu",
-        "building": "temple",
-        "name": "Sree Padmanabhaswamy Temple"
-      },
-      "lat": 8.4828,
-      "lng": 76.9438,
-      "road": "Fort Road",
-      "distance": 0.5
-    },
-    {
-      "id": "node/2",
-      "name": "Palayam Juma Masjid",
-      "amenity": "mosque",
-      "tags": {
-        "amenity": "mosque",
-        "religion": "muslim",
-        "name": "Palayam Juma Masjid"
-      },
-      "lat": 8.5065,
-      "lng": 76.949,
-      "road": "Palayam Road",
-      "distance": 1.2
-    },
-    {
-      "id": "node/3",
-      "name": "St. Joseph's Cathedral",
-      "amenity": "church",
-      "tags": {
-        "amenity": "church",
-        "religion": "christian",
-        "name": "St. Joseph's Cathedral"
-      },
-      "lat": 8.508,
-      "lng": 76.95,
-      "road": "Palayam Road",
-      "distance": 1.3
-    },
-    {
-      "id": "node/4",
-      "name": "Indian Coffee House",
-      "amenity": "cafe",
-      "tags": {
-        "amenity": "cafe",
-        "name": "Indian Coffee House",
-        "cuisine": "indian"
-      },
-      "lat": 8.5245,
-      "lng": 76.936,
-      "road": "M.G. Road",
-      "distance": 0.2
-    },
-    {
-      "id": "node/5",
-      "name": "Zam Zam Restaurant",
-      "amenity": "restaurant",
-      "tags": {
-        "amenity": "restaurant",
-        "cuisine": "arabian",
-        "name": "Zam Zam Restaurant"
-      },
-      "lat": 8.5088,
-      "lng": 76.956,
-      "road": "Palayam-Airport Road",
-      "distance": 1.5
-    },
-    {
-      "id": "node/6",
-      "name": "Lulu Mall Trivandrum",
-      "shop": "mall",
-      "tags": {
-        "shop": "mall",
-        "name": "Lulu Mall Trivandrum"
-      },
-      "lat": 8.54,
-      "lng": 76.903,
-      "road": "NH 66",
-      "distance": 3.5
-    },
-    {
-      "id": "node/7",
-      "name": "Technopark",
-      "office": "it",
-      "tags": {
-        "office": "it",
-        "name": "Technopark"
-      },
-      "lat": 8.558,
-      "lng": 76.881,
-      "road": "Technopark Road",
-      "distance": 5.2
-    },
-    {
-      "id": "node/8",
-      "name": "University of Kerala",
-      "amenity": "university",
-      "tags": {
-        "amenity": "university",
-        "name": "University of Kerala"
-      },
-      "lat": 8.5088,
-      "lng": 76.949,
-      "road": "Palayam Road",
-      "distance": 1.2
-    },
-    {
-      "id": "node/9",
-      "name": "Government Medical College",
-      "amenity": "hospital",
-      "tags": {
-        "amenity": "hospital",
-        "name": "Government Medical College"
-      },
-      "lat": 8.524,
-      "lng": 76.928,
-      "road": "Medical College Road",
-      "distance": 1.0
-    },
-    {
-      "id": "node/10",
-      "name": "State Bank of India",
-      "amenity": "bank",
+      "id": "node/2392776445",
+      "lat": 8.5219052,
+      "lng": 76.9410324,
       "tags": {
         "amenity": "bank",
-        "name": "State Bank of India"
+        "atm": "yes",
+        "brand": "State Bank of India",
+        "brand:wikidata": "Q1340361",
+        "brand:wikipedia": "en:State Bank of India",
+        "name": "State Bank of India",
+        "short_name": "SBI"
       },
-      "lat": 8.524,
-      "lng": 76.936,
-      "road": "M.G. Road",
-      "distance": 0.1
+      "name": "State Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/2562484852",
+      "lat": 8.528222,
+      "lng": 76.938728,
+      "tags": {
+        "alt_name": "Kentucky Fried Chicken",
+        "alt_name:en": "Kentucky Fried Chicken",
+        "alt_name:hi": "केंटुकी फ्राइड चिकन",
+        "alt_name:pa": "ਕੈਂਟੁਕੀ ਫ੍ਰਾਈਡ ਚਿਕਨ",
+        "alt_name:pnb": "کینٹکی فرائیڈ چکن",
+        "alt_name:ur": "کینٹکی فرائیڈ چکن",
+        "amenity": "fast_food",
+        "brand": "KFC",
+        "brand:en": "KFC",
+        "brand:hi": "केएफसी",
+        "brand:pa": "ਕੇਐਫਸੀ",
+        "brand:pnb": "کے ایف سی",
+        "brand:ur": "کے ایف سی",
+        "brand:wikidata": "Q524757",
+        "brand:wikipedia": "en:KFC",
+        "brand:wikipedia:pa": "ਕੇਐਫਸੀ",
+        "brand:wikipedia:ur": "کینٹکی فرائیڈ چکن",
+        "capacity": "100",
+        "cuisine": "chicken",
+        "name": "KFC",
+        "name:en": "KFC",
+        "name:hi": "केएफसी",
+        "name:pa": "ਕੇਐਫਸੀ",
+        "name:pnb": "کے ایف سی",
+        "name:ur": "کے ایف سی",
+        "takeaway": "yes"
+      },
+      "name": "KFC",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3898452790",
+      "lat": 8.5203634,
+      "lng": 76.9373579,
+      "tags": {
+        "name": "JJ Stores",
+        "shop": "dairy"
+      },
+      "name": "JJ Stores",
+      "amenity": null,
+      "shop": "dairy",
+      "road": null
+    },
+    {
+      "id": "node/3898452791",
+      "lat": 8.5204287,
+      "lng": 76.9375074,
+      "tags": {
+        "amenity": "community_centre",
+        "name": "Panachmood Lane Residents Association"
+      },
+      "name": "Panachmood Lane Residents Association",
+      "amenity": "community_centre",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3898452792",
+      "lat": 8.5201695,
+      "lng": 76.9375833,
+      "tags": {
+        "name": "RM Stores",
+        "shop": "dairy"
+      },
+      "name": "RM Stores",
+      "amenity": null,
+      "shop": "dairy",
+      "road": null
+    },
+    {
+      "id": "node/3898452793",
+      "lat": 8.5205664,
+      "lng": 76.9402536,
+      "tags": {
+        "name": "Sarabhai Institute of Space and Technology City Office",
+        "office": "government"
+      },
+      "name": "Sarabhai Institute of Space and Technology City Office",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3898452794",
+      "lat": 8.520916,
+      "lng": 76.9405363,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "SH Convent",
+        "religion": "christian"
+      },
+      "name": "SH Convent",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3898452796",
+      "lat": 8.5213409,
+      "lng": 76.9412677,
+      "tags": {
+        "name": "Aruvi Tourist Home",
+        "phone": "+91-471-2445751",
+        "tourism": "hotel"
+      },
+      "name": "Aruvi Tourist Home",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3898452798",
+      "lat": 8.5219326,
+      "lng": 76.9410031,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:postcode": "695004",
+        "addr:street": "Kesavadasapuram road",
+        "name": "Spencers",
+        "operator": "Spencers",
+        "organic": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "shop": "supermarket",
+        "website": "https://www.spencers.in/"
+      },
+      "name": "Spencers",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": "Kesavadasapuram road"
+    },
+    {
+      "id": "node/3898452799",
+      "lat": 8.5220582,
+      "lng": 76.9409689,
+      "tags": {
+        "name": "Louis Phillipe",
+        "operator": "Louis Phillipe",
+        "shop": "clothes"
+      },
+      "name": "Louis Phillipe",
+      "amenity": null,
+      "shop": "clothes",
+      "road": null
+    },
+    {
+      "id": "node/3898452800",
+      "lat": 8.5221838,
+      "lng": 76.9409315,
+      "tags": {
+        "amenity": "bank",
+        "brand": "State Bank of India",
+        "brand:wikidata": "Q1340361",
+        "brand:wikipedia": "en:State Bank of India",
+        "name": "State Bank of India",
+        "short_name": "SBI",
+        "website": "https://www.sbi.co.in"
+      },
+      "name": "State Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3898452801",
+      "lat": 8.5223159,
+      "lng": 76.9408452,
+      "tags": {
+        "name": "The Mobile Store",
+        "operator": "The Mobile Store",
+        "shop": "mobile_phone"
+      },
+      "name": "The Mobile Store",
+      "amenity": null,
+      "shop": "mobile_phone",
+      "road": null
+    },
+    {
+      "id": "node/3898452802",
+      "lat": 8.5224479,
+      "lng": 76.9407963,
+      "tags": {
+        "name": "Eye Plus",
+        "shop": "optician"
+      },
+      "name": "Eye Plus",
+      "amenity": null,
+      "shop": "optician",
+      "road": null
+    },
+    {
+      "id": "node/3898452803",
+      "lat": 8.5224705,
+      "lng": 76.9407117,
+      "tags": {
+        "name": "Just Buy Cycles",
+        "shop": "bicycle"
+      },
+      "name": "Just Buy Cycles",
+      "amenity": null,
+      "shop": "bicycle",
+      "road": null
+    },
+    {
+      "id": "node/3898452804",
+      "lat": 8.5226347,
+      "lng": 76.9406677,
+      "tags": {
+        "name": "Angel Electroics Service",
+        "shop": "electronics"
+      },
+      "name": "Angel Electroics Service",
+      "amenity": null,
+      "shop": "electronics",
+      "road": null
+    },
+    {
+      "id": "node/3898452806",
+      "lat": 8.523434,
+      "lng": 76.9400732,
+      "tags": {
+        "name": "Indroyal",
+        "shop": "furniture"
+      },
+      "name": "Indroyal",
+      "amenity": null,
+      "shop": "furniture",
+      "road": null
+    },
+    {
+      "id": "node/3898452807",
+      "lat": 8.5238479,
+      "lng": 76.939873,
+      "tags": {
+        "name": "Chellam Umbrella Mart",
+        "shop": "bag"
+      },
+      "name": "Chellam Umbrella Mart",
+      "amenity": null,
+      "shop": "bag",
+      "road": null
+    },
+    {
+      "id": "node/3898452809",
+      "lat": 8.5241007,
+      "lng": 76.9397085,
+      "tags": {
+        "name": "Surya Book House",
+        "shop": "books"
+      },
+      "name": "Surya Book House",
+      "amenity": null,
+      "shop": "books",
+      "road": null
+    },
+    {
+      "id": "node/3898452810",
+      "lat": 8.5242488,
+      "lng": 76.939614,
+      "tags": {
+        "name": "Gloria Systems",
+        "phone": "+91-471-2555623",
+        "shop": "computer"
+      },
+      "name": "Gloria Systems",
+      "amenity": null,
+      "shop": "computer",
+      "road": null
+    },
+    {
+      "id": "node/4214036865",
+      "lat": 8.5277954,
+      "lng": 76.9405126,
+      "tags": {
+        "name": "SAMS School of Music",
+        "shop": "musical_instrument"
+      },
+      "name": "SAMS School of Music",
+      "amenity": null,
+      "shop": "musical_instrument",
+      "road": null
+    },
+    {
+      "id": "node/4658657204",
+      "lat": 8.5287546,
+      "lng": 76.9351413,
+      "tags": {
+        "name": "FCI",
+        "office": "yes"
+      },
+      "name": "FCI",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4658657205",
+      "lat": 8.5290638,
+      "lng": 76.9354605,
+      "tags": {
+        "amenity": "fast_food",
+        "brand": "Domino's",
+        "brand:ks": "ڈومینوز",
+        "brand:pa": "ਡੋਮੀਨੋਜ਼",
+        "brand:ur": "ڈومینوز",
+        "brand:wikidata": "Q839466",
+        "brand:wikipedia": "en:Domino's Pizza",
+        "cuisine": "pizza",
+        "name": "Domino's",
+        "name:ks": "ڈومینوز",
+        "name:pa": "ਡੋਮੀਨੋਜ਼",
+        "name:ur": "ڈومینوز",
+        "takeaway": "yes"
+      },
+      "name": "Domino's",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4841296573",
+      "lat": 8.5275555,
+      "lng": 76.9388504,
+      "tags": {
+        "amenity": "cafe",
+        "amenity_1": "billiards, snooker, foosball",
+        "cuisine": "sandwich;burger;pasta",
+        "internet_access": "yes",
+        "name": "Cofi Club",
+        "outdoor_seating": "no"
+      },
+      "name": "Cofi Club",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/5398516321",
+      "lat": 8.5217367,
+      "lng": 76.9407134,
+      "tags": {
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Spring Garden Medical Clinic",
+        "opening_hours": "Mo-Sa 09:00-18:00",
+        "operator": "Department of Health and Family Welfare",
+        "operator:type": "private",
+        "phone": "+914714011441"
+      },
+      "name": "Spring Garden Medical Clinic",
+      "amenity": "clinic",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/6836400068",
+      "lat": 8.5240431,
+      "lng": 76.9403597,
+      "tags": {
+        "addr:street": "PATTOM, Trivandrum, Kerala, India",
+        "brand": "Life Insurance Corporation",
+        "brand:wikidata": "Q2767170",
+        "name": "Life Insurance Corporation Of India, Pattom, Trivandrum",
+        "office": "insurance",
+        "short_name": "LIC"
+      },
+      "name": "Life Insurance Corporation Of India, Pattom, Trivandrum",
+      "amenity": null,
+      "shop": null,
+      "road": "PATTOM, Trivandrum, Kerala, India"
+    },
+    {
+      "id": "node/6966156302",
+      "lat": 8.5241037,
+      "lng": 76.9367456,
+      "tags": {
+        "addr:district": "Thiruvananthapuram",
+        "addr:full": "H.No. 102, Kochulloor,Medical College",
+        "addr:postcode": "695011",
+        "addr:state": "Kerala",
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Chakrabarti Eye Care Centre",
+        "source": "OpenGovernmentData"
+      },
+      "name": "Chakrabarti Eye Care Centre",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7080201295",
+      "lat": 8.5230215,
+      "lng": 76.9313839,
+      "tags": {
+        "addr:housenumber": "Trivandrum Islamic Mission, Trust Buildings Mediacal College",
+        "addr:street": "Chalakuzhy",
+        "amenity": "place_of_worship",
+        "name": "Masjidu Rahma & Madrasathu Rahma",
+        "opening_hours": "Mo-Su 04:30-22:00",
+        "phone": "+91-471-2446169",
+        "religion": "muslim"
+      },
+      "name": "Masjidu Rahma & Madrasathu Rahma",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": "Chalakuzhy"
+    },
+    {
+      "id": "node/7124045511",
+      "lat": 8.528806,
+      "lng": 76.9343325,
+      "tags": {
+        "amenity": "atm"
+      },
+      "name": null,
+      "amenity": "atm",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7124045516",
+      "lat": 8.5287219,
+      "lng": 76.9342955,
+      "tags": {
+        "amenity": "bank",
+        "brand": "State Bank of India",
+        "brand:wikidata": "Q1340361",
+        "brand:wikipedia": "en:State Bank of India",
+        "name": "State Bank of India",
+        "short_name": "SBI"
+      },
+      "name": "State Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7124045517",
+      "lat": 8.5287763,
+      "lng": 76.9343157,
+      "tags": {
+        "amenity": "atm"
+      },
+      "name": null,
+      "amenity": "atm",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140723966",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Ragam Theaters Grandhasala"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140723978",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Mithravedhi Grandhasaala"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140723980",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Aksharasreegrandhasala"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728489",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Desasevini Library And Reading Room"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728510",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "National Liabrary &Reading Room Nannattukave"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728518",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Rajan Memmorial Childrens Library"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728527",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Navabharath Public Library"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728545",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Aksharam Grandhashala"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728552",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Navachethana Grandha Sala"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728559",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Desabhimani Grandhasala"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728560",
+      "lat": 8.5208656,
+      "lng": 76.934865,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Friends Library & Reading Centre"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728562",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Himashyla Grandhashala"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7140728603",
+      "lat": 8.5241391,
+      "lng": 76.9366376,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "S N Library"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7192624669",
+      "lat": 8.5225417,
+      "lng": 76.939775,
+      "tags": {
+        "name": "Haritha Keralam Mission",
+        "office": "government"
+      },
+      "name": "Haritha Keralam Mission",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7242709839",
+      "lat": 8.5214138,
+      "lng": 76.9412919,
+      "tags": {
+        "addr:place": "Pattom",
+        "addr:postcode": "695004",
+        "addr:street": "Kesavadasapuram Rd",
+        "amenity": "ice_cream",
+        "branch": "Pattom",
+        "brand": "Baskin-Robbins",
+        "brand:wikidata": "Q584601",
+        "cuisine": "ice_cream",
+        "name": "Baskin-Robbins"
+      },
+      "name": "Baskin-Robbins",
+      "amenity": "ice_cream",
+      "shop": null,
+      "road": "Kesavadasapuram Rd"
+    },
+    {
+      "id": "node/7242723900",
+      "lat": 8.522224,
+      "lng": 76.9411864,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:place": "Pattom",
+        "addr:postcode": "695004",
+        "amenity": "atm",
+        "branch": "atm cdm",
+        "brand": "Federal Bank",
+        "brand:wikidata": "Q2044983",
+        "name": "Federal Bank",
+        "operator": "Federal Bank",
+        "operator:wikidata": "Q2044983"
+      },
+      "name": "Federal Bank",
+      "amenity": "atm",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7245250367",
+      "lat": 8.5216215,
+      "lng": 76.9411735,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:place": "Pattom",
+        "addr:street": "Kesavadasapuram Road",
+        "name": "Team fresh",
+        "shop": "bakery"
+      },
+      "name": "Team fresh",
+      "amenity": null,
+      "shop": "bakery",
+      "road": "Kesavadasapuram Road"
+    },
+    {
+      "id": "node/7351369671",
+      "lat": 8.527792,
+      "lng": 76.939479,
+      "tags": {
+        "brand": "Big Bazaar",
+        "brand:wikidata": "Q3631008",
+        "brand:wikipedia": "en:Big Bazaar",
+        "name": "Big Bazaar",
+        "shop": "supermarket"
+      },
+      "name": "Big Bazaar",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "node/7351375309",
+      "lat": 8.5282135,
+      "lng": 76.9390879,
+      "tags": {
+        "name": "FONE 4 Mobiles",
+        "shop": "mobile_phone"
+      },
+      "name": "FONE 4 Mobiles",
+      "amenity": null,
+      "shop": "mobile_phone",
+      "road": null
+    },
+    {
+      "id": "node/7351380408",
+      "lat": 8.528702,
+      "lng": 76.938941,
+      "tags": {
+        "amenity": "bank",
+        "name": "Thiruvananthapuam Co-operative bank"
+      },
+      "name": "Thiruvananthapuam Co-operative bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351386850",
+      "lat": 8.529045,
+      "lng": 76.938849,
+      "tags": {
+        "name": "Pancard office",
+        "office": "yes"
+      },
+      "name": "Pancard office",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351389172",
+      "lat": 8.5268699,
+      "lng": 76.9389011,
+      "tags": {
+        "brand": "Bata",
+        "brand:wikidata": "Q688082",
+        "name": "Bata",
+        "shop": "shoes"
+      },
+      "name": "Bata",
+      "amenity": null,
+      "shop": "shoes",
+      "road": null
+    },
+    {
+      "id": "node/7351390850",
+      "lat": 8.5253102,
+      "lng": 76.9391463,
+      "tags": {
+        "name": "square one beauty parlour",
+        "shop": "beauty"
+      },
+      "name": "square one beauty parlour",
+      "amenity": null,
+      "shop": "beauty",
+      "road": null
+    },
+    {
+      "id": "node/7351391796",
+      "lat": 8.5256637,
+      "lng": 76.9394778,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Hotel Swagaqth"
+      },
+      "name": "Hotel Swagaqth",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351392493",
+      "lat": 8.5272532,
+      "lng": 76.9389058,
+      "tags": {
+        "name": "Blue dart courier service",
+        "shop": "yes"
+      },
+      "name": "Blue dart courier service",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7351446225",
+      "lat": 8.5276874,
+      "lng": 76.938747,
+      "tags": {
+        "name": "Samsung Service center",
+        "shop": "mobile_phone"
+      },
+      "name": "Samsung Service center",
+      "amenity": null,
+      "shop": "mobile_phone",
+      "road": null
+    },
+    {
+      "id": "node/7351446270",
+      "lat": 8.5261462,
+      "lng": 76.9393292,
+      "tags": {
+        "name": "Chand Acadamy",
+        "office": "educational_institution"
+      },
+      "name": "Chand Acadamy",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351448608",
+      "lat": 8.5255259,
+      "lng": 76.9383024,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Adoration Chapel",
+        "religion": "christian"
+      },
+      "name": "Adoration Chapel",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351450308",
+      "lat": 8.5274878,
+      "lng": 76.9392409,
+      "tags": {
+        "name": "Nilkamal Neo Combines",
+        "shop": "yes"
+      },
+      "name": "Nilkamal Neo Combines",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7351455101",
+      "lat": 8.5264724,
+      "lng": 76.9401004,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Madthu Devi Temple",
+        "religion": "hindu"
+      },
+      "name": "Madthu Devi Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351456534",
+      "lat": 8.5256821,
+      "lng": 76.9376751,
+      "tags": {
+        "amenity": "fast_food",
+        "name": "St Mary HSS canteen"
+      },
+      "name": "St Mary HSS canteen",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7372744585",
+      "lat": 8.5241012,
+      "lng": 76.9397228,
+      "tags": {
+        "name": "nandas sweets",
+        "shop": "bakery"
+      },
+      "name": "nandas sweets",
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "node/7487985307",
+      "lat": 8.5264494,
+      "lng": 76.9387518,
+      "tags": {
+        "name": "Chicking",
+        "tourism": "hotel"
+      },
+      "name": "Chicking",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8290404601",
+      "lat": 8.5288441,
+      "lng": 76.9346039,
+      "tags": {
+        "name": "Studio Pepperfry",
+        "shop": "furniture"
+      },
+      "name": "Studio Pepperfry",
+      "amenity": null,
+      "shop": "furniture",
+      "road": null
+    },
+    {
+      "id": "node/8396254411",
+      "lat": 8.522034,
+      "lng": 76.9410293,
+      "tags": {
+        "amenity": "internet_cafe",
+        "name": "Akshaya e Centre, Nalanchira Centre",
+        "ref": "TVM173"
+      },
+      "name": "Akshaya e Centre, Nalanchira Centre",
+      "amenity": "internet_cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/12645206455",
+      "lat": 8.529,
+      "lng": 76.9384938,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:district": "Thiruvananthapuram",
+        "addr:street": "MC Road",
+        "branch": "Experience",
+        "brand": "Samsung",
+        "brand:wikidata": "Q20718",
+        "name": "Samsung",
+        "operator": "Samsung",
+        "shop": "electronics"
+      },
+      "name": "Samsung",
+      "amenity": null,
+      "shop": "electronics",
+      "road": "MC Road"
+    },
+    {
+      "id": "way/319658941",
+      "lat": 8.5200862,
+      "lng": 76.9405356,
+      "tags": {
+        "addr:block": "Thiruvanathapuram",
+        "addr:district": "Thiruvanathapuram",
+        "addr:postcode": "695004",
+        "addr:village": "Medical College",
+        "amenity": "school",
+        "brand": "Kendriya Vidyalaya",
+        "brand:wikidata": "Q1156653",
+        "name": "Kendriya Vidyalaya, Pattom",
+        "operator:type": "government_non_profit"
+      },
+      "name": "Kendriya Vidyalaya, Pattom",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/599292844",
+      "lat": 8.5269938,
+      "lng": 76.9392507,
+      "tags": {
+        "amenity": "fuel",
+        "brand": "Bharat Petroleum",
+        "brand:wikidata": "Q854826",
+        "brand:wikipedia": "en:Bharat Petroleum",
+        "name": "Bharat Petroleum"
+      },
+      "name": "Bharat Petroleum",
+      "amenity": "fuel",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/618720614",
+      "lat": 8.5225231,
+      "lng": 76.9397464,
+      "tags": {
+        "building": "yes",
+        "name": "Haritha Keralam Mission",
+        "office": "government"
+      },
+      "name": "Haritha Keralam Mission",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/623939790",
+      "lat": 8.5251192,
+      "lng": 76.936998,
+      "tags": {
+        "amenity": "school",
+        "name": "St. Mary's Higher Secondary School Ground"
+      },
+      "name": "St. Mary's Higher Secondary School Ground",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/762175785",
+      "lat": 8.5242417,
+      "lng": 76.9400529,
+      "tags": {
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "garam masala"
+      },
+      "name": "garam masala",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/762432864",
+      "lat": 8.5277571,
+      "lng": 76.9329886,
+      "tags": {
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "name": "sree durga bhagavathi temple",
+        "religion": "hindu"
+      },
+      "name": "sree durga bhagavathi temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/762433146",
+      "lat": 8.528728,
+      "lng": 76.9342937,
+      "tags": {
+        "amenity": "bank",
+        "brand": "State Bank of India",
+        "brand:wikidata": "Q1340361",
+        "brand:wikipedia": "en:State Bank of India",
+        "building": "yes",
+        "name": "State Bank of India",
+        "short_name": "SBI"
+      },
+      "name": "State Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/762811986",
+      "lat": 8.5231619,
+      "lng": 76.9358535,
+      "tags": {
+        "addr:city": "Pattom",
+        "addr:postcode": "695004",
+        "addr:street": "Lane E",
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "denomination": "pentecostal",
+        "name": "India pentecostal assembly of india",
+        "religion": "christian",
+        "service_times": "sunday"
+      },
+      "name": "India pentecostal assembly of india",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": "Lane E"
+    },
+    {
+      "id": "way/762835459",
+      "lat": 8.5250048,
+      "lng": 76.9376607,
+      "tags": {
+        "addr:postcode": "695004",
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "denomination": "catholic",
+        "name": "st marys church building",
+        "religion": "christian"
+      },
+      "name": "st marys church building",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/763017008",
+      "lat": 8.5241395,
+      "lng": 76.9392981,
+      "tags": {
+        "amenity": "cafe",
+        "building": "yes",
+        "name": "Burger lounge"
+      },
+      "name": "Burger lounge",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/763017803",
+      "lat": 8.5239383,
+      "lng": 76.9397995,
+      "tags": {
+        "building": "yes",
+        "name": "Mobile shop",
+        "shop": "mobile_phone"
+      },
+      "name": "Mobile shop",
+      "amenity": null,
+      "shop": "mobile_phone",
+      "road": null
+    },
+    {
+      "id": "way/763019651",
+      "lat": 8.5283653,
+      "lng": 76.9387007,
+      "tags": {
+        "building": "yes",
+        "name": "medical store",
+        "shop": "medical_supply"
+      },
+      "name": "medical store",
+      "amenity": null,
+      "shop": "medical_supply",
+      "road": null
+    },
+    {
+      "id": "way/797042797",
+      "lat": 8.5254586,
+      "lng": 76.9378726,
+      "tags": {
+        "amenity": "parking",
+        "operator": "St Mary's school parking area"
+      },
+      "name": null,
+      "amenity": "parking",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797349670",
+      "lat": 8.528123,
+      "lng": 76.9392255,
+      "tags": {
+        "amenity": "bank",
+        "building": "yes",
+        "name": "LIC HFL"
+      },
+      "name": "LIC HFL",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797349671",
+      "lat": 8.528275,
+      "lng": 76.938752,
+      "tags": {
+        "alt_name": "Kentucky Fried Chicken",
+        "amenity": "fast_food",
+        "brand": "KFC",
+        "brand:pa": "ਕੇਐਫਸੀ",
+        "brand:ur": "کینٹکی فرائیڈ چکن",
+        "brand:wikidata": "Q524757",
+        "brand:wikipedia": "en:KFC",
+        "brand:wikipedia:pa": "ਕੇਐਫਸੀ",
+        "brand:wikipedia:ur": "کینٹکی فرائیڈ چکن",
+        "building": "yes",
+        "cuisine": "chicken",
+        "name": "KFC",
+        "name:pa": "ਕੇਐਫਸੀ",
+        "name:ur": "کینٹکی فرائیڈ چکن",
+        "takeaway": "yes"
+      },
+      "name": "KFC",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797349672",
+      "lat": 8.5241549,
+      "lng": 76.9396951,
+      "tags": {
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "Nandas"
+      },
+      "name": "Nandas",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/800472209",
+      "lat": 8.5252256,
+      "lng": 76.9396882,
+      "tags": {
+        "amenity": "shelter",
+        "building": "yes",
+        "building:levels": "10",
+        "height": "30"
+      },
+      "name": null,
+      "amenity": "shelter",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/804694888",
+      "lat": 8.5292242,
+      "lng": 76.9371079,
+      "tags": {
+        "amenity": "parking",
+        "operator": "chaithanya hospital car parking"
+      },
+      "name": null,
+      "amenity": "parking",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/845784445",
+      "lat": 8.5253244,
+      "lng": 76.9391254,
+      "tags": {
+        "amenity": "cafe",
+        "building": "yes",
+        "name": "Square One Homemade Treats and Beauty Parlor"
+      },
+      "name": "Square One Homemade Treats and Beauty Parlor",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/845785020",
+      "lat": 8.5219079,
+      "lng": 76.9408711,
+      "tags": {
+        "building": "yes",
+        "name": "Spencer's Supermarket",
+        "shop": "supermarket"
+      },
+      "name": "Spencer's Supermarket",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "way/845785188",
+      "lat": 8.5221126,
+      "lng": 76.9413475,
+      "tags": {
+        "building": "yes",
+        "name": "Life Medicals",
+        "shop": "medical_supply"
+      },
+      "name": "Life Medicals",
+      "amenity": null,
+      "shop": "medical_supply",
+      "road": null
+    },
+    {
+      "id": "way/845786074",
+      "lat": 8.52145,
+      "lng": 76.9406705,
+      "tags": {
+        "amenity": "clinic",
+        "building": "yes",
+        "healthcare": "clinic",
+        "name": "Spring Gardens Clinic",
+        "operator": "Department of Health and Family Welfare",
+        "operator:type": "private"
+      },
+      "name": "Spring Gardens Clinic",
+      "amenity": "clinic",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/845786577",
+      "lat": 8.5255052,
+      "lng": 76.940279,
+      "tags": {
+        "amenity": "clinic",
+        "building": "yes",
+        "healthcare": "clinic",
+        "name": "Spring Gardens Dental Clinic"
+      },
+      "name": "Spring Gardens Dental Clinic",
+      "amenity": "clinic",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/895401574",
+      "lat": 8.5260583,
+      "lng": 76.9380631,
+      "tags": {
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "denomination": "syriac_catholic",
+        "name": "St. Mary's Malankara Syrian Catholic Cathedral",
+        "religion": "christian",
+        "wikidata": "Q7590101"
+      },
+      "name": "St. Mary's Malankara Syrian Catholic Cathedral",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/895402529",
+      "lat": 8.5289955,
+      "lng": 76.938855,
+      "tags": {
+        "building": "yes",
+        "shop": "bakery"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "way/896888227",
+      "lat": 8.5196783,
+      "lng": 76.9399398,
+      "tags": {
+        "leisure": "playground",
+        "name": "Kendriya Vidyalaya, Pattom"
+      },
+      "name": "Kendriya Vidyalaya, Pattom",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/933179185",
+      "lat": 8.5235157,
+      "lng": 76.940518,
+      "tags": {
+        "building": "yes",
+        "name": "Nilgiris Supermart & QRS Retail",
+        "shop": "supermarket"
+      },
+      "name": "Nilgiris Supermart & QRS Retail",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "way/1208597980",
+      "lat": 8.5236874,
+      "lng": 76.9403373,
+      "tags": {
+        "addr:postcode": "695004",
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "Arya Jyothi",
+        "source": "microsoft/BuildingFootprints"
+      },
+      "name": "Arya Jyothi",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/1208607482",
+      "lat": 8.5224257,
+      "lng": 76.9407136,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:place": "Pattom",
+        "addr:postcode": "695004",
+        "addr:street": "Pattom",
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "Ambalappatt restaurant",
+        "source": "microsoft/BuildingFootprints"
+      },
+      "name": "Ambalappatt restaurant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": "Pattom"
+    },
+    {
+      "id": "way/1365507117",
+      "lat": 8.5218745,
+      "lng": 76.9415032,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:district": "Thiruvanathapuram",
+        "addr:street": "MC Road",
+        "brand": "Xiaomi",
+        "brand:wikidata": "Q1636958",
+        "building": "yes",
+        "name": "Xiaomi",
+        "shop": "mobile_phone"
+      },
+      "name": "Xiaomi",
+      "amenity": null,
+      "shop": "mobile_phone",
+      "road": "MC Road"
     }
   ],
-  "roads": [
-    {
-      "id": 1,
-      "name": "M.G. Road",
-      "highway": "primary"
-    },
-    {
-      "id": 2,
-      "name": "Palayam Road",
-      "highway": "secondary"
-    },
-    {
-      "id": 3,
-      "name": "Fort Road",
-      "highway": "secondary"
-    },
-    {
-      "id": 4,
-      "name": "NH 66",
-      "highway": "trunk"
-    },
-    {
-      "id": 5,
-      "name": "Technopark Road",
-      "highway": "secondary"
-    }
-  ],
+  "roads": [],
   "classification": {
     "roadWise": {
-      "Fort Road": 1,
-      "Palayam Road": 3,
-      "M.G. Road": 2,
-      "Palayam-Airport Road": 1,
-      "NH 66": 1,
-      "Technopark Road": 1,
-      "Medical College Road": 1
+      "Unknown Road": [
+        "node/2392776445",
+        "node/2562484852",
+        "node/3898452790",
+        "node/3898452791",
+        "node/3898452792",
+        "node/3898452793",
+        "node/3898452794",
+        "node/3898452796",
+        "node/3898452799",
+        "node/3898452800",
+        "node/3898452801",
+        "node/3898452802",
+        "node/3898452803",
+        "node/3898452804",
+        "node/3898452806",
+        "node/3898452807",
+        "node/3898452809",
+        "node/3898452810",
+        "node/4214036865",
+        "node/4658657204",
+        "node/4658657205",
+        "node/4841296573",
+        "node/5398516321",
+        "node/6966156302",
+        "node/7124045511",
+        "node/7124045516",
+        "node/7124045517",
+        "node/7140723966",
+        "node/7140723978",
+        "node/7140723980",
+        "node/7140728489",
+        "node/7140728510",
+        "node/7140728518",
+        "node/7140728527",
+        "node/7140728545",
+        "node/7140728552",
+        "node/7140728559",
+        "node/7140728560",
+        "node/7140728562",
+        "node/7140728603",
+        "node/7192624669",
+        "node/7242723900",
+        "node/7351369671",
+        "node/7351375309",
+        "node/7351380408",
+        "node/7351386850",
+        "node/7351389172",
+        "node/7351390850",
+        "node/7351391796",
+        "node/7351392493",
+        "node/7351446225",
+        "node/7351446270",
+        "node/7351448608",
+        "node/7351450308",
+        "node/7351455101",
+        "node/7351456534",
+        "node/7372744585",
+        "node/7487985307",
+        "node/8290404601",
+        "node/8396254411",
+        "way/319658941",
+        "way/599292844",
+        "way/618720614",
+        "way/623939790",
+        "way/762175785",
+        "way/762432864",
+        "way/762433146",
+        "way/762835459",
+        "way/763017008",
+        "way/763017803",
+        "way/763019651",
+        "way/797042797",
+        "way/797349670",
+        "way/797349671",
+        "way/797349672",
+        "way/800472209",
+        "way/804694888",
+        "way/845784445",
+        "way/845785020",
+        "way/845785188",
+        "way/845786074",
+        "way/845786577",
+        "way/895401574",
+        "way/895402529",
+        "way/896888227",
+        "way/933179185",
+        "way/1208597980"
+      ],
+      "Kesavadasapuram road": [
+        "node/3898452798"
+      ],
+      "PATTOM, Trivandrum, Kerala, India": [
+        "node/6836400068"
+      ],
+      "Chalakuzhy": [
+        "node/7080201295"
+      ],
+      "Kesavadasapuram Rd": [
+        "node/7242709839"
+      ],
+      "Kesavadasapuram Road": [
+        "node/7245250367"
+      ],
+      "MC Road": [
+        "node/12645206455",
+        "way/1365507117"
+      ],
+      "Lane E": [
+        "way/762811986"
+      ],
+      "Pattom": [
+        "way/1208607482"
+      ]
     },
     "businessWise": {
-      "place_of_worship": 1,
-      "mosque": 1,
-      "church": 1,
-      "cafe": 1,
-      "restaurant": 1,
-      "mall": 1,
-      "it": 1,
-      "university": 1,
-      "hospital": 1,
-      "bank": 1
+      "bank": [
+        "node/2392776445",
+        "node/3898452800",
+        "node/7124045516",
+        "node/7351380408",
+        "way/762433146",
+        "way/797349670"
+      ],
+      "fast_food": [
+        "node/2562484852",
+        "node/4658657205",
+        "node/7351456534",
+        "way/797349671"
+      ],
+      "dairy": [
+        "node/3898452790",
+        "node/3898452792"
+      ],
+      "community_centre": [
+        "node/3898452791"
+      ],
+      "other": [
+        "node/3898452793",
+        "node/3898452796",
+        "node/4658657204",
+        "node/6836400068",
+        "node/7192624669",
+        "node/7351386850",
+        "node/7351446270",
+        "node/7487985307",
+        "way/618720614",
+        "way/896888227"
+      ],
+      "place_of_worship": [
+        "node/3898452794",
+        "node/7080201295",
+        "node/7351448608",
+        "node/7351455101",
+        "way/762432864",
+        "way/762811986",
+        "way/762835459",
+        "way/895401574"
+      ],
+      "supermarket": [
+        "node/3898452798",
+        "node/7351369671",
+        "way/845785020",
+        "way/933179185"
+      ],
+      "clothes": [
+        "node/3898452799"
+      ],
+      "mobile_phone": [
+        "node/3898452801",
+        "node/7351375309",
+        "node/7351446225",
+        "way/763017803",
+        "way/1365507117"
+      ],
+      "optician": [
+        "node/3898452802"
+      ],
+      "bicycle": [
+        "node/3898452803"
+      ],
+      "electronics": [
+        "node/3898452804",
+        "node/12645206455"
+      ],
+      "furniture": [
+        "node/3898452806",
+        "node/8290404601"
+      ],
+      "bag": [
+        "node/3898452807"
+      ],
+      "books": [
+        "node/3898452809"
+      ],
+      "computer": [
+        "node/3898452810"
+      ],
+      "musical_instrument": [
+        "node/4214036865"
+      ],
+      "cafe": [
+        "node/4841296573",
+        "way/763017008",
+        "way/845784445"
+      ],
+      "clinic": [
+        "node/5398516321",
+        "way/845786074",
+        "way/845786577"
+      ],
+      "hospital": [
+        "node/6966156302"
+      ],
+      "atm": [
+        "node/7124045511",
+        "node/7124045517",
+        "node/7242723900"
+      ],
+      "library": [
+        "node/7140723966",
+        "node/7140723978",
+        "node/7140723980",
+        "node/7140728489",
+        "node/7140728510",
+        "node/7140728518",
+        "node/7140728527",
+        "node/7140728545",
+        "node/7140728552",
+        "node/7140728559",
+        "node/7140728560",
+        "node/7140728562",
+        "node/7140728603"
+      ],
+      "ice_cream": [
+        "node/7242709839"
+      ],
+      "bakery": [
+        "node/7245250367",
+        "node/7372744585",
+        "way/895402529"
+      ],
+      "shoes": [
+        "node/7351389172"
+      ],
+      "beauty": [
+        "node/7351390850"
+      ],
+      "restaurant": [
+        "node/7351391796",
+        "way/762175785",
+        "way/797349672",
+        "way/1208597980",
+        "way/1208607482"
+      ],
+      "yes": [
+        "node/7351392493",
+        "node/7351450308"
+      ],
+      "internet_cafe": [
+        "node/8396254411"
+      ],
+      "school": [
+        "way/319658941",
+        "way/623939790"
+      ],
+      "fuel": [
+        "way/599292844"
+      ],
+      "medical_supply": [
+        "way/763019651",
+        "way/845785188"
+      ],
+      "parking": [
+        "way/797042797",
+        "way/804694888"
+      ],
+      "shelter": [
+        "way/800472209"
+      ]
     },
     "religious": {
       "mosque": [
-        "node/2"
+        "node/7080201295"
       ],
       "church": [
-        "node/3"
+        "node/3898452794",
+        "node/7351448608",
+        "way/762811986",
+        "way/762835459",
+        "way/895401574"
       ],
       "temple": [
-        "node/1"
+        "node/7351455101",
+        "way/762432864"
       ],
       "other": []
     }
   },
   "stats": {
-    "placesCount": 10,
-    "roadsCount": 5
+    "placesCount": 96,
+    "roadsCount": 0
   },
   "current": {
     "lat": 8.524139,

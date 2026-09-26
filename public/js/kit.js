@@ -25,17 +25,23 @@ export function toast(msg) {
 }
 
 export function byok() {
+  // Migrate old persistent keys out of localStorage. Keys are session-only;
+  // URL/model preferences may remain across browser sessions.
+  const previous = localStorage.getItem('mp-byok-key');
+  if (previous && !sessionStorage.getItem('mp-byok-key')) sessionStorage.setItem('mp-byok-key', previous);
+  localStorage.removeItem('mp-byok-key');
   return {
     url: localStorage.getItem('mp-byok-url') || '',
     model: localStorage.getItem('mp-byok-model') || '',
-    key: localStorage.getItem('mp-byok-key') || ''
+    key: sessionStorage.getItem('mp-byok-key') || ''
   };
 }
 
 export function saveByok({ url, model, key }) {
   if (url != null) localStorage.setItem('mp-byok-url', url.trim());
   if (model != null) localStorage.setItem('mp-byok-model', model.trim());
-  if (key != null) localStorage.setItem('mp-byok-key', key.trim());
+  if (key != null) sessionStorage.setItem('mp-byok-key', key.trim());
+  localStorage.removeItem('mp-byok-key');
 }
 
 export async function askAssistant(task, text, extra = '') {
@@ -128,19 +134,27 @@ export function base64ToUtf8(s) {
 }
 
 export function parseCsv(text) {
-  const lines = String(text).replace(/^\uFEFF/, '').split(/\r?\n/);
-  return lines.filter((l, i) => l.length || i === 0).map(line => {
-    const out = []; let cur = ''; let q = false;
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
-      else if (c === '"') q = !q;
-      else if (c === ',' && !q) { out.push(cur); cur = ''; }
-      else cur += c;
-    }
-    out.push(cur);
-    return out;
-  });
+  const input = String(text).replace(/^\uFEFF/, '');
+  const rows = []; let row = [], cell = '', quoted = false;
+  for (let i = 0; i < input.length; i++) {
+    const ch = input[i];
+    if (quoted) {
+      if (ch === '"' && input[i + 1] === '"') { cell += '"'; i++; }
+      else if (ch === '"') quoted = false;
+      else cell += ch;
+    } else if (ch === '"' && !cell) quoted = true;
+    else if (ch === ',') { row.push(cell); cell = ''; }
+    else if (ch === '\r' || ch === '\n') {
+      if (ch === '\r' && input[i + 1] === '\n') i++;
+      row.push(cell);
+      if (row.some(v => v !== '')) rows.push(row);
+      row = []; cell = '';
+    } else cell += ch;
+  }
+  if (quoted) throw Error('CSV contains an unclosed quoted field.');
+  row.push(cell);
+  if (row.some(v => v !== '')) rows.push(row);
+  return rows;
 }
 
 export function toCsv(rows) {

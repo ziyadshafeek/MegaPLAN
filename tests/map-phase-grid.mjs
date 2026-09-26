@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { phaseTasks } from '../lib/map-phase-grid.mjs';
+const phases = JSON.parse(fs.readFileSync(new URL('../data/map-directory/expansion-plan.json', import.meta.url))).phases;
+const first = phaseTasks(phases[0], [], -1, 3);
+assert.equal(first[0].index, 0);
+assert.equal(first[0].lat, 8.524139);
+assert.equal(first[0].lng, 76.936638);
+assert.notEqual(first[1].lng, first[0].lng);
+assert.deepEqual(phaseTasks(phases[0], [], 0, 1)[0], first[1], 'next run must advance rather than repeat center');
+const phaseTwo = phaseTasks(phases[1], [phases[0]], 0, 1);
+assert.equal(phaseTwo[0].index, phases[0].estimatedCells);
+assert.ok(phaseTwo[0].lat > phases[1].bbox.latMin);
+assert.deepEqual(phaseTasks(phases[1], [phases[0]], phaseTwo[0].index, 1)[0].index, phaseTwo[0].index + 1);
+console.log('map grid ok: Trivandrum center, no double spiral, successive cells and phase offsets');

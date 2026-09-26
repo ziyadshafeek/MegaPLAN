@@ -11,6 +11,7 @@
  */
 import { esc, downloadBlob, downloadText, mountShell, setOut, toast } from './kit.js';
 import { mountTool } from './engines.js';
+import { presentationTopic, createPresentation } from './presentation-tool.js';
 
 const LS_SESSION = 'mp-ai-mode-session';
 const LS_HISTORY = 'mp-ai-mode-history';
@@ -250,6 +251,19 @@ export function mountAIMode(root, tool) {
     addBubble('user', prompt || '(files only)');
     saveHistory({ prompt, mode, target, files: files.map(f => f.name), youtubeUrls });
 
+    // Execute presentation requests instead of offering a hypothetical chain.
+    const pptTopic = presentationTopic(prompt);
+    if (pptTopic !== null) {
+      if (!pptTopic) return addBubble('agent', 'What topic should the presentation cover? Try: “Create a PPT about solar energy.”');
+      if (files.length || youtubeUrls.length) return addBubble('agent', 'Presentation creation currently accepts a topic and text notes, not attached files or YouTube URLs. Paste your notes into Presentation Creator for an attributed PPTX. I will not pretend I processed these files.');
+      addToolBubble('Researching sources and creating a real PowerPoint…');
+      try {
+        const result = await createPresentation(pptTopic);
+        addBubble('agent', `Downloaded ${result.name} (${Math.round(result.bytes / 1024)} KB). This deck uses source snippets and includes source links; check them before presenting. The presentation tool also accepts your own notes.`);
+      } catch (e) { addBubble('agent', `Presentation not created: ${e.message}. You can provide notes in Presentation Creator if online sources are unavailable.`); }
+      return;
+    }
+
     // Step 1: Analyze files
     addBubble('agent', `Analyzing ${files.length} file(s) + ${youtubeUrls.length} YouTube URL(s)…\nMode: ${mode} · Target: ${target} · API key: ${hasKey ? 'yes' : 'no'}\nSession: ${sessionCode}`);
 
@@ -416,6 +430,17 @@ export function mountAIMode(root, tool) {
     addBubble('user', input);
     $('chat-in').value = '';
     
+    // Execute the presentation tool directly from chat as well.
+    const pptTopic = presentationTopic(input);
+    if (pptTopic !== null) {
+      if (!pptTopic) return addBubble('agent', 'Please specify a topic, for example: “Make a PPT about solar energy.”');
+      addToolBubble('Searching sources and generating a downloadable .pptx…');
+      try {
+        const result = await createPresentation(pptTopic);
+        addBubble('agent', `Downloaded ${result.name} (${Math.round(result.bytes / 1024)} KB). Sources are linked in the deck; review before reuse.`);
+      } catch (e) { addBubble('agent', `Presentation not created: ${e.message}. Try the Presentation Creator with your own notes.`); }
+      return;
+    }
     // Simple intent detection
     if (input.toLowerCase().includes('transcript') || input.toLowerCase().includes('youtube')) {
       addBubble('agent', `For YouTube transcript, use the YouTube Transcript tool or add YouTube URL in upload section. It works for any video with captions (manual or auto). I can also list playlists via YouTube Playlist Lister.`);

@@ -6,15 +6,24 @@
     "node": "24.x"
   },
   "dependencies": {
-    "pdf-lib": "1.17.1",
     "jszip": "3.10.1",
-    "libsodium-wrappers": "^0.7.15"
+    "libsodium-wrappers": "^0.7.15",
+    "pdf-lib": "1.17.1",
+    "pptxgenjs": "4.0.1"
   },
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
     "start": "node scripts/dev-server.mjs",
-    "test": "node tests/smoke.mjs && node tests/agent-static.mjs && node tests/agent-actions-static.mjs && node tests/pdf-engine-coverage.mjs",
+    "test": "node tests/smoke.mjs && node tests/agent-static.mjs && node tests/agent-actions-static.mjs && node tests/agent-integration.mjs && node tests/site-regression.mjs && node tests/tool-mount.mjs && node tests/city-directory.mjs && node tests/map-phase-grid.mjs && node tests/upstream-honesty.mjs && node tests/presentation.mjs && node tests/data-sources.mjs && node tests/music-collection.mjs && python3 tests/music-dump.py && node tests/vercel-bundle.mjs && node tests/pdf-engine-coverage.mjs && python3 scripts/validate_registry.py",
     "test:agent-actions": "node tests/agent-actions-static.mjs",
-    "validate": "python3 scripts/validate_registry.py"
+    "validate": "python3 scripts/validate_registry.py",
+    "test:bundle": "node tests/vercel-bundle.mjs"
+  },
+  "devDependencies": {
+    "@vercel/nft": "0.30.1",
+    "jsdom": "^26.1.0"
+  },
+  "overrides": {
+    "image-size": "2.0.4"
   }
 }

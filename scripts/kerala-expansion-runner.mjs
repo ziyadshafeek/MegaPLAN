@@ -10,11 +10,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { phaseTasks } from '../lib/map-phase-grid.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(here, '..');
 
-const CENTER = { lat: 8.524139, lng: 76.936638 };
 const OVERPASS_MIRRORS = [
   'https://overpass-api.de/api/interpreter',
   'https://overpass.kumi.systems/api/interpreter',
@@ -38,26 +38,6 @@ function loadExpansionPlan() {
   const p = path.join(root, 'data', 'map-directory', 'expansion-plan.json');
   if (!fs.existsSync(p)) return null;
   return JSON.parse(fs.readFileSync(p, 'utf8'));
-}
-
-function spiralToCoords(index) {
-  if (index === 0) return { dx: 0, dy: 0 };
-  let x = 0, y = 0, dx = 0, dy = -1;
-  for (let i = 0; i < index; i++) {
-    if ((x === y) || (x < 0 && x === -y) || (x > 0 && x === 1 - y)) {
-      const tmp = dx; dx = -dy; dy = tmp;
-    }
-    x += dx; y += dy;
-  }
-  return { dx: x, dy: y };
-}
-
-function haversine(lat1, lng1, lat2, lng2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
 async function fetchWithTimeout(url, opts = {}, timeout = 25000) {
@@ -92,9 +72,8 @@ function writeIndex(idx) {
 }
 
 async function scanCellWithMirrors(index, grid, radius, center, mirrorIndex = 0) {
-  const { dx, dy } = spiralToCoords(index);
-  const lat = center.lat + dy * grid;
-  const lng = center.lng + dx * grid;
+  // The queue already calculated the exact point. Never apply the spiral twice.
+  const { lat, lng, dx = 0, dy = 0 } = center;
 
   const query = `[out:json][timeout:25];
 (
@@ -115,7 +94,8 @@ out center 100;`;
       const r = await fetchWithTimeout(url, {}, 25000);
       if (!r.ok) throw Error(`Overpass ${mirror} ${r.status}`);
       const data = await r.json();
-      const places = (data.elements || []).map(el => ({
+      if (!Array.isArray(data.elements)) throw Error('Invalid Overpass response');
+      const places = data.elements.map(el => ({
         id: `${el.type}/${el.id}`,
         lat: el.lat || el.center?.lat,
         lng: el.lon || el.center?.lon,
@@ -126,6 +106,7 @@ out center 100;`;
         road: el.tags?.['addr:street'] || null
       })).filter(p => p.lat && p.lng);
       
+      if (!places.length && index === 0) throw Error('Trivandrum center returned no verified places');
       return { index, lat, lng, dx, dy, grid, radius, places, roads: [], mirror };
     } catch (e) {
       console.log(`  Mirror ${mirror} failed for cell ${index}: ${e.message}, trying next...`);
@@ -137,6 +118,7 @@ out center 100;`;
 
 async function saveCell(cellData) {
   ensureDir();
+  if (readIndex().cells?.includes(cellData.index)) return null; // never double-count a previously verified cell
   const dir = path.join(root, 'data', 'map-directory');
   const pub = path.join(root, 'public', 'data', 'map-directory');
   
@@ -206,33 +188,16 @@ async function runPhase(phase, batch, workers) {
   console.log(`\n=== Phase ${phase.phase}: ${phase.name} ===`);
   console.log(`BBOX: ${phase.bbox.latMin}-${phase.bbox.latMax}, ${phase.bbox.lngMin}-${phase.bbox.lngMax}, grid ${phase.grid}, radius ${phase.radius}, estimated ${phase.estimatedCells} cells`);
 
-  const center = { lat: (phase.bbox.latMin + phase.bbox.latMax)/2, lng: (phase.bbox.lngMin + phase.bbox.lngMax)/2 };
   const idx = readIndex();
-  let startIndex = idx.lastIndex + 1;
-  
-  // For Kerala phases, we need to generate grid covering bbox, not just spiral from Trivandrum
-  // We'll generate lat/lng grid points within bbox
-  const latSteps = Math.ceil((phase.bbox.latMax - phase.bbox.latMin) / phase.grid);
-  const lngSteps = Math.ceil((phase.bbox.lngMax - phase.bbox.lngMin) / phase.grid);
-  const totalInPhase = latSteps * lngSteps;
-  
-  console.log(`Phase grid: ${latSteps} x ${lngSteps} = ${totalInPhase} cells, starting from index ${startIndex}, batch ${batch}, workers ${workers}`);
-
-  let scanned = 0;
-  let queue = [];
-  for (let latIdx = 0; latIdx < latSteps && scanned < batch; latIdx++) {
-    for (let lngIdx = 0; lngIdx < lngSteps && scanned < batch; lngIdx++) {
-      const lat = phase.bbox.latMin + latIdx * phase.grid;
-      const lng = phase.bbox.lngMin + lngIdx * phase.grid;
-      // Skip if already scanned? Check if cell file exists for this lat/lng approx
-      // For simplicity, use spiral index + phase offset
-      const cellIndex = startIndex + scanned;
-      queue.push({ index: cellIndex, lat, lng, grid: phase.grid, radius: phase.radius, center: { lat, lng } });
-      scanned++;
-    }
-  }
+  // Two mirrored JSON cell trees live in Git/Vercel; don't silently grow them
+  // into a planet-scale repository. An OSM extract + spatial DB is required.
+  if ((idx.cells || []).length >= 100) throw Error('Git map preview cap: 100 verified cells; use an OSM extract and external spatial database for further coverage.');
+  const previousPhases = (loadExpansionPlan()?.phases || []).filter(p => p.phase < phase.phase);
+  const queue = phaseTasks(phase, previousPhases, idx.lastIndex, batch, idx.cells || []);
+  console.log(`Phase queue: ${queue.length} cells, next index ${queue[0]?.index ?? 'none'}; workers ${workers}`);
 
   console.log(`Queue: ${queue.length} cells`);
+  if (!queue.length) { console.log('No unscanned grid positions remain in this phase.'); return { completed: 0, totalPlaces: 0 }; }
 
   // Parallel workers
   let completed = 0;
@@ -245,7 +210,7 @@ async function runPhase(phase, batch, workers) {
       try {
         console.log(`[Worker ${workerId}] Scanning cell ${task.index} at ${task.lat.toFixed(4)},${task.lng.toFixed(4)} grid ${task.grid}`);
         const result = await scanCellWithMirrors(task.index, task.grid, task.radius, task.center, workerId);
-        await saveCell(result);
+        if (!await saveCell(result)) continue;
         completed++;
         totalPlaces += result.places.length;
         console.log(`[Worker ${workerId}] Cell ${task.index} done: ${result.places.length} places, total ${completed}/${batch}`);
@@ -264,6 +229,7 @@ async function runPhase(phase, batch, workers) {
   await Promise.all(workerPromises);
 
   console.log(`\nPhase ${phase.phase} done: ${completed} cells, ${totalPlaces} places`);
+  if (!completed) throw Error(`No verified cells in phase ${phase.phase}; all Overpass mirrors failed.`);
   return { completed, totalPlaces };
 }
 

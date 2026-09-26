@@ -1,51 +1,42 @@
-name: Product Directory Auto Scraper — Amazon & Flipkart Massive
-
+name: Authorized retailer listing feed sync
 on:
+  # Scheduled on the default branch only after review and merge.
   schedule:
-    - cron: '0 */3 * * *' # Every 3 hours
+    - cron: '19 3 * * *'
   workflow_dispatch:
-    inputs:
-      batch:
-        description: 'Products to scrape per run'
-        default: '50'
-        type: string
-      platform:
-        description: 'Platform: flipkart, amazon, both'
-        default: 'flipkart'
-        type: string
-      category:
-        description: 'Category to scrape'
-        default: 'mobiles'
-        type: string
-
+permissions:
+  contents: write
+concurrency:
+  group: open-directory-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  scrape:
+  licensed-feed:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - name: Install
-        run: npm ci || npm install
-      - name: Run product scraper
+          node-version: '24'
+      - name: Sync operator-authorized JSON feed (if configured)
         env:
-          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+          PRODUCT_FEED_URL: ${{ secrets.PRODUCT_FEED_URL }}
+          PRODUCT_FEED_TOKEN: ${{ secrets.PRODUCT_FEED_TOKEN }}
+          PRODUCT_FEED_PERMISSION_URL: ${{ vars.PRODUCT_FEED_PERMISSION_URL }}
+          PRODUCT_RETAILER_DOMAIN: ${{ vars.PRODUCT_RETAILER_DOMAIN }}
+        run: node scripts/sync-product-feed.mjs
+      - name: Commit verified records only
         run: |
-          BATCH="${{ inputs.batch || '50' }}"
-          PLATFORM="${{ inputs.platform || 'flipkart' }}"
-          CATEGORY="${{ inputs.category || 'mobiles' }}"
-          echo "Scraping $BATCH products from $PLATFORM category $CATEGORY"
-          node scripts/product-scraper-runner.mjs --batch $BATCH --platform $PLATFORM --category $CATEGORY
-      - name: Commit
+          git config user.name 'megaplan-collector[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/product-directory public/data/product-directory
+          if git diff --cached --quiet; then echo 'No authorized new product records'; exit 0; fi
+          git commit -m 'data: refresh authorized retailer feed [skip ci]'
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase FETCH_HEAD
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Report coverage
+        if: always()
         run: |
-          git config user.name "product-scraper-bot"
-          git config user.email "bot@megaplan.local"
-          git add data/product-directory/ public/data/product-directory/ || true
-          if git diff --cached --quiet; then echo "No new data"; exit 0; fi
-          TOTAL=$(jq -r '.totalProducts // 0' data/product-directory/index.json 2>/dev/null || echo "0")
-          git commit -m "product: auto scrape batch ${{ inputs.batch || '50' }} $PLATFORM $CATEGORY total ${TOTAL} [skip ci]"
-          git push origin HEAD:${{ github.ref_name || 'main' }}
+          echo 'Retailer listings require authorized feed access and redistribution rights. No Flipkart/Amazon HTML scraping is scheduled.' >> "$GITHUB_STEP_SUMMARY"
+          jq '{totalProducts,lastScannedAt,source}' data/product-directory/index.json >> "$GITHUB_STEP_SUMMARY"

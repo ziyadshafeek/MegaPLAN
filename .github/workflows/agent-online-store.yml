@@ -43,6 +43,8 @@ jobs:
           mkdir .agent-test-site
           ln -s "$GITHUB_WORKSPACE/public/agent" .agent-test-site/agent
           ln -s "$GITHUB_WORKSPACE/public/styles.css" .agent-test-site/styles.css
+          ln -s "$GITHUB_WORKSPACE/public/js" .agent-test-site/js
+          ln -s "$GITHUB_WORKSPACE/public/favicon.svg" .agent-test-site/favicon.svg
           ln -s "$GITHUB_WORKSPACE/data" .agent-test-site/data
           python3 -m http.server 4173 --directory .agent-test-site >/tmp/agent-site.log 2>&1 &
           echo $! >/tmp/agent-site.pid

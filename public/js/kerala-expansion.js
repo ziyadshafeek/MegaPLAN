@@ -1,5 +1,5 @@
 /**
- * Kerala Expansion Viewer — 10 days to finish Kerala from Trivandrum
+ * Kerala expansion plan and published snapshot progress
  * Shows phases, districts, progress, road-wise, business-wise
  */
 
@@ -30,11 +30,11 @@ export function mountKeralaExpansion(root, tool) {
     <div style="display:grid;grid-template-columns:360px 1fr;gap:0;min-height:78vh;border:1px solid #e0d5c4;border-radius:12px;overflow:hidden">
       <aside style="background:#efe6d8;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:12px;border-right:1px solid #e0d5c4">
         <div>
-          <b>Kerala 10-Day Expansion — Trivandrum → All Kerala</b>
-          <p class="muted" style="margin:4px 0 8px;font-size:12px">Adaptive multi-resolution: 0.01° Trivandrum district (2000 cells) + 0.02° rest Kerala (10000) + 0.05° gaps (5000) = 17000 cells in 10 days. 4 parallel workers, 3 Overpass mirrors, 35s interval, flawless.</p>
+          <b>Kerala indexing plan — Trivandrum and beyond</b>
+          <p class="muted" style="margin:4px 0 8px;font-size:12px">A planned multi-resolution grid for Kerala. The count below is published repository data, not a guarantee of coverage or a completion deadline. It starts empty until a scheduled Overpass scan succeeds.</p>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             <button class="btn primary" id="${id}-refresh" style="font-size:12px">↻ Refresh Progress</button>
-            <button class="btn secondary" id="${id}-start" style="font-size:12px">▶ Start Kerala Sprint</button>
+            <button class="btn secondary" id="${id}-start" style="font-size:12px">About indexing</button>
           </div>
         </div>
 
@@ -46,7 +46,7 @@ export function mountKeralaExpansion(root, tool) {
         </div>
 
         <div class="panel" style="padding:10px">
-          <b>Phases (8 phases, 10 days)</b>
+          <b>Planned phases</b>
           <div id="${id}-phases" style="margin-top:8px;max-height:300px;overflow:auto;font-size:11px"></div>
         </div>
 
@@ -74,7 +74,7 @@ export function mountKeralaExpansion(root, tool) {
         </div>
       </div>
     </div>
-    <div class="note" style="margin-top:10px;font-size:11px">Kerala 10-day sprint: Starts Trivandrum 8.5241,76.9366, spiral 0.01° grid, expands to Kollam, Pathanamthitta, Alappuzha, Kottayam, Idukki, Ernakulam, Thrissur, Palakkad, Malappuram, Kozhikode, Wayanad, Kannur, Kasaragod. Adaptive: 0.01° for cities, 0.02° for districts, 0.05° for gaps. 4 workers, 3 Overpass mirrors, 35s interval, NVIDIA AI classification road-wise & business-wise (mosques, restaurants etc), new sections auto-created. GitHub Action every 30min batch 20 cells. After Kerala, South India 11-20 days, India 21-60 days, World 61-365 days. Flawless engineering.</div>
+    <div class="note" style="margin-top:10px;font-size:11px">Scheduled jobs attempt to index public OpenStreetMap data. Upstream availability, rate limits and data quality determine progress. The browser cannot persist a published dataset; use the map directory for manual local scanning.</div>
   `);
 
   const $ = sid => body.querySelector('#' + id + '-' + sid);
@@ -106,7 +106,7 @@ export function mountKeralaExpansion(root, tool) {
         <div><b>Phase ${p.currentPhase}</b> — ${p.phaseProgress} cells in phase</div>
         <div>Total: <b>${p.totalCells}</b> / ${p.keralaTarget} Kerala target (${p.keralaPercent}%)</div>
         <div>Places: <b>${p.totalPlaces}</b> · Business: ${p.businessTypes} types · Roads: ${p.roads}</div>
-        <div>Days: ${p.daysElapsed}d elapsed, ${p.daysRemaining}d remaining, est finish ${p.estimatedDaysToFinish}d</div>
+
         <div>Religious: 🕌${p.religious.mosque||0} ⛪${p.religious.church||0} 🛕${p.religious.temple||0}</div>
       `;
       $(`bar`).style.width = p.keralaPercent + '%';
@@ -120,7 +120,7 @@ export function mountKeralaExpansion(root, tool) {
           <div class="panel" style="padding:8px"><b>Kerala Progress</b><br>${p.keralaPercent}% (${p.totalCells}/${p.keralaTarget})</div>
           <div class="panel" style="padding:8px"><b>Phase</b><br>${p.currentPhase}/8 — ${j.nextPhase?.name||''}</div>
           <div class="panel" style="padding:8px"><b>Places</b><br>${p.totalPlaces}</div>
-          <div class="panel" style="padding:8px"><b>Days Left</b><br>${p.daysRemaining}d / 10d</div>
+          <div class="panel" style="padding:8px"><b>Target</b><br>${p.keralaTarget} planned cells</div>
         </div>
         <div style="margin-top:12px"><b>Current Phase Details:</b><br>${esc(JSON.stringify(j.nextPhase, null, 2).slice(0, 800))}</div>
       `;
@@ -181,14 +181,8 @@ export function mountKeralaExpansion(root, tool) {
   }
 
   $(`refresh`).onclick = () => { loadProgress(); loadDistricts(); };
-  $(`start`).onclick = async () => {
-    toast('Starting Kerala sprint — 20 cells batch');
-    try {
-      const r = await fetch('/api/map-auto?batch=20');
-      const j = await r.json();
-      toast(`Scanned ${j.scanned||0} cells, next ${j.nextIndex||''}`);
-      loadProgress();
-    } catch (e) { toast('Failed: ' + e.message); }
+  $(`start`).onclick = () => {
+    toast('Published map indexing runs in scheduled jobs. Open Map Directory for a local manual scan.');
   };
 
   $(`roadwise`).onclick = async () => {

@@ -1473,9 +1473,9 @@
     "slug": "audio-dereverb",
     "title": "Audio Dereverb",
     "category": "Audio",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Audio Dereverb \u2014 audio helper on this device. Heavy denoise is a simple gate, not a named model.",
+    "description": "Limited preview: uses a basic noise gate; it does not remove reverb or isolate a voice.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1487,9 +1487,9 @@
     "slug": "voice-isolation",
     "title": "Voice Isolation",
     "category": "Audio",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Voice Isolation \u2014 audio helper on this device. Heavy denoise is a simple gate, not a named model.",
+    "description": "Limited preview: uses a basic noise gate; it does not remove reverb or isolate a voice.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1725,9 +1725,9 @@
     "slug": "sample-rate-converter",
     "title": "Sample Rate Converter",
     "category": "Audio",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Sample Rate Converter \u2014 audio helper on this device. Heavy denoise is a simple gate, not a named model.",
+    "description": "Beta: currently inspects audio duration and does not resample audio.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1879,9 +1879,9 @@
     "slug": "video-compressor",
     "title": "Video Compressor",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Compressor \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1893,9 +1893,9 @@
     "slug": "video-trimmer",
     "title": "Video Trimmer",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Trimmer \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1907,9 +1907,9 @@
     "slug": "video-cutter",
     "title": "Video Cutter",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Cutter \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1921,9 +1921,9 @@
     "slug": "video-merger",
     "title": "Video Merger",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Merger \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1935,9 +1935,9 @@
     "slug": "extract-audio",
     "title": "Extract Audio",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Extract Audio \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1949,9 +1949,9 @@
     "slug": "extract-frames",
     "title": "Extract Frames",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Extract Frames \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Limited preview: exports a single frame as an image; does not produce a GIF, sheet or frame sequence yet.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1963,9 +1963,9 @@
     "slug": "video-to-gif",
     "title": "Video to GIF",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video to GIF \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Limited preview: exports a single frame as an image; does not produce a GIF, sheet or frame sequence yet.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1977,9 +1977,9 @@
     "slug": "gif-to-mp4",
     "title": "GIF to MP4",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "GIF to MP4 \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1991,9 +1991,9 @@
     "slug": "mp4-to-webm",
     "title": "MP4 to WebM",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "MP4 to WebM \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2005,9 +2005,9 @@
     "slug": "webm-to-mp4",
     "title": "WebM to MP4",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "WebM to MP4 \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2019,9 +2019,9 @@
     "slug": "resize-video",
     "title": "Resize Video",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Resize Video \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2033,9 +2033,9 @@
     "slug": "crop-video",
     "title": "Crop Video",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Crop Video \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2047,9 +2047,9 @@
     "slug": "rotate-video",
     "title": "Rotate Video",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Rotate Video \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2061,9 +2061,9 @@
     "slug": "mute-video",
     "title": "Mute Video",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Mute Video \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2089,9 +2089,9 @@
     "slug": "video-contact-sheet",
     "title": "Video Contact Sheet",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Contact Sheet \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Limited preview: exports a single frame as an image; does not produce a GIF, sheet or frame sequence yet.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2105,7 +2105,7 @@
     "category": "Video",
     "status": "live",
     "processing": "browser",
-    "description": "Subtitle Extractor \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Extract dialogue from pasted SRT/VTT subtitles. Video file subtitle tracks are not decoded.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2131,9 +2131,9 @@
     "slug": "subtitle-timing-helper",
     "title": "Subtitle Timing Helper",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Subtitle Timing Helper \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Beta: subtitle timing shifts are not implemented; currently echoes pasted caption text.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4709,7 +4709,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Purchase Tracker \u2014 Business tool: purchase tracker calculator/helper, local, export.",
+    "description": "Sum purchases entered as Item | Quantity | Unit price, locally in the browser.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4973,9 +4973,9 @@
     "slug": "citation-formatter",
     "title": "Citation Formatter",
     "category": "Education",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Citation Formatter \u2014 Education: citation formatter \u2014 works in browser, local processing, export result. Fast and private.",
+    "description": "Beta: citation style formatting is not implemented; currently echoes pasted references.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5129,7 +5129,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Timetable Maker \u2014 Education: timetable maker \u2014 works in browser, local processing, export result. Fast and private.",
+    "description": "Build a Markdown timetable from Day | Time | Activity rows.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6081,7 +6081,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "CSV Merger \u2014 Files & Data: csv merger \u2014 works in browser, local processing, export result. Fast and private.",
+    "description": "Merge pasted CSV datasets with matching headers, separated by a line containing ---.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6177,9 +6177,9 @@
     "slug": "csv-to-xlsx",
     "title": "CSV to XLSX",
     "category": "Files & Data",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "CSV to XLSX \u2014 Files & Data: csv to xlsx \u2014 works in browser, local processing, export result. Fast and private.",
+    "description": "Beta: currently exports CSV for spreadsheet applications; it does not generate an XLSX file.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6401,9 +6401,9 @@
     "slug": "decision-table-maker",
     "title": "Decision Table Maker",
     "category": "Productivity",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Decision Table Maker \u2014 Productivity: decision table maker \u2014 OSM, local processing, export.",
+    "description": "Beta: decision matrix construction is not implemented; currently echoes pasted text.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6429,9 +6429,9 @@
     "slug": "meeting-minutes",
     "title": "Meeting Minutes",
     "category": "Productivity",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Meeting Minutes \u2014 Productivity: meeting minutes \u2014 OSM, local processing, export.",
+    "description": "Beta: currently creates a numbered agenda, not structured meeting minutes.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7984,13 +7984,14 @@
       "puzzle",
       "blocks"
     ],
-    "processing": "local-browser"
+    "processing": "browser",
+    "status": "beta"
   },
   {
     "slug": "map-directory",
     "title": "Map Directory \u2014 Trivandrum Massive",
     "category": "Productivity",
-    "description": "Massive directory map starting from Trivandrum (8.5241,76.9366) \u2014 auto scraper point by point 0.01\u00b0 grid spiral outward, entire map covered by one point. Classifies road-wise & business-wise (mosques, restaurants, churches, temples, schools, hospitals, banks etc) via NVIDIA AI that creates new sections automatically. Runs continuously in background via frontend poller + GitHub Action hourly. Free Overpass API, no key, IndexedDB + localStorage, export JSON.",
+    "description": "Browse the published OpenStreetMap directory snapshot or manually scan a cell to keep a local IndexedDB copy. Published coverage starts empty and depends on successful scheduled indexing jobs.",
     "keywords": [
       "map",
       "directory",
@@ -8002,13 +8003,14 @@
       "mosque",
       "restaurant"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "map-auto-scraper",
     "title": "Map Auto Scraper \u2014 Background",
     "category": "Productivity",
-    "description": "Background auto scraper that continuously polls map agent and builds massive directory from Trivandrum. Spiral grid 0.01\u00b0, classifies roads & business types, uses NVIDIA AI for new sections. Runs every 35s in browser + GitHub Action every 2h. Flawless engineering: retry, rate limit, IndexedDB, progress persistence.",
+    "description": "Review a bounded OSM map-cell snapshot and collection status. Recurring GitHub jobs collect only verified, rate-limited cells after the workflow is merged; not continuous browser scraping or complete map coverage.",
     "keywords": [
       "auto",
       "scraper",
@@ -8017,7 +8019,8 @@
       "background",
       "osm"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "road-directory",
@@ -8030,7 +8033,8 @@
       "trivandrum",
       "map"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "business-directory",
@@ -8046,13 +8050,14 @@
       "temple",
       "shop"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "kerala-expansion",
     "title": "Kerala Expansion \u2014 10 Day Sprint",
     "category": "Productivity",
-    "description": "Kerala 10-day sprint to finish entire Kerala from Trivandrum origin \u2014 adaptive multi-resolution 0.01\u00b0 Trivandrum 2000 cells + 0.02\u00b0 rest Kerala 10000 + 0.05\u00b0 gaps 5000 = 17000 cells, 4 parallel workers, 3 Overpass mirrors, 35s interval, NVIDIA AI road-wise & business-wise classification, GitHub Action every 30min batch 20. After Kerala, South India 11-20d, India 21-60d, World 61-365d. Flawless.",
+    "description": "View Kerala indexing plans and published progress. Scheduled OpenStreetMap jobs depend on upstream availability; the planned cell target is not a completion guarantee.",
     "keywords": [
       "kerala",
       "expansion",
@@ -8063,7 +8068,8 @@
       "mosque",
       "restaurant"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "kerala-districts",
@@ -8077,13 +8083,14 @@
       "trivandrum",
       "kollam"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "kerala-directory-full",
     "title": "Kerala Directory \u2014 Full Business Info",
     "category": "Productivity",
-    "description": "Kerala directory full \u2014 massive scrapping, shows ALL business info from OSM not only names: phone, website, opening_hours, cuisine, religion, operator, brand, building, wheelchair, etc + railways + roads with length/maxspeed/traffic heuristic + spatial index geohash6/7 grid01/02/05 via lat/lng, distance via haversine+OSRM, free storage GitHub+Vercel+IndexedDB+search-index fully indexable for AI multi-tool, visible in Kerala directory page.",
+    "description": "Browse verified OpenStreetMap cells and tagged business details from a bounded Kerala sample; not all Kerala businesses, roads, or live availability. ODbL attribution required.",
     "keywords": [
       "kerala",
       "directory",
@@ -8095,7 +8102,8 @@
       "distance",
       "traffic"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "kerala-ai",
@@ -8112,7 +8120,8 @@
       "geohash",
       "traffic"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "spatial-index",
@@ -8128,13 +8137,14 @@
       "lng",
       "distance"
     ],
-    "processing": "local-browser"
+    "processing": "browser",
+    "status": "beta"
   },
   {
     "slug": "inception-labs",
     "title": "Inception Labs \u2014 Mercury Diffusion LLM",
     "category": "OCR & AI",
-    "description": "Inception Labs reverse engineered chat.inceptionlabs.ai as API \u2014 Mercury diffusion LLM 737 tok/s, 32k context, free playground. Endpoint https://chat.inceptionlabs.ai/api/chat/completions model lambda.mercury-coder-small, auth Bearer token from cookie token TTL 6h generated via Playwright at /auth. Official API https://api.inceptionlabs.ai/v1/chat/completions model mercury-2.5 100M free tokens. Must be rigorously tested or else rubbish \u2014 small AI, use high thinking for map work, proxy rotation every time to reset rate limit.",
+    "description": "Inception Labs chat via its official API. Requires the site operator to configure INCEPTION_API_KEY; unavailable when unconfigured. AI output must be checked before use.",
     "keywords": [
       "inception",
       "mercury",
@@ -8145,13 +8155,14 @@
       "reverse",
       "proxy"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "product-directory",
-    "title": "Product Directory \u2014 Amazon & Flipkart Massive",
+    "title": "Product Directory \u2014 Nationwide (Limited)",
     "category": "Business",
-    "description": "Product directory massive dataset \u2014 Amazon 100M+ and Flipkart 10M+ products with price categorizing, rating, seller rating etc. Systematic: categories \u2192 subcategories \u2192 product URLs \u2192 details (title, price, original price, discount, rating, seller name, seller rating, thumbnails, highlights, offers, specifications). Free storage GitHub+Vercel+IndexedDB+search-index fully indexable for AI. Similar to map big project.",
+    "description": "Search verified nationwide product records. The published snapshot currently contains no verified products. Prices, sellers and coverage require authorized retailer feeds.",
     "keywords": [
       "product",
       "amazon",
@@ -8161,26 +8172,28 @@
       "seller",
       "directory"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "product-scraper",
-    "title": "Product Scraper \u2014 Amazon Flipkart",
+    "title": "Product Search \u2014 Retail Sources (Limited)",
     "category": "Business",
-    "description": "Product scraper for Amazon & Flipkart millions of products \u2014 free Flipkart scraper API Rust dvishal485 no auth, Amazon needs rotating proxies ScraperAPI. Systematic categories \u2192 subcategories \u2192 product URLs \u2192 details. Free storage GitHub+Vercel+IndexedDB.",
+    "description": "Browse verified authorized retailer-feed listings. Unlicensed Flipkart/Amazon HTML scraping is disabled; a permissioned feed is required for product details and current prices.",
     "keywords": [
       "product",
       "scraper",
       "amazon",
       "flipkart"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "music-directory",
-    "title": "Music Directory \u2014 Spotify Full Dataset",
+    "title": "Music Directory \u2014 Worldwide Open Search",
     "category": "Audio",
-    "description": "Music directory full dataset for AI for songs in Spotify \u2014 based on GitHub AliAkhtari78/SpotifyScraper (no API key, public embed token) + msr8/spotify 7M+ tracks. Extract tracks, albums, artists, playlists, podcasts, lyrics, audio features danceability energy valence tempo etc. Free storage GitHub+Vercel+IndexedDB fully indexable for AI recommendations via k-nearest-neighbours.",
+    "description": "On-demand MusicBrainz recording search worldwide (not Trivandrum and not a complete Spotify catalogue). Spotify links open an unverified search; no Spotify tracks stored.",
     "keywords": [
       "music",
       "spotify",
@@ -8189,18 +8202,90 @@
       "audio",
       "features"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "music-scraper",
-    "title": "Music Scraper \u2014 Spotify",
+    "title": "Music Search \u2014 Open Recordings",
     "category": "Audio",
-    "description": "Music scraper Spotify \u2014 extract public Spotify data without official API, no key, sync+async, typed models, one dependency, bootstraps anonymous token from public embed pages. Features: all core entities + podcasts, search, charts, cover colors, credits, two-tier resilience GraphQL+embed fallback, anti-ban.",
+    "description": "On-demand open MusicBrainz recording search; unlicensed Spotify scraping disabled. No full Spotify dataset or verified Spotify ID matching.",
     "keywords": [
       "music",
       "scraper",
       "spotify"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
+  },
+  {
+    "slug": "trivandrum-music-places",
+    "title": "Trivandrum Music Places Directory",
+    "category": "Maps",
+    "status": "beta",
+    "processing": "hybrid",
+    "description": "Attributed OpenStreetMap music venues, clubs and music shops near central Thiruvananthapuram. Bounded published snapshot, not a Spotify tracks catalogue; starts empty until a verified indexing job succeeds.",
+    "keywords": [
+      "trivandrum",
+      "thiruvananthapuram",
+      "music",
+      "venue",
+      "instruments",
+      "local"
+    ]
+  },
+  {
+    "slug": "trivandrum-shop-directory",
+    "title": "Trivandrum Shop Directory",
+    "category": "Maps",
+    "status": "beta",
+    "processing": "hybrid",
+    "description": "Attributed OpenStreetMap shops within 6.5 km of central Thiruvananthapuram. Bounded published snapshot, not live inventory; starts empty until a verified indexing job succeeds.",
+    "keywords": [
+      "trivandrum",
+      "thiruvananthapuram",
+      "shops",
+      "local",
+      "directory"
+    ]
+  },
+  {
+    "slug": "presentation-creator",
+    "title": "Presentation Creator \u2014 Research to PPTX",
+    "category": "AI",
+    "status": "live",
+    "processing": "server",
+    "description": "Search Wikipedia and optional web sources, combine source snippets or your notes, and download a real PowerPoint deck with citations. Reviewed image links only; no image bytes stored.",
+    "privacy": "Topic and notes sent to the MegaPLAN server; no file uploads.",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "reviewed-image-link-directory",
+    "title": "Reviewed Image Link Directory",
+    "category": "Images",
+    "status": "live",
+    "processing": "server",
+    "description": "Search for source links to human-reviewed, licensed, non-explicit Wikimedia image records. Link-only index; unreviewed candidates never published.",
+    "privacy": "Query sent to MegaPLAN server; metadata links only.",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "data-sources-status",
+    "title": "Data Sources \u2014 Coverage & Health",
+    "category": "OSINT / Public Data",
+    "status": "live",
+    "processing": "server",
+    "description": "Live verified counts, last collection times, licensing and completeness limits for world song names, local map cells, retailer feeds and reviewed image links.",
+    "privacy": "Public read-only metadata; no uploads.",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
   }
 ]

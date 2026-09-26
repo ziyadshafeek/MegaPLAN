@@ -13,6 +13,9 @@ import { mountKeralaDirectoryFull } from './kerala-directory-full.js';
 import { mountInceptionTool } from './inception-tool.js';
 import { mountProductDirectory } from './product-directory.js';
 import { mountMusicDirectory } from './music-directory.js';
+import { mountCityMusicDirectory, mountCityShopDirectory } from './city-directory.js';
+import { mountPresentationTool } from './presentation-tool.js';
+import { mountSourceStatus } from './source-status-tool.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -387,7 +390,7 @@ Object.assign(HANDLERS, {
   'Crop Video': (r, t) => HANDLERS['Mute Video'](r, t),
   'Rotate Video': (r, t) => HANDLERS['Mute Video'](r, t),
   'Video Contact Sheet': (r, t) => HANDLERS['Video Thumbnail Extractor'](r, t),
-  'Subtitle Extractor': (r, t) => textTool(r, t, s => s),
+  'Subtitle Extractor': (r, t) => textTool(r, t, s => s.split(/\r?\n/).map(x => x.trim()).filter(x => x && x !== 'WEBVTT' && !/^\d+$/.test(x) && !/-->/.test(x)).join('\n'), '<p class="muted">Paste SRT/VTT captions to extract dialogue; video files are not decoded here.</p>'),
   'Subtitle Formatter': (r, t) => textTool(r, t, s => s.replace(/\r/g, '')),
   'Subtitle Timing Helper': (r, t) => textTool(r, t, s => s),
   'Transcript to SRT': (r, t) => textTool(r, t, s => s.split(/\n\s*\n/).map((p, i) => `${i + 1}\n00:00:${String(i * 5).padStart(2, '0')},000 --> 00:00:${String(i * 5 + 4).padStart(2, '0')},000\n${p.trim()}`).join('\n\n')),
@@ -440,7 +443,18 @@ Object.assign(HANDLERS, {
   'UTM Builder': (r, t) => textTool(r, t, (s, body) => {
     const u = new URL(s); u.searchParams.set('utm_source', body.querySelector('#src').value); u.searchParams.set('utm_medium', body.querySelector('#med').value); u.searchParams.set('utm_campaign', body.querySelector('#camp').value); return u.toString();
   }, `<div class="field-row" style="margin-top:8px"><input id="src" class="field" placeholder="source"><input id="med" class="field" placeholder="medium"><input id="camp" class="field" placeholder="campaign"></div>`),
-  'Purchase Tracker': (r, t) => textTool(r, t, s => s),
+  'Purchase Tracker': (r, t) => textTool(r, t, s => {
+    let total = 0;
+    const rows = s.trim().split(/\r?\n/).filter(Boolean).map(line => {
+      const [name, qty, price] = line.split('|').map(x => x.trim());
+      const q = Number(qty), p = Number(price);
+      if (!name || !Number.isFinite(q) || q <= 0 || !Number.isFinite(p) || p < 0) throw Error('Use Item | Quantity | Unit price on each line.');
+      const amount = q * p; total += amount;
+      return `${name}: ${q} × ${p.toFixed(2)} = ${amount.toFixed(2)}`;
+    });
+    if (!rows.length) throw Error('Add at least one purchase.');
+    return rows.join('\n') + `\nTotal: ${total.toFixed(2)}`;
+  }, '<p class="muted">One purchase per line: Item | Quantity | Unit price</p>'),
   'CGPA Calculator': (r, t) => textTool(r, t, s => {
     const rows = s.split(/\r?\n/).map(x => x.split(/[,\s]+/).map(Number)).filter(x => x.length >= 2 && x.every(Number.isFinite));
     const cr = rows.reduce((a, [g, c]) => a + c, 0), gp = rows.reduce((a, [g, c]) => a + g * c, 0);
@@ -467,7 +481,11 @@ Object.assign(HANDLERS, {
   'PDF Study Pack Maker': (r, t) => HANDLERS['Note Outline Maker'](r, t),
   'Question Paper Formatter': (r, t) => textTool(r, t, s => s.split(/\r?\n/).filter(Boolean).map((x, i) => `Q${i + 1}. ${x}`).join('\n\n')),
   'Answer Sheet Generator': (r, t) => textTool(r, t, s => s.split(/\r?\n/).filter(Boolean).map((x, i) => `${i + 1}. ${x}\nAnswer: ________\n`).join('\n')),
-  'Timetable Maker': (r, t) => textTool(r, t, s => s),
+  'Timetable Maker': (r, t) => textTool(r, t, s => {
+    const rows = s.split(/\r?\n/).filter(Boolean).map(line => line.split('|').map(x => x.trim()));
+    if (!rows.length || rows.some(row => row.length !== 3)) throw Error('Use Day | Time | Activity on each line.');
+    return ['| Day | Time | Activity |', '| --- | --- | --- |', ...rows.map(row => '| ' + row.map(x => x.replace(/\|/g, '\\|')).join(' | ') + ' |')].join('\n');
+  }, '<p class="muted">One entry per line: Day | Time | Activity</p>'),
   'Exam Countdown': (r, t) => {
     const body = mountShell(r, t, `<input id="d" class="field" type="date"><div class="button-row"><button class="btn primary" id="run">Days left</button></div><pre id="tool-out" class="out" style="margin-top:12px"></pre>`);
     body.querySelector('#run').onclick = () => { const d = new Date(body.querySelector('#d').value + 'T00:00:00'); setOut(body, `${Math.ceil((d - Date.now()) / 86400000)} days`); };
@@ -593,7 +611,13 @@ Object.assign(HANDLERS, {
     for (let i = 1; i < rows.length; i += n) { part++; downloadText(toCsv([head, ...rows.slice(i, i + n)]), `part-${part}.csv`, 'text/csv'); }
     return `Wrote ${part} CSV part(s).`;
   }, `<input id="n" class="num" style="margin-top:8px" value="50">`),
-  'CSV Merger': (r, t) => textTool(r, t, s => s),
+  'CSV Merger': (r, t) => textTool(r, t, s => {
+    const parts = s.trim().split(/\r?\n\s*---\s*\r?\n/).map(parseCsv).filter(rows => rows.length);
+    if (!parts.length) throw Error('Paste two CSV datasets separated by a line containing ---');
+    const header = parts[0][0].join('\0');
+    for (const rows of parts.slice(1)) if (rows[0].join('\0') !== header) throw Error('CSV headers do not match.');
+    return toCsv([parts[0][0], ...parts.flatMap(rows => rows.slice(1))]);
+  }, '<p class="muted">Paste CSV datasets with matching headers, separated by a line containing ---.</p>'),
   'CSV Transposer': (r, t) => textTool(r, t, s => {
     const rows = parseCsv(s); const w = Math.max(...rows.map(r0 => r0.length));
     return toCsv(Array.from({ length: w }, (_, i) => rows.map(r0 => r0[i] ?? '')));
@@ -771,10 +795,15 @@ Object.assign(HANDLERS, {
   'Kerala AI — Map Intelligence': (r, t) => mountKeralaDirectoryFull(r, { ...t, title: 'Kerala AI — Map Intelligence' }),
   'Spatial Index — Geohash Grid System': (r, t) => mountKeralaDirectoryFull(r, { ...t, title: 'Spatial Index — Geohash Grid System' }),
   'Inception Labs — Mercury Diffusion LLM': (r, t) => mountInceptionTool(r, t),
-  'Product Directory — Amazon & Flipkart Massive': (r, t) => mountProductDirectory(r, t),
-  'Product Scraper — Amazon Flipkart': (r, t) => mountProductDirectory(r, { ...t, title: 'Product Scraper — Amazon Flipkart' }),
-  'Music Directory — Spotify Full Dataset': (r, t) => mountMusicDirectory(r, t),
-  'Music Scraper — Spotify': (r, t) => mountMusicDirectory(r, { ...t, title: 'Music Scraper — Spotify' })
+  'Product Directory — Nationwide (Limited)': (r, t) => mountProductDirectory(r, t),
+  'Product Search — Retail Sources (Limited)': (r, t) => mountProductDirectory(r, { ...t, title: 'Product Search — Retail Sources (Limited)' }),
+  'Music Directory — Worldwide Open Search': (r, t) => mountMusicDirectory(r, t),
+  'Trivandrum Music Places Directory': (r, t) => mountCityMusicDirectory(r, t),
+  'Trivandrum Shop Directory': (r, t) => mountCityShopDirectory(r, t),
+  'Music Search — Open Recordings': (r, t) => mountMusicDirectory(r, { ...t, title: 'Music Search — Open Recordings' }),
+  'Presentation Creator — Research to PPTX': (r, t) => mountPresentationTool(r, t),
+  'Reviewed Image Link Directory': (r, t) => mountPresentationTool(r, { ...t, title: 'Reviewed Image Link Directory' }),
+  'Data Sources — Coverage & Health': (r, t) => mountSourceStatus(r, t)
 });
 
 for (const title of ['APA Citation Helper', 'MLA Citation Helper', 'Chicago Citation Helper', 'Vancouver Citation Helper']) {
