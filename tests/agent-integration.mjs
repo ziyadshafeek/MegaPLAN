@@ -20,7 +20,7 @@ function call(handler, method, url, body = {}, headers = {}) {
 
 const index = await call(router, 'GET', '/api');
 assert.equal(index.status, 200);
-assert.equal(index.data.count, 30);
+assert.equal(index.data.count, 31);
 assert.ok(index.data.routes.includes('presentation'));
 assert.ok(index.data.routes.includes('open-music'));
 const source = fs.readFileSync(new URL('../api/index.js', import.meta.url), 'utf8');

@@ -1,8 +1,7 @@
 name: Scheduled directory indexing
 
 on:
-  schedule:
-    - cron: '*/20 * * * *' # Every 20 minutes
+  # Manual diagnostic only: separate map/music workflows own their staggered schedules.
   workflow_dispatch:
     inputs:
       batch:
@@ -10,6 +9,9 @@ on:
         default: '10'
         type: string
 
+concurrency:
+  group: open-directory-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
   auto-master:
     runs-on: ubuntu-latest
@@ -30,7 +32,7 @@ jobs:
           echo "Running scheduled indexing (upstream failures are not successful ingestions)"
           # Map — Kerala 10-day sprint
           echo "=== Map Kerala ==="
-          node scripts/kerala-expansion-runner.mjs --batch 10 --workers 2
+          node scripts/kerala-expansion-runner.mjs --phase 1 --batch 2 --workers 1
           # Product feeds are imported only after documented retailer permission.
           echo 'Product collection skipped: no authorized retailer feed configured.'
           # Worldwide open recording metadata; not Spotify catalogue
@@ -46,7 +48,9 @@ jobs:
           PROD=$(jq -r '.totalProducts // 0' data/product-directory/index.json 2>/dev/null || echo "0")
           MUSIC=$(jq -r '.totalTracks // 0' data/music-directory/index.json 2>/dev/null || echo "0")
           git commit -m "auto-master: fully automatic map ${MAP} cells, product ${PROD}, music ${MUSIC} [skip ci]"
-          git push origin HEAD:${{ github.ref_name || 'main' }}
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase FETCH_HEAD
+          git push origin "HEAD:${GITHUB_REF_NAME}"
       - name: Summary
         run: |
           echo "### 🤖 Scheduled indexing" >> $GITHUB_STEP_SUMMARY

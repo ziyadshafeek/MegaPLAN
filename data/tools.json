@@ -8010,7 +8010,7 @@
     "slug": "map-auto-scraper",
     "title": "Map Auto Scraper \u2014 Background",
     "category": "Productivity",
-    "description": "Background auto scraper that continuously polls map agent and builds massive directory from Trivandrum. Spiral grid 0.01\u00b0, classifies roads & business types, uses NVIDIA AI for new sections. Runs every 35s in browser + GitHub Action every 2h. Flawless engineering: retry, rate limit, IndexedDB, progress persistence.",
+    "description": "Review a bounded OSM map-cell snapshot and collection status. Recurring GitHub jobs collect only verified, rate-limited cells after the workflow is merged; not continuous browser scraping or complete map coverage.",
     "keywords": [
       "auto",
       "scraper",
@@ -8090,7 +8090,7 @@
     "slug": "kerala-directory-full",
     "title": "Kerala Directory \u2014 Full Business Info",
     "category": "Productivity",
-    "description": "Kerala directory full \u2014 massive scrapping, shows ALL business info from OSM not only names: phone, website, opening_hours, cuisine, religion, operator, brand, building, wheelchair, etc + railways + roads with length/maxspeed/traffic heuristic + spatial index geohash6/7 grid01/02/05 via lat/lng, distance via haversine+OSRM, free storage GitHub+Vercel+IndexedDB+search-index fully indexable for AI multi-tool, visible in Kerala directory page.",
+    "description": "Browse verified OpenStreetMap cells and tagged business details from a bounded Kerala sample; not all Kerala businesses, roads, or live availability. ODbL attribution required.",
     "keywords": [
       "kerala",
       "directory",
@@ -8179,7 +8179,7 @@
     "slug": "product-scraper",
     "title": "Product Search \u2014 Retail Sources (Limited)",
     "category": "Business",
-    "description": "Experimental on-demand product lookup; no verified nationwide inventory. Bulk Flipkart/Amazon details require authorized affiliate or retailer feeds, not bypass scraping.",
+    "description": "Browse verified authorized retailer-feed listings. Unlicensed Flipkart/Amazon HTML scraping is disabled; a permissioned feed is required for product details and current prices.",
     "keywords": [
       "product",
       "scraper",
@@ -8270,6 +8270,19 @@
     "processing": "server",
     "description": "Search for source links to human-reviewed, licensed, non-explicit Wikimedia image records. Link-only index; unreviewed candidates never published.",
     "privacy": "Query sent to MegaPLAN server; metadata links only.",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "data-sources-status",
+    "title": "Data Sources \u2014 Coverage & Health",
+    "category": "OSINT / Public Data",
+    "status": "live",
+    "processing": "server",
+    "description": "Live verified counts, last collection times, licensing and completeness limits for world song names, local map cells, retailer feeds and reviewed image links.",
+    "privacy": "Public read-only metadata; no uploads.",
     "adSlots": [
       "top",
       "bottom"

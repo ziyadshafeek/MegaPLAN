@@ -18,10 +18,8 @@ export function validateProductFeed(input) {
     return { id: String(p.id).slice(0, 100), title: String(p.title).slice(0, 250), seller: String(p.seller).slice(0, 160), category: String(p.category).slice(0, 100), brand: String(p.brand || '').slice(0, 100), price: Number(p.price), currentPrice: Number(p.price), currency: 'INR', rating: Number(p.rating) || null, external_url: url.href, source: domain, platform: domain, verifiedAt: p.verifiedAt, indexedAt: now, permissionEvidence: input.permissionEvidence };
   });
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  if (process.env.AUTHORIZED_PRODUCT_FEED !== '1' || !process.argv[2]) throw Error('Set AUTHORIZED_PRODUCT_FEED=1 after verifying retailer permission; provide the local feed JSON path.');
-  const products = validateProductFeed(JSON.parse(fs.readFileSync(process.argv[2])));
-  const file = new URL('../data/product-directory/index.json', import.meta.url);
+export function publishAuthorizedFeed(input, file = new URL('../data/product-directory/index.json', import.meta.url), publicFile = new URL('../public/data/product-directory/index.json', import.meta.url)) {
+  const products = validateProductFeed(input);
   const old = JSON.parse(fs.readFileSync(file));
   const byId = new Map((old.products || []).map(p => [`${p.source}:${p.id}`, p]));
   for (const p of products) byId.set(`${p.source}:${p.id}`, p);
@@ -31,6 +29,11 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   const updated = { ...old, products: merged, totalProducts: merged.length, totalCategories: Object.keys(categories).length, categories, lastScannedAt: new Date().toISOString(), source: 'Operator-supplied authorized feed; permission evidence recorded per record. Price may change.' };
   const text = JSON.stringify(updated, null, 2) + '\n';
   fs.writeFileSync(file, text);
-  fs.writeFileSync(new URL('../public/data/product-directory/index.json', import.meta.url), text);
-  console.log(`Imported ${products.length} authorized products; ${merged.length} total. No storefront scraping.`);
+  fs.writeFileSync(publicFile, text);
+  return { imported: products.length, total: merged.length };
+}
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  if (process.env.AUTHORIZED_PRODUCT_FEED !== '1' || !process.argv[2]) throw Error('Set AUTHORIZED_PRODUCT_FEED=1 after verifying retailer permission; provide the local feed JSON path.');
+  const result = publishAuthorizedFeed(JSON.parse(fs.readFileSync(process.argv[2])));
+  console.log(`Imported ${result.imported} authorized products; ${result.total} total. No storefront scraping.`);
 }

@@ -15,6 +15,7 @@ import { mountProductDirectory } from './product-directory.js';
 import { mountMusicDirectory } from './music-directory.js';
 import { mountCityMusicDirectory, mountCityShopDirectory } from './city-directory.js';
 import { mountPresentationTool } from './presentation-tool.js';
+import { mountSourceStatus } from './source-status-tool.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -801,7 +802,8 @@ Object.assign(HANDLERS, {
   'Trivandrum Shop Directory': (r, t) => mountCityShopDirectory(r, t),
   'Music Search — Open Recordings': (r, t) => mountMusicDirectory(r, { ...t, title: 'Music Search — Open Recordings' }),
   'Presentation Creator — Research to PPTX': (r, t) => mountPresentationTool(r, t),
-  'Reviewed Image Link Directory': (r, t) => mountPresentationTool(r, { ...t, title: 'Reviewed Image Link Directory' })
+  'Reviewed Image Link Directory': (r, t) => mountPresentationTool(r, { ...t, title: 'Reviewed Image Link Directory' }),
+  'Data Sources — Coverage & Health': (r, t) => mountSourceStatus(r, t)
 });
 
 for (const title of ['APA Citation Helper', 'MLA Citation Helper', 'Chicago Citation Helper', 'Vancouver Citation Helper']) {

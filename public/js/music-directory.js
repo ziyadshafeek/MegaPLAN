@@ -84,18 +84,25 @@ export function mountMusicDirectory(root, tool) {
     $(`info`).innerHTML = `Searching worldwide MusicBrainz recordings for "${esc(term)}"…`;
     try {
       if (type !== 'track') throw Error('This live search currently supports recordings only.');
-      const r = await fetch(`/api/open-music?q=${encodeURIComponent(term)}`);
-      const j = await r.json();
-      if (!r.ok) throw Error(j.error || 'Open music search unavailable');
-      const tracks = j.results || [];
-      $(`info`).textContent = `${tracks.length} MusicBrainz recordings · Spotify links are searches, not verified matches.`;
+      const local = await fetch(`/api/music-directory?action=search&q=${encodeURIComponent(term)}`);
+      const localData = await local.json();
+      let tracks = local.ok ? localData.results || [] : [];
+      let origin = 'published MusicBrainz snapshot';
+      if (!tracks.length) {
+        const live = await fetch(`/api/open-music?q=${encodeURIComponent(term)}`);
+        const liveData = await live.json();
+        if (!live.ok) throw Error(liveData.error || 'Open music search unavailable');
+        tracks = liveData.results || [];
+        origin = liveData.source || 'MusicBrainz live search';
+      }
+      $(`info`).textContent = `${tracks.length} recording-name matches from ${origin} · Spotify search links are not verified matches.`;
 
       $(`tracks`).innerHTML = tracks.slice(0, 20).map(t => `
         <div style="border:1px solid #e0d5c4;border-radius:10px;padding:10px;background:#fff">
           <b style="font-size:13px">${esc(t.name||'Unnamed')}</b><br>
           <div style="font-size:12px;margin-top:4px">
             <div>👤 ${esc(t.artists||'')} · 💿 ${esc(t.album||'')}</div>
-            <div>⏱ ${Math.floor((t.duration_ms||0)/60000)}:${String(Math.floor((t.duration_ms||0)%60000/1000)).padStart(2,'0')} · source: MusicBrainz</div>
+            <div>⏱ ${t.duration_ms ? `${Math.floor(t.duration_ms/60000)}:${String(Math.floor(t.duration_ms%60000/1000)).padStart(2,'0')}` : 'duration unknown'} · source: MusicBrainz</div>
             ${t.danceability != null ? `<div>💃 Danceability ${esc(t.danceability)} · ⚡ Energy ${esc(t.energy ?? '—')} · 😊 Valence ${esc(t.valence ?? '—')} · 🎵 Tempo ${esc(t.tempo ?? '—')}</div>` : ''}
             <div style="margin-top:4px"><a href="${esc(t.external_url||'')}" target="_blank" style="font-size:11px">Open MusicBrainz</a> ${t.spotifySearchUrl ? `· <a href="${esc(t.spotifySearchUrl)}" target="_blank" rel="noopener noreferrer" style="font-size:11px">Search Spotify (unverified)</a>` : ''} ${t.preview_url ? `· <a href="${esc(t.preview_url)}" target="_blank" style="font-size:11px">Preview</a>` : ''}</div>
           </div>

@@ -118,6 +118,7 @@ out center 100;`;
 
 async function saveCell(cellData) {
   ensureDir();
+  if (readIndex().cells?.includes(cellData.index)) return null; // never double-count a previously verified cell
   const dir = path.join(root, 'data', 'map-directory');
   const pub = path.join(root, 'public', 'data', 'map-directory');
   
@@ -188,8 +189,11 @@ async function runPhase(phase, batch, workers) {
   console.log(`BBOX: ${phase.bbox.latMin}-${phase.bbox.latMax}, ${phase.bbox.lngMin}-${phase.bbox.lngMax}, grid ${phase.grid}, radius ${phase.radius}, estimated ${phase.estimatedCells} cells`);
 
   const idx = readIndex();
+  // Two mirrored JSON cell trees live in Git/Vercel; don't silently grow them
+  // into a planet-scale repository. An OSM extract + spatial DB is required.
+  if ((idx.cells || []).length >= 100) throw Error('Git map preview cap: 100 verified cells; use an OSM extract and external spatial database for further coverage.');
   const previousPhases = (loadExpansionPlan()?.phases || []).filter(p => p.phase < phase.phase);
-  const queue = phaseTasks(phase, previousPhases, idx.lastIndex, batch);
+  const queue = phaseTasks(phase, previousPhases, idx.lastIndex, batch, idx.cells || []);
   console.log(`Phase queue: ${queue.length} cells, next index ${queue[0]?.index ?? 'none'}; workers ${workers}`);
 
   console.log(`Queue: ${queue.length} cells`);
@@ -206,7 +210,7 @@ async function runPhase(phase, batch, workers) {
       try {
         console.log(`[Worker ${workerId}] Scanning cell ${task.index} at ${task.lat.toFixed(4)},${task.lng.toFixed(4)} grid ${task.grid}`);
         const result = await scanCellWithMirrors(task.index, task.grid, task.radius, task.center, workerId);
-        await saveCell(result);
+        if (!await saveCell(result)) continue;
         completed++;
         totalPlaces += result.places.length;
         console.log(`[Worker ${workerId}] Cell ${task.index} done: ${result.places.length} places, total ${completed}/${batch}`);

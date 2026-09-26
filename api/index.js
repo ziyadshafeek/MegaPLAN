@@ -9,7 +9,7 @@
  */
 
 // Literal imports are required for Vercel @vercel/nft to bundle every handler.
-const ROUTES = ["agent-dispatch", "agent-health", "agent-plan", "agent-publish", "agent-status", "ai", "auto-master", "github-secret-setup", "inception", "inception-labs", "inspect", "kerala-ai", "kerala", "kerala-expansion", "map-auto", "map-directory", "map-scraper-v2", "map-scraper", "maps", "music-directory", "music-scraper", "open-music", "osint", "product-directory", "product-scraper", "presentation", "rate-limiter", "split-pdf", "youtube-playlist", "youtube-transcript"];
+const ROUTES = ["agent-dispatch", "agent-health", "agent-plan", "agent-publish", "agent-status", "ai", "auto-master", "github-secret-setup", "inception", "inception-labs", "inspect", "kerala-ai", "kerala", "kerala-expansion", "map-auto", "map-directory", "map-scraper-v2", "map-scraper", "maps", "music-directory", "music-scraper", "open-music", "osint", "product-directory", "product-scraper", "presentation", "rate-limiter", "split-pdf", "source-status", "youtube-playlist", "youtube-transcript"];
 const handlerCache = new Map();
 
 async function getHandler(route) {
@@ -45,6 +45,7 @@ async function getHandler(route) {
     case 'presentation': mod = await import('../lib/api/presentation.js'); break;
     case 'rate-limiter': mod = await import('../lib/api/rate-limiter.js'); break;
     case 'split-pdf': mod = await import('../lib/api/split-pdf.js'); break;
+    case 'source-status': mod = await import('../lib/api/source-status.js'); break;
     case 'youtube-playlist': mod = await import('../lib/api/youtube-playlist.js'); break;
     case 'youtube-transcript': mod = await import('../lib/api/youtube-transcript.js'); break;
   }

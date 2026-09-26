@@ -1,10 +1,42 @@
-name: Authorized product feed readiness
+name: Authorized retailer listing feed sync
 on:
+  # Scheduled on the default branch only after review and merge.
+  schedule:
+    - cron: '19 3 * * *'
   workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: open-directory-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  readiness:
+  licensed-feed:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - run: |
-          echo 'No nationwide product feed is configured. Request retailer/affiliate permission first.'
-          echo 'Import an authorized JSON feed locally with scripts/import-authorized-products.mjs; publish only verified records.'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Sync operator-authorized JSON feed (if configured)
+        env:
+          PRODUCT_FEED_URL: ${{ secrets.PRODUCT_FEED_URL }}
+          PRODUCT_FEED_TOKEN: ${{ secrets.PRODUCT_FEED_TOKEN }}
+          PRODUCT_FEED_PERMISSION_URL: ${{ vars.PRODUCT_FEED_PERMISSION_URL }}
+          PRODUCT_RETAILER_DOMAIN: ${{ vars.PRODUCT_RETAILER_DOMAIN }}
+        run: node scripts/sync-product-feed.mjs
+      - name: Commit verified records only
+        run: |
+          git config user.name 'megaplan-collector[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/product-directory public/data/product-directory
+          if git diff --cached --quiet; then echo 'No authorized new product records'; exit 0; fi
+          git commit -m 'data: refresh authorized retailer feed [skip ci]'
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase FETCH_HEAD
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Report coverage
+        if: always()
+        run: |
+          echo 'Retailer listings require authorized feed access and redistribution rights. No Flipkart/Amazon HTML scraping is scheduled.' >> "$GITHUB_STEP_SUMMARY"
+          jq '{totalProducts,lastScannedAt,source}' data/product-directory/index.json >> "$GITHUB_STEP_SUMMARY"

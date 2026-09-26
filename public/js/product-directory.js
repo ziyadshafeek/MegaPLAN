@@ -1,5 +1,5 @@
 /**
- * Product Directory — published snapshot and on-demand search
+ * Product Directory — verified snapshot and authorized feed search
  * Published repository snapshot; no visitor-side ingestion.
  * Shows all business info: price, rating, seller rating, category, brand, etc
  */
@@ -14,7 +14,7 @@ export function mountProductDirectory(root, tool) {
       <aside style="background:#efe6d8;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:12px;border-right:1px solid #e0d5c4">
         <div>
           <b>Product Directory</b>
-          <p class="muted" style="margin:4px 0 8px;font-size:12px">Nationwide product inventory is not populated yet (zero verified products). On-demand third-party lookup is experimental and may fail; prices are not verified. Detailed nationwide listings require authorized retailer feeds.</p>
+          <p class="muted" style="margin:4px 0 8px;font-size:12px">Nationwide product inventory is not populated yet (zero verified products). No unofficial HTML lookup is used; prices are only as fresh as licensed feed updates. Detailed nationwide listings require authorized retailer feeds.</p>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             <button class="btn primary" id="${id}-scan" style="font-size:12px">About indexing</button>
             <button class="btn secondary" id="${id}-stop" style="font-size:12px">⏸ Stop</button>
@@ -58,7 +58,7 @@ export function mountProductDirectory(root, tool) {
         <div id="${id}-products" style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px"></div>
       </div>
     </div>
-    <div class="note" style="margin-top:10px;font-size:11px">Current snapshot has zero verified products. A live experimental lookup is not a licensed nationwide product database. Sellers, prices and product details need permissioned source feeds and periodic verification.</div>
+    <div class="note" style="margin-top:10px;font-size:11px">Current snapshot has zero verified products. There is no unlicensed retailer HTML lookup. Sellers, prices and product details need permissioned source feeds and periodic verification.</div>
   `);
 
   const $ = sid => body.querySelector('#' + id + '-' + sid);
@@ -101,14 +101,7 @@ export function mountProductDirectory(root, tool) {
       if (!r.ok) throw Error(j.error || 'Published product search failed');
       let products = j.results || [];
       
-      // If no results, try scraper search (live)
-      if (!products.length) {
-        r = await fetch(`/api/product-scraper?action=search&term=${encodeURIComponent(term)}&platform=flipkart`);
-        j = await r.json();
-        if (!r.ok) throw Error(j.error || 'Live product lookup unavailable');
-        products = j.products || [];
-        // Live search results are ephemeral; repository snapshots come from scheduled jobs.
-      }
+      if (!products.length) $(`info`).textContent = 'No verified product listings for this query. An authorized retailer feed is required; no storefront HTML is scraped.';
 
       $(`products`).innerHTML = products.slice(0, 20).map(p => {
         // Retail image URLs are never auto-rendered. Only HTTPS retailer pages
@@ -137,8 +130,8 @@ export function mountProductDirectory(root, tool) {
   }
 
   function startScraper() {
-    log('Bulk retail scraping is disabled. Import an authorized affiliate feed after verifying rights. On-demand lookup is experimental.');
-    toast('Use Search for on-demand results');
+    log('Bulk retail scraping is disabled. Import an authorized affiliate feed after verifying rights. Only verified published data is searchable.');
+    toast('Search available verified listings');
   }
 
   $(`scan`).onclick = startScraper;

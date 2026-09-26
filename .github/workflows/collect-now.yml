@@ -12,7 +12,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: directory-collector-${{ github.ref }}
+  group: open-directory-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   collect:
@@ -76,7 +76,8 @@ jobs:
             echo 'Inspect committed snapshot counts; a started workflow is not proof of published data.'
             echo "Branch: ${GITHUB_REF_NAME}"
           } >> "$GITHUB_STEP_SUMMARY"
-          if [ "$CITY" != success ] || [ "$MAP" != success ] || [ "$PRODUCT" != success ] || [ "$MUSIC" != success ]; then
-            echo 'Partial collection. See committed status.json and individual step logs.'
+          echo 'Product source skipped by policy unless an authorized feed is provided; skip does NOT mean product coverage.'
+          if [ "$CITY" != success ] || [ "$MAP" != success ] || [ "$MUSIC" != success ] || { [ "$PRODUCT" != success ] && [ "$PRODUCT" != skipped-policy ]; }; then
+            echo 'A permitted source failed. See committed status.json and individual step logs.'
             exit 1
           fi
