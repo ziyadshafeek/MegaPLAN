@@ -1,0 +1,1350 @@
+{
+  "index": 3,
+  "lat": 8.534139,
+  "lng": 76.936638,
+  "dx": 0,
+  "dy": 1,
+  "grid": 0.01,
+  "scannedAt": "2026-09-26T11:50:01.309Z",
+  "places": [
+    {
+      "id": "node/2562490474",
+      "lat": 8.5299889,
+      "lng": 76.9340054,
+      "tags": {
+        "building": "commercial",
+        "name": "Heera Classic",
+        "name:ml": "ഹീര ക്ലാസ്സിക്",
+        "tourism": "apartment"
+      },
+      "name": "Heera Classic",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/2562490475",
+      "lat": 8.5300955,
+      "lng": 76.9345878,
+      "tags": {
+        "building": "commercial",
+        "name": "Heera Kinara",
+        "name:ml": "ഹീര കിനാര",
+        "tourism": "apartment"
+      },
+      "name": "Heera Kinara",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/2562490476",
+      "lat": 8.5298823,
+      "lng": 76.9364715,
+      "tags": {
+        "amenity": "place_of_worship",
+        "religion": "muslim"
+      },
+      "name": null,
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4658657205",
+      "lat": 8.5290638,
+      "lng": 76.9354605,
+      "tags": {
+        "amenity": "fast_food",
+        "brand": "Domino's",
+        "brand:ks": "ڈومینوز",
+        "brand:pa": "ਡੋਮੀਨੋਜ਼",
+        "brand:ur": "ڈومینوز",
+        "brand:wikidata": "Q839466",
+        "brand:wikipedia": "en:Domino's Pizza",
+        "cuisine": "pizza",
+        "name": "Domino's",
+        "name:ks": "ڈومینوز",
+        "name:pa": "ਡੋਮੀਨੋਜ਼",
+        "name:ur": "ڈومینوز",
+        "takeaway": "yes"
+      },
+      "name": "Domino's",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7121671350",
+      "lat": 8.5296064,
+      "lng": 76.9388278,
+      "tags": {
+        "amenity": "monastery"
+      },
+      "name": null,
+      "amenity": "monastery",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7130193537",
+      "lat": 8.5295425,
+      "lng": 76.9364721,
+      "tags": {
+        "addr:postcode": "695004",
+        "addr:street": "Keshavadasapuram-Ullor road",
+        "amenity": "marketplace",
+        "name": "kesavadasapuram market"
+      },
+      "name": "kesavadasapuram market",
+      "amenity": "marketplace",
+      "shop": null,
+      "road": "Keshavadasapuram-Ullor road"
+    },
+    {
+      "id": "node/7130332049",
+      "lat": 8.5309734,
+      "lng": 76.9376023,
+      "tags": {
+        "office": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7130337796",
+      "lat": 8.5304264,
+      "lng": 76.9374931,
+      "tags": {
+        "office": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7130342308",
+      "lat": 8.5314929,
+      "lng": 76.9383802,
+      "tags": {
+        "office": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351239860",
+      "lat": 8.5336089,
+      "lng": 76.9413565,
+      "tags": {
+        "name": "BSIX Fish World",
+        "shop": "fishing"
+      },
+      "name": "BSIX Fish World",
+      "amenity": null,
+      "shop": "fishing",
+      "road": null
+    },
+    {
+      "id": "node/7351259136",
+      "lat": 8.531158,
+      "lng": 76.9390391,
+      "tags": {
+        "name": "Sevana medicines",
+        "shop": "medical_supply"
+      },
+      "name": "Sevana medicines",
+      "amenity": null,
+      "shop": "medical_supply",
+      "road": null
+    },
+    {
+      "id": "node/7351265533",
+      "lat": 8.5326447,
+      "lng": 76.9385329,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "eirene gospel church",
+        "religion": "christian"
+      },
+      "name": "eirene gospel church",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351275122",
+      "lat": 8.5326324,
+      "lng": 76.9404918,
+      "tags": {
+        "amenity": "bank",
+        "brand": "Bank of India",
+        "brand:wikidata": "Q2004439",
+        "name": "Bank of India"
+      },
+      "name": "Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351287405",
+      "lat": 8.5323038,
+      "lng": 76.9400583,
+      "tags": {
+        "amenity": "bank",
+        "name": "united bank of india"
+      },
+      "name": "united bank of india",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351289031",
+      "lat": 8.5320513,
+      "lng": 76.9398578,
+      "tags": {
+        "amenity": "bank",
+        "brand": "Vijaya Bank",
+        "brand:wikidata": "Q2003171",
+        "brand:wikipedia": "en:Vijaya Bank",
+        "name": "Vijaya Bank"
+      },
+      "name": "Vijaya Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351304241",
+      "lat": 8.5309882,
+      "lng": 76.9396399,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Iyers kitchen"
+      },
+      "name": "Iyers kitchen",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351304503",
+      "lat": 8.5330225,
+      "lng": 76.9410101,
+      "tags": {
+        "name": "pention bhavan",
+        "office": "yes"
+      },
+      "name": "pention bhavan",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351374402",
+      "lat": 8.5332845,
+      "lng": 76.9412073,
+      "tags": {
+        "name": "Sony Authorised Service Center",
+        "shop": "mobile_phone"
+      },
+      "name": "Sony Authorised Service Center",
+      "amenity": null,
+      "shop": "mobile_phone",
+      "road": null
+    },
+    {
+      "id": "node/7351377398",
+      "lat": 8.5299655,
+      "lng": 76.9391115,
+      "tags": {
+        "name": "Nazereth convent chappel and girls hostel",
+        "tourism": "hostel"
+      },
+      "name": "Nazereth convent chappel and girls hostel",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614031",
+      "lat": 8.5300607,
+      "lng": 76.9385712,
+      "tags": {
+        "amenity": "bureau_de_change",
+        "name": "Kosamattam Finance Limited"
+      },
+      "name": "Kosamattam Finance Limited",
+      "amenity": "bureau_de_change",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614032",
+      "lat": 8.5309672,
+      "lng": 76.939017,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Dum Biriyani Restaurant"
+      },
+      "name": "Dum Biriyani Restaurant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614033",
+      "lat": 8.5313733,
+      "lng": 76.9393168,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "STAR CHEF Bake & Make Restaurant",
+        "takeaway": "only"
+      },
+      "name": "STAR CHEF Bake & Make Restaurant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614038",
+      "lat": 8.5313282,
+      "lng": 76.9396076,
+      "tags": {
+        "name": "Mahek Designs",
+        "shop": "clothes"
+      },
+      "name": "Mahek Designs",
+      "amenity": null,
+      "shop": "clothes",
+      "road": null
+    },
+    {
+      "id": "node/7466614039",
+      "lat": 8.5315824,
+      "lng": 76.9394847,
+      "tags": {
+        "amenity": "place_of_worship",
+        "denomination": "pentecostal",
+        "name": "IPC Prayer Band Worship Centre",
+        "religion": "christian"
+      },
+      "name": "IPC Prayer Band Worship Centre",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614040",
+      "lat": 8.5317442,
+      "lng": 76.9395986,
+      "tags": {
+        "name": "Prince Tyres And Agencies",
+        "shop": "tyres"
+      },
+      "name": "Prince Tyres And Agencies",
+      "amenity": null,
+      "shop": "tyres",
+      "road": null
+    },
+    {
+      "id": "node/7466614041",
+      "lat": 8.5317893,
+      "lng": 76.9396486,
+      "tags": {
+        "name": "Diya Hero",
+        "shop": "motorcycle"
+      },
+      "name": "Diya Hero",
+      "amenity": null,
+      "shop": "motorcycle",
+      "road": null
+    },
+    {
+      "id": "node/7466614046",
+      "lat": 8.5322966,
+      "lng": 76.9402963,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Shiva Temple",
+        "religion": "hindu"
+      },
+      "name": "Shiva Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614047",
+      "lat": 8.5326549,
+      "lng": 76.9406254,
+      "tags": {
+        "name": "Green Trends Unisex Hair & Style Salon",
+        "shop": "beauty"
+      },
+      "name": "Green Trends Unisex Hair & Style Salon",
+      "amenity": null,
+      "shop": "beauty",
+      "road": null
+    },
+    {
+      "id": "node/7466614048",
+      "lat": 8.5325742,
+      "lng": 76.9405675,
+      "tags": {
+        "name": "CBC Honda",
+        "shop": "motorcycle"
+      },
+      "name": "CBC Honda",
+      "amenity": null,
+      "shop": "motorcycle",
+      "road": null
+    },
+    {
+      "id": "node/7466614049",
+      "lat": 8.5327355,
+      "lng": 76.9407762,
+      "tags": {
+        "name": "FSC Bake House and Ice Cream Parlour",
+        "shop": "bakery"
+      },
+      "name": "FSC Bake House and Ice Cream Parlour",
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "node/7466614050",
+      "lat": 8.5333573,
+      "lng": 76.9413584,
+      "tags": {
+        "amenity": "events_venue",
+        "name": "Grace MINI Hall"
+      },
+      "name": "Grace MINI Hall",
+      "amenity": "events_venue",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614051",
+      "lat": 8.5333779,
+      "lng": 76.9414371,
+      "tags": {
+        "name": "BSIX Fish World",
+        "shop": "seafood"
+      },
+      "name": "BSIX Fish World",
+      "amenity": null,
+      "shop": "seafood",
+      "road": null
+    },
+    {
+      "id": "node/7526812622",
+      "lat": 8.5376059,
+      "lng": 76.9380804,
+      "tags": {
+        "addr:city": "Paarottukonam",
+        "name": "Kerala Soil Museum",
+        "operator": "Govt. of Kerala",
+        "tourism": "museum",
+        "wikidata": "Q17064628",
+        "wikipedia": "en:Kerala Soil Museum"
+      },
+      "name": "Kerala Soil Museum",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7925841290",
+      "lat": 8.5382247,
+      "lng": 76.9377805,
+      "tags": {
+        "name": "Krishi Bhavan",
+        "office": "government"
+      },
+      "name": "Krishi Bhavan",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8321155473",
+      "lat": 8.5385369,
+      "lng": 76.9385732,
+      "tags": {
+        "name": "Haritha VegetableShop",
+        "shop": "greengrocer"
+      },
+      "name": "Haritha VegetableShop",
+      "amenity": null,
+      "shop": "greengrocer",
+      "road": null
+    },
+    {
+      "id": "node/8321225733",
+      "lat": 8.5376399,
+      "lng": 76.9401636,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Pananvila Kuzhivila Devi Temple",
+        "religion": "hindu"
+      },
+      "name": "Pananvila Kuzhivila Devi Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8321765498",
+      "lat": 8.5299399,
+      "lng": 76.9368756,
+      "tags": {
+        "name": "Airtel Store",
+        "office": "telecommunication"
+      },
+      "name": "Airtel Store",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8411297865",
+      "lat": 8.535735,
+      "lng": 76.935231,
+      "tags": {
+        "shop": "supermarket"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "node/8411297866",
+      "lat": 8.5357366,
+      "lng": 76.9354213,
+      "tags": {
+        "shop": "supermarket"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "node/12645206454",
+      "lat": 8.5295229,
+      "lng": 76.9381664,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:district": "Thiruvananthapuram",
+        "addr:street": "Kesavadasapuram-Ulloor road",
+        "brand": "Samsung",
+        "brand:wikidata": "Q20718",
+        "name": "Samsung",
+        "operator": "DP Tech",
+        "shop": "electronics"
+      },
+      "name": "Samsung",
+      "amenity": null,
+      "shop": "electronics",
+      "road": "Kesavadasapuram-Ulloor road"
+    },
+    {
+      "id": "node/13991409004",
+      "lat": 8.5295434,
+      "lng": 76.9360933,
+      "tags": {
+        "amenity": "waste_basket"
+      },
+      "name": null,
+      "amenity": "waste_basket",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/285189750",
+      "lat": 8.5320396,
+      "lng": 76.9421812,
+      "tags": {
+        "addr:city": "Trivandrum",
+        "addr:postcode": "695004",
+        "amenity": "college",
+        "name": "Mahatma Gandhi College",
+        "name:etymology:wikidata": "Q1001",
+        "name:ml": "മഹാത്മാ ഗാന്ധി കോളേജ്",
+        "website": "https://mgcollegetvm.ac.in/",
+        "wikidata": "Q6733491",
+        "wikipedia": "en:Mahatma Gandhi College"
+      },
+      "name": "Mahatma Gandhi College",
+      "amenity": "college",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/716328460",
+      "lat": 8.5375737,
+      "lng": 76.9374939,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:postcode": "695015",
+        "addr:street": "Parattukonam",
+        "building": "yes",
+        "name": "State Soil Museum &Soil Information Centre",
+        "opening_hours": "Mo-Sa 10:00-17:00",
+        "operator": "Government Of Kerala,, Department Of Soil Survey & Soil Conservation",
+        "operator:type": "government",
+        "phone": "+91-471 254 1776",
+        "tourism": "museum"
+      },
+      "name": "State Soil Museum &Soil Information Centre",
+      "amenity": null,
+      "shop": null,
+      "road": "Parattukonam"
+    },
+    {
+      "id": "way/725250440",
+      "lat": 8.5385809,
+      "lng": 76.9372791,
+      "tags": {
+        "amenity": "school",
+        "name": "Government High School, Kattachakonam"
+      },
+      "name": "Government High School, Kattachakonam",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/725250838",
+      "lat": 8.5391186,
+      "lng": 76.9371601,
+      "tags": {
+        "amenity": "school",
+        "name": "Parottukonam School Ground",
+        "operator": "public Government"
+      },
+      "name": "Parottukonam School Ground",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/725263285",
+      "lat": 8.5364436,
+      "lng": 76.9365526,
+      "tags": {
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "name": "Lutheren Church",
+        "religion": "christian"
+      },
+      "name": "Lutheren Church",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/725268443",
+      "lat": 8.5355293,
+      "lng": 76.935473,
+      "tags": {
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "denomination": "catholic",
+        "name": "Kunnumpuram Catholic Church",
+        "religion": "christian"
+      },
+      "name": "Kunnumpuram Catholic Church",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/762183511",
+      "lat": 8.5297459,
+      "lng": 76.9389473,
+      "tags": {
+        "amenity": "restaurant",
+        "building": "yes"
+      },
+      "name": null,
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/763019952",
+      "lat": 8.5301158,
+      "lng": 76.9368419,
+      "tags": {
+        "building": "yes",
+        "name": "Cadd Centre",
+        "office": "educational_institution"
+      },
+      "name": "Cadd Centre",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797855539",
+      "lat": 8.5340688,
+      "lng": 76.9418732,
+      "tags": {
+        "brand": "Margin Free Market",
+        "brand:wikidata": "Q99751436",
+        "building": "yes",
+        "name": "Margin Free Market",
+        "official_name": "Margin Free Market Pvt Ltd",
+        "shop": "supermarket"
+      },
+      "name": "Margin Free Market",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "way/797859013",
+      "lat": 8.5344622,
+      "lng": 76.9421088,
+      "tags": {
+        "building": "yes",
+        "name": "jose textiles",
+        "shop": "clothes"
+      },
+      "name": "jose textiles",
+      "amenity": null,
+      "shop": "clothes",
+      "road": null
+    },
+    {
+      "id": "way/797859428",
+      "lat": 8.5342889,
+      "lng": 76.9420331,
+      "tags": {
+        "building": "yes",
+        "name": "revathy service center",
+        "operator": "private",
+        "shop": "car"
+      },
+      "name": "revathy service center",
+      "amenity": null,
+      "shop": "car",
+      "road": null
+    },
+    {
+      "id": "way/798309498",
+      "lat": 8.5314854,
+      "lng": 76.9394064,
+      "tags": {
+        "amenity": "cafe",
+        "building": "yes",
+        "delivery": "yes",
+        "name": "Annie's Samosa Point"
+      },
+      "name": "Annie's Samosa Point",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/798309499",
+      "lat": 8.5325901,
+      "lng": 76.9403789,
+      "tags": {
+        "building": "yes",
+        "name": "Maitry Supermarket",
+        "shop": "supermarket"
+      },
+      "name": "Maitry Supermarket",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "way/799115410",
+      "lat": 8.5300542,
+      "lng": 76.9390394,
+      "tags": {
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "name": "nazareth church",
+        "religion": "christian"
+      },
+      "name": "nazareth church",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/799115976",
+      "lat": 8.5302121,
+      "lng": 76.9390737,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:postcode": "695004",
+        "addr:street": "NSP Nagar",
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "Hotel Chinnus",
+        "phone": "+91-471 2540019"
+      },
+      "name": "Hotel Chinnus",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": "NSP Nagar"
+    },
+    {
+      "id": "way/802587777",
+      "lat": 8.530673,
+      "lng": 76.9384391,
+      "tags": {
+        "amenity": "shelter",
+        "building": "yes"
+      },
+      "name": null,
+      "amenity": "shelter",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/802588174",
+      "lat": 8.530257,
+      "lng": 76.937716,
+      "tags": {
+        "amenity": "shelter",
+        "building": "yes",
+        "name": "shop"
+      },
+      "name": "shop",
+      "amenity": "shelter",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/802588664",
+      "lat": 8.5313388,
+      "lng": 76.936515,
+      "tags": {
+        "building": "yes",
+        "shop": "bakery"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "way/802594465",
+      "lat": 8.5310895,
+      "lng": 76.9357435,
+      "tags": {
+        "amenity": "shelter",
+        "building": "yes"
+      },
+      "name": null,
+      "amenity": "shelter",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/804694888",
+      "lat": 8.5292242,
+      "lng": 76.9371079,
+      "tags": {
+        "amenity": "parking",
+        "operator": "chaithanya hospital car parking"
+      },
+      "name": null,
+      "amenity": "parking",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/804694981",
+      "lat": 8.5373911,
+      "lng": 76.9380187,
+      "tags": {
+        "leisure": "park"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/895228243",
+      "lat": 8.5385653,
+      "lng": 76.9392498,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:street": "parottukonam",
+        "amenity": "driving_school",
+        "building": "yes",
+        "name": "anitha driving school"
+      },
+      "name": "anitha driving school",
+      "amenity": "driving_school",
+      "shop": null,
+      "road": "parottukonam"
+    },
+    {
+      "id": "way/905061762",
+      "lat": 8.5294286,
+      "lng": 76.9387317,
+      "tags": {
+        "amenity": "restaurant",
+        "building": "yes",
+        "diet:vegetarian": "yes",
+        "name": "Sri Ananthapuri Vegetarian Restaurant"
+      },
+      "name": "Sri Ananthapuri Vegetarian Restaurant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/945528574",
+      "lat": 8.5381271,
+      "lng": 76.9370261,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam Kunnil Rakshapuri Lane",
+        "amenity": "driving_school",
+        "building": "yes",
+        "name": "Anitha Driving School"
+      },
+      "name": "Anitha Driving School",
+      "amenity": "driving_school",
+      "shop": null,
+      "road": "Parottukonam Kunnil Rakshapuri Lane"
+    },
+    {
+      "id": "way/945532044",
+      "lat": 8.538268,
+      "lng": 76.9370139,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam-Kariyam Road",
+        "building": "yes",
+        "name": "Provision Store",
+        "shop": "yes"
+      },
+      "name": "Provision Store",
+      "amenity": null,
+      "shop": "yes",
+      "road": "Parottukonam-Kariyam Road"
+    },
+    {
+      "id": "way/945537339",
+      "lat": 8.5381065,
+      "lng": 76.9369023,
+      "tags": {
+        "building": "yes",
+        "name": "Pan Shop",
+        "shop": "yes"
+      },
+      "name": "Pan Shop",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "way/945776922",
+      "lat": 8.5392815,
+      "lng": 76.9366811,
+      "tags": {
+        "addr:city": "Thiruvananthapuram",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam-Kariyam Road",
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "name": "Parottukonam Kurushadi",
+        "religion": "christian"
+      },
+      "name": "Parottukonam Kurushadi",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": "Parottukonam-Kariyam Road"
+    },
+    {
+      "id": "way/945777744",
+      "lat": 8.5385073,
+      "lng": 76.9369639,
+      "tags": {
+        "addr:city": "Paarottukonam",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam-Kariyam Road",
+        "building": "yes",
+        "name": "Parottukonam Tea Stall",
+        "shop": "tea"
+      },
+      "name": "Parottukonam Tea Stall",
+      "amenity": null,
+      "shop": "tea",
+      "road": "Parottukonam-Kariyam Road"
+    },
+    {
+      "id": "way/946477676",
+      "lat": 8.5387161,
+      "lng": 76.9368943,
+      "tags": {
+        "addr:city": "Paarottukonam",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam-Kariyam Road",
+        "building": "yes",
+        "name": "Ironing Shop",
+        "shop": "yes"
+      },
+      "name": "Ironing Shop",
+      "amenity": null,
+      "shop": "yes",
+      "road": "Parottukonam-Kariyam Road"
+    },
+    {
+      "id": "way/946478096",
+      "lat": 8.538846,
+      "lng": 76.9367936,
+      "tags": {
+        "addr:city": "Paarottukonam",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam-Kariyam Road",
+        "building": "yes",
+        "name": "Tailoring Shop",
+        "shop": "yes"
+      },
+      "name": "Tailoring Shop",
+      "amenity": null,
+      "shop": "yes",
+      "road": "Parottukonam-Kariyam Road"
+    },
+    {
+      "id": "way/946478727",
+      "lat": 8.5386532,
+      "lng": 76.9369208,
+      "tags": {
+        "addr:city": "Paarottukonam",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam-Kariyam Road",
+        "building": "yes",
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": "Parottukonam-Kariyam Road"
+    },
+    {
+      "id": "way/946948348",
+      "lat": 8.5371308,
+      "lng": 76.9378057,
+      "tags": {
+        "addr:city": "Paarottukonam",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam Kunnil Rakshapuri Lane",
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "name": "Parottukonam Temple",
+        "religion": "hindu"
+      },
+      "name": "Parottukonam Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": "Parottukonam Kunnil Rakshapuri Lane"
+    },
+    {
+      "id": "way/946954441",
+      "lat": 8.5383719,
+      "lng": 76.9369893,
+      "tags": {
+        "addr:city": "Paarottukonam",
+        "addr:postcode": "695015",
+        "addr:street": "Parottukonam Road",
+        "building": "yes",
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": "Parottukonam Road"
+    }
+  ],
+  "roads": [],
+  "classification": {
+    "roadWise": {
+      "Unknown Road": [
+        "node/2562490474",
+        "node/2562490475",
+        "node/2562490476",
+        "node/4658657205",
+        "node/7121671350",
+        "node/7130332049",
+        "node/7130337796",
+        "node/7130342308",
+        "node/7351239860",
+        "node/7351259136",
+        "node/7351265533",
+        "node/7351275122",
+        "node/7351287405",
+        "node/7351289031",
+        "node/7351304241",
+        "node/7351304503",
+        "node/7351374402",
+        "node/7351377398",
+        "node/7466614031",
+        "node/7466614032",
+        "node/7466614033",
+        "node/7466614038",
+        "node/7466614039",
+        "node/7466614040",
+        "node/7466614041",
+        "node/7466614046",
+        "node/7466614047",
+        "node/7466614048",
+        "node/7466614049",
+        "node/7466614050",
+        "node/7466614051",
+        "node/7526812622",
+        "node/7925841290",
+        "node/8321155473",
+        "node/8321225733",
+        "node/8321765498",
+        "node/8411297865",
+        "node/8411297866",
+        "node/13991409004",
+        "way/285189750",
+        "way/725250440",
+        "way/725250838",
+        "way/725263285",
+        "way/725268443",
+        "way/762183511",
+        "way/763019952",
+        "way/797855539",
+        "way/797859013",
+        "way/797859428",
+        "way/798309498",
+        "way/798309499",
+        "way/799115410",
+        "way/802587777",
+        "way/802588174",
+        "way/802588664",
+        "way/802594465",
+        "way/804694888",
+        "way/804694981",
+        "way/905061762",
+        "way/945537339"
+      ],
+      "Keshavadasapuram-Ullor road": [
+        "node/7130193537"
+      ],
+      "Kesavadasapuram-Ulloor road": [
+        "node/12645206454"
+      ],
+      "Parattukonam": [
+        "way/716328460"
+      ],
+      "NSP Nagar": [
+        "way/799115976"
+      ],
+      "parottukonam": [
+        "way/895228243"
+      ],
+      "Parottukonam Kunnil Rakshapuri Lane": [
+        "way/945528574",
+        "way/946948348"
+      ],
+      "Parottukonam-Kariyam Road": [
+        "way/945532044",
+        "way/945776922",
+        "way/945777744",
+        "way/946477676",
+        "way/946478096",
+        "way/946478727"
+      ],
+      "Parottukonam Road": [
+        "way/946954441"
+      ]
+    },
+    "businessWise": {
+      "other": [
+        "node/2562490474",
+        "node/2562490475",
+        "node/7130332049",
+        "node/7130337796",
+        "node/7130342308",
+        "node/7351304503",
+        "node/7351377398",
+        "node/7526812622",
+        "node/7925841290",
+        "node/8321765498",
+        "way/716328460",
+        "way/763019952",
+        "way/804694981"
+      ],
+      "place_of_worship": [
+        "node/2562490476",
+        "node/7351265533",
+        "node/7466614039",
+        "node/7466614046",
+        "node/8321225733",
+        "way/725263285",
+        "way/725268443",
+        "way/799115410",
+        "way/945776922",
+        "way/946948348"
+      ],
+      "fast_food": [
+        "node/4658657205"
+      ],
+      "monastery": [
+        "node/7121671350"
+      ],
+      "marketplace": [
+        "node/7130193537"
+      ],
+      "fishing": [
+        "node/7351239860"
+      ],
+      "medical_supply": [
+        "node/7351259136"
+      ],
+      "bank": [
+        "node/7351275122",
+        "node/7351287405",
+        "node/7351289031"
+      ],
+      "restaurant": [
+        "node/7351304241",
+        "node/7466614032",
+        "node/7466614033",
+        "way/762183511",
+        "way/799115976",
+        "way/905061762"
+      ],
+      "mobile_phone": [
+        "node/7351374402"
+      ],
+      "bureau_de_change": [
+        "node/7466614031"
+      ],
+      "clothes": [
+        "node/7466614038",
+        "way/797859013"
+      ],
+      "tyres": [
+        "node/7466614040"
+      ],
+      "motorcycle": [
+        "node/7466614041",
+        "node/7466614048"
+      ],
+      "beauty": [
+        "node/7466614047"
+      ],
+      "bakery": [
+        "node/7466614049",
+        "way/802588664"
+      ],
+      "events_venue": [
+        "node/7466614050"
+      ],
+      "seafood": [
+        "node/7466614051"
+      ],
+      "greengrocer": [
+        "node/8321155473"
+      ],
+      "supermarket": [
+        "node/8411297865",
+        "node/8411297866",
+        "way/797855539",
+        "way/798309499"
+      ],
+      "electronics": [
+        "node/12645206454"
+      ],
+      "waste_basket": [
+        "node/13991409004"
+      ],
+      "college": [
+        "way/285189750"
+      ],
+      "school": [
+        "way/725250440",
+        "way/725250838"
+      ],
+      "car": [
+        "way/797859428"
+      ],
+      "cafe": [
+        "way/798309498"
+      ],
+      "shelter": [
+        "way/802587777",
+        "way/802588174",
+        "way/802594465"
+      ],
+      "parking": [
+        "way/804694888"
+      ],
+      "driving_school": [
+        "way/895228243",
+        "way/945528574"
+      ],
+      "yes": [
+        "way/945532044",
+        "way/945537339",
+        "way/946477676",
+        "way/946478096",
+        "way/946478727",
+        "way/946954441"
+      ],
+      "tea": [
+        "way/945777744"
+      ]
+    },
+    "religious": {
+      "mosque": [
+        "node/2562490476"
+      ],
+      "church": [
+        "node/7351265533",
+        "node/7466614039",
+        "way/725263285",
+        "way/725268443",
+        "way/799115410",
+        "way/945776922"
+      ],
+      "temple": [
+        "node/7466614046",
+        "node/8321225733",
+        "way/946948348"
+      ],
+      "other": []
+    }
+  },
+  "stats": {
+    "placesCount": 74,
+    "roadsCount": 0
+  },
+  "current": {
+    "lat": 8.534139,
+    "lng": 76.936638,
+    "index": 3,
+    "dx": 0,
+    "dy": 1
+  }
+}
