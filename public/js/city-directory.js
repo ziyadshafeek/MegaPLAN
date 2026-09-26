@@ -43,6 +43,11 @@ function mountCityDirectory(root, tool, type) {
         ? `Last attempt: ${new Date(report.attemptedAt).toLocaleString()} · city: ${report.outcomes?.city || 'unknown'} · map: ${report.outcomes?.map || 'unknown'} · product: ${report.outcomes?.product || 'unknown'} · music tracks: ${report.outcomes?.music || 'unknown'}. `
         : 'No collection attempt has been recorded for this published snapshot. ';
       job.append(label);
+      if (report.details?.city && report.outcomes?.city === 'failure') {
+        const detail = document.createElement('span');
+        detail.textContent = `City source: ${report.details.city}. `;
+        job.append(detail);
+      }
       if (typeof report.runUrl === 'string' && /^https:\/\/github\.com\/ziyadshafeek\/MegaPLAN\/actions\/runs\/\d+$/.test(report.runUrl)) {
         const link = document.createElement('a');
         link.href = report.runUrl;
