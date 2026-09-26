@@ -27,7 +27,7 @@ const status = {
     cityShops: city.shops?.length || 0, cityMusicPlaces: city.music?.length || 0,
     mapPlaces: map.totalPlaces || 0, products: product.totalProducts || 0, musicTracks: music.totalTracks || 0
   },
-  note: 'Outcome success means an upstream request returned verifiable data. Check counts; existing snapshot data is not proof that this attempt added records.'
+  note: 'Outcome success means the step used verified existing OSM cells or received verifiable upstream records; it may not have added new data. Check counts and source timestamps.'
 };
 for (const prefix of ['data', 'public/data']) {
   const dir = path.join(root, prefix, 'city-directory');
