@@ -1,11 +1,16 @@
 {
+  "source": "OpenStreetMap",
+  "license": "ODbL-1.0",
+  "attribution": "© OpenStreetMap contributors",
+  "sourceUrl": "https://www.openstreetmap.org/copyright",
+  "endpoint": "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
   "index": 5,
   "lat": 8.524139,
   "lng": 76.926638,
   "dx": -1,
   "dy": 0,
   "grid": 0.01,
-  "scannedAt": "2026-09-26T16:01:29.144Z",
+  "scannedAt": "2026-09-26T16:35:36.809Z",
   "places": [
     {
       "id": "node/253949506",
