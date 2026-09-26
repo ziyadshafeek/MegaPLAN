@@ -154,3 +154,26 @@ path, matching output files, mirrored snapshots, and no artifact on upstream err
 Full npm test passes on Node 24 after the fix. The corrected upload still needs a
 new live branch run; no successful artifact, published data or deployed delta is
 claimed from the failed run. Raw log download still fails with EOF in this session.
+
+## Successful branch trials and publication boundary
+
+At code SHA `76f744b70271a4c557e7b7c1ab0a8eff9471cc4e`:
+
+- Music: https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36255411454
+  collection, artifact upload and reporting all succeeded (Jobs API verified).
+  Artifact `music-review-36255411454`, 102017 bytes, not expired when checked.
+- Map: https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36255927182
+  collection, artifact upload and reporting all succeeded (Jobs API verified).
+  Artifact `map-review-36255927182`, 84728 bytes, not expired when checked.
+- Artifact downloads from this environment still fail (EOF). Therefore actual
+  before/after counts and timestamps INSIDE those artifacts are not verified;
+  neither artifact has been imported or published by this repair.
+- Auto Master confirmed `disabled_manually`.
+- Latest main advanced independently to `fb5547c` with an OSM data commit.
+  Merged that base into the session branch without overwriting its data. The PR
+  introduces no source data differences versus that base; the independent main
+  data change must not be credited to these read-only collection trials.
+- User authorized proceeding without further manual download steps. Proceed with
+  the code-only repair through normal PR controls; do not bypass reviews or claim
+  uninspected artifacts were published. Automated data publication remains outside
+  this patch. Owner/operator review is still required for any future data PR.
