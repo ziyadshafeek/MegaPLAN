@@ -1,6 +1,6 @@
 # Recurring data collection: what is real, what is not
 
-**“Music” means recording/song names and metadata only, never audio files.** The user's requested Spotify-wide inventory is different from a CC0 MusicBrainz catalog: do not claim the latter is all Spotify tracks. Trivandrum OSM music *places* are yet another independent source.
+**“Music” means recording/song names and metadata only, never audio files.** Latest verified branch trial: 249 distinct MusicBrainz recording names, 4 map cells/370 overlapping place occurrences, 120 local shops, 48 unreviewed image-link candidates, and 0 authorized retailer products. The user's requested Spotify-wide inventory is different from a CC0 MusicBrainz catalog: do not claim the latter is all Spotify tracks. Trivandrum OSM music *places* are yet another independent source.
 
 ## Current branch, then default-branch operation
 
