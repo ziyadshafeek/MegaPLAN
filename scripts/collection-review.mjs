@@ -16,7 +16,7 @@ export function measure(source, root = process.cwd()) {
 }
 export function review(source, root = process.cwd(), run = spawnSync) {
   if (!['map', 'music'].includes(source)) throw Error('Expected map or music');
-  const output = path.join(root, '.collection-review');
+  const output = path.join(root, 'collection-review-output');
   fs.rmSync(output, { recursive: true, force: true });
   const before = measure(source, root);
   const args = source === 'map' ? ['scripts/kerala-expansion-runner.mjs', '--phase', '1', '--batch', '2', '--workers', '1'] : ['scripts/open-music-runner.mjs'];

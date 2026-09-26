@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: map-review-${{ github.run_id }}
-          path: .collection-review/
+          path: collection-review-output/
           if-no-files-found: error
           retention-days: 7
       - name: Report collection versus publication
@@ -35,4 +35,4 @@ jobs:
         run: |
           echo "Collection/review artifact job: $JOB_STATUS" >> "$GITHUB_STEP_SUMMARY"
           echo 'Publication: pending human PR review. This job cannot push or deploy data.' >> "$GITHUB_STEP_SUMMARY"
-          if [ -f .collection-review/report.json ]; then cat .collection-review/report.json >> "$GITHUB_STEP_SUMMARY"; fi
+          if [ -f collection-review-output/report.json ]; then cat collection-review-output/report.json >> "$GITHUB_STEP_SUMMARY"; fi

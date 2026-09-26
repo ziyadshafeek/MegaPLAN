@@ -18,8 +18,14 @@ try {
   const report = review('map', root, () => ({status:0}));
   assert.equal(report.distinctDelta, 0);
   assert.equal(report.deployed, false);
+  const output = path.join(root, 'collection-review-output');
+  assert.ok(fs.existsSync(path.join(output, 'report.json')), 'visible review report exists');
+  for (const prefix of ['data', 'public/data']) {
+    assert.ok(fs.existsSync(path.join(output, prefix, 'map-directory/index.json')), 'review artifact contains mirrored source data');
+  }
+  assert.ok(!fs.existsSync(path.join(root, '.collection-review')), 'no hidden output directory');
   assert.throws(() => review('map', root, () => ({status:1})), /no review artifact/);
-  assert.ok(!fs.existsSync(path.join(root,'.collection-review')));
+  assert.ok(!fs.existsSync(path.join(root,'collection-review-output')));
   let calls = 0; const waits = [];
   globalThis.fetch = async () => { calls++; return calls === 1 ? {ok:false,status:429} : {ok:true,json:async () => ({elements:[{type:'node',id:123,lat:0,lon:1,tags:{name:'Fixture'}}]})}; };
   const cell = await scanCellWithMirrors(1, 0.01, 600, {lat:0,lng:1}, 0, async ms => waits.push(ms));

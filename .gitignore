@@ -8,4 +8,4 @@ __pycache__/
 coverage/
 *.log
 
-.collection-review/
+collection-review-output/

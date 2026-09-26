@@ -138,3 +138,19 @@ Large datasets must remain external; no paid service was introduced.
 - Full npm test on Node 24 passed after retry change, including deterministic
   recovery, exhaustion, same-page URL, Retry-After and permanent-error fixtures.
   This is test evidence, not a successful live collection run.
+
+## Follow-up: artifact path correction
+
+Music run https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36255205532 at
+`83a9aa7` completed the collection step successfully (confirmed via Jobs API),
+but failed uploading the review artifact. User screenshot reports no files found
+at `.collection-review/`. upload-artifact v4 excludes hidden paths by default;
+using a dot-prefixed output directory was a workflow bug in this patch.
+
+Renamed output to `collection-review-output/` consistently in collector, map/music
+uploads, summaries, ignore rule and fixtures. Hidden-file uploading remains off;
+no secret-bearing directory is included. Added assertions for a non-hidden upload
+path, matching output files, mirrored snapshots, and no artifact on upstream error.
+Full npm test passes on Node 24 after the fix. The corrected upload still needs a
+new live branch run; no successful artifact, published data or deployed delta is
+claimed from the failed run. Raw log download still fails with EOF in this session.

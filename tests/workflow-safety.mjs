@@ -31,6 +31,8 @@ for (const source of ['map', 'music']) {
   assert.doesNotMatch(JSON.stringify(steps), /git push|\|\| true|NVIDIA/);
   assert.match(JSON.stringify(steps), /pending human PR review/);
   const upload = steps.find(x => x.uses?.startsWith('actions/upload-artifact'));
+  assert.equal(upload.with.path, 'collection-review-output/', 'upload must match the non-hidden collector output directory');
+  assert.ok(upload.with.path.split('/').every(part => !part.startsWith('.')), 'default upload filtering excludes hidden directories');
   assert.equal(upload.if, undefined, 'artifact only after successful upstream, upload errors fail job');
 }
 console.log('Workflow safety: parsed YAML, bash syntax, retired schedulers, bounded source ownership, fail-closed review artifacts OK');
