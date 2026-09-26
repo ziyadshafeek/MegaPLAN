@@ -1,0 +1,174 @@
+{
+  "version": 2,
+  "origin": { "lat": 8.524139, "lng": 76.936638, "name": "Trivandrum" },
+  "goal": "Finish entire Kerala in 10 days, then expand to South India, then India, then world",
+  "createdAt": "2026-09-26T00:00:00Z",
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Trivandrum District High-Res",
+      "days": "1-2",
+      "bbox": { "latMin": 8.3, "latMax": 8.7, "lngMin": 76.7, "lngMax": 77.2 },
+      "grid": 0.01,
+      "radius": 600,
+      "estimatedCells": 2000,
+      "priority": "high",
+      "description": "Trivandrum city + district at 0.01° (~1.1km) high resolution, spiral from center"
+    },
+    {
+      "phase": 2,
+      "name": "South Kerala — Kollam, Pathanamthitta, Alappuzha",
+      "days": "3",
+      "bbox": { "latMin": 8.8, "latMax": 9.6, "lngMin": 76.3, "lngMax": 77.0 },
+      "grid": 0.02,
+      "radius": 1000,
+      "estimatedCells": 1500,
+      "priority": "high",
+      "cities": ["Kollam", "Pathanamthitta", "Alappuzha", "Kayamkulam"]
+    },
+    {
+      "phase": 3,
+      "name": "Central Kerala — Kottayam, Idukki, Ernakulam",
+      "days": "4",
+      "bbox": { "latMin": 9.2, "latMax": 10.2, "lngMin": 76.2, "lngMax": 77.3 },
+      "grid": 0.02,
+      "radius": 1000,
+      "estimatedCells": 2000,
+      "priority": "high",
+      "cities": ["Kottayam", "Idukki", "Ernakulam", "Kochi", "Munnar"]
+    },
+    {
+      "phase": 4,
+      "name": "Mid Kerala — Thrissur, Palakkad",
+      "days": "5",
+      "bbox": { "latMin": 10.0, "latMax": 11.0, "lngMin": 75.8, "lngMax": 76.8 },
+      "grid": 0.02,
+      "radius": 1000,
+      "estimatedCells": 1500,
+      "priority": "medium",
+      "cities": ["Thrissur", "Palakkad", "Guruvayur"]
+    },
+    {
+      "phase": 5,
+      "name": "North Kerala — Malappuram, Kozhikode, Wayanad",
+      "days": "6",
+      "bbox": { "latMin": 10.8, "latMax": 11.8, "lngMin": 75.5, "lngMax": 76.5 },
+      "grid": 0.02,
+      "radius": 1000,
+      "estimatedCells": 2000,
+      "priority": "medium",
+      "cities": ["Malappuram", "Kozhikode", "Wayanad", "Calicut"]
+    },
+    {
+      "phase": 6,
+      "name": "Far North Kerala — Kannur, Kasaragod",
+      "days": "7",
+      "bbox": { "latMin": 11.5, "latMax": 12.8, "lngMin": 74.8, "lngMax": 76.0 },
+      "grid": 0.02,
+      "radius": 1000,
+      "estimatedCells": 1800,
+      "priority": "medium",
+      "cities": ["Kannur", "Kasaragod", "Payyanur"]
+    },
+    {
+      "phase": 7,
+      "name": "Kerala Fill Gaps + Cities High-Res",
+      "days": "8-9",
+      "bbox": { "latMin": 8.18, "latMax": 12.83, "lngMin": 74.86, "lngMax": 77.59 },
+      "grid": 0.05,
+      "radius": 2500,
+      "estimatedCells": 5000,
+      "priority": "high",
+      "description": "Low-res 0.05° sweep to fill gaps, plus high-res 0.01° for major cities Kochi, Kozhikode, Thrissur, Kannur",
+      "highResCities": [
+        { "name": "Kochi", "lat": 9.9312, "lng": 76.2673, "radiusKm": 10, "grid": 0.01 },
+        { "name": "Kozhikode", "lat": 11.2588, "lng": 75.7804, "radiusKm": 10, "grid": 0.01 },
+        { "name": "Thrissur", "lat": 10.5276, "lng": 76.2144, "radiusKm": 8, "grid": 0.01 },
+        { "name": "Kollam", "lat": 8.8932, "lng": 76.6141, "radiusKm": 8, "grid": 0.01 }
+      ]
+    },
+    {
+      "phase": 8,
+      "name": "Kerala Final Verification + AI Classification",
+      "days": "10",
+      "bbox": { "latMin": 8.18, "latMax": 12.83, "lngMin": 74.86, "lngMax": 77.59 },
+      "grid": 0.02,
+      "radius": 1000,
+      "estimatedCells": 0,
+      "priority": "critical",
+      "description": "Verify coverage, run NVIDIA AI to classify all roads & business types, create new sections automatically, generate final road-wise and business-wise directories"
+    }
+  ],
+  "kerala": {
+    "bbox": { "latMin": 8.18, "latMax": 12.83, "lngMin": 74.86, "lngMax": 77.59 },
+    "districts": [
+      { "name": "Thiruvananthapuram", "lat": 8.5241, "lng": 76.9366, "priority": 1 },
+      { "name": "Kollam", "lat": 8.8932, "lng": 76.6141, "priority": 2 },
+      { "name": "Pathanamthitta", "lat": 9.2648, "lng": 76.7870, "priority": 3 },
+      { "name": "Alappuzha", "lat": 9.4981, "lng": 76.3388, "priority": 3 },
+      { "name": "Kottayam", "lat": 9.5916, "lng": 76.5222, "priority": 4 },
+      { "name": "Idukki", "lat": 9.9189, "lng": 77.1025, "priority": 4 },
+      { "name": "Ernakulam", "lat": 9.9816, "lng": 76.2999, "priority": 4 },
+      { "name": "Thrissur", "lat": 10.5276, "lng": 76.2144, "priority": 5 },
+      { "name": "Palakkad", "lat": 10.7867, "lng": 76.6548, "priority": 5 },
+      { "name": "Malappuram", "lat": 11.0410, "lng": 76.0830, "priority": 6 },
+      { "name": "Kozhikode", "lat": 11.2588, "lng": 75.7804, "priority": 6 },
+      { "name": "Wayanad", "lat": 11.6854, "lng": 76.1310, "priority": 7 },
+      { "name": "Kannur", "lat": 11.8745, "lng": 75.3704, "priority": 7 },
+      { "name": "Kasaragod", "lat": 12.4996, "lng": 74.9869, "priority": 8 }
+    ],
+    "totalEstimatedCells": {
+      "0.01deg": 126945,
+      "0.02deg": 31552,
+      "0.05deg": 5022
+    },
+    "10dayPlan": {
+      "strategy": "Adaptive multi-resolution: 0.01° for Trivandrum district (2000 cells) + 0.02° for rest Kerala (~10000 cells) + 0.05° gap fill (5000 cells) = ~17000 cells in 10 days",
+      "cellsPerDay": 1700,
+      "cellsPerHour": 71,
+      "cellsPerMinute": 1.18,
+      "overpassReqPerMinute": 2.36,
+      "parallelWorkers": 4,
+      "endpoints": [
+        "https://overpass-api.de/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter",
+        "https://overpass-api.de/api/interpreter",
+        "https://maps.mail.ru/osm/tools/overpass/api/interpreter"
+      ],
+      "feasible": "Yes with 4 parallel workers + 2 endpoints, 1.18 cells/min per worker = 2.36 req/min total, within Overpass fair use if distributed"
+    }
+  },
+  "next": {
+    "southIndia": {
+      "name": "South India Expansion",
+      "days": "11-20",
+      "bbox": { "latMin": 8.0, "latMax": 14.0, "lngMin": 74.0, "lngMax": 80.0 },
+      "states": ["Tamil Nadu", "Karnataka", "Andhra Pradesh"],
+      "grid": 0.05,
+      "estimatedCells": 15000
+    },
+    "india": {
+      "name": "All India",
+      "days": "21-60",
+      "bbox": { "latMin": 6.5, "latMax": 35.5, "lngMin": 68.0, "lngMax": 97.5 },
+      "grid": 0.1,
+      "estimatedCells": 80000
+    },
+    "world": {
+      "name": "World",
+      "days": "61-365",
+      "grid": 0.5,
+      "estimatedCells": 500000
+    }
+  },
+  "engineering": {
+    "parallelWorkers": 4,
+    "overpassMirrors": 3,
+    "batchSize": 20,
+    "intervalSeconds": 35,
+    "retryBackoff": [5, 15, 30, 60],
+    "storage": ["IndexedDB", "localStorage", "GitHub commits", "Vercel cache"],
+    "ai": "NVIDIA deepseek-ai/deepseek-v4.1-flash for road-wise & business-wise classification, new sections auto-created",
+    "flawless": "Rate limit handling, offline seed fallback, deduplication by OSM id, progress persistence, SW background sync, GitHub Action hourly, frontend poller"
+  }
+}
