@@ -10,11 +10,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { phaseTasks } from '../lib/map-phase-grid.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(here, '..');
 
-const CENTER = { lat: 8.524139, lng: 76.936638 };
 const OVERPASS_MIRRORS = [
   'https://overpass-api.de/api/interpreter',
   'https://overpass.kumi.systems/api/interpreter',
@@ -38,26 +38,6 @@ function loadExpansionPlan() {
   const p = path.join(root, 'data', 'map-directory', 'expansion-plan.json');
   if (!fs.existsSync(p)) return null;
   return JSON.parse(fs.readFileSync(p, 'utf8'));
-}
-
-function spiralToCoords(index) {
-  if (index === 0) return { dx: 0, dy: 0 };
-  let x = 0, y = 0, dx = 0, dy = -1;
-  for (let i = 0; i < index; i++) {
-    if ((x === y) || (x < 0 && x === -y) || (x > 0 && x === 1 - y)) {
-      const tmp = dx; dx = -dy; dy = tmp;
-    }
-    x += dx; y += dy;
-  }
-  return { dx: x, dy: y };
-}
-
-function haversine(lat1, lng1, lat2, lng2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLng = (lng2 - lng1) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
 
 async function fetchWithTimeout(url, opts = {}, timeout = 25000) {
@@ -92,9 +72,8 @@ function writeIndex(idx) {
 }
 
 async function scanCellWithMirrors(index, grid, radius, center, mirrorIndex = 0) {
-  const { dx, dy } = spiralToCoords(index);
-  const lat = center.lat + dy * grid;
-  const lng = center.lng + dx * grid;
+  // The queue already calculated the exact point. Never apply the spiral twice.
+  const { lat, lng, dx = 0, dy = 0 } = center;
 
   const query = `[out:json][timeout:25];
 (
@@ -206,33 +185,13 @@ async function runPhase(phase, batch, workers) {
   console.log(`\n=== Phase ${phase.phase}: ${phase.name} ===`);
   console.log(`BBOX: ${phase.bbox.latMin}-${phase.bbox.latMax}, ${phase.bbox.lngMin}-${phase.bbox.lngMax}, grid ${phase.grid}, radius ${phase.radius}, estimated ${phase.estimatedCells} cells`);
 
-  const center = { lat: (phase.bbox.latMin + phase.bbox.latMax)/2, lng: (phase.bbox.lngMin + phase.bbox.lngMax)/2 };
   const idx = readIndex();
-  let startIndex = idx.lastIndex + 1;
-  
-  // For Kerala phases, we need to generate grid covering bbox, not just spiral from Trivandrum
-  // We'll generate lat/lng grid points within bbox
-  const latSteps = Math.ceil((phase.bbox.latMax - phase.bbox.latMin) / phase.grid);
-  const lngSteps = Math.ceil((phase.bbox.lngMax - phase.bbox.lngMin) / phase.grid);
-  const totalInPhase = latSteps * lngSteps;
-  
-  console.log(`Phase grid: ${latSteps} x ${lngSteps} = ${totalInPhase} cells, starting from index ${startIndex}, batch ${batch}, workers ${workers}`);
-
-  let scanned = 0;
-  let queue = [];
-  for (let latIdx = 0; latIdx < latSteps && scanned < batch; latIdx++) {
-    for (let lngIdx = 0; lngIdx < lngSteps && scanned < batch; lngIdx++) {
-      const lat = phase.bbox.latMin + latIdx * phase.grid;
-      const lng = phase.bbox.lngMin + lngIdx * phase.grid;
-      // Skip if already scanned? Check if cell file exists for this lat/lng approx
-      // For simplicity, use spiral index + phase offset
-      const cellIndex = startIndex + scanned;
-      queue.push({ index: cellIndex, lat, lng, grid: phase.grid, radius: phase.radius, center: { lat, lng } });
-      scanned++;
-    }
-  }
+  const previousPhases = (loadExpansionPlan()?.phases || []).filter(p => p.phase < phase.phase);
+  const queue = phaseTasks(phase, previousPhases, idx.lastIndex, batch);
+  console.log(`Phase queue: ${queue.length} cells, next index ${queue[0]?.index ?? 'none'}; workers ${workers}`);
 
   console.log(`Queue: ${queue.length} cells`);
+  if (!queue.length) { console.log('No unscanned grid positions remain in this phase.'); return { completed: 0, totalPlaces: 0 }; }
 
   // Parallel workers
   let completed = 0;
