@@ -88,32 +88,45 @@ async function load() {
   });
 
   // Background Map Auto Scraper — runs continuously if enabled, starting from Trivandrum
+  // Fully automatic now: auto-enabled by default for all massive datasets
   // Flawless engineering: checks localStorage flag, uses SW + interval fallback
   try {
+    // Fully automatic by default — no manual start needed
+    if (localStorage.getItem('mp-map-auto-enabled') === null) {
+      localStorage.setItem('mp-map-auto-enabled', '1');
+      console.log('[MegaPLAN] Fully automatic enabled by default — map, product, music');
+    }
+    if (localStorage.getItem('mp-product-auto') === null) {
+      localStorage.setItem('mp-product-auto', '1');
+    }
+    if (localStorage.getItem('mp-music-auto') === null) {
+      localStorage.setItem('mp-music-auto', '1');
+    }
+
     const autoEnabled = localStorage.getItem('mp-map-auto-enabled');
     if (autoEnabled === '1') {
-      console.log('[MegaPLAN] Map auto scraper background enabled — starting from Trivandrum');
+      console.log('[MegaPLAN] Map auto scraper background enabled — starting from Trivandrum, fully automatic');
       // Register SW if not already
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw-map-scraper.js').catch(()=>{});
       }
       // Fallback interval poller that runs even without opening map tool
-      // Only runs if user has visited map-directory before (has progress)
-      const prog = localStorage.getItem('mp-map-dir-progress');
-      if (prog) {
-        let lastRun = 0;
-        setInterval(async () => {
-          const now = Date.now();
-          if (now - lastRun < 35000) return; // 35s min interval to respect Overpass fair use
+      // Only runs if user has visited map-directory before (has progress) OR auto enabled by default
+      let lastRun = 0;
+      let lastProductRun = 0;
+      let lastMusicRun = 0;
+      setInterval(async () => {
+        const now = Date.now();
+        // Map
+        if (now - lastRun >= 40000) { // 40s min interval to respect Overpass fair use
           lastRun = now;
           try {
             const p = JSON.parse(localStorage.getItem('mp-map-dir-progress') || '{"lastIndex":-1}');
             const nextIdx = (p.lastIndex ?? -1) + 1;
-            console.log(`[Background] Auto scanning cell ${nextIdx} from Trivandrum`);
-            const r = await fetch(`/api/map-scraper?index=${nextIdx}`);
+            console.log(`[Background] Auto scanning map cell ${nextIdx} from Trivandrum`);
+            const r = await fetch(`/api/map-scraper-v2?index=${nextIdx}&radius=1000`);
             const j = await r.json();
             if (r.ok && j.places) {
-              // Save locally
               localStorage.setItem('mp-map-dir-progress', JSON.stringify({
                 lastIndex: j.current.index,
                 lastLat: j.current.lat,
@@ -122,15 +135,50 @@ async function load() {
                 totalPlaces: (p.totalPlaces||0)+(j.places.length||0),
                 lastScannedAt: new Date().toISOString()
               }));
-              // Save to server
               fetch('/api/map-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(j) }).catch(()=>{});
-              console.log(`[Background] Scanned cell ${nextIdx}: ${j.places.length} places`);
+              console.log(`[Background] Scanned map cell ${nextIdx}: ${j.places.length} places, free storage GitHub+Vercel+IndexedDB`);
             }
           } catch (e) {
-            console.log('[Background] Auto scan failed', e.message);
+            console.log('[Background] Map auto scan failed', e.message);
           }
-        }, 40000); // 40s interval
-      }
+        }
+        // Product — every 60s
+        if (now - lastProductRun >= 60000 && localStorage.getItem('mp-product-auto') === '1') {
+          lastProductRun = now;
+          try {
+            const cats = ['mobiles','laptops','electronics'];
+            const cat = cats[Math.floor(Math.random()*cats.length)];
+            const r = await fetch(`/api/product-scraper?action=search&term=${encodeURIComponent(cat)}&platform=flipkart`);
+            const j = await r.json();
+            if (j.products) {
+              fetch('/api/product-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ products: j.products.slice(0,5) }) }).catch(()=>{});
+              console.log(`[Background] Scraped ${j.products.length} products ${cat}`);
+            }
+          } catch {}
+        }
+        // Music — every 60s
+        if (now - lastMusicRun >= 60000 && localStorage.getItem('mp-music-auto') === '1') {
+          lastMusicRun = now;
+          try {
+            const terms = ['love','party','malayalam','hindi'];
+            const term = terms[Math.floor(Math.random()*terms.length)];
+            const r = await fetch(`/api/music-scraper?action=search&q=${encodeURIComponent(term)}&type=track`);
+            const j = await r.json();
+            if (j.results) {
+              fetch('/api/music-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ tracks: j.results.slice(0,5) }) }).catch(()=>{});
+              console.log(`[Background] Scraped ${j.results.length} tracks ${term}`);
+            }
+          } catch {}
+        }
+      }, 40000); // 40s interval for map, 60s for product/music inside
+
+      // Also call auto-master every 5 minutes to run all
+      setInterval(async () => {
+        try {
+          await fetch('/api/auto-master?action=run');
+          console.log('[Background] Auto master ran all scrapers');
+        } catch {}
+      }, 300000); // 5 min
     }
   } catch {}
 }

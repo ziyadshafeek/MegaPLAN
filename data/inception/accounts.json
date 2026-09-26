@@ -1,1 +1,14 @@
-{"active":[],"rate_limited":[],"note":"Accounts generated via Playwright at https://chat.inceptionlabs.ai/auth, token TTL 6h, see DarkPyDoor/api-inceptionlabs"}
+{
+  "active": [
+    {
+      "bearer": "mock_bearer_j563589yvb",
+      "cookies": {
+        "token": "mock_bearer_j563589yvb"
+      },
+      "created_at": 1790412692.148,
+      "mock": true
+    }
+  ],
+  "rate_limited": [],
+  "savedAt": "2026-09-26T08:51:32.158Z"
+}

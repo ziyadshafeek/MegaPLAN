@@ -22,22 +22,29 @@ function readBody(req) {
 }
 
 async function fetchWithTimeout(url, opts = {}, timeout = 15000) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
   try {
-    const r = await fetch(url, {
-      ...opts,
-      signal: controller.signal,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json, text/html',
-        'Accept-Language': 'en-US,en;q=0.9',
-        ...(opts.headers || {})
-      }
-    });
+    const { makeRateLimitedRequest } = await import('./rate-limiter.js');
+    const service = url.includes('flipkart') ? 'flipkart' : url.includes('amazon') ? 'amazon' : 'flipkart';
+    const r = await makeRateLimitedRequest(service, url, opts, timeout);
     return r;
-  } finally {
-    clearTimeout(timer);
+  } catch {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const r = await fetch(url, {
+        ...opts,
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'application/json, text/html',
+          'Accept-Language': 'en-US,en;q=0.9',
+          ...(opts.headers || {})
+        }
+      });
+      return r;
+    } finally {
+      clearTimeout(timer);
+    }
   }
 }
 

@@ -29,21 +29,29 @@ function readBody(req) {
 }
 
 async function fetchWithTimeout(url, opts = {}, timeout = 20000) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
+  // Use central rate limiter for Overpass
   try {
-    const r = await fetch(url, {
-      ...opts,
-      signal: controller.signal,
-      headers: {
-        'User-Agent': 'MegaPLAN-MapScraper-V2/2.0 (https://mega-plan.vercel.app) - Massive directory',
-        'Accept-Language': 'en',
-        ...(opts.headers || {})
-      }
-    });
+    const { makeRateLimitedRequest } = await import('./rate-limiter.js');
+    const r = await makeRateLimitedRequest('overpass', url, opts, timeout);
     return r;
-  } finally {
-    clearTimeout(timer);
+  } catch {
+    // Fallback to direct fetch with timeout
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const r = await fetch(url, {
+        ...opts,
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'MegaPLAN-MapScraper-V2/2.0 (https://mega-plan.vercel.app) - Massive directory',
+          'Accept-Language': 'en',
+          ...(opts.headers || {})
+        }
+      });
+      return r;
+    } finally {
+      clearTimeout(timer);
+    }
   }
 }
 
