@@ -34,7 +34,7 @@ const FOLDER_META = {
 
 const APPS = [
   { id: 'wiki-agent', title: 'Wiki Agent', blurb: 'Describe a page. The agent drafts, tests, and can publish it.', kind: 'wiki-agent' },
-  { id: 'self-agent', title: 'Self Agent', blurb: 'Use your own OpenAI-compatible key. It never leaves this browser.', kind: 'self-agent' },
+  { id: 'self-agent', title: 'Self Agent', blurb: 'Use your own key. It goes directly to your chosen provider, not MegaPLAN.', kind: 'self-agent' },
   { id: 'ai-mode', title: 'AI Mode', blurb: 'Combine tools, upload files, 4-digit session. Future paid, free now.', kind: 'tool', slug: 'ai-mode' },
   { id: 'audio-studio', title: 'Audio Studio', blurb: 'Audacity-like multi-track, waveform, MP3/WAV, autosave.', kind: 'tool', slug: 'audio-studio' },
   { id: 'my-wiki', title: 'My Wiki', blurb: 'Pages saved on this device.', kind: 'my-wiki' }
@@ -47,11 +47,16 @@ const state = {
   folder: null,
   query: '',
   view: localStorage.getItem('mp-view') || 'icons',
-  recents: JSON.parse(localStorage.getItem('mp-recents') || '[]'),
+  recents: readLocalList('mp-recents'),
   tabs: [{ id: 'home', kind: 'home', title: 'Files', path: 'megaplan://home' }],
   active: 'home',
   mobileTab: 'home'
 };
+
+function readLocalList(key) {
+  try { const value = JSON.parse(localStorage.getItem(key) || '[]'); return Array.isArray(value) ? value : []; }
+  catch { return []; }
+}
 
 function folderSvg(color) {
   return `<svg class="glyph" viewBox="0 0 52 44" aria-hidden="true"><path d="M2 10h16l4 6h28v24H2z" fill="${color}"/><path d="M2 8h14l4 8H2z" fill="#f3d27a"/></svg>`;
@@ -87,100 +92,15 @@ async function load() {
     if (e.key === 'Escape') document.getElementById('palette')?.classList.add('hidden');
   });
 
-  // Background Map Auto Scraper — runs continuously if enabled, starting from Trivandrum
-  // Fully automatic now: auto-enabled by default for all massive datasets
-  // Flawless engineering: checks localStorage flag, uses SW + interval fallback
-  try {
-    // Fully automatic by default — no manual start needed
-    if (localStorage.getItem('mp-map-auto-enabled') === null) {
-      localStorage.setItem('mp-map-auto-enabled', '1');
-      console.log('[MegaPLAN] Fully automatic enabled by default — map, product, music');
-    }
-    if (localStorage.getItem('mp-product-auto') === null) {
-      localStorage.setItem('mp-product-auto', '1');
-    }
-    if (localStorage.getItem('mp-music-auto') === null) {
-      localStorage.setItem('mp-music-auto', '1');
-    }
-
-    const autoEnabled = localStorage.getItem('mp-map-auto-enabled');
-    if (autoEnabled === '1') {
-      console.log('[MegaPLAN] Map auto scraper background enabled — starting from Trivandrum, fully automatic');
-      // Register SW if not already
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw-map-scraper.js').catch(()=>{});
-      }
-      // Fallback interval poller that runs even without opening map tool
-      // Only runs if user has visited map-directory before (has progress) OR auto enabled by default
-      let lastRun = 0;
-      let lastProductRun = 0;
-      let lastMusicRun = 0;
-      setInterval(async () => {
-        const now = Date.now();
-        // Map
-        if (now - lastRun >= 40000) { // 40s min interval to respect Overpass fair use
-          lastRun = now;
-          try {
-            const p = JSON.parse(localStorage.getItem('mp-map-dir-progress') || '{"lastIndex":-1}');
-            const nextIdx = (p.lastIndex ?? -1) + 1;
-            console.log(`[Background] Auto scanning map cell ${nextIdx} from Trivandrum`);
-            const r = await fetch(`/api/map-scraper-v2?index=${nextIdx}&radius=1000`);
-            const j = await r.json();
-            if (r.ok && j.places) {
-              localStorage.setItem('mp-map-dir-progress', JSON.stringify({
-                lastIndex: j.current.index,
-                lastLat: j.current.lat,
-                lastLng: j.current.lng,
-                totalCells: (p.totalCells||0)+1,
-                totalPlaces: (p.totalPlaces||0)+(j.places.length||0),
-                lastScannedAt: new Date().toISOString()
-              }));
-              fetch('/api/map-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(j) }).catch(()=>{});
-              console.log(`[Background] Scanned map cell ${nextIdx}: ${j.places.length} places, free storage GitHub+Vercel+IndexedDB`);
-            }
-          } catch (e) {
-            console.log('[Background] Map auto scan failed', e.message);
-          }
-        }
-        // Product — every 60s
-        if (now - lastProductRun >= 60000 && localStorage.getItem('mp-product-auto') === '1') {
-          lastProductRun = now;
-          try {
-            const cats = ['mobiles','laptops','electronics'];
-            const cat = cats[Math.floor(Math.random()*cats.length)];
-            const r = await fetch(`/api/product-scraper?action=search&term=${encodeURIComponent(cat)}&platform=flipkart`);
-            const j = await r.json();
-            if (j.products) {
-              fetch('/api/product-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ products: j.products.slice(0,5) }) }).catch(()=>{});
-              console.log(`[Background] Scraped ${j.products.length} products ${cat}`);
-            }
-          } catch {}
-        }
-        // Music — every 60s
-        if (now - lastMusicRun >= 60000 && localStorage.getItem('mp-music-auto') === '1') {
-          lastMusicRun = now;
-          try {
-            const terms = ['love','party','malayalam','hindi'];
-            const term = terms[Math.floor(Math.random()*terms.length)];
-            const r = await fetch(`/api/music-scraper?action=search&q=${encodeURIComponent(term)}&type=track`);
-            const j = await r.json();
-            if (j.results) {
-              fetch('/api/music-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ tracks: j.results.slice(0,5) }) }).catch(()=>{});
-              console.log(`[Background] Scraped ${j.results.length} tracks ${term}`);
-            }
-          } catch {}
-        }
-      }, 40000); // 40s interval for map, 60s for product/music inside
-
-      // Also call auto-master every 5 minutes to run all
-      setInterval(async () => {
-        try {
-          await fetch('/api/auto-master?action=run');
-          console.log('[Background] Auto master ran all scrapers');
-        } catch {}
-      }, 300000); // 5 min
-    }
-  } catch {}
+  // Indexing runs in scheduled GitHub jobs, not on every visitor's phone.
+  // Old installations had an API-caching scraper worker; retire it so published
+  // directory responses are not replaced by stale private browser caches.
+  window.caches?.delete('mp-map-dir-v1').catch(() => {});
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(regs => {
+      for (const reg of regs) if (reg.active?.scriptURL?.endsWith('/sw-map-scraper.js')) reg.unregister();
+    }).catch(() => {});
+  }
 }
 
 function routeFromLocation() {
@@ -189,6 +109,7 @@ function routeFromLocation() {
   const mTool = p.match(/^\/tools\/([^/]+)$/);
   const mFolder = p.match(/^\/folder\/([^/]+)$/);
   const mWiki = p.match(/^\/wiki\/([^/]+)$/);
+  if (p === '/wiki' || p === '/wiki/') { openApp('my-wiki', false); return; }
   if (mTool) openTool(decodeURIComponent(mTool[1]), false);
   else if (mFolder) openFolder(decodeURIComponent(mFolder[1]).replace(/-/g, ' '), false);
   else if (mWiki) openWiki(decodeURIComponent(mWiki[1]), false);
@@ -205,6 +126,7 @@ function activate(id) {
 }
 
 function openFolder(name, nav = true) {
+  state.mobileTab = 'home';
   const cat = state.tools.map(t => t.category).find(c => c.toLowerCase() === String(name).toLowerCase()) || name;
   state.folder = cat;
   const id = 'folder-' + cat;
@@ -214,6 +136,7 @@ function openFolder(name, nav = true) {
 }
 
 function openTool(slug, nav = true) {
+  state.mobileTab = 'home';
   const tool = state.tools.find(t => t.slug === slug);
   if (!tool) return;
   const id = 'tool-' + slug;
@@ -231,6 +154,7 @@ function openApp(kind, nav = true) {
   if (app.kind === 'tool' && app.slug) {
     return openTool(app.slug, nav);
   }
+  state.mobileTab = kind === 'wiki-agent' ? 'agent' : kind === 'self-agent' ? 'self' : 'home';
   upsertTab({ id: app.id, kind: app.kind, title: app.title, path: `megaplan://${app.id}` });
   if (nav) push(kind === 'self-agent' ? '/self' : kind === 'wiki-agent' ? '/agent/' : '/wiki/');
   render();
@@ -244,9 +168,8 @@ function openApp(kind, nav = true) {
 }
 
 function openWiki(slug, nav = true) {
-  upsertTab({ id: 'wiki-' + slug, kind: 'wiki-page', title: slug, path: `megaplan://wiki/${slug}`, slug });
-  if (nav) push('/wiki/' + encodeURIComponent(slug));
-  render();
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+){2,69}$/.test(slug)) return;
+  location.assign('/agent/view.html?slug=' + encodeURIComponent(slug));
 }
 
 function upsertTab(tab) {
@@ -363,18 +286,18 @@ function homeIcons() {
 
 function filesView(tools) {
   if (state.view === 'list') {
-    return `<div class="list">${tools.map(t => `<button class="list-row" data-slug="${esc(t.slug)}">${fileSvg()}<span>${esc(t.title)}</span><span class="muted">${esc(t.category)}</span><span class="muted">ready</span></button>`).join('')}</div>`;
+    return `<div class="list">${tools.map(t => `<button class="list-row" data-slug="${esc(t.slug)}">${fileSvg()}<span>${esc(t.title)}</span><span class="muted">${esc(t.category)}</span><span class="muted">${esc(t.status || 'beta')}</span></button>`).join('')}</div>`;
   }
-  return `<div class="icon-grid">${tools.map(t => `<button class="icon" data-slug="${esc(t.slug)}">${fileSvg()}<div class="name">${esc(t.title)}</div><div class="meta">${esc(t.category)}</div></button>`).join('')}</div>`;
+  return `<div class="icon-grid">${tools.map(t => `<button class="icon" data-slug="${esc(t.slug)}">${fileSvg()}<div class="name">${esc(t.title)}</div><div class="meta">${esc(t.category)} · ${esc(t.status || 'beta')}</div></button>`).join('')}</div>`;
 }
 
 function wikiStage() {
-  const all = [...state.localPages, ...state.pages];
+  const all = [...readLocalList('mp-wiki-pages'), ...state.pages].filter((p, i, list) => p && typeof p.slug === 'string' && list.findIndex(x => x?.slug === p.slug) === i);
   return `<div class="files"><div class="tool-pane">
     <div class="tool-kicker">Wiki</div>
     <h1>Pages</h1>
     <p class="lede">Pages you build with Wiki Agent or Self Agent. Local pages live in this browser. Published pages come from the site wiki.</p>
-    <div class="icon-grid">${all.map(p => `<button class="icon" data-wikipage="${esc(p.slug)}">${fileSvg()}<div class="name">${esc(p.title || p.slug)}</div></button>`).join('') || '<p class="muted">No wiki pages yet. Open Wiki Agent.</p>'}</div>
+    <div class="icon-grid">${all.map(p => `<a class="icon" href="/agent/view.html?slug=${encodeURIComponent(p.slug)}">${fileSvg()}<div class="name">${esc(p.title || p.slug)}</div></a>`).join('') || '<p class="muted">No wiki pages yet. Open Wiki Agent.</p>'}</div>
   </div></div>`;
 }
 
@@ -387,6 +310,7 @@ function androidHTML() {
     return androidChrome(clock, 'Self Agent', `<div class="a-screen" style="min-height:60vh" data-agent="self-agent"></div>`);
   }
   const tab = state.tabs.find(t => t.id === state.active);
+  if (tab?.kind === 'my-wiki' || tab?.kind === 'wiki-page') return androidChrome(clock, 'My Wiki', wikiStage());
   if (tab?.kind === 'tool') {
     return androidChrome(clock, tab.title, `<div class="a-screen"><button class="a-row" data-home>← Files</button><div data-tool-mount="${esc(tab.slug)}"></div></div>`);
   }
@@ -426,7 +350,7 @@ function bind() {
   document.querySelectorAll('[data-folder]').forEach(b => b.onclick = () => openFolder(b.dataset.folder));
   document.querySelectorAll('[data-slug]').forEach(b => b.onclick = () => openTool(b.dataset.slug));
   document.querySelectorAll('[data-app]').forEach(b => b.onclick = () => {
-    if (b.dataset.app === 'my-wiki') { upsertTab({ id: 'my-wiki', kind: 'my-wiki', title: 'My Wiki', path: 'megaplan://wiki' }); push('/wiki/'); render(); }
+    if (b.dataset.app === 'my-wiki') openApp('my-wiki');
     else openApp(b.dataset.app);
   });
   document.querySelectorAll('[data-tab]').forEach(b => b.onclick = e => { if (e.target.dataset.close) return; activate(b.dataset.tab); render(); });
@@ -471,15 +395,26 @@ function bind() {
 function openPalette() {
   const el = document.getElementById('palette');
   const items = [
-    ...APPS.map(a => ({ t: a.title, run: () => a.kind === 'my-wiki' ? (upsertTab({ id: 'my-wiki', kind: 'my-wiki', title: 'My Wiki', path: 'megaplan://wiki' }), push('/wiki/'), render()) : openApp(a.kind) })),
+    ...APPS.map(a => ({ t: a.title, run: () => openApp(a.kind) })),
     ...cats().map(([c]) => ({ t: c + ' folder', run: () => openFolder(c) })),
-    ...state.tools.slice(0, 40).map(t => ({ t: t.title, run: () => openTool(t.slug) }))
+    ...state.tools.map(t => ({ t: t.title, run: () => openTool(t.slug) }))
   ];
   el.classList.remove('hidden');
-  el.innerHTML = `<div class="palette-box"><input id="pal-q" placeholder="Search MegaPLAN…">${items.slice(0, 18).map((x, i) => `<button class="palette-item" data-i="${i}">${esc(x.t)}</button>`).join('')}</div>`;
-  el.onclick = ev => { if (ev.target.id === 'palette') el.classList.add('hidden'); };
-  el.querySelectorAll('[data-i]').forEach(b => b.onclick = () => { el.classList.add('hidden'); items[Number(b.dataset.i)].run(); });
-  el.querySelector('#pal-q').focus();
+  el.innerHTML = '<div class="palette-box"><input id="pal-q" aria-label="Search apps and tools" placeholder="Search all tools…"><div id="pal-results"></div></div>';
+  el.onclick = ev => { if (ev.target === el) el.classList.add('hidden'); };
+  const input = el.querySelector('#pal-q'), results = el.querySelector('#pal-results');
+  function update() {
+    const query = input.value.trim().toLowerCase();
+    const matches = items.filter(x => x.t.toLowerCase().includes(query)).slice(0, 20);
+    results.innerHTML = matches.map((x, i) => `<button class="palette-item" data-i="${i}">${esc(x.t)}</button>`).join('') || '<p class="muted">No matches.</p>';
+    results.querySelectorAll('[data-i]').forEach(b => b.onclick = () => { el.classList.add('hidden'); matches[Number(b.dataset.i)].run(); });
+  }
+  input.addEventListener('input', update);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); results.querySelector('[data-i]')?.click(); }
+  });
+  update();
+  input.focus();
 }
 
 load().catch(err => {

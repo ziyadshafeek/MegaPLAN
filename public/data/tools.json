@@ -1725,9 +1725,9 @@
     "slug": "sample-rate-converter",
     "title": "Sample Rate Converter",
     "category": "Audio",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Sample Rate Converter \u2014 audio helper on this device. Heavy denoise is a simple gate, not a named model.",
+    "description": "Beta: currently inspects audio duration and does not resample audio.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2105,7 +2105,7 @@
     "category": "Video",
     "status": "live",
     "processing": "browser",
-    "description": "Subtitle Extractor \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Extract dialogue from pasted SRT/VTT subtitles. Video file subtitle tracks are not decoded.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2131,9 +2131,9 @@
     "slug": "subtitle-timing-helper",
     "title": "Subtitle Timing Helper",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Subtitle Timing Helper \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Beta: subtitle timing shifts are not implemented; currently echoes pasted caption text.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4709,7 +4709,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Purchase Tracker \u2014 Business tool: purchase tracker calculator/helper, local, export.",
+    "description": "Sum purchases entered as Item | Quantity | Unit price, locally in the browser.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4973,9 +4973,9 @@
     "slug": "citation-formatter",
     "title": "Citation Formatter",
     "category": "Education",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Citation Formatter \u2014 Education: citation formatter \u2014 works in browser, local processing, export result. Fast and private.",
+    "description": "Beta: citation style formatting is not implemented; currently echoes pasted references.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5129,7 +5129,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Timetable Maker \u2014 Education: timetable maker \u2014 works in browser, local processing, export result. Fast and private.",
+    "description": "Build a Markdown timetable from Day | Time | Activity rows.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6081,7 +6081,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "CSV Merger \u2014 Files & Data: csv merger \u2014 works in browser, local processing, export result. Fast and private.",
+    "description": "Merge pasted CSV datasets with matching headers, separated by a line containing ---.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6177,9 +6177,9 @@
     "slug": "csv-to-xlsx",
     "title": "CSV to XLSX",
     "category": "Files & Data",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "CSV to XLSX \u2014 Files & Data: csv to xlsx \u2014 works in browser, local processing, export result. Fast and private.",
+    "description": "Beta: currently exports CSV for spreadsheet applications; it does not generate an XLSX file.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6401,9 +6401,9 @@
     "slug": "decision-table-maker",
     "title": "Decision Table Maker",
     "category": "Productivity",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Decision Table Maker \u2014 Productivity: decision table maker \u2014 OSM, local processing, export.",
+    "description": "Beta: decision matrix construction is not implemented; currently echoes pasted text.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6429,9 +6429,9 @@
     "slug": "meeting-minutes",
     "title": "Meeting Minutes",
     "category": "Productivity",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Meeting Minutes \u2014 Productivity: meeting minutes \u2014 OSM, local processing, export.",
+    "description": "Beta: currently creates a numbered agenda, not structured meeting minutes.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7991,7 +7991,7 @@
     "slug": "map-directory",
     "title": "Map Directory \u2014 Trivandrum Massive",
     "category": "Productivity",
-    "description": "Massive directory map starting from Trivandrum (8.5241,76.9366) \u2014 auto scraper point by point 0.01\u00b0 grid spiral outward, entire map covered by one point. Classifies road-wise & business-wise (mosques, restaurants, churches, temples, schools, hospitals, banks etc) via NVIDIA AI that creates new sections automatically. Runs continuously in background via frontend poller + GitHub Action hourly. Free Overpass API, no key, IndexedDB + localStorage, export JSON.",
+    "description": "Browse the published OpenStreetMap directory snapshot or manually scan a cell to keep a local IndexedDB copy. Published coverage starts empty and depends on successful scheduled indexing jobs.",
     "keywords": [
       "map",
       "directory",
@@ -8057,7 +8057,7 @@
     "slug": "kerala-expansion",
     "title": "Kerala Expansion \u2014 10 Day Sprint",
     "category": "Productivity",
-    "description": "Kerala 10-day sprint to finish entire Kerala from Trivandrum origin \u2014 adaptive multi-resolution 0.01\u00b0 Trivandrum 2000 cells + 0.02\u00b0 rest Kerala 10000 + 0.05\u00b0 gaps 5000 = 17000 cells, 4 parallel workers, 3 Overpass mirrors, 35s interval, NVIDIA AI road-wise & business-wise classification, GitHub Action every 30min batch 20. After Kerala, South India 11-20d, India 21-60d, World 61-365d. Flawless.",
+    "description": "View Kerala indexing plans and published progress. Scheduled OpenStreetMap jobs depend on upstream availability; the planned cell target is not a completion guarantee.",
     "keywords": [
       "kerala",
       "expansion",
@@ -8144,7 +8144,7 @@
     "slug": "inception-labs",
     "title": "Inception Labs \u2014 Mercury Diffusion LLM",
     "category": "OCR & AI",
-    "description": "Inception Labs reverse engineered chat.inceptionlabs.ai as API \u2014 Mercury diffusion LLM 737 tok/s, 32k context, free playground. Endpoint https://chat.inceptionlabs.ai/api/chat/completions model lambda.mercury-coder-small, auth Bearer token from cookie token TTL 6h generated via Playwright at /auth. Official API https://api.inceptionlabs.ai/v1/chat/completions model mercury-2.5 100M free tokens. Must be rigorously tested or else rubbish \u2014 small AI, use high thinking for map work, proxy rotation every time to reset rate limit.",
+    "description": "Inception Labs chat via its official API. Requires the site operator to configure INCEPTION_API_KEY; unavailable when unconfigured. AI output must be checked before use.",
     "keywords": [
       "inception",
       "mercury",
@@ -8162,7 +8162,7 @@
     "slug": "product-directory",
     "title": "Product Directory \u2014 Amazon & Flipkart Massive",
     "category": "Business",
-    "description": "Product directory massive dataset \u2014 Amazon 100M+ and Flipkart 10M+ products with price categorizing, rating, seller rating etc. Systematic: categories \u2192 subcategories \u2192 product URLs \u2192 details (title, price, original price, discount, rating, seller name, seller rating, thumbnails, highlights, offers, specifications). Free storage GitHub+Vercel+IndexedDB+search-index fully indexable for AI. Similar to map big project.",
+    "description": "Search verified published product records, with an experimental on-demand Flipkart lookup when no indexed match is found. Prices are not guaranteed current. Amazon live search is not connected.",
     "keywords": [
       "product",
       "amazon",
@@ -8193,7 +8193,7 @@
     "slug": "music-directory",
     "title": "Music Directory \u2014 Spotify Full Dataset",
     "category": "Audio",
-    "description": "Music directory full dataset for AI for songs in Spotify \u2014 based on GitHub AliAkhtari78/SpotifyScraper (no API key, public embed token) + msr8/spotify 7M+ tracks. Extract tracks, albums, artists, playlists, podcasts, lyrics, audio features danceability energy valence tempo etc. Free storage GitHub+Vercel+IndexedDB fully indexable for AI recommendations via k-nearest-neighbours.",
+    "description": "Search published music records or try an on-demand Spotify track lookup when no indexed match is found. No complete catalogue, audio-feature dataset, or third-party availability is guaranteed.",
     "keywords": [
       "music",
       "spotify",

@@ -2,7 +2,7 @@
 
 ## Source of truth
 Repository: `ziyadshafeek/MegaPLAN`
-Branch for this session: whatever the user is on (Arena uses a working branch; production is `main` via Vercel).
+Branch for this session: `arena/01a0dd3c-megaplan` (do not switch branches or push to main). Production is `main` via Vercel after PR merge.
 
 Read before editing:
 
@@ -17,7 +17,7 @@ MegaPLAN is **not** a clone of freetoolforge.org. The customer UI is a **desktop
 Pinned apps on the home screen:
 
 - **Wiki Agent** — hosted page builder (`/agent/`, `/api/agent-plan`) — Codex-style chat + live browser + Deploy
-- **Self Agent** — BYOK OpenAI-compatible builder (keys stay in `localStorage`)
+- **Self Agent** — BYOK OpenAI-compatible builder (key is session-only and sent directly to the chosen provider)
 - **AI Mode** — combine tools, upload files + complex request, 4-digit session code for private tools, future paid (free now) — `/tools/ai-mode`, `public/js/ai-mode.js`
 - **Audio Studio** — Audacity-like multi-track DAW, waveform, MP3/WAV, autosave — `/tools/audio-studio`, `public/js/audio-studio.js`
 - **My Wiki** — pages saved on this device + published pages
@@ -65,7 +65,7 @@ lib/api/youtube-transcript.js  YouTube captions fetcher (YouTube timedtext + Pip
 lib/api/youtube-playlist.js    Playlist extractor (Piped + Invidious + YouTube scrape, CSV/TXT export)
 lib/api/inspect.js             public URL/DNS/TLS/robots
 scripts/dev-server.mjs     local static + API
-data/tools.json            canonical 562-tool registry (was 555, now includes frontier tools)
+data/tools.json            canonical 585-tool registry (some tools are beta)
 public/data/               deployed copy of JSON
 changes.patch              original 13-file Codex patch (737 lines, verified)
 ```
@@ -83,9 +83,12 @@ Codex-style split: chat on the left, live browser window on the right, Deploy in
 3. Hosted: `POST /api/agent-plan` → NVIDIA NIM. Default model `deepseek-ai/deepseek-v4.1-flash` if `NVIDIA_AGENT_MODEL` is unset. **Only `NVIDIA_API_KEY` is required, and it must be on Vercel** — GitHub Actions secrets are not visible to the website.
 4. Self Agent: browser calls the user’s `/v1/chat/completions`.
 5. Constrained JSON schema (blocks + optional `api` expression). Prefer a working calculator/API when asked.
-6. Sandboxed iframe preview + declarative tests.
-7. Validated pages save to `localStorage` (`mp-wiki-pages`) after preview checks pass.
+6. Sandboxed iframe preview + declarative tests; use Local outline if hosted writing is unconfigured (not AI-written).
+7. Validated pages save to `localStorage` (`mp-wiki-pages`) after preview checks pass; Self Agent key is kept in `sessionStorage`.
 8. Deploy: `POST /api/agent-publish` requires `GITHUB_TOKEN` and `AGENT_WRITE_TOKEN` on Vercel, plus an operator-supplied write token (kept in tab memory only). Otherwise stay on-device.
+
+## Data ingestion
+Visitor devices do not run automatic scraping. The public directory endpoints are read-only on Vercel; scheduled GitHub jobs attempt verified upstream indexing and only commit data on success. The initial snapshots are empty because synthetic seeds were removed. Manual map scans remain local to IndexedDB. Never re-enable public filesystem POST writes.
 
 ## Tests
 ```

@@ -1,34 +1,5 @@
 {
-  "totalTracks": 2,
-  "lastScannedAt": "2026-09-26T00:00:00Z",
-  "tracks": [
-    {
-      "id": "4cOdK2wGLETKBW3PvgPWqT",
-      "name": "Never Gonna Give You Up",
-      "artists": "Rick Astley",
-      "album": "Whenever You Need Somebody",
-      "duration_ms": 212000,
-      "popularity": 85,
-      "danceability": 0.7,
-      "energy": 0.8,
-      "valence": 0.9,
-      "tempo": 113,
-      "searchable_text": "rick astley never gonna give you up"
-    },
-    {
-      "id": "5ghIJDpPoe3CfHMGu71E6T",
-      "name": "Bohemian Rhapsody",
-      "artists": "Queen",
-      "album": "A Night at the Opera",
-      "duration_ms": 354000,
-      "popularity": 90,
-      "danceability": 0.4,
-      "energy": 0.6,
-      "valence": 0.3,
-      "tempo": 72,
-      "searchable_text": "queen bohemian rhapsody"
-    }
-  ],
-  "freeStorage": "GitHub + Vercel + IndexedDB fully indexable for AI, 7M+ target like msr8/spotify",
-  "github": "AliAkhtari78/SpotifyScraper no key + msr8/spotify 7M+ tracks"
+  "totalTracks": 0,
+  "lastScannedAt": null,
+  "tracks": []
 }

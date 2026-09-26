@@ -41,14 +41,14 @@ export function mountKeralaDirectoryFull(root, tool) {
     <div style="display:grid;grid-template-columns:380px 1fr;gap:0;min-height:82vh;border:1px solid #e0d5c4;border-radius:12px;overflow:hidden">
       <aside style="background:#efe6d8;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:12px;border-right:1px solid #e0d5c4">
         <div>
-          <b>Kerala Directory — Full Business Info, Massive Scrapping</b>
-          <p class="muted" style="margin:4px 0 8px;font-size:12px">Shows ALL business info from OSM, not only names: phone, website, opening_hours, cuisine, religion, operator, brand, building, wheelchair, etc + railways + roads + spatial index geohash. Stored free: GitHub + Vercel static + IndexedDB + search-index, fully indexable for AI multi-tool. Distance, traffic heuristic.</p>
+          <b>Kerala Directory — published OSM snapshot</b>
+          <p class="muted" style="margin:4px 0 8px;font-size:12px">Shows fields available in published OSM records. Records and tags may be incomplete or out of date. The published index starts empty until a verified indexing job succeeds; distance and traffic estimates should not be used for navigation.</p>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             <button class="btn primary" id="${id}-refresh" style="font-size:12px">↻ Refresh</button>
             <button class="btn secondary" id="${id}-ai-search" style="font-size:12px">🤖 AI Search</button>
           </div>
           <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
-            <input id="${id}-q" class="field" placeholder="Search massive directory: mosque, restaurant, M.G. Road…" style="flex:1;min-width:160px">
+            <input id="${id}-q" class="field" placeholder="Search published records…" style="flex:1;min-width:160px">
             <button class="btn secondary" id="${id}-search" style="font-size:12px">Search</button>
           </div>
           <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">

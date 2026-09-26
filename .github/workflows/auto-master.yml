@@ -1,4 +1,4 @@
-name: Auto Master — Fully Automatic All Datasets
+name: Scheduled directory indexing
 
 on:
   schedule:
@@ -23,31 +23,27 @@ jobs:
           node-version: '20'
       - name: Install
         run: npm ci || npm install
-      - name: Run auto master — map + product + music + inception
+      - name: Run verifiable map, product, and music indexing
         env:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
-          INCEPTION_TOKEN: ${{ secrets.INCEPTION_TOKEN || '' }}
         run: |
-          echo "Running auto master — fully automatic all datasets"
+          echo "Running scheduled indexing (upstream failures are not successful ingestions)"
           # Map — Kerala 10-day sprint
           echo "=== Map Kerala ==="
-          node scripts/kerala-expansion-runner.mjs --batch 10 --workers 2 || true
-          # Product — Amazon Flipkart
+          node scripts/kerala-expansion-runner.mjs --batch 10 --workers 2
+          # Product — experimental Flipkart search
           echo "=== Product ==="
-          node scripts/product-scraper-runner.mjs --batch 20 --platform flipkart --category mobiles || true
-          node scripts/product-scraper-runner.mjs --batch 20 --platform flipkart --category laptops || true
+          node scripts/product-scraper-runner.mjs --batch 20 --platform flipkart --category mobiles
+          node scripts/product-scraper-runner.mjs --batch 20 --platform flipkart --category laptops
           # Music — Spotify
           echo "=== Music ==="
-          node scripts/music-scraper-runner.mjs --batch 30 --query love || true
-          node scripts/music-scraper-runner.mjs --batch 30 --query malayalam || true
-          # Inception test
-          echo "=== Inception ==="
-          node scripts/inception-test.mjs http://localhost:4173 || true
+          node scripts/music-scraper-runner.mjs --batch 30 --query love
+          node scripts/music-scraper-runner.mjs --batch 30 --query malayalam
       - name: Commit all
         run: |
           git config user.name "auto-master-bot"
           git config user.email "bot@megaplan.local"
-          git add data/ public/data/ || true
+          git add data/ public/data/
           if git diff --cached --quiet; then echo "No new data"; exit 0; fi
           MAP=$(jq -r '.totalCells // 0' data/map-directory/index.json 2>/dev/null || echo "0")
           PROD=$(jq -r '.totalProducts // 0' data/product-directory/index.json 2>/dev/null || echo "0")
@@ -56,7 +52,7 @@ jobs:
           git push origin HEAD:${{ github.ref_name || 'main' }}
       - name: Summary
         run: |
-          echo "### 🤖 Auto Master — Fully Automatic" >> $GITHUB_STEP_SUMMARY
+          echo "### 🤖 Scheduled indexing" >> $GITHUB_STEP_SUMMARY
           echo "Map: $(jq -r '.totalCells // 0' data/map-directory/index.json) cells" >> $GITHUB_STEP_SUMMARY
           echo "Product: $(jq -r '.totalProducts // 0' data/product-directory/index.json) products" >> $GITHUB_STEP_SUMMARY
           echo "Music: $(jq -r '.totalTracks // 0' data/music-directory/index.json) tracks" >> $GITHUB_STEP_SUMMARY

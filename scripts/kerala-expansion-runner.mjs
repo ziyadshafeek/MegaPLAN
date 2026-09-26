@@ -264,6 +264,7 @@ async function runPhase(phase, batch, workers) {
   await Promise.all(workerPromises);
 
   console.log(`\nPhase ${phase.phase} done: ${completed} cells, ${totalPlaces} places`);
+  if (!completed) throw Error(`No verified cells in phase ${phase.phase}; all Overpass mirrors failed.`);
   return { completed, totalPlaces };
 }
 

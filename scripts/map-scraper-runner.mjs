@@ -134,7 +134,7 @@ out center 100;`;
     }).filter(p => p.lat && p.lng);
     console.log(`  Places: ${places.length}`);
   } catch (e) {
-    console.log(`  Places error: ${e.message}`);
+    throw Error(`Overpass places unavailable: ${e.message}`);
   }
 
   // Roads query
@@ -284,10 +284,12 @@ async function main() {
 
   ensureDir();
 
+  let completed = 0;
   for (let i = 0; i < batch; i++) {
     const idx = start + i;
     try {
       await scanCell(idx);
+      completed++;
     } catch (e) {
       console.log(`Failed cell ${idx}: ${e.message}`);
     }
@@ -297,6 +299,7 @@ async function main() {
     }
   }
 
+  if (!completed) throw Error('No verified cells were scanned; no data was published.');
   console.log('\nDone. Index:');
   const idx = readIndex();
   console.log(JSON.stringify({ totalCells: idx.totalCells, totalPlaces: idx.totalPlaces, lastIndex: idx.lastIndex, businessTypes: Object.keys(idx.businessTypes||{}).length, roads: Object.keys(idx.roadWise||{}).length, religious: idx.religious }, null, 2));

@@ -30,6 +30,25 @@ export function validate(s) {
   return s;
 }
 
+// An explicitly non-AI fallback when hosted writing is not configured.
+// Keeps page preview/local export useful without pretending to have generated prose.
+export function createLocalDraft(prompt) {
+  const text = String(prompt || '').trim().replace(/\s+/g, ' ').slice(0, 7000);
+  if (text.length < 4) throw Error('Describe the page in at least four characters.');
+  const title = text.slice(0, 100);
+  return {
+    kind: 'page', slug: `local-draft-${crypto.randomUUID().slice(0, 8)}`,
+    title,
+    summary: 'A local starter page based on your request. Review and expand the content before publishing.',
+    blocks: [
+      { type: 'hero', title, subtitle: 'Local starter draft — no hosted writing assistant was used.' },
+      { type: 'text', title: 'Your brief', body: text },
+      { type: 'note', body: 'This outline is a template, not an AI-written article. Check facts and add your own content before publishing.' }
+    ],
+    tests: [{ action: 'assert-text', text: title }, { action: 'assert-blocks', minimum: 3 }]
+  };
+}
+
 function blockHtml(b) {
   if (b.type === 'hero') return `<section class="hero"><div class="eyebrow">WIKI</div><h1>${esc(b.title)}</h1><p>${esc(b.subtitle)}</p></section>`;
   if (b.type === 'text') return `<section><h2>${esc(b.title || '')}</h2><p>${esc(b.body)}</p></section>`;
@@ -108,7 +127,7 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
             <div class="tool-kicker">${mode === 'self' ? 'SELF AGENT' : 'WIKI AGENT'}</div>
             <h1>${mode === 'self' ? 'Your key, this browser' : 'Prompt → page → deploy'}</h1>
             <p class="lede">${mode === 'self'
-              ? 'Paste an OpenAI-compatible base URL, model id, and key. They stay in this browser.'
+              ? 'Paste an OpenAI-compatible base URL, model id, and key. The key stays in this tab and is sent directly to your provider, not to MegaPLAN.'
               : 'Describe a page or a calculator API. The agent writes it, this window runs it, Deploy publishes it.'}</p>
             ${standalone ? '<p class="lede"><a href="/" style="color:#e8b44c">← Desk</a></p>' : ''}
           </header>
@@ -117,6 +136,7 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
             <textarea id="prompt" maxlength="7000" placeholder="Example: Create a GST invoice checklist for small businesses in India, with a glossary and a GST calculator API."></textarea>
             <div class="codex-actions">
               <button class="btn primary" id="build" type="submit">Run</button>
+              <button class="btn ghost" id="local-draft" type="button">Local outline</button>
               <button class="btn secondary" id="autonomous" type="button">${mode === 'hosted' ? 'GitHub runner' : 'Queue run'}</button>
               <button class="btn ghost" type="button" data-fill="Create a custom API page that calculates discount from price and percent.">New API</button>
               <button class="btn ghost" type="button" data-fill="Create a study reference page with an outline, glossary, checklist and FAQ.">Study page</button>
@@ -167,8 +187,13 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
     catch { return {}; }
   }
 
+  function readLocalPages() {
+    try { const value = JSON.parse(localStorage.getItem('mp-wiki-pages') || '[]'); return Array.isArray(value) ? value : []; }
+    catch { return []; }
+  }
+
   function persistLocal(s) {
-    const list = JSON.parse(localStorage.getItem('mp-wiki-pages') || '[]').filter(x => x.slug !== s.slug);
+    const list = readLocalPages().filter(x => x.slug !== s.slug);
     list.push({ slug: s.slug, title: s.title, summary: s.summary, spec: s, savedAt: new Date().toISOString() });
     localStorage.setItem('mp-wiki-pages', JSON.stringify(list));
     localStorage.setItem('mp-wiki-' + s.slug, JSON.stringify(s));
@@ -177,12 +202,12 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
   async function pages() {
     let remote = [];
     try { remote = await (await fetch('/data/agent-pages.json', { cache: 'no-store' })).json(); } catch {}
-    const local = JSON.parse(localStorage.getItem('mp-wiki-pages') || '[]');
-    const html = [...local.map(x => ({ ...x, local: true })), ...(remote || [])]
+    const local = readLocalPages();
+    const html = [...local.map(x => ({ ...x, local: true })), ...(Array.isArray(remote) ? remote : [])].filter(x => x && typeof x.slug === 'string')
       .map(x => `<a href="/agent/view.html?slug=${encodeURIComponent(x.slug)}">${esc(x.title)} · ${x.local ? 'device' : 'live'}</a>`)
       .join('') || '<span>No pages yet.</span>';
     $('pages-side').innerHTML = html;
-    return [...local, ...(remote || [])];
+    return [...local, ...(Array.isArray(remote) ? remote : [])];
   }
 
   let validationPassed = false;
@@ -226,7 +251,7 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
       });
       const j = await r.json();
       if (!r.ok) throw Error(j.error || 'Publish API unavailable.');
-      addBubble('agent', `Deployed ${j.path}${j.deployed ? ' and triggered a site rebuild.' : '. Vercel will pick up the Git commit.'}`);
+      addBubble('agent', `Published ${j.path} to GitHub. ${j.deployed ? 'A site rebuild was triggered.' : 'Wait for the Vercel deployment to finish before sharing the live URL.'}`);
       $('cb-url').textContent = '/agent/view.html?slug=' + spec.slug;
       pages();
     } catch (e) {
@@ -313,10 +338,17 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
     const h = await health();
     if (h.aiConfigured || h.providerConfigured) addBubble('agent', 'Ready. Type a prompt — I will write a page or API, run it in the window on the right, then you can Deploy.');
     else if (h.actionsConfigured) addBubble('agent', 'This website does not hold the hosted writing key (it lives in GitHub Actions secrets). Run will queue the GitHub runner, or paste a Self Agent key.');
-    else addBubble('agent', 'Hosted writing is not on this website yet. Use Self Agent, or add the hosted API key on Vercel. GitHub secrets are not visible to the website.');
+    else addBubble('agent', 'Hosted writing is not configured here. Use Self Agent, create a local template outline, or ask the operator to configure hosted writing.');
   }
 
   $('composer').onsubmit = build;
+  $('local-draft').onclick = () => {
+    try {
+      const draft = validate(createLocalDraft($('prompt').value));
+      addBubble('agent', 'Created a template outline on this device. It is not an AI-written page; edit the brief or use hosted/Self Agent for writing.');
+      renderSpec(draft);
+    } catch (e) { addBubble('agent', e.message); }
+  };
   $('autonomous').onclick = autonomous;
   $('deploy').onclick = publish;
   $('reload').onclick = () => { if (spec) renderSpec(spec); };

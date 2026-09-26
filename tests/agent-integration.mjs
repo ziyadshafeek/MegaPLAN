@@ -74,8 +74,27 @@ try {
 
 // Parse the actual srcdoc script, including the generated evaluator and test channel.
 globalThis.document = { getElementById: () => null };
-const { previewHtml } = await import('../public/agent/agent.js');
+const { previewHtml, createLocalDraft, validate: validateClient } = await import('../public/agent/agent.js');
+const localDraft = validateClient(createLocalDraft('Build a local study checklist for algebra'));
+assert.equal(localDraft.blocks.length, 3);
+assert.match(localDraft.blocks[0].subtitle, /no hosted writing/i);
+assert.equal((await domPreviewLocal(localDraft)).ok, true);
 const html = previewHtml(spec, 'test-nonce');
+
+async function domPreviewLocal(page) {
+  const { JSDOM } = await import('jsdom');
+  let message;
+  const dom = new JSDOM(previewHtml(page, 'local-nonce'), {
+    runScripts: 'dangerously',
+    beforeParse(win) {
+      Object.defineProperty(win.HTMLElement.prototype, 'innerText', { get() { const copy = this.cloneNode(true); copy.querySelectorAll('script,style').forEach(node => node.remove()); return copy.textContent; } });
+      win.addEventListener('message', event => { message = event.data; });
+    }
+  });
+  await new Promise(resolve => setTimeout(resolve, 20));
+  dom.window.close();
+  return message;
+}
 assert.ok(html.endsWith('</script>'), 'preview script must close in HTML');
 assert.equal((html.match(/<\/script>/g) || []).length, 1);
 new vm.Script(html.split('<script>')[1].split('</script>')[0]);
