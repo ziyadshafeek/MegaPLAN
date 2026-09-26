@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 
 const files = [
   'public/agent/index.html', 'public/agent/agent.css', 'public/agent/agent.js',
-  'public/agent/view.html', 'api/agent-plan.js', 'api/agent-publish.js',
-  'api/agent-health.js', 'data/agent-pages.json'
+  'public/agent/view.html', 'lib/api/agent-plan.js', 'lib/api/agent-publish.js',
+  'lib/api/agent-health.js', 'api/index.js', 'data/agent-pages.json'
 ];
 for (const f of files) assert.ok(fs.existsSync(new URL('../' + f, import.meta.url)), `missing ${f}`);
 

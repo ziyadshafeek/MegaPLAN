@@ -48,9 +48,34 @@ async function serveStatic(urlPath, res) {
 }
 
 async function serveApi(req, res, url) {
-  const name = url.pathname.replace(/^\/api\//, '').replace(/\/$/, '');
-  const file = path.join(root, 'api', name + '.js');
-  if (!fs.existsSync(file)) return send(res, 404, JSON.stringify({ error: 'No such API' }), { 'Content-Type': 'application/json' });
+  let name = url.pathname.replace(/^\/api\//, '').replace(/\/$/, '');
+  // Handle router: if file doesn't exist, try api/index.js with route param
+  let file = path.join(root, 'api', name + '.js');
+  let routeParam = null;
+  
+  if (!fs.existsSync(file)) {
+    // Check if it's a subpath like rate-limiter or ai or inception?action=test
+    // Try to extract first segment as route
+    const firstSeg = name.split('/')[0];
+    if (firstSeg) {
+      const indexFile = path.join(root, 'api', 'index.js');
+      if (fs.existsSync(indexFile)) {
+        file = indexFile;
+        routeParam = firstSeg;
+        // Add route param to URL if not already present
+        if (!url.searchParams.get('route')) {
+          url.searchParams.set('route', routeParam);
+        }
+      } else {
+        return send(res, 404, JSON.stringify({ error: 'No such API', tried: name }), { 'Content-Type': 'application/json' });
+      }
+    } else {
+      // /api or /api/index
+      file = path.join(root, 'api', 'index.js');
+      if (!fs.existsSync(file)) return send(res, 404, JSON.stringify({ error: 'No such API' }), { 'Content-Type': 'application/json' });
+    }
+  }
+  
   const mod = await import(pathToFileURL(file).href + '?t=' + Date.now());
   const chunks = [];
   for await (const c of req) chunks.push(c);
@@ -58,10 +83,19 @@ async function serveApi(req, res, url) {
   if (raw) {
     try { req.body = JSON.parse(raw); } catch { req.body = raw; }
   } else req.body = {};
+  // Reconstruct url with route param for router
+  if (routeParam) {
+    req.url = url.pathname + (url.search ? url.search : '') + (url.search ? '&' : '?') + `route=${routeParam}`;
+    // Actually set full url for handler to parse
+    const newUrl = new URL(req.url, `http://${req.headers.host}`);
+    // Ensure route param is set
+    if (!newUrl.searchParams.get('route')) newUrl.searchParams.set('route', routeParam);
+    req.url = newUrl.pathname + newUrl.search;
+  }
   if (typeof mod.default === 'function') return mod.default(req, res);
   const method = (req.method || 'GET').toUpperCase();
   if (typeof mod[method] === 'function') {
-    const request = new Request('http://127.0.0.1' + url.pathname, { method, headers: req.headers, body: method === 'GET' || method === 'HEAD' ? undefined : raw });
+    const request = new Request('http://127.0.0.1' + url.pathname + url.search, { method, headers: req.headers, body: method === 'GET' || method === 'HEAD' ? undefined : raw });
     const out = await mod[method](request);
     const buf = Buffer.from(await out.arrayBuffer());
     const headers = {}; out.headers.forEach((v, k) => { headers[k] = v; });
