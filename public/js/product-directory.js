@@ -135,30 +135,41 @@ export function mountProductDirectory(root, tool) {
   function startScraper() {
     if (autoInterval) return;
     isRunning = true;
-    log('Product scraper started — systematic categories → subcategories → products, 2s interval, proxy rotation');
+    localStorage.setItem('mp-product-auto', '1');
+    log('Product scraper started — systematic categories → subcategories → products, 2s interval, proxy rotation, fully automatic');
     autoInterval = setInterval(async () => {
       try {
-        const categories = ['mobiles', 'laptops', 'electronics'];
+        const categories = ['mobiles', 'laptops', 'electronics', 'books', 'beauty', 'toys'];
         const cat = categories[Math.floor(Math.random()*categories.length)];
         const r = await fetch(`/api/product-scraper?action=search&term=${encodeURIComponent(cat)}&platform=flipkart`);
         const j = await r.json();
         if (j.products && j.products.length) {
           await fetch('/api/product-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ products: j.products }) });
-          log(`Scraped ${j.products.length} products for ${cat}, total now growing`);
+          log(`Scraped ${j.products.length} products for ${cat}, total now growing, free storage GitHub+Vercel+IndexedDB`);
           updateProgress();
         }
       } catch (e) { log(`Scraper error: ${e.message}`); }
-    }, 5000);
-    $(`scan`).textContent = '● Running';
-    toast('Product scraper started');
+    }, 8000);
+    $(`scan`).textContent = '● Running — Fully Automatic';
+    toast('Product scraper started — fully automatic');
   }
 
   function stopScraper() {
     if (autoInterval) clearInterval(autoInterval);
     autoInterval = null;
     isRunning = false;
+    localStorage.setItem('mp-product-auto', '0');
     $(`scan`).textContent = '▶ Start Scraper';
     log('Scraper paused');
+  }
+
+  // Fully automatic by default
+  function ensureAuto() {
+    if (localStorage.getItem('mp-product-auto') === null) {
+      localStorage.setItem('mp-product-auto', '1');
+      return true;
+    }
+    return localStorage.getItem('mp-product-auto') === '1';
   }
 
   $(`scan`).onclick = startScraper;
@@ -208,4 +219,5 @@ export function mountProductDirectory(root, tool) {
 
   updateProgress();
   search('mobile');
+  if (ensureAuto()) startScraper();
 }

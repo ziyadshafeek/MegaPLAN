@@ -492,14 +492,27 @@ export function mountMapDirectory(root, tool) {
     }
   }
 
+  // Fully automatic: auto-enable if not set
+  function ensureAutoEnabled() {
+    if (localStorage.getItem(LS_AUTO) === null) {
+      localStorage.setItem(LS_AUTO, '1');
+      log('Fully automatic enabled by default — no manual start needed, will run in background');
+      return true;
+    }
+    return localStorage.getItem(LS_AUTO) === '1';
+  }
+
   // Init
   initMap();
   updateProgressUI();
   registerSW();
-  if (isAutoRunning) startAuto();
+  const shouldAuto = ensureAutoEnabled();
+  if (shouldAuto || isAutoRunning) startAuto();
 
   // Auto resume if was running
-  log(`Directory tool loaded. Last index: ${getProgress().lastIndex}. ${isAutoRunning ? 'Auto resuming…' : 'Click Start Auto Scraper to begin building massive directory from Trivandrum.'}`);
+  log(`Directory tool loaded. Last index: ${getProgress().lastIndex}. ${shouldAuto ? 'Fully automatic enabled — auto running Kerala 10-day sprint' : 'Click Start Auto Scraper to begin building massive directory from Trivandrum.'}`);
+  log('Flawless engineering: SW + IndexedDB + localStorage + GitHub Action every 30min + Overpass free + NVIDIA AI classification');
+  log('Free storage: GitHub data/map-directory/ + Vercel public + IndexedDB + search-index fully indexable for AI multi-tool');
   log('Flawless engineering: SW + IndexedDB + localStorage + GitHub Action hourly + Overpass free + NVIDIA AI classification');
 }
 

@@ -136,29 +136,39 @@ export function mountMusicDirectory(root, tool) {
 
   function startScraper() {
     if (autoInterval) return;
-    log('Music scraper started — SpotifyScraper no key, public embed token, 7M+ target');
+    localStorage.setItem('mp-music-auto', '1');
+    log('Music scraper started — SpotifyScraper no key, public embed token, 7M+ target, fully automatic');
     autoInterval = setInterval(async () => {
       try {
-        const terms = ['love', 'party', 'chill', 'rock', 'pop', 'hip hop', 'edm'];
+        const terms = ['love', 'party', 'chill', 'rock', 'pop', 'hip hop', 'edm', 'malayalam', 'hindi', 'tamil'];
         const term = terms[Math.floor(Math.random()*terms.length)];
         const r = await fetch(`/api/music-scraper?action=search&q=${encodeURIComponent(term)}&type=track`);
         const j = await r.json();
         if (j.results && j.results.length) {
           await fetch('/api/music-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ tracks: j.results }) });
-          log(`Scraped ${j.results.length} tracks for "${term}", total growing`);
+          log(`Scraped ${j.results.length} tracks for "${term}", total growing, free storage GitHub+Vercel+IndexedDB`);
           updateProgress();
         }
       } catch (e) { log(`Scraper error: ${e.message}`); }
-    }, 5000);
-    $(`scan`).textContent = '● Running';
-    toast('Music scraper started');
+    }, 8000);
+    $(`scan`).textContent = '● Running — Fully Automatic';
+    toast('Music scraper started — fully automatic');
   }
 
   function stopScraper() {
     if (autoInterval) clearInterval(autoInterval);
     autoInterval = null;
+    localStorage.setItem('mp-music-auto', '0');
     $(`scan`).textContent = '▶ Start Scraper';
     log('Scraper paused');
+  }
+
+  function ensureAuto() {
+    if (localStorage.getItem('mp-music-auto') === null) {
+      localStorage.setItem('mp-music-auto', '1');
+      return true;
+    }
+    return localStorage.getItem('mp-music-auto') === '1';
   }
 
   $(`scan`).onclick = startScraper;
@@ -171,4 +181,5 @@ export function mountMusicDirectory(root, tool) {
   updateProgress();
   loadFeatures();
   search('love', 'track');
+  if (ensureAuto()) startScraper();
 }

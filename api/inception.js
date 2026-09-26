@@ -57,8 +57,39 @@ async function fetchWithTimeout(url, opts = {}, timeout = 30000) {
   }
 }
 
-// In-memory account cache (ephemeral, but we also try to persist via file if available)
-let accountCache = [];
+// In-memory account cache + file persistence for fully automatic
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const root = path.join(here, '..');
+const accountsFile = path.join(root, 'data', 'inception', 'accounts.json');
+
+function loadAccountsFromFile() {
+  try {
+    if (fs.existsSync(accountsFile)) {
+      const data = JSON.parse(fs.readFileSync(accountsFile, 'utf8'));
+      if (Array.isArray(data.active)) return data.active;
+      if (Array.isArray(data)) return data;
+    }
+  } catch {}
+  return [];
+}
+
+function saveAccountsToFile(accounts) {
+  try {
+    const dir = path.dirname(accountsFile);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(accountsFile, JSON.stringify({ active: accounts, rate_limited: [], savedAt: new Date().toISOString() }, null, 2));
+    // Also public
+    const pubDir = path.join(root, 'public', 'data', 'inception');
+    if (!fs.existsSync(pubDir)) fs.mkdirSync(pubDir, { recursive: true });
+    fs.writeFileSync(path.join(pubDir, 'accounts.json'), JSON.stringify({ count: accounts.length, has_accounts: accounts.length > 0 }, null, 2));
+  } catch {}
+}
+
+let accountCache = loadAccountsFromFile();
 let rateLimitedUntil = 0;
 let requestCount = 0;
 let lastReset = Date.now();
@@ -163,6 +194,7 @@ async function getValidAccount() {
   const newAcc = await generateAccountViaAPI();
   if (newAcc) {
     accountCache.push(newAcc);
+    saveAccountsToFile(accountCache);
     return newAcc;
   }
 
