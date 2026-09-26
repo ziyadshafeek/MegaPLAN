@@ -59,5 +59,9 @@ jobs:
         run: node scripts/emit-mirror-annotations.mjs emit 8
       - name: Emit mirror chunks 9
         run: node scripts/emit-mirror-annotations.mjs emit 9
+      - name: Emit mirror chunks 10
+        run: node scripts/emit-mirror-annotations.mjs emit 10
+      - name: Emit mirror chunks 11
+        run: node scripts/emit-mirror-annotations.mjs emit 11
       - name: Verify mirrored annotations round-trip
         run: node scripts/emit-mirror-annotations.mjs verify

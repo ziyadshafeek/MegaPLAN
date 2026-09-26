@@ -8,8 +8,8 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import crypto from 'node:crypto';
 
-const CHUNK = 12000;
-const PARTS = 10;
+const CHUNK = 3500;
+const PARTS = 12;
 const root = process.cwd();
 const mirrorDir = path.join(root, 'mirror');
 
@@ -83,7 +83,7 @@ async function main() {
 
   if (mode === 'emit') {
     const part = Number(arg);
-    if (!Number.isInteger(part) || part < 0 || part >= PARTS) throw Error('emit needs part 0-9');
+    if (!Number.isInteger(part) || part < 0 || part >= PARTS) throw Error('emit needs a valid part');
     let count = 0;
     for (let i = part; i < chunks.length; i += PARTS) {
       process.stdout.write(`::notice::MIRROR|${i}|${chunks.length}|${streamSha}|${chunks[i]}\n`);
