@@ -1,0 +1,1734 @@
+{
+  "index": 2,
+  "lat": 8.534139,
+  "lng": 76.94663800000001,
+  "dx": 1,
+  "dy": 1,
+  "grid": 0.01,
+  "scannedAt": "2026-09-26T11:28:52.917Z",
+  "places": [
+    {
+      "id": "node/588740457",
+      "lat": 8.535379,
+      "lng": 76.9448687,
+      "tags": {
+        "amenity": "bank",
+        "atm": "yes",
+        "brand": "Federal Bank",
+        "brand:wikidata": "Q2044983",
+        "brand:wikipedia": "en:Federal Bank",
+        "name": "Federal Bank",
+        "name:en": "Federal Bank",
+        "website": "https://www.federalbank.co.in"
+      },
+      "name": "Federal Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/588740474",
+      "lat": 8.5347894,
+      "lng": 76.9480773,
+      "tags": {
+        "amenity": "school",
+        "name": "Technical Higher Secondary School, Pattom"
+      },
+      "name": "Technical Higher Secondary School, Pattom",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/588740477",
+      "lat": 8.5347829,
+      "lng": 76.9473309,
+      "tags": {
+        "amenity": "bank",
+        "atm": "yes",
+        "brand": "Canara Bank",
+        "brand:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "brand:ur": "کینرا بینک",
+        "brand:wikidata": "Q2003777",
+        "brand:wikipedia": "en:Canara Bank",
+        "brand:wikipedia:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "name": "Canara Bank",
+        "name:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "name:ur": "کینرا بینک",
+        "website": "https://www.canarabank.com/"
+      },
+      "name": "Canara Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/588740509",
+      "lat": 8.5346737,
+      "lng": 76.9485442,
+      "tags": {
+        "amenity": "post_office",
+        "name": "Post Office, Muttada"
+      },
+      "name": "Post Office, Muttada",
+      "amenity": "post_office",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3492617393",
+      "lat": 8.5358575,
+      "lng": 76.9447777,
+      "tags": {
+        "amenity": "place_of_worship",
+        "denomination": "catholic",
+        "name": "Holy Cross Muttada Church",
+        "religion": "christian"
+      },
+      "name": "Holy Cross Muttada Church",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7121671351",
+      "lat": 8.5365023,
+      "lng": 76.9450739,
+      "tags": {
+        "amenity": "school",
+        "name": "st joseph higher secondary"
+      },
+      "name": "st joseph higher secondary",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7121671368",
+      "lat": 8.5366174,
+      "lng": 76.9454462,
+      "tags": {
+        "amenity": "monastery",
+        "name": "holly cross",
+        "religion": "christian"
+      },
+      "name": "holly cross",
+      "amenity": "monastery",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7121671369",
+      "lat": 8.5373497,
+      "lng": 76.9454411,
+      "tags": {
+        "amenity": "school",
+        "name": "upper primary"
+      },
+      "name": "upper primary",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7121673689",
+      "lat": 8.5351836,
+      "lng": 76.945519,
+      "tags": {
+        "amenity": "school",
+        "name": "thss muttada"
+      },
+      "name": "thss muttada",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7139629382",
+      "lat": 8.5303521,
+      "lng": 76.9446032,
+      "tags": {
+        "amenity": "school",
+        "name": "nss high school"
+      },
+      "name": "nss high school",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7351239860",
+      "lat": 8.5336089,
+      "lng": 76.9413565,
+      "tags": {
+        "name": "BSIX Fish World",
+        "shop": "fishing"
+      },
+      "name": "BSIX Fish World",
+      "amenity": null,
+      "shop": "fishing",
+      "road": null
+    },
+    {
+      "id": "node/7353204182",
+      "lat": 8.5352156,
+      "lng": 76.9426678,
+      "tags": {
+        "amenity": "bank",
+        "brand": "Canara Bank",
+        "brand:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "brand:ur": "کینرا بینک",
+        "brand:wikidata": "Q2003777",
+        "brand:wikipedia": "en:Canara Bank",
+        "brand:wikipedia:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "name": "Canara Bank",
+        "name:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "name:ur": "کینرا بینک"
+      },
+      "name": "Canara Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7353206367",
+      "lat": 8.5354469,
+      "lng": 76.9422876,
+      "tags": {
+        "name": "Dlife home interior desighner",
+        "shop": "yes"
+      },
+      "name": "Dlife home interior desighner",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7353219654",
+      "lat": 8.5365136,
+      "lng": 76.9421691,
+      "tags": {
+        "name": "H20 care",
+        "shop": "yes"
+      },
+      "name": "H20 care",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7353220128",
+      "lat": 8.5357421,
+      "lng": 76.9427238,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Immanual marthoma church",
+        "religion": "christian"
+      },
+      "name": "Immanual marthoma church",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7353220426",
+      "lat": 8.5352756,
+      "lng": 76.9442789,
+      "tags": {
+        "name": "the show showp",
+        "shop": "yes"
+      },
+      "name": "the show showp",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7353233535",
+      "lat": 8.535211,
+      "lng": 76.9435504,
+      "tags": {
+        "name": "Ethnic Weavers",
+        "shop": "clothes"
+      },
+      "name": "Ethnic Weavers",
+      "amenity": null,
+      "shop": "clothes",
+      "road": null
+    },
+    {
+      "id": "node/7353234160",
+      "lat": 8.5369156,
+      "lng": 76.9420919,
+      "tags": {
+        "name": "Matrix computer seles and services",
+        "shop": "computer"
+      },
+      "name": "Matrix computer seles and services",
+      "amenity": null,
+      "shop": "computer",
+      "road": null
+    },
+    {
+      "id": "node/7353242878",
+      "lat": 8.5341626,
+      "lng": 76.9447179,
+      "tags": {
+        "amenity": "conference_centre",
+        "name": "Malarvady Auditorium"
+      },
+      "name": "Malarvady Auditorium",
+      "amenity": "conference_centre",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7353249649",
+      "lat": 8.536598,
+      "lng": 76.9418318,
+      "tags": {
+        "name": "Cell Tell Mobiles",
+        "shop": "mobile_phone"
+      },
+      "name": "Cell Tell Mobiles",
+      "amenity": null,
+      "shop": "mobile_phone",
+      "road": null
+    },
+    {
+      "id": "node/7462437499",
+      "lat": 8.5345917,
+      "lng": 76.9426282,
+      "tags": {
+        "amenity": "bank",
+        "name": "mini muthoote"
+      },
+      "name": "mini muthoote",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463036839",
+      "lat": 8.5344773,
+      "lng": 76.9498975,
+      "tags": {
+        "name": "Cannan Bakers",
+        "shop": "bakery"
+      },
+      "name": "Cannan Bakers",
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "node/7463067646",
+      "lat": 8.5344291,
+      "lng": 76.9498752,
+      "tags": {
+        "name": "Sree Lakshmi Edibles",
+        "shop": "bakery"
+      },
+      "name": "Sree Lakshmi Edibles",
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "node/7463067647",
+      "lat": 8.5346047,
+      "lng": 76.9497758,
+      "tags": {
+        "amenity": "atm",
+        "brand": "State Bank of India",
+        "brand:wikidata": "Q1340361",
+        "name": "State Bank of India",
+        "operator": "State Bank of India",
+        "operator:wikidata": "Q1340361",
+        "short_name": "SBI"
+      },
+      "name": "State Bank of India",
+      "amenity": "atm",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463067648",
+      "lat": 8.5348035,
+      "lng": 76.9497647,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "AG Revival Worship Center",
+        "religion": "christian"
+      },
+      "name": "AG Revival Worship Center",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463094082",
+      "lat": 8.5297477,
+      "lng": 76.949076,
+      "tags": {
+        "brand": "Ration Shop",
+        "brand:wikidata": "Q60901",
+        "name": "Ration Shop",
+        "operator": "Public Distribution System",
+        "operator:type": "public",
+        "operator:wikidata": "Q60901",
+        "shop": "convenience"
+      },
+      "name": "Ration Shop",
+      "amenity": null,
+      "shop": "convenience",
+      "road": null
+    },
+    {
+      "id": "node/7463094083",
+      "lat": 8.5309499,
+      "lng": 76.9494955,
+      "tags": {
+        "name": "GS Stores",
+        "shop": "yes"
+      },
+      "name": "GS Stores",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7463110687",
+      "lat": 8.5353911,
+      "lng": 76.9478442,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Heavenly Feast TVM Diocese",
+        "religion": "hindu"
+      },
+      "name": "Heavenly Feast TVM Diocese",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463110688",
+      "lat": 8.5338526,
+      "lng": 76.9474741,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Muttada CSI Church",
+        "religion": "christian"
+      },
+      "name": "Muttada CSI Church",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463110689",
+      "lat": 8.5350383,
+      "lng": 76.9468545,
+      "tags": {
+        "amenity": "post_office",
+        "name": "Post Office Muttada"
+      },
+      "name": "Post Office Muttada",
+      "amenity": "post_office",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463110690",
+      "lat": 8.5350648,
+      "lng": 76.9461893,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Bethasda Church of Word",
+        "religion": "christian"
+      },
+      "name": "Bethasda Church of Word",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463110691",
+      "lat": 8.5343831,
+      "lng": 76.9461786,
+      "tags": {
+        "name": "TIME Kids Preschool",
+        "office": "educational_institution"
+      },
+      "name": "TIME Kids Preschool",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463125607",
+      "lat": 8.5299549,
+      "lng": 76.9491795,
+      "tags": {
+        "name": "Adiya stiching center",
+        "shop": "tailor"
+      },
+      "name": "Adiya stiching center",
+      "amenity": null,
+      "shop": "tailor",
+      "road": null
+    },
+    {
+      "id": "node/7463125608",
+      "lat": 8.5299638,
+      "lng": 76.9492111,
+      "tags": {
+        "craft": "electronics_repair",
+        "name": "Rohini electronics and electricals"
+      },
+      "name": "Rohini electronics and electricals",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463445755",
+      "lat": 8.532487,
+      "lng": 76.9482321,
+      "tags": {
+        "amenity": "place_of_worship",
+        "religion": "hindu"
+      },
+      "name": null,
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463445760",
+      "lat": 8.5333001,
+      "lng": 76.946242,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Arappura Temple",
+        "religion": "hindu"
+      },
+      "name": "Arappura Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7463670705",
+      "lat": 8.5338685,
+      "lng": 76.9503453,
+      "tags": {
+        "name": "Ladies tailoing Center",
+        "shop": "tailor"
+      },
+      "name": "Ladies tailoing Center",
+      "amenity": null,
+      "shop": "tailor",
+      "road": null
+    },
+    {
+      "id": "node/7463670706",
+      "lat": 8.5336271,
+      "lng": 76.951142,
+      "tags": {
+        "brand": "Bata",
+        "brand:wikidata": "Q688082",
+        "name": "Bata",
+        "shop": "shoes"
+      },
+      "name": "Bata",
+      "amenity": null,
+      "shop": "shoes",
+      "road": null
+    },
+    {
+      "id": "node/7466165279",
+      "lat": 8.5356865,
+      "lng": 76.9421259,
+      "tags": {
+        "name": "Softline",
+        "shop": "yes"
+      },
+      "name": "Softline",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7466166581",
+      "lat": 8.5358152,
+      "lng": 76.9421943,
+      "tags": {
+        "name": "Venus Hardware Store",
+        "shop": "hardware"
+      },
+      "name": "Venus Hardware Store",
+      "amenity": null,
+      "shop": "hardware",
+      "road": null
+    },
+    {
+      "id": "node/7466177707",
+      "lat": 8.5348709,
+      "lng": 76.9423257,
+      "tags": {
+        "name": "Sree Tiffin center",
+        "shop": "yes"
+      },
+      "name": "Sree Tiffin center",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7466177746",
+      "lat": 8.5355221,
+      "lng": 76.9423217,
+      "tags": {
+        "name": "Abhina Fancy Store",
+        "shop": "yes"
+      },
+      "name": "Abhina Fancy Store",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7466183274",
+      "lat": 8.534843,
+      "lng": 76.9422667,
+      "tags": {
+        "name": "Janardhanan Stores",
+        "shop": "yes"
+      },
+      "name": "Janardhanan Stores",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7466614050",
+      "lat": 8.5333573,
+      "lng": 76.9413584,
+      "tags": {
+        "amenity": "events_venue",
+        "name": "Grace MINI Hall"
+      },
+      "name": "Grace MINI Hall",
+      "amenity": "events_venue",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614051",
+      "lat": 8.5333779,
+      "lng": 76.9414371,
+      "tags": {
+        "name": "BSIX Fish World",
+        "shop": "seafood"
+      },
+      "name": "BSIX Fish World",
+      "amenity": null,
+      "shop": "seafood",
+      "road": null
+    },
+    {
+      "id": "node/7466614052",
+      "lat": 8.5347593,
+      "lng": 76.942302,
+      "tags": {
+        "name": "Janardhanan Stores",
+        "shop": "general"
+      },
+      "name": "Janardhanan Stores",
+      "amenity": null,
+      "shop": "general",
+      "road": null
+    },
+    {
+      "id": "node/7466614053",
+      "lat": 8.5349797,
+      "lng": 76.9423333,
+      "tags": {
+        "branch": "Substation Paruthippara",
+        "name": "Kerala State Electricity Board",
+        "office": "energy_supplier",
+        "operator": "Kerala State Electricity Board",
+        "operator:wikidata": "Q6393422",
+        "short_name": "KSEB"
+      },
+      "name": "Kerala State Electricity Board",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614054",
+      "lat": 8.5356371,
+      "lng": 76.9423065,
+      "tags": {
+        "name": "Venus Hardware Stores",
+        "shop": "hardware"
+      },
+      "name": "Venus Hardware Stores",
+      "amenity": null,
+      "shop": "hardware",
+      "road": null
+    },
+    {
+      "id": "node/7466614055",
+      "lat": 8.5360601,
+      "lng": 76.9421576,
+      "tags": {
+        "name": "Cotton & More",
+        "shop": "clothes"
+      },
+      "name": "Cotton & More",
+      "amenity": null,
+      "shop": "clothes",
+      "road": null
+    },
+    {
+      "id": "node/7466614056",
+      "lat": 8.536468,
+      "lng": 76.942205,
+      "tags": {
+        "name": "Tessy's Herbal Beauty Clinic",
+        "shop": "beauty"
+      },
+      "name": "Tessy's Herbal Beauty Clinic",
+      "amenity": null,
+      "shop": "beauty",
+      "road": null
+    },
+    {
+      "id": "node/7466614057",
+      "lat": 8.5365843,
+      "lng": 76.9421291,
+      "tags": {
+        "name": "Samudra Fresh Fish",
+        "shop": "seafood"
+      },
+      "name": "Samudra Fresh Fish",
+      "amenity": null,
+      "shop": "seafood",
+      "road": null
+    },
+    {
+      "id": "node/7466614058",
+      "lat": 8.5366997,
+      "lng": 76.9420808,
+      "tags": {
+        "amenity": "driving_school",
+        "name": "Emmanuel School of Driving"
+      },
+      "name": "Emmanuel School of Driving",
+      "amenity": "driving_school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7466614059",
+      "lat": 8.5367728,
+      "lng": 76.9420666,
+      "tags": {
+        "name": "Kodan Auto Parts",
+        "shop": "motorcycle_repair"
+      },
+      "name": "Kodan Auto Parts",
+      "amenity": null,
+      "shop": "motorcycle_repair",
+      "road": null
+    },
+    {
+      "id": "node/7466704565",
+      "lat": 8.5390633,
+      "lng": 76.9444017,
+      "tags": {
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7467891484",
+      "lat": 8.5329501,
+      "lng": 76.9490897,
+      "tags": {
+        "amenity": "food_court",
+        "name": "Mummy's kitchen"
+      },
+      "name": "Mummy's kitchen",
+      "amenity": "food_court",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7471536145",
+      "lat": 8.5340243,
+      "lng": 76.9495411,
+      "tags": {
+        "name": "Maxima finance",
+        "office": "financial"
+      },
+      "name": "Maxima finance",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7471536154",
+      "lat": 8.5342496,
+      "lng": 76.950184,
+      "tags": {
+        "amenity": "bicycle_repair_station"
+      },
+      "name": null,
+      "amenity": "bicycle_repair_station",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7471669466",
+      "lat": 8.5337886,
+      "lng": 76.949921,
+      "tags": {
+        "name": "Biju hardware shop",
+        "shop": "hardware"
+      },
+      "name": "Biju hardware shop",
+      "amenity": null,
+      "shop": "hardware",
+      "road": null
+    },
+    {
+      "id": "node/7471669467",
+      "lat": 8.5340048,
+      "lng": 76.9497721,
+      "tags": {
+        "name": "senthil enterprises",
+        "shop": "yes"
+      },
+      "name": "senthil enterprises",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7471669468",
+      "lat": 8.5338814,
+      "lng": 76.949744,
+      "tags": {
+        "name": "Adharam ezhuthu office",
+        "office": "yes"
+      },
+      "name": "Adharam ezhuthu office",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7471669473",
+      "lat": 8.5341308,
+      "lng": 76.9498166,
+      "tags": {
+        "name": "Aadharam ezhuthu office",
+        "office": "yes"
+      },
+      "name": "Aadharam ezhuthu office",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8321290536",
+      "lat": 8.5365005,
+      "lng": 76.941901,
+      "tags": {
+        "name": "Amul Exclusive Outlet",
+        "shop": "dairy"
+      },
+      "name": "Amul Exclusive Outlet",
+      "amenity": null,
+      "shop": "dairy",
+      "road": null
+    },
+    {
+      "id": "node/8321764976",
+      "lat": 8.5354642,
+      "lng": 76.9426885,
+      "tags": {
+        "brand": "Bata",
+        "brand:wikidata": "Q688082",
+        "name": "Bata",
+        "shop": "shoes"
+      },
+      "name": "Bata",
+      "amenity": null,
+      "shop": "shoes",
+      "road": null
+    },
+    {
+      "id": "node/8396286067",
+      "lat": 8.5347891,
+      "lng": 76.9480771,
+      "tags": {
+        "amenity": "internet_cafe",
+        "name": "Akshaya e centre Muttada Jn",
+        "ref": "TVM285"
+      },
+      "name": "Akshaya e centre Muttada Jn",
+      "amenity": "internet_cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13727229201",
+      "lat": 8.5356691,
+      "lng": 76.9425472,
+      "tags": {
+        "amenity": "college",
+        "email": "tvm@offensoqcademy.com",
+        "internet_access": "wlan",
+        "name": "Offenso Hackers Academy",
+        "opening_hours": "Mo-Sa 09:00-18:00",
+        "website": "https://tvm.offensoacademy.com/"
+      },
+      "name": "Offenso Hackers Academy",
+      "amenity": "college",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/285189750",
+      "lat": 8.5320396,
+      "lng": 76.9421812,
+      "tags": {
+        "addr:city": "Trivandrum",
+        "addr:postcode": "695004",
+        "amenity": "college",
+        "name": "Mahatma Gandhi College",
+        "name:etymology:wikidata": "Q1001",
+        "name:ml": "മഹാത്മാ ഗാന്ധി കോളേജ്",
+        "website": "https://mgcollegetvm.ac.in/",
+        "wikidata": "Q6733491",
+        "wikipedia": "en:Mahatma Gandhi College"
+      },
+      "name": "Mahatma Gandhi College",
+      "amenity": "college",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/747005075",
+      "lat": 8.5331026,
+      "lng": 76.9512955,
+      "tags": {
+        "leisure": "swimming_area",
+        "name": "Alappuram kulam (swimming pool)"
+      },
+      "name": "Alappuram kulam (swimming pool)",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/762183513",
+      "lat": 8.537025,
+      "lng": 76.9452587,
+      "tags": {
+        "leisure": "playground"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/762183514",
+      "lat": 8.5360207,
+      "lng": 76.9438552,
+      "tags": {
+        "amenity": "school",
+        "name": "holly cross school"
+      },
+      "name": "holly cross school",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/796896847",
+      "lat": 8.5310431,
+      "lng": 76.9492891,
+      "tags": {
+        "building": "yes",
+        "landuse": "residential",
+        "residential": "apartments",
+        "shop": "tailor"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "tailor",
+      "road": null
+    },
+    {
+      "id": "way/796896852",
+      "lat": 8.5307313,
+      "lng": 76.949214,
+      "tags": {
+        "building": "yes",
+        "name": "Rice Godown",
+        "shop": "storage_rental"
+      },
+      "name": "Rice Godown",
+      "amenity": null,
+      "shop": "storage_rental",
+      "road": null
+    },
+    {
+      "id": "way/796896857",
+      "lat": 8.5309454,
+      "lng": 76.9495208,
+      "tags": {
+        "building": "yes",
+        "name": "GS Stores",
+        "shop": "stationery"
+      },
+      "name": "GS Stores",
+      "amenity": null,
+      "shop": "stationery",
+      "road": null
+    },
+    {
+      "id": "way/796896869",
+      "lat": 8.5312802,
+      "lng": 76.9494138,
+      "tags": {
+        "building": "yes",
+        "name": "Chain link",
+        "operator": "Subhash",
+        "shop": "motorcycle_repair"
+      },
+      "name": "Chain link",
+      "amenity": null,
+      "shop": "motorcycle_repair",
+      "road": null
+    },
+    {
+      "id": "way/796896871",
+      "lat": 8.5313876,
+      "lng": 76.9498357,
+      "tags": {
+        "building": "yes",
+        "name": "Central University ladies hostel",
+        "tourism": "hostel"
+      },
+      "name": "Central University ladies hostel",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797042801",
+      "lat": 8.5333674,
+      "lng": 76.9512494,
+      "tags": {
+        "leisure": "park",
+        "name": "Aakulam park"
+      },
+      "name": "Aakulam park",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797042802",
+      "lat": 8.5333074,
+      "lng": 76.9515343,
+      "tags": {
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Urban Primary Health Centre Muttada",
+        "ref": "169"
+      },
+      "name": "Urban Primary Health Centre Muttada",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797045715",
+      "lat": 8.5346461,
+      "lng": 76.949713,
+      "tags": {
+        "amenity": "bank",
+        "brand": "State Bank of India",
+        "brand:wikidata": "Q1340361",
+        "building": "yes",
+        "name": "State Bank of India",
+        "short_name": "SBI"
+      },
+      "name": "State Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797045716",
+      "lat": 8.5343806,
+      "lng": 76.9495513,
+      "tags": {
+        "building": "yes",
+        "name": "Sub registar office,muttada",
+        "office": "yes"
+      },
+      "name": "Sub registar office,muttada",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797045717",
+      "lat": 8.5345543,
+      "lng": 76.9494041,
+      "tags": {
+        "building": "yes",
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "way/797045719",
+      "lat": 8.5344893,
+      "lng": 76.9491262,
+      "tags": {
+        "amenity": "dentist",
+        "building": "yes",
+        "healthcare": "dentist"
+      },
+      "name": null,
+      "amenity": "dentist",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797045720",
+      "lat": 8.5345917,
+      "lng": 76.9489952,
+      "tags": {
+        "building": "yes",
+        "shop": "bakery"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "way/797045723",
+      "lat": 8.5344621,
+      "lng": 76.9500827,
+      "tags": {
+        "building": "yes",
+        "shop": "bakery"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "way/797045724",
+      "lat": 8.5347087,
+      "lng": 76.9498349,
+      "tags": {
+        "brand": "Triveni Supermarket",
+        "brand:wikidata": "Q7844639",
+        "building": "yes",
+        "name": "Triveni Supermarket",
+        "shop": "supermarket"
+      },
+      "name": "Triveni Supermarket",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "way/797306861",
+      "lat": 8.5320402,
+      "lng": 76.9492364,
+      "tags": {
+        "building": "yes",
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "way/797306865",
+      "lat": 8.532287,
+      "lng": 76.949414,
+      "tags": {
+        "building": "yes",
+        "name": "Vinod traders",
+        "shop": "yes"
+      },
+      "name": "Vinod traders",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "way/797306870",
+      "lat": 8.5299781,
+      "lng": 76.9489389,
+      "tags": {
+        "building": "yes",
+        "name": "mani automobile workshop",
+        "shop": "motorcycle_repair"
+      },
+      "name": "mani automobile workshop",
+      "amenity": null,
+      "shop": "motorcycle_repair",
+      "road": null
+    },
+    {
+      "id": "way/797306872",
+      "lat": 8.5293789,
+      "lng": 76.9487262,
+      "tags": {
+        "building": "yes",
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "way/797306888",
+      "lat": 8.5346142,
+      "lng": 76.9485516,
+      "tags": {
+        "amenity": "post_office",
+        "building": "yes",
+        "name": "Muttada post office"
+      },
+      "name": "Muttada post office",
+      "amenity": "post_office",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797306890",
+      "lat": 8.5347382,
+      "lng": 76.9496731,
+      "tags": {
+        "building": "yes",
+        "name": "Chinnu's hotel",
+        "tourism": "hotel"
+      },
+      "name": "Chinnu's hotel",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797306891",
+      "lat": 8.5346566,
+      "lng": 76.9496607,
+      "tags": {
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "Chinnu Hotel"
+      },
+      "name": "Chinnu Hotel",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797354863",
+      "lat": 8.535299,
+      "lng": 76.9435725,
+      "tags": {
+        "building": "yes",
+        "name": "Ethnic Weaves",
+        "payment:cash": "yes",
+        "payment:credit_cards": "yes",
+        "shop": "fabric"
+      },
+      "name": "Ethnic Weaves",
+      "amenity": null,
+      "shop": "fabric",
+      "road": null
+    },
+    {
+      "id": "way/797354864",
+      "lat": 8.5347772,
+      "lng": 76.9473677,
+      "tags": {
+        "amenity": "bank",
+        "brand": "Canara Bank",
+        "brand:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "brand:ur": "کینرا بینک",
+        "brand:wikidata": "Q2003777",
+        "brand:wikipedia": "en:Canara Bank",
+        "brand:wikipedia:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "building": "yes",
+        "name": "Canara Bank",
+        "name:pa": "ਕੇਨਰਾ ਬੈਂਕ",
+        "name:ur": "کینرا بینک"
+      },
+      "name": "Canara Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797555981",
+      "lat": 8.5381089,
+      "lng": 76.9453632,
+      "tags": {
+        "building": "house",
+        "government": "yes",
+        "name": "Anganwadi",
+        "name:pa": "ਆਂਗਣਵਾੜੀ",
+        "name:ur": "آنگن واڑی",
+        "office": "government",
+        "opening_hours": "Mo-Su 10:00-16:00"
+      },
+      "name": "Anganwadi",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797561857",
+      "lat": 8.5353656,
+      "lng": 76.9439532,
+      "tags": {
+        "addr:street": "Abmalamukku Muttada Paruthipara Road",
+        "amenity": "place_of_worship",
+        "name": "Madan kovil",
+        "religion": "hindu"
+      },
+      "name": "Madan kovil",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": "Abmalamukku Muttada Paruthipara Road"
+    },
+    {
+      "id": "way/797563572",
+      "lat": 8.5346429,
+      "lng": 76.9421923,
+      "tags": {
+        "addr:street": "MC Road",
+        "brand": "More",
+        "brand:wikidata": "Q6910891",
+        "brand:wikipedia": "en:More (store)",
+        "building": "yes",
+        "name": "More",
+        "shop": "supermarket"
+      },
+      "name": "More",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": "MC Road"
+    },
+    {
+      "id": "way/797572430",
+      "lat": 8.5360704,
+      "lng": 76.94523,
+      "tags": {
+        "amenity": "school"
+      },
+      "name": null,
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797573037",
+      "lat": 8.5367688,
+      "lng": 76.9441457,
+      "tags": {
+        "amenity": "crematorium"
+      },
+      "name": null,
+      "amenity": "crematorium",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797840864",
+      "lat": 8.5300305,
+      "lng": 76.9443044,
+      "tags": {
+        "amenity": "school",
+        "name": "NSS higher secondary school & Civil Services Coaching Centter"
+      },
+      "name": "NSS higher secondary school & Civil Services Coaching Centter",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797848845",
+      "lat": 8.535892,
+      "lng": 76.944352,
+      "tags": {
+        "amenity": "school"
+      },
+      "name": null,
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797855539",
+      "lat": 8.5340688,
+      "lng": 76.9418732,
+      "tags": {
+        "brand": "Margin Free Market",
+        "brand:wikidata": "Q99751436",
+        "building": "yes",
+        "name": "Margin Free Market",
+        "official_name": "Margin Free Market Pvt Ltd",
+        "shop": "supermarket"
+      },
+      "name": "Margin Free Market",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    }
+  ],
+  "roads": [],
+  "classification": {
+    "roadWise": {
+      "Unknown Road": [
+        "node/588740457",
+        "node/588740474",
+        "node/588740477",
+        "node/588740509",
+        "node/3492617393",
+        "node/7121671351",
+        "node/7121671368",
+        "node/7121671369",
+        "node/7121673689",
+        "node/7139629382",
+        "node/7351239860",
+        "node/7353204182",
+        "node/7353206367",
+        "node/7353219654",
+        "node/7353220128",
+        "node/7353220426",
+        "node/7353233535",
+        "node/7353234160",
+        "node/7353242878",
+        "node/7353249649",
+        "node/7462437499",
+        "node/7463036839",
+        "node/7463067646",
+        "node/7463067647",
+        "node/7463067648",
+        "node/7463094082",
+        "node/7463094083",
+        "node/7463110687",
+        "node/7463110688",
+        "node/7463110689",
+        "node/7463110690",
+        "node/7463110691",
+        "node/7463125607",
+        "node/7463125608",
+        "node/7463445755",
+        "node/7463445760",
+        "node/7463670705",
+        "node/7463670706",
+        "node/7466165279",
+        "node/7466166581",
+        "node/7466177707",
+        "node/7466177746",
+        "node/7466183274",
+        "node/7466614050",
+        "node/7466614051",
+        "node/7466614052",
+        "node/7466614053",
+        "node/7466614054",
+        "node/7466614055",
+        "node/7466614056",
+        "node/7466614057",
+        "node/7466614058",
+        "node/7466614059",
+        "node/7466704565",
+        "node/7467891484",
+        "node/7471536145",
+        "node/7471536154",
+        "node/7471669466",
+        "node/7471669467",
+        "node/7471669468",
+        "node/7471669473",
+        "node/8321290536",
+        "node/8321764976",
+        "node/8396286067",
+        "node/13727229201",
+        "way/285189750",
+        "way/747005075",
+        "way/762183513",
+        "way/762183514",
+        "way/796896847",
+        "way/796896852",
+        "way/796896857",
+        "way/796896869",
+        "way/796896871",
+        "way/797042801",
+        "way/797042802",
+        "way/797045715",
+        "way/797045716",
+        "way/797045717",
+        "way/797045719",
+        "way/797045720",
+        "way/797045723",
+        "way/797045724",
+        "way/797306861",
+        "way/797306865",
+        "way/797306870",
+        "way/797306872",
+        "way/797306888",
+        "way/797306890",
+        "way/797306891",
+        "way/797354863",
+        "way/797354864",
+        "way/797555981",
+        "way/797572430",
+        "way/797573037",
+        "way/797840864",
+        "way/797848845",
+        "way/797855539"
+      ],
+      "Abmalamukku Muttada Paruthipara Road": [
+        "way/797561857"
+      ],
+      "MC Road": [
+        "way/797563572"
+      ]
+    },
+    "businessWise": {
+      "bank": [
+        "node/588740457",
+        "node/588740477",
+        "node/7353204182",
+        "node/7462437499",
+        "way/797045715",
+        "way/797354864"
+      ],
+      "school": [
+        "node/588740474",
+        "node/7121671351",
+        "node/7121671369",
+        "node/7121673689",
+        "node/7139629382",
+        "way/762183514",
+        "way/797572430",
+        "way/797840864",
+        "way/797848845"
+      ],
+      "post_office": [
+        "node/588740509",
+        "node/7463110689",
+        "way/797306888"
+      ],
+      "place_of_worship": [
+        "node/3492617393",
+        "node/7353220128",
+        "node/7463067648",
+        "node/7463110687",
+        "node/7463110688",
+        "node/7463110690",
+        "node/7463445755",
+        "node/7463445760",
+        "way/797561857"
+      ],
+      "monastery": [
+        "node/7121671368"
+      ],
+      "fishing": [
+        "node/7351239860"
+      ],
+      "yes": [
+        "node/7353206367",
+        "node/7353219654",
+        "node/7353220426",
+        "node/7463094083",
+        "node/7466165279",
+        "node/7466177707",
+        "node/7466177746",
+        "node/7466183274",
+        "node/7466704565",
+        "node/7471669467",
+        "way/797045717",
+        "way/797306861",
+        "way/797306865",
+        "way/797306872"
+      ],
+      "clothes": [
+        "node/7353233535",
+        "node/7466614055"
+      ],
+      "computer": [
+        "node/7353234160"
+      ],
+      "conference_centre": [
+        "node/7353242878"
+      ],
+      "mobile_phone": [
+        "node/7353249649"
+      ],
+      "bakery": [
+        "node/7463036839",
+        "node/7463067646",
+        "way/797045720",
+        "way/797045723"
+      ],
+      "atm": [
+        "node/7463067647"
+      ],
+      "convenience": [
+        "node/7463094082"
+      ],
+      "other": [
+        "node/7463110691",
+        "node/7463125608",
+        "node/7466614053",
+        "node/7471536145",
+        "node/7471669468",
+        "node/7471669473",
+        "way/747005075",
+        "way/762183513",
+        "way/796896871",
+        "way/797042801",
+        "way/797045716",
+        "way/797306890",
+        "way/797555981"
+      ],
+      "tailor": [
+        "node/7463125607",
+        "node/7463670705",
+        "way/796896847"
+      ],
+      "shoes": [
+        "node/7463670706",
+        "node/8321764976"
+      ],
+      "hardware": [
+        "node/7466166581",
+        "node/7466614054",
+        "node/7471669466"
+      ],
+      "events_venue": [
+        "node/7466614050"
+      ],
+      "seafood": [
+        "node/7466614051",
+        "node/7466614057"
+      ],
+      "general": [
+        "node/7466614052"
+      ],
+      "beauty": [
+        "node/7466614056"
+      ],
+      "driving_school": [
+        "node/7466614058"
+      ],
+      "motorcycle_repair": [
+        "node/7466614059",
+        "way/796896869",
+        "way/797306870"
+      ],
+      "food_court": [
+        "node/7467891484"
+      ],
+      "bicycle_repair_station": [
+        "node/7471536154"
+      ],
+      "dairy": [
+        "node/8321290536"
+      ],
+      "internet_cafe": [
+        "node/8396286067"
+      ],
+      "college": [
+        "node/13727229201",
+        "way/285189750"
+      ],
+      "storage_rental": [
+        "way/796896852"
+      ],
+      "stationery": [
+        "way/796896857"
+      ],
+      "hospital": [
+        "way/797042802"
+      ],
+      "dentist": [
+        "way/797045719"
+      ],
+      "supermarket": [
+        "way/797045724",
+        "way/797563572",
+        "way/797855539"
+      ],
+      "restaurant": [
+        "way/797306891"
+      ],
+      "fabric": [
+        "way/797354863"
+      ],
+      "crematorium": [
+        "way/797573037"
+      ]
+    },
+    "religious": {
+      "mosque": [],
+      "church": [
+        "node/3492617393",
+        "node/7353220128",
+        "node/7463067648",
+        "node/7463110688",
+        "node/7463110690"
+      ],
+      "temple": [
+        "node/7463110687",
+        "node/7463445755",
+        "node/7463445760",
+        "way/797561857"
+      ],
+      "other": []
+    }
+  },
+  "stats": {
+    "placesCount": 100,
+    "roadsCount": 0
+  },
+  "current": {
+    "lat": 8.534139,
+    "lng": 76.94663800000001,
+    "index": 2,
+    "dx": 1,
+    "dy": 1
+  }
+}

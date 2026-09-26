@@ -1,11 +1,11 @@
 {
-  "attemptedAt": "2026-09-26T11:11:37.249Z",
+  "attemptedAt": "2026-09-26T11:29:04.560Z",
   "branch": "arena/01a0dd3c-megaplan",
-  "runUrl": "https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36238012863",
+  "runUrl": "https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36238934999",
   "outcomes": {
     "city": "success",
-    "map": "failure",
-    "product": "failure",
+    "map": "success",
+    "product": "skipped-policy",
     "music": "success"
   },
   "details": {
@@ -14,9 +14,9 @@
   "published": {
     "cityShops": 74,
     "cityMusicPlaces": 1,
-    "mapPlaces": 196,
+    "mapPlaces": 296,
     "products": 0,
-    "musicTracks": 10
+    "musicTracks": 36
   },
-  "note": "Outcome success means an upstream request returned verifiable data. Check counts; existing snapshot data is not proof that this attempt added records."
+  "note": "Outcome success means the step used verified existing OSM cells or received verifiable upstream records; it may not have added new data. Check counts and source timestamps."
 }
