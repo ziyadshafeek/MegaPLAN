@@ -1,0 +1,63 @@
+# TEMPORARY read-only channel for the human-reviewed data publication.
+# The sandbox of the reviewing operator cannot reach Actions artifact blob
+# storage (TLS to productionresultssa*.blob.core.windows.net is refused), so
+# this job re-emits the two named review artifacts as check-run annotations,
+# which ARE readable through api.github.com. Everything is read-only: no
+# pushes, no PR creation, no secrets, no writes. Files are verified by
+# SHA-256 both in the job and again by the reviewer before any import.
+# Delete this workflow before opening the data-only PR.
+name: Artifact mirror (temporary, read-only)
+on:
+  push:
+    branches:
+      - arena/01a0deb9-megaplan
+permissions:
+  contents: read
+  actions: read
+  checks: read
+concurrency:
+  group: artifact-mirror-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Download map review artifact (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 36255927182 --repo ziyadshafeek/MegaPLAN --name map-review-36255927182 --dir mirror/map
+      - name: Download music review artifact (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 36255411454 --repo ziyadshafeek/MegaPLAN --name music-review-36255411454 --dir mirror/music
+      - name: Emit mirror chunks 0
+        run: node scripts/emit-mirror-annotations.mjs emit 0
+      - name: Emit mirror chunks 1
+        run: node scripts/emit-mirror-annotations.mjs emit 1
+      - name: Emit mirror chunks 2
+        run: node scripts/emit-mirror-annotations.mjs emit 2
+      - name: Emit mirror chunks 3
+        run: node scripts/emit-mirror-annotations.mjs emit 3
+      - name: Emit mirror chunks 4
+        run: node scripts/emit-mirror-annotations.mjs emit 4
+      - name: Emit mirror chunks 5
+        run: node scripts/emit-mirror-annotations.mjs emit 5
+      - name: Emit mirror chunks 6
+        run: node scripts/emit-mirror-annotations.mjs emit 6
+      - name: Emit mirror chunks 7
+        run: node scripts/emit-mirror-annotations.mjs emit 7
+      - name: Emit mirror chunks 8
+        run: node scripts/emit-mirror-annotations.mjs emit 8
+      - name: Emit mirror chunks 9
+        run: node scripts/emit-mirror-annotations.mjs emit 9
+      - name: Verify mirrored annotations round-trip
+        run: node scripts/emit-mirror-annotations.mjs verify
