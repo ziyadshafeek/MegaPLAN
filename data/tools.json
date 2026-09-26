@@ -8129,5 +8129,78 @@
       "distance"
     ],
     "processing": "local-browser"
+  },
+  {
+    "slug": "inception-labs",
+    "title": "Inception Labs \u2014 Mercury Diffusion LLM",
+    "category": "OCR & AI",
+    "description": "Inception Labs reverse engineered chat.inceptionlabs.ai as API \u2014 Mercury diffusion LLM 737 tok/s, 32k context, free playground. Endpoint https://chat.inceptionlabs.ai/api/chat/completions model lambda.mercury-coder-small, auth Bearer token from cookie token TTL 6h generated via Playwright at /auth. Official API https://api.inceptionlabs.ai/v1/chat/completions model mercury-2.5 100M free tokens. Must be rigorously tested or else rubbish \u2014 small AI, use high thinking for map work, proxy rotation every time to reset rate limit.",
+    "keywords": [
+      "inception",
+      "mercury",
+      "diffusion",
+      "llm",
+      "free",
+      "api",
+      "reverse",
+      "proxy"
+    ],
+    "processing": "hybrid"
+  },
+  {
+    "slug": "product-directory",
+    "title": "Product Directory \u2014 Amazon & Flipkart Massive",
+    "category": "Business",
+    "description": "Product directory massive dataset \u2014 Amazon 100M+ and Flipkart 10M+ products with price categorizing, rating, seller rating etc. Systematic: categories \u2192 subcategories \u2192 product URLs \u2192 details (title, price, original price, discount, rating, seller name, seller rating, thumbnails, highlights, offers, specifications). Free storage GitHub+Vercel+IndexedDB+search-index fully indexable for AI. Similar to map big project.",
+    "keywords": [
+      "product",
+      "amazon",
+      "flipkart",
+      "price",
+      "rating",
+      "seller",
+      "directory"
+    ],
+    "processing": "hybrid"
+  },
+  {
+    "slug": "product-scraper",
+    "title": "Product Scraper \u2014 Amazon Flipkart",
+    "category": "Business",
+    "description": "Product scraper for Amazon & Flipkart millions of products \u2014 free Flipkart scraper API Rust dvishal485 no auth, Amazon needs rotating proxies ScraperAPI. Systematic categories \u2192 subcategories \u2192 product URLs \u2192 details. Free storage GitHub+Vercel+IndexedDB.",
+    "keywords": [
+      "product",
+      "scraper",
+      "amazon",
+      "flipkart"
+    ],
+    "processing": "hybrid"
+  },
+  {
+    "slug": "music-directory",
+    "title": "Music Directory \u2014 Spotify Full Dataset",
+    "category": "Audio",
+    "description": "Music directory full dataset for AI for songs in Spotify \u2014 based on GitHub AliAkhtari78/SpotifyScraper (no API key, public embed token) + msr8/spotify 7M+ tracks. Extract tracks, albums, artists, playlists, podcasts, lyrics, audio features danceability energy valence tempo etc. Free storage GitHub+Vercel+IndexedDB fully indexable for AI recommendations via k-nearest-neighbours.",
+    "keywords": [
+      "music",
+      "spotify",
+      "dataset",
+      "songs",
+      "audio",
+      "features"
+    ],
+    "processing": "hybrid"
+  },
+  {
+    "slug": "music-scraper",
+    "title": "Music Scraper \u2014 Spotify",
+    "category": "Audio",
+    "description": "Music scraper Spotify \u2014 extract public Spotify data without official API, no key, sync+async, typed models, one dependency, bootstraps anonymous token from public embed pages. Features: all core entities + podcasts, search, charts, cover colors, credits, two-tier resilience GraphQL+embed fallback, anti-ban.",
+    "keywords": [
+      "music",
+      "scraper",
+      "spotify"
+    ],
+    "processing": "hybrid"
   }
 ]

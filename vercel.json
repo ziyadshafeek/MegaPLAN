@@ -34,6 +34,11 @@
     "api/map-directory.js": { "maxDuration": 15 },
     "api/map-auto.js": { "maxDuration": 60 },
     "api/kerala-expansion.js": { "maxDuration": 15 },
-    "api/kerala-ai.js": { "maxDuration": 20 }
+    "api/kerala-ai.js": { "maxDuration": 20 },
+    "api/inception.js": { "maxDuration": 30 },
+    "api/product-scraper.js": { "maxDuration": 30 },
+    "api/product-directory.js": { "maxDuration": 15 },
+    "api/music-scraper.js": { "maxDuration": 20 },
+    "api/music-directory.js": { "maxDuration": 15 }
   }
 }

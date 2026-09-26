@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "goal": "Full dataset for AI for songs in Spotify or any platform — must have full dataset for AI, search GitHub if needed",
+  "createdAt": "2026-09-26T00:00:00Z",
+  "github_existing": [
+    {
+      "repo": "AliAkhtari78/SpotifyScraper",
+      "description": "Extract public Spotify data — tracks, albums, artists, playlists, podcasts & lyrics — without official API, no key, sync+async, typed models, one dependency (httpx), bootstraps anonymous token from Spotify's public embed pages",
+      "features": ["All core entities + podcasts", "Search across every entity", "Charts & discovery", "Cover colors & Canvas", "Credits & concerts", "Two-tier resilience GraphQL + embed fallback", "One dependency", "Anti-ban built in"],
+      "free": "No API key, no OAuth, no quota, public data"
+    },
+    {
+      "repo": "msr8/spotify",
+      "description": "Scrape features about spotify tracks and website for recommendations from 7M+ tracks using custom k-nearest-neighbours",
+      "total_records": "7,458,293",
+      "phases": [
+        "Scrapes all followers of last scraped followers of given user (unofficial reverse-engineered API)",
+        "Scrapes all playlists of all users",
+        "Scrapes IDs of all tracks of all playlists",
+        "Scrapes audio features of all tracks (official API)"
+      ],
+      "technologies": ["Django", "MongoDB", "Docker", "Spotify API", "Python"]
+    }
+  ],
+  "plan": {
+    "phase1": {
+      "name": "Spotify Public Data without API Key",
+      "days": "1-2",
+      "method": "Use SpotifyScraper approach: bootstrap anonymous token from public embed pages https://open.spotify.com/embed/*, read JSON endpoints web player uses, typed models",
+      "entities": ["tracks", "albums", "artists", "playlists", "shows", "episodes", "search", "charts"],
+      "estimated": "1M tracks via playlists and charts"
+    },
+    "phase2": {
+      "name": "Playlists & Followers Expansion",
+      "days": "3-5",
+      "method": "Unofficial reverse-engineered API: scrape followers of followers, then playlists of users, then track IDs of playlists (msr8 approach)",
+      "estimated": "7M+ tracks like msr8"
+    },
+    "phase3": {
+      "name": "Audio Features",
+      "days": "6-8",
+      "method": "Official Spotify API for audio features: danceability, energy, liveness, valence, tempo, etc — requires API key but free tier, or use public data",
+      "features": ["danceability", "energy", "liveness", "valence", "tempo", "loudness", "speechiness", "acousticness", "instrumentalness"]
+    },
+    "phase4": {
+      "name": "Full Dataset for AI",
+      "days": "9-10",
+      "tasks": [
+        "Create full-index.jsonl with all tracks",
+        "Create search-index.json inverted",
+        "Create api/music-ai.js for AI multi-tool",
+        "Make fully indexable"
+      ]
+    }
+  },
+  "free_storage": {
+    "github": "data/music-directory/tracks_*.json + index.json + search-index.json",
+    "vercel": "public/data/music-directory/",
+    "indexedDB": "mp-music-directory",
+    "note": "All free, SpotifyScraper no key, no quota"
+  },
+  "engineering": {
+    "parallel_workers": 4,
+    "proxy_rotation": "Rotate proxy/location every time, anti-ban built in, per-host rate limiting, retries with backoff, UA rotation",
+    "free_api": "SpotifyScraper public embed token, no API key, no OAuth",
+    "ai": "NVIDIA for categorization, recommendations via k-nearest-neighbours like msr8"
+  }
+}
