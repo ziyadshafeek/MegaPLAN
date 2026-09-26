@@ -86,6 +86,53 @@ async function load() {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
     if (e.key === 'Escape') document.getElementById('palette')?.classList.add('hidden');
   });
+
+  // Background Map Auto Scraper — runs continuously if enabled, starting from Trivandrum
+  // Flawless engineering: checks localStorage flag, uses SW + interval fallback
+  try {
+    const autoEnabled = localStorage.getItem('mp-map-auto-enabled');
+    if (autoEnabled === '1') {
+      console.log('[MegaPLAN] Map auto scraper background enabled — starting from Trivandrum');
+      // Register SW if not already
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw-map-scraper.js').catch(()=>{});
+      }
+      // Fallback interval poller that runs even without opening map tool
+      // Only runs if user has visited map-directory before (has progress)
+      const prog = localStorage.getItem('mp-map-dir-progress');
+      if (prog) {
+        let lastRun = 0;
+        setInterval(async () => {
+          const now = Date.now();
+          if (now - lastRun < 35000) return; // 35s min interval to respect Overpass fair use
+          lastRun = now;
+          try {
+            const p = JSON.parse(localStorage.getItem('mp-map-dir-progress') || '{"lastIndex":-1}');
+            const nextIdx = (p.lastIndex ?? -1) + 1;
+            console.log(`[Background] Auto scanning cell ${nextIdx} from Trivandrum`);
+            const r = await fetch(`/api/map-scraper?index=${nextIdx}`);
+            const j = await r.json();
+            if (r.ok && j.places) {
+              // Save locally
+              localStorage.setItem('mp-map-dir-progress', JSON.stringify({
+                lastIndex: j.current.index,
+                lastLat: j.current.lat,
+                lastLng: j.current.lng,
+                totalCells: (p.totalCells||0)+1,
+                totalPlaces: (p.totalPlaces||0)+(j.places.length||0),
+                lastScannedAt: new Date().toISOString()
+              }));
+              // Save to server
+              fetch('/api/map-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(j) }).catch(()=>{});
+              console.log(`[Background] Scanned cell ${nextIdx}: ${j.places.length} places`);
+            }
+          } catch (e) {
+            console.log('[Background] Auto scan failed', e.message);
+          }
+        }, 40000); // 40s interval
+      }
+    }
+  } catch {}
 }
 
 function routeFromLocation() {

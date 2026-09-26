@@ -7,6 +7,7 @@ import { mountAgenticPdfSplitter, mountQuestionPaperToNotes } from './agentic-pd
 import { mountChess, mount2048, mountSnake, mountTicTacToe, mountMinesweeper, mountTetris } from './games.js';
 import { mountMaps } from './maps-tool.js';
 import { mountInstagramOSINT, mountOSINTAdvanced } from './osint-advanced.js';
+import { mountMapDirectory, mountMapAutoScraper } from './map-directory.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -754,7 +755,11 @@ Object.assign(HANDLERS, {
   'Maps': (r, t) => mountMaps(r, t),
   'Instagram OSINT Checker': (r, t) => mountInstagramOSINT(r, t),
   'OSINT Advanced': (r, t) => mountOSINTAdvanced(r, t),
-  'Tetris': (r, t) => mountTetris(r, t)
+  'Tetris': (r, t) => mountTetris(r, t),
+  'Map Directory — Trivandrum Massive': (r, t) => mountMapDirectory(r, t),
+  'Map Auto Scraper — Background': (r, t) => mountMapAutoScraper(r, t),
+  'Road Directory — Wise Listing': (r, t) => mountMapDirectory(r, { ...t, title: 'Road Directory — Wise Listing' }),
+  'Business Directory — By Type': (r, t) => mountMapDirectory(r, { ...t, title: 'Business Directory — By Type' })
 });
 
 for (const title of ['APA Citation Helper', 'MLA Citation Helper', 'Chicago Citation Helper', 'Vancouver Citation Helper']) {
