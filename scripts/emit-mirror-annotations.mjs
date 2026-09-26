@@ -63,14 +63,16 @@ async function fetchAnnotations() {
   const headers = { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
   if (token) headers.Authorization = `Bearer ${token}`;
   const runs = await (await fetch(`https://api.github.com/repos/${repo}/commits/${sha}/check-runs`, { headers })).json();
-  const run = (runs.check_runs || []).find(r => r.name === 'mirror');
-  if (!run) throw Error('mirror check run not found');
+  const targets = (runs.check_runs || []).filter(r => /^mirror-[abc]$/.test(r.name));
+  if (targets.length !== 3) throw Error(`expected 3 mirror check runs, found ${targets.length}`);
   const messages = [];
-  for (let page = 1; page <= 20; page++) {
-    const res = await (await fetch(`https://api.github.com/repos/${repo}/check-runs/${run.id}/annotations?per_page=100&page=${page}`, { headers })).json();
-    if (!Array.isArray(res)) throw Error('annotations fetch failed');
-    for (const a of res) if (typeof a.message === 'string' && a.message.startsWith('MIRROR|')) messages.push(a.message);
-    if (res.length < 100) break;
+  for (const run of targets) {
+    for (let page = 1; page <= 20; page++) {
+      const res = await (await fetch(`https://api.github.com/repos/${repo}/check-runs/${run.id}/annotations?per_page=100&page=${page}`, { headers })).json();
+      if (!Array.isArray(res)) throw Error('annotations fetch failed');
+      for (const a of res) if (typeof a.message === 'string' && a.message.startsWith('MIRROR|')) messages.push(a.message);
+      if (res.length < 100) break;
+    }
   }
   return messages;
 }

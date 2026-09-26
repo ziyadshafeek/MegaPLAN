@@ -5,7 +5,10 @@
 # which ARE readable through api.github.com. Everything is read-only: no
 # pushes, no PR creation, no secrets, no writes. Files are verified by
 # SHA-256 both in the job and again by the reviewer before any import.
-# Delete this workflow before opening the data-only PR.
+# Known channel limits handled here: annotation messages truncate at 4096
+# characters and each check run holds at most 50 annotations, so chunks are
+# 3500 characters and split across three jobs. Delete this workflow and
+# scripts/emit-mirror-annotations.mjs before opening the data-only PR.
 name: Artifact mirror (temporary, read-only)
 on:
   push:
@@ -19,7 +22,7 @@ concurrency:
   group: artifact-mirror-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  mirror:
+  mirror-a:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -47,6 +50,26 @@ jobs:
         run: node scripts/emit-mirror-annotations.mjs emit 2
       - name: Emit mirror chunks 3
         run: node scripts/emit-mirror-annotations.mjs emit 3
+  mirror-b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Download map review artifact (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 36255927182 --repo ziyadshafeek/MegaPLAN --name map-review-36255927182 --dir mirror/map
+      - name: Download music review artifact (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 36255411454 --repo ziyadshafeek/MegaPLAN --name music-review-36255411454 --dir mirror/music
       - name: Emit mirror chunks 4
         run: node scripts/emit-mirror-annotations.mjs emit 4
       - name: Emit mirror chunks 5
@@ -55,6 +78,26 @@ jobs:
         run: node scripts/emit-mirror-annotations.mjs emit 6
       - name: Emit mirror chunks 7
         run: node scripts/emit-mirror-annotations.mjs emit 7
+  mirror-c:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Download map review artifact (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 36255927182 --repo ziyadshafeek/MegaPLAN --name map-review-36255927182 --dir mirror/map
+      - name: Download music review artifact (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 36255411454 --repo ziyadshafeek/MegaPLAN --name music-review-36255411454 --dir mirror/music
       - name: Emit mirror chunks 8
         run: node scripts/emit-mirror-annotations.mjs emit 8
       - name: Emit mirror chunks 9
@@ -63,5 +106,26 @@ jobs:
         run: node scripts/emit-mirror-annotations.mjs emit 10
       - name: Emit mirror chunks 11
         run: node scripts/emit-mirror-annotations.mjs emit 11
+  verify:
+    needs: [mirror-a, mirror-b, mirror-c]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Download map review artifact (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 36255927182 --repo ziyadshafeek/MegaPLAN --name map-review-36255927182 --dir mirror/map
+      - name: Download music review artifact (read-only)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 36255411454 --repo ziyadshafeek/MegaPLAN --name music-review-36255411454 --dir mirror/music
       - name: Verify mirrored annotations round-trip
         run: node scripts/emit-mirror-annotations.mjs verify
