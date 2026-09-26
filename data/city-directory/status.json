@@ -1,17 +1,20 @@
 {
-  "attemptedAt": "2026-09-26T11:06:12.739Z",
+  "attemptedAt": "2026-09-26T11:09:13.459Z",
   "branch": "arena/01a0dd3c-megaplan",
-  "runUrl": "https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36237736073",
+  "runUrl": "https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36237866486",
   "outcomes": {
     "city": "failure",
     "map": "success",
     "product": "failure",
     "music": "success"
   },
+  "details": {
+    "city": "Overpass shops lookup failed on all mirrors: The operation was aborted due to timeout"
+  },
   "published": {
     "cityShops": 0,
     "cityMusicPlaces": 0,
-    "mapPlaces": 96,
+    "mapPlaces": 196,
     "products": 0,
     "musicTracks": 10
   },

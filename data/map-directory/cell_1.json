@@ -1,0 +1,1737 @@
+{
+  "index": 1,
+  "lat": 8.524139,
+  "lng": 76.94663800000001,
+  "dx": 1,
+  "dy": 0,
+  "grid": 0.01,
+  "scannedAt": "2026-09-26T11:09:09.188Z",
+  "places": [
+    {
+      "id": "node/2444936665",
+      "lat": 8.5226162,
+      "lng": 76.9507816,
+      "tags": {
+        "name": "Thiruvonam Grocery Store",
+        "shop": "supermarket"
+      },
+      "name": "Thiruvonam Grocery Store",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "node/2444936674",
+      "lat": 8.5229048,
+      "lng": 76.9513238,
+      "tags": {
+        "amenity": "fast_food",
+        "name": "All Spice Restaurant"
+      },
+      "name": "All Spice Restaurant",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/2552582361",
+      "lat": 8.5200257,
+      "lng": 76.9447003,
+      "tags": {
+        "shop": "butcher"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "butcher",
+      "road": null
+    },
+    {
+      "id": "node/2552582362",
+      "lat": 8.5191434,
+      "lng": 76.9449002,
+      "tags": {
+        "brand": "More",
+        "brand:wikidata": "Q6910891",
+        "brand:wikipedia": "en:More (store)",
+        "name": "More",
+        "shop": "supermarket"
+      },
+      "name": "More",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "node/2552582366",
+      "lat": 8.5196101,
+      "lng": 76.9448249,
+      "tags": {
+        "name": "Matsyafed Fish Stall",
+        "shop": "seafood"
+      },
+      "name": "Matsyafed Fish Stall",
+      "amenity": null,
+      "shop": "seafood",
+      "road": null
+    },
+    {
+      "id": "node/2552582369",
+      "lat": 8.5203264,
+      "lng": 76.9457771,
+      "tags": {
+        "amenity": "pharmacy",
+        "healthcare": "pharmacy"
+      },
+      "name": null,
+      "amenity": "pharmacy",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/2552582371",
+      "lat": 8.5195757,
+      "lng": 76.9448305,
+      "tags": {
+        "name": "Jyothis Vegetable Shop",
+        "shop": "greengrocer"
+      },
+      "name": "Jyothis Vegetable Shop",
+      "amenity": null,
+      "shop": "greengrocer",
+      "road": null
+    },
+    {
+      "id": "node/6767322264",
+      "lat": 8.5231009,
+      "lng": 76.9512183,
+      "tags": {
+        "name": "Welgate Organic Shoppe",
+        "opening_hours": "Mo-Su 10:00-21:00",
+        "shop": "health_food",
+        "wheelchair": "limited"
+      },
+      "name": "Welgate Organic Shoppe",
+      "amenity": null,
+      "shop": "health_food",
+      "road": null
+    },
+    {
+      "id": "node/6767324031",
+      "lat": 8.5227995,
+      "lng": 76.9513415,
+      "tags": {
+        "addr:city": "Trivandrum",
+        "addr:district": "Kuravankonam",
+        "addr:place": "Musaliar Buildings",
+        "addr:postcode": "695003",
+        "name": "Supreme Bakers",
+        "payment:cards": "yes",
+        "payment:cash": "yes",
+        "payment:upi": "yes",
+        "shop": "bakery",
+        "website": "http://supremebakers.in"
+      },
+      "name": "Supreme Bakers",
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "node/7003507561",
+      "lat": 8.5199191,
+      "lng": 76.9441521,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Atelier by Ambrosia"
+      },
+      "name": "Atelier by Ambrosia",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7003507562",
+      "lat": 8.5233128,
+      "lng": 76.9454191,
+      "tags": {
+        "name": "Margin free Shop",
+        "shop": "supermarket"
+      },
+      "name": "Margin free Shop",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "node/7003507569",
+      "lat": 8.5237709,
+      "lng": 76.9452618,
+      "tags": {
+        "amenity": "university",
+        "name": "Central University of Kerala Capital centre"
+      },
+      "name": "Central University of Kerala Capital centre",
+      "amenity": "university",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7003563807",
+      "lat": 8.5253791,
+      "lng": 76.9471912,
+      "tags": {
+        "name": "Nestle Distributor Trivandrum",
+        "shop": "yes"
+      },
+      "name": "Nestle Distributor Trivandrum",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7008308796",
+      "lat": 8.5202332,
+      "lng": 76.94505,
+      "tags": {
+        "name": "Amrutham Fruits and vegetables",
+        "shop": "greengrocer"
+      },
+      "name": "Amrutham Fruits and vegetables",
+      "amenity": null,
+      "shop": "greengrocer",
+      "road": null
+    },
+    {
+      "id": "node/7008354996",
+      "lat": 8.5201403,
+      "lng": 76.9450653,
+      "tags": {
+        "amenity": "fast_food",
+        "name": "Sri adithya Chappatti Shop"
+      },
+      "name": "Sri adithya Chappatti Shop",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7008357598",
+      "lat": 8.5236857,
+      "lng": 76.945658,
+      "tags": {
+        "amenity": "place_of_worship",
+        "denomination": "hindu",
+        "name": "Kizhakepattom Mararapalam Devi Temple",
+        "religion": "hindu"
+      },
+      "name": "Kizhakepattom Mararapalam Devi Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7008370382",
+      "lat": 8.527501,
+      "lng": 76.9484833,
+      "tags": {
+        "shop": "general"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "general",
+      "road": null
+    },
+    {
+      "id": "node/7019622969",
+      "lat": 8.5199549,
+      "lng": 76.9447377,
+      "tags": {
+        "name": "kurmur",
+        "shop": "tea"
+      },
+      "name": "kurmur",
+      "amenity": null,
+      "shop": "tea",
+      "road": null
+    },
+    {
+      "id": "node/7019631381",
+      "lat": 8.5218759,
+      "lng": 76.9449732,
+      "tags": {
+        "name": "Bespoke studio",
+        "shop": "photo"
+      },
+      "name": "Bespoke studio",
+      "amenity": null,
+      "shop": "photo",
+      "road": null
+    },
+    {
+      "id": "node/7019658576",
+      "lat": 8.524419,
+      "lng": 76.9457375,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Mankulam Sree Parashakthi Temple",
+        "religion": "hindu"
+      },
+      "name": "Mankulam Sree Parashakthi Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7019712114",
+      "lat": 8.5203399,
+      "lng": 76.9443951,
+      "tags": {
+        "name": "Atlas Kitchen",
+        "shop": "yes"
+      },
+      "name": "Atlas Kitchen",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7019712115",
+      "lat": 8.5203225,
+      "lng": 76.9449054,
+      "tags": {
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "name": "Kichoos Restuarant"
+      },
+      "name": "Kichoos Restuarant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7019712116",
+      "lat": 8.5204834,
+      "lng": 76.9447319,
+      "tags": {
+        "leisure": "fitness_centre",
+        "name": "Bodyfit health club",
+        "name:en": "Bodyfit health club",
+        "name:ml": "ബോഡിഫിറ്റ് ഹെൽത്ത് ക്ലബ്"
+      },
+      "name": "Bodyfit health club",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7019725301",
+      "lat": 8.5207332,
+      "lng": 76.9449214,
+      "tags": {
+        "name": "Friends Auto Electrical",
+        "shop": "motorcycle_repair"
+      },
+      "name": "Friends Auto Electrical",
+      "amenity": null,
+      "shop": "motorcycle_repair",
+      "road": null
+    },
+    {
+      "id": "node/7019733933",
+      "lat": 8.5211476,
+      "lng": 76.9449692,
+      "tags": {
+        "name": "Bharat Ayoob Automobiles",
+        "shop": "car_repair"
+      },
+      "name": "Bharat Ayoob Automobiles",
+      "amenity": null,
+      "shop": "car_repair",
+      "road": null
+    },
+    {
+      "id": "node/7019733934",
+      "lat": 8.5213408,
+      "lng": 76.9450164,
+      "tags": {
+        "brand": "Ration Shop",
+        "brand:wikidata": "Q60901",
+        "name": "Ration Shop",
+        "operator": "Public Distribution System",
+        "operator:type": "public",
+        "operator:wikidata": "Q60901",
+        "shop": "convenience"
+      },
+      "name": "Ration Shop",
+      "amenity": null,
+      "shop": "convenience",
+      "road": null
+    },
+    {
+      "id": "node/7019733935",
+      "lat": 8.521363,
+      "lng": 76.9450225,
+      "tags": {
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7101400292",
+      "lat": 8.5276979,
+      "lng": 76.9481019,
+      "tags": {
+        "survey:date": "2020-01-02",
+        "tourism": "apartment"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7101400386",
+      "lat": 8.5224714,
+      "lng": 76.9511035,
+      "tags": {
+        "air_conditioning": "yes",
+        "name": "നികുഞ്ജം ഇംപീരിയൽ കോർട്ട്",
+        "name:en": "Nikunjam Imperial Court",
+        "name:ml": "നികുഞ്ജം ഇംപീരിയൽ കോർട്ട്",
+        "survey:date": "2020-01-02",
+        "tourism": "apartment"
+      },
+      "name": "നികുഞ്ജം ഇംപീരിയൽ കോർട്ട്",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7101400391",
+      "lat": 8.5249787,
+      "lng": 76.9508992,
+      "tags": {
+        "survey:date": "2020-01-02",
+        "tourism": "apartment"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7101400392",
+      "lat": 8.526161,
+      "lng": 76.9507078,
+      "tags": {
+        "survey:date": "2020-01-02",
+        "tourism": "apartment"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7101400485",
+      "lat": 8.5235139,
+      "lng": 76.9519893,
+      "tags": {
+        "survey:date": "2020-01-02",
+        "tourism": "apartment"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7105030336",
+      "lat": 8.5260367,
+      "lng": 76.9505095,
+      "tags": {
+        "name": "Condor Daffodils",
+        "tourism": "apartment"
+      },
+      "name": "Condor Daffodils",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7462485056",
+      "lat": 8.5201776,
+      "lng": 76.9450572,
+      "tags": {
+        "shop": "bakery"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "node/7467444271",
+      "lat": 8.5229081,
+      "lng": 76.9515207,
+      "tags": {
+        "name": "Agnikone",
+        "shop": "interior_decoration"
+      },
+      "name": "Agnikone",
+      "amenity": null,
+      "shop": "interior_decoration",
+      "road": null
+    },
+    {
+      "id": "node/7467444272",
+      "lat": 8.5232048,
+      "lng": 76.9516529,
+      "tags": {
+        "amenity": "bank",
+        "brand": "State Bank of India",
+        "brand:wikidata": "Q1340361",
+        "brand:wikipedia": "en:State Bank of India",
+        "name": "State Bank of India",
+        "opening_hours": "Mo-Sa 09:30-18:00",
+        "wheelchair": "limited"
+      },
+      "name": "State Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467444273",
+      "lat": 8.5232679,
+      "lng": 76.9518571,
+      "tags": {
+        "name": "99acres (Info Edge India Ltd) - Trivandrum Branch",
+        "office": "company"
+      },
+      "name": "99acres (Info Edge India Ltd) - Trivandrum Branch",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467444275",
+      "lat": 8.5226292,
+      "lng": 76.9509121,
+      "tags": {
+        "name": "Bata",
+        "shop": "shoes"
+      },
+      "name": "Bata",
+      "amenity": null,
+      "shop": "shoes",
+      "road": null
+    },
+    {
+      "id": "node/7467444276",
+      "lat": 8.5226149,
+      "lng": 76.9511585,
+      "tags": {
+        "name": "Home Credit Finance Private Limted Trivandrum",
+        "office": "financial"
+      },
+      "name": "Home Credit Finance Private Limted Trivandrum",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467444278",
+      "lat": 8.5226449,
+      "lng": 76.9509437,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "supreme Upper crest"
+      },
+      "name": "supreme Upper crest",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467444279",
+      "lat": 8.5225354,
+      "lng": 76.9507407,
+      "tags": {
+        "air_conditioning": "yes",
+        "amenity": "cafe",
+        "diet:vegetarian": "yes",
+        "name": "fruit bae",
+        "opening_hours": "Mo-Su 10:30-22:00",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "smoking": "no",
+        "wheelchair": "limited"
+      },
+      "name": "fruit bae",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467444280",
+      "lat": 8.5225581,
+      "lng": 76.9507072,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Old's Cool Bistro"
+      },
+      "name": "Old's Cool Bistro",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467444281",
+      "lat": 8.522746,
+      "lng": 76.9505805,
+      "tags": {
+        "amenity": "pharmacy",
+        "dispensing": "yes",
+        "healthcare": "pharmacy",
+        "level": "0",
+        "name": "Kims Wellness",
+        "payment:cards": "yes",
+        "payment:cash": "yes",
+        "payment:upi": "yes"
+      },
+      "name": "Kims Wellness",
+      "amenity": "pharmacy",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464890",
+      "lat": 8.5220991,
+      "lng": 76.949755,
+      "tags": {
+        "name": "Nikunjam Constructions Pvt. Ltd.",
+        "office": "estate_agent"
+      },
+      "name": "Nikunjam Constructions Pvt. Ltd.",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464891",
+      "lat": 8.5218342,
+      "lng": 76.9499002,
+      "tags": {
+        "amenity": "kindergarten",
+        "name": "Toddlers English Clinic"
+      },
+      "name": "Toddlers English Clinic",
+      "amenity": "kindergarten",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464892",
+      "lat": 8.5219447,
+      "lng": 76.9496219,
+      "tags": {
+        "amenity": "bank",
+        "brand": "Indian Overseas Bank",
+        "brand:wikidata": "Q2003611",
+        "brand:wikipedia": "en:Indian Overseas Bank",
+        "name": "Indian Overseas Bank"
+      },
+      "name": "Indian Overseas Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464893",
+      "lat": 8.5217096,
+      "lng": 76.9496897,
+      "tags": {
+        "name": "Paisley",
+        "shop": "cosmetics"
+      },
+      "name": "Paisley",
+      "amenity": null,
+      "shop": "cosmetics",
+      "road": null
+    },
+    {
+      "id": "node/7467464894",
+      "lat": 8.5213373,
+      "lng": 76.9492082,
+      "tags": {
+        "name": "Pets club",
+        "opening_hours": "Mo-Su 10:00-21:00",
+        "shop": "pet",
+        "wheelchair": "yes"
+      },
+      "name": "Pets club",
+      "amenity": null,
+      "shop": "pet",
+      "road": null
+    },
+    {
+      "id": "node/7467464895",
+      "lat": 8.5212906,
+      "lng": 76.9491185,
+      "tags": {
+        "amenity": "kindergarten",
+        "name": "Little Feet"
+      },
+      "name": "Little Feet",
+      "amenity": "kindergarten",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464896",
+      "lat": 8.521249,
+      "lng": 76.949031,
+      "tags": {
+        "name": "Golden thread",
+        "shop": "clothes"
+      },
+      "name": "Golden thread",
+      "amenity": null,
+      "shop": "clothes",
+      "road": null
+    },
+    {
+      "id": "node/7467464899",
+      "lat": 8.5208135,
+      "lng": 76.9479324,
+      "tags": {
+        "name": "Love Dale Ladies Hostel",
+        "tourism": "hostel"
+      },
+      "name": "Love Dale Ladies Hostel",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464913",
+      "lat": 8.5201275,
+      "lng": 76.9467231,
+      "tags": {
+        "amenity": "cafe",
+        "name": "Chai cult"
+      },
+      "name": "Chai cult",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464914",
+      "lat": 8.5201709,
+      "lng": 76.9466689,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Al Dalam Foodd"
+      },
+      "name": "Al Dalam Foodd",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464916",
+      "lat": 8.5203449,
+      "lng": 76.9466915,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Golden Fork Fast Food And Take Away",
+        "takeaway": "only"
+      },
+      "name": "Golden Fork Fast Food And Take Away",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464917",
+      "lat": 8.5190191,
+      "lng": 76.9470252,
+      "tags": {
+        "name": "SGEW Bullet Works",
+        "shop": "motorcycle_repair"
+      },
+      "name": "SGEW Bullet Works",
+      "amenity": null,
+      "shop": "motorcycle_repair",
+      "road": null
+    },
+    {
+      "id": "node/7467464918",
+      "lat": 8.5202903,
+      "lng": 76.9463475,
+      "tags": {
+        "name": "Paranoia Systems International Pvt. Ltd. (PSI Pvt. Ltd.)",
+        "office": "it"
+      },
+      "name": "Paranoia Systems International Pvt. Ltd. (PSI Pvt. Ltd.)",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464920",
+      "lat": 8.5202423,
+      "lng": 76.9460633,
+      "tags": {
+        "name": "Forest Vibe",
+        "shop": "interior_decoration"
+      },
+      "name": "Forest Vibe",
+      "amenity": null,
+      "shop": "interior_decoration",
+      "road": null
+    },
+    {
+      "id": "node/7467464921",
+      "lat": 8.5199501,
+      "lng": 76.9454284,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Aachis Restaurant"
+      },
+      "name": "Aachis Restaurant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464922",
+      "lat": 8.5201372,
+      "lng": 76.9453502,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Kerala Chicken And Nadan Restaurant"
+      },
+      "name": "Kerala Chicken And Nadan Restaurant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7467464923",
+      "lat": 8.5200853,
+      "lng": 76.9453096,
+      "tags": {
+        "name": "St Joseph's Fish And Poultry",
+        "shop": "seafood"
+      },
+      "name": "St Joseph's Fish And Poultry",
+      "amenity": null,
+      "shop": "seafood",
+      "road": null
+    },
+    {
+      "id": "node/7467464927",
+      "lat": 8.5202077,
+      "lng": 76.9444168,
+      "tags": {
+        "name": "Tristar Gadgets",
+        "shop": "computer"
+      },
+      "name": "Tristar Gadgets",
+      "amenity": null,
+      "shop": "computer",
+      "road": null
+    },
+    {
+      "id": "node/7467464928",
+      "lat": 8.5202669,
+      "lng": 76.9444462,
+      "tags": {
+        "name": "Tulips Beauty Parlour",
+        "shop": "beauty"
+      },
+      "name": "Tulips Beauty Parlour",
+      "amenity": null,
+      "shop": "beauty",
+      "road": null
+    },
+    {
+      "id": "node/7467464929",
+      "lat": 8.520249,
+      "lng": 76.944206,
+      "tags": {
+        "name": "HP World",
+        "shop": "computer"
+      },
+      "name": "HP World",
+      "amenity": null,
+      "shop": "computer",
+      "road": null
+    },
+    {
+      "id": "node/7467464930",
+      "lat": 8.5203762,
+      "lng": 76.9438586,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Robust Garden Restaurant."
+      },
+      "name": "Robust Garden Restaurant.",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/9001210207",
+      "lat": 8.5227389,
+      "lng": 76.9505587,
+      "tags": {
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "internet_access": "terminal;wlan",
+        "name": "KIMSHealth Medical Centre",
+        "operator": "Department of Health and Family Welfare",
+        "operator:type": "private",
+        "wheelchair": "no"
+      },
+      "name": "KIMSHealth Medical Centre",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/9001210208",
+      "lat": 8.5258391,
+      "lng": 76.9510655,
+      "tags": {
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Mruthyunjaya Holistic Clinic",
+        "operator": "department of Health and Family Welfare",
+        "operator:type": "private"
+      },
+      "name": "Mruthyunjaya Holistic Clinic",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13917432240",
+      "lat": 8.522038,
+      "lng": 76.9498127,
+      "tags": {
+        "amenity": "prep_school",
+        "education": "prep_school",
+        "name": "Fortune IAS Academy",
+        "opening_hours": "Mo-Sa 09:00-17:00",
+        "wheelchair": "no"
+      },
+      "name": "Fortune IAS Academy",
+      "amenity": "prep_school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13917466548",
+      "lat": 8.5219936,
+      "lng": 76.9497721,
+      "tags": {
+        "amenity": "bank",
+        "brand": "ICICI Bank",
+        "brand:wikidata": "Q1653258",
+        "name": "ICICI Bank",
+        "short_name": "ICICI"
+      },
+      "name": "ICICI Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13917489322",
+      "lat": 8.521223,
+      "lng": 76.9485673,
+      "tags": {
+        "shop": "vacant"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "vacant",
+      "road": null
+    },
+    {
+      "id": "node/13919134861",
+      "lat": 8.521297,
+      "lng": 76.9487422,
+      "tags": {
+        "air_conditioning": "yes",
+        "amenity": "cafe",
+        "diet:vegetarian": "yes",
+        "name": "Kadalas",
+        "opening_hours": "Mo-Su 13:00-22:00",
+        "payment:credit_cards": "no",
+        "payment:debit_cards": "no",
+        "smoking": "no",
+        "wheelchair": "limited"
+      },
+      "name": "Kadalas",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13919138956",
+      "lat": 8.5200392,
+      "lng": 76.9468719,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Bab arabia : Gateway of Arabian Dishes"
+      },
+      "name": "Bab arabia : Gateway of Arabian Dishes",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13926109172",
+      "lat": 8.5230099,
+      "lng": 76.9511063,
+      "tags": {
+        "name": "കദളി വനം",
+        "name:en": "Kadhalivanam",
+        "name:ml": "കദളി വനം",
+        "opening_hours": "Mo-Su 10:00-21:00",
+        "shop": "greengrocer",
+        "wheelchair": "limited"
+      },
+      "name": "കദളി വനം",
+      "amenity": null,
+      "shop": "greengrocer",
+      "road": null
+    },
+    {
+      "id": "node/13926122851",
+      "lat": 8.5231274,
+      "lng": 76.951517,
+      "tags": {
+        "brand": "Muthoot Finance",
+        "brand:wikidata": "Q6943861",
+        "name": "Muthoot Finance",
+        "office": "financial"
+      },
+      "name": "Muthoot Finance",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13926133126",
+      "lat": 8.5228597,
+      "lng": 76.95162,
+      "tags": {
+        "female": "yes",
+        "male": "yes",
+        "name": "naturals",
+        "shop": "hairdresser"
+      },
+      "name": "naturals",
+      "amenity": null,
+      "shop": "hairdresser",
+      "road": null
+    },
+    {
+      "id": "node/13926157343",
+      "lat": 8.5225542,
+      "lng": 76.9508502,
+      "tags": {
+        "name": "Juice",
+        "shop": "beauty"
+      },
+      "name": "Juice",
+      "amenity": null,
+      "shop": "beauty",
+      "road": null
+    },
+    {
+      "id": "node/13926165528",
+      "lat": 8.5227556,
+      "lng": 76.9504052,
+      "tags": {
+        "leisure": "fitness_centre",
+        "name": "Pheonix Fit"
+      },
+      "name": "Pheonix Fit",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13926172250",
+      "lat": 8.5225946,
+      "lng": 76.9508348,
+      "tags": {
+        "brand": "Lenskart",
+        "brand:wikidata": "Q17068753",
+        "shop": "optician"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "optician",
+      "road": null
+    },
+    {
+      "id": "node/13926191023",
+      "lat": 8.5226808,
+      "lng": 76.9504119,
+      "tags": {
+        "name": "WelloKidz",
+        "shop": "toys"
+      },
+      "name": "WelloKidz",
+      "amenity": null,
+      "shop": "toys",
+      "road": null
+    },
+    {
+      "id": "node/13926191024",
+      "lat": 8.5222141,
+      "lng": 76.9501304,
+      "tags": {
+        "air_conditioning": "yes",
+        "amenity": "ice_cream",
+        "name": "Peni ice",
+        "opening_hours": "Mo-Su 12:00-22:00",
+        "payment:credit_cards": "no",
+        "payment:debit_cards": "no",
+        "wheelchair": "no"
+      },
+      "name": "Peni ice",
+      "amenity": "ice_cream",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13926193949",
+      "lat": 8.5222217,
+      "lng": 76.9501066,
+      "tags": {
+        "name": "Godspeed Migration and Study Abroad Experts",
+        "office": "educational_institution"
+      },
+      "name": "Godspeed Migration and Study Abroad Experts",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13926194840",
+      "lat": 8.5214856,
+      "lng": 76.9494145,
+      "tags": {
+        "air_conditioning": "no",
+        "amenity": "cafe",
+        "diet:vegetarian": "yes",
+        "name": "Chai khana",
+        "opening_hours": "Mo-Su,PH 10:00-12:00",
+        "payment:credit_cards": "no",
+        "payment:debit_cards": "no",
+        "smoking": "no",
+        "wheelchair": "limited"
+      },
+      "name": "Chai khana",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13926199068",
+      "lat": 8.5220029,
+      "lng": 76.9496107,
+      "tags": {
+        "name": "Geojit Private Wealth",
+        "office": "financial_advisor"
+      },
+      "name": "Geojit Private Wealth",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13926199391",
+      "lat": 8.5222264,
+      "lng": 76.9500739,
+      "tags": {
+        "leisure": "fitness_centre",
+        "name": "Gym"
+      },
+      "name": "Gym",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13927768670",
+      "lat": 8.5210724,
+      "lng": 76.9482912,
+      "tags": {
+        "amenity": "waste_basket"
+      },
+      "name": null,
+      "amenity": "waste_basket",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13984591446",
+      "lat": 8.5201927,
+      "lng": 76.9450545,
+      "tags": {
+        "name": "Flower Shop",
+        "shop": "florist"
+      },
+      "name": "Flower Shop",
+      "amenity": null,
+      "shop": "florist",
+      "road": null
+    },
+    {
+      "id": "node/13994351042",
+      "lat": 8.5200819,
+      "lng": 76.9450856,
+      "tags": {
+        "amenity": "fast_food",
+        "cuisine": "coffee_shop;indian",
+        "diet:eggs": "yes",
+        "diet:vegetarian": "yes",
+        "name": "Royal  Street Tiffin centre"
+      },
+      "name": "Royal  Street Tiffin centre",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/13994351048",
+      "lat": 8.5199846,
+      "lng": 76.9449307,
+      "tags": {
+        "amenity": "fast_food",
+        "name": "Vinayaka tiffin centre"
+      },
+      "name": "Vinayaka tiffin centre",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/14063082029",
+      "lat": 8.520518,
+      "lng": 76.9452885,
+      "tags": {
+        "guest_house": "government",
+        "name": "ISRO/VSSC  Guest House",
+        "operator": "Government of India",
+        "reservation": "members_only",
+        "tourism": "guest_house"
+      },
+      "name": "ISRO/VSSC  Guest House",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/14063082052",
+      "lat": 8.5242837,
+      "lng": 76.9456223,
+      "tags": {
+        "name": "Massage parlour",
+        "shop": "massage"
+      },
+      "name": "Massage parlour",
+      "amenity": null,
+      "shop": "massage",
+      "road": null
+    },
+    {
+      "id": "node/14063082053",
+      "lat": 8.5242784,
+      "lng": 76.9458392,
+      "tags": {
+        "brand": "Kerala Co-operative Milk Marketing Federation",
+        "brand:wikidata": "Q3532857",
+        "name": "Milma",
+        "shop": "dairy"
+      },
+      "name": "Milma",
+      "amenity": null,
+      "shop": "dairy",
+      "road": null
+    },
+    {
+      "id": "node/14063082054",
+      "lat": 8.5236799,
+      "lng": 76.9452393,
+      "tags": {
+        "amenity": "college",
+        "education": "college",
+        "name": "International Relation Study centre University of Kerala"
+      },
+      "name": "International Relation Study centre University of Kerala",
+      "amenity": "college",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/14063082055",
+      "lat": 8.5204099,
+      "lng": 76.9458646,
+      "tags": {
+        "name": "Barkode",
+        "shop": "pet"
+      },
+      "name": "Barkode",
+      "amenity": null,
+      "shop": "pet",
+      "road": null
+    },
+    {
+      "id": "way/748897141",
+      "lat": 8.5200258,
+      "lng": 76.9441401,
+      "tags": {
+        "amenity": "social_facility",
+        "building": "yes",
+        "name": "Asha Care Home",
+        "social_facility": "group_home",
+        "social_facility:for": "senior"
+      },
+      "name": "Asha Care Home",
+      "amenity": "social_facility",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/750767012",
+      "lat": 8.5218636,
+      "lng": 76.9449767,
+      "tags": {
+        "building": "yes",
+        "name": "Bespoke studio",
+        "shop": "photo"
+      },
+      "name": "Bespoke studio",
+      "amenity": null,
+      "shop": "photo",
+      "road": null
+    },
+    {
+      "id": "way/750775611",
+      "lat": 8.5203469,
+      "lng": 76.9444007,
+      "tags": {
+        "building": "yes",
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "way/797349673",
+      "lat": 8.5213418,
+      "lng": 76.9420186,
+      "tags": {
+        "building": "yes",
+        "name": "Kerala State Planning Commission",
+        "office": "government"
+      },
+      "name": "Kerala State Planning Commission",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797861568",
+      "lat": 8.5236644,
+      "lng": 76.9456532,
+      "tags": {
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "name": "Kizhekkepattom marappalam devi kshethram",
+        "religion": "hindu"
+      },
+      "name": "Kizhekkepattom marappalam devi kshethram",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797861570",
+      "lat": 8.5244034,
+      "lng": 76.9456928,
+      "tags": {
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "name": "Sree Mankulam Devi Temple",
+        "religion": "hindu"
+      },
+      "name": "Sree Mankulam Devi Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/797861571",
+      "lat": 8.5233309,
+      "lng": 76.945458,
+      "tags": {
+        "building": "yes",
+        "name": "Margin Free Market",
+        "shop": "supermarket"
+      },
+      "name": "Margin Free Market",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "way/797861572",
+      "lat": 8.5213737,
+      "lng": 76.9453633,
+      "tags": {
+        "amenity": "bus_station",
+        "bus": "yes",
+        "name": "ISRO Bus Depot",
+        "public_transport": "station"
+      },
+      "name": "ISRO Bus Depot",
+      "amenity": "bus_station",
+      "shop": null,
+      "road": null
+    }
+  ],
+  "roads": [],
+  "classification": {
+    "roadWise": {
+      "Unknown Road": [
+        "node/2444936665",
+        "node/2444936674",
+        "node/2552582361",
+        "node/2552582362",
+        "node/2552582366",
+        "node/2552582369",
+        "node/2552582371",
+        "node/6767322264",
+        "node/6767324031",
+        "node/7003507561",
+        "node/7003507562",
+        "node/7003507569",
+        "node/7003563807",
+        "node/7008308796",
+        "node/7008354996",
+        "node/7008357598",
+        "node/7008370382",
+        "node/7019622969",
+        "node/7019631381",
+        "node/7019658576",
+        "node/7019712114",
+        "node/7019712115",
+        "node/7019712116",
+        "node/7019725301",
+        "node/7019733933",
+        "node/7019733934",
+        "node/7019733935",
+        "node/7101400292",
+        "node/7101400386",
+        "node/7101400391",
+        "node/7101400392",
+        "node/7101400485",
+        "node/7105030336",
+        "node/7462485056",
+        "node/7467444271",
+        "node/7467444272",
+        "node/7467444273",
+        "node/7467444275",
+        "node/7467444276",
+        "node/7467444278",
+        "node/7467444279",
+        "node/7467444280",
+        "node/7467444281",
+        "node/7467464890",
+        "node/7467464891",
+        "node/7467464892",
+        "node/7467464893",
+        "node/7467464894",
+        "node/7467464895",
+        "node/7467464896",
+        "node/7467464899",
+        "node/7467464913",
+        "node/7467464914",
+        "node/7467464916",
+        "node/7467464917",
+        "node/7467464918",
+        "node/7467464920",
+        "node/7467464921",
+        "node/7467464922",
+        "node/7467464923",
+        "node/7467464927",
+        "node/7467464928",
+        "node/7467464929",
+        "node/7467464930",
+        "node/9001210207",
+        "node/9001210208",
+        "node/13917432240",
+        "node/13917466548",
+        "node/13917489322",
+        "node/13919134861",
+        "node/13919138956",
+        "node/13926109172",
+        "node/13926122851",
+        "node/13926133126",
+        "node/13926157343",
+        "node/13926165528",
+        "node/13926172250",
+        "node/13926191023",
+        "node/13926191024",
+        "node/13926193949",
+        "node/13926194840",
+        "node/13926199068",
+        "node/13926199391",
+        "node/13927768670",
+        "node/13984591446",
+        "node/13994351042",
+        "node/13994351048",
+        "node/14063082029",
+        "node/14063082052",
+        "node/14063082053",
+        "node/14063082054",
+        "node/14063082055",
+        "way/748897141",
+        "way/750767012",
+        "way/750775611",
+        "way/797349673",
+        "way/797861568",
+        "way/797861570",
+        "way/797861571",
+        "way/797861572"
+      ]
+    },
+    "businessWise": {
+      "supermarket": [
+        "node/2444936665",
+        "node/2552582362",
+        "node/7003507562",
+        "way/797861571"
+      ],
+      "fast_food": [
+        "node/2444936674",
+        "node/7008354996",
+        "node/13994351042",
+        "node/13994351048"
+      ],
+      "butcher": [
+        "node/2552582361"
+      ],
+      "seafood": [
+        "node/2552582366",
+        "node/7467464923"
+      ],
+      "pharmacy": [
+        "node/2552582369",
+        "node/7467444281"
+      ],
+      "greengrocer": [
+        "node/2552582371",
+        "node/7008308796",
+        "node/13926109172"
+      ],
+      "health_food": [
+        "node/6767322264"
+      ],
+      "bakery": [
+        "node/6767324031",
+        "node/7462485056"
+      ],
+      "restaurant": [
+        "node/7003507561",
+        "node/7019712115",
+        "node/7467444278",
+        "node/7467444280",
+        "node/7467464914",
+        "node/7467464916",
+        "node/7467464921",
+        "node/7467464922",
+        "node/7467464930",
+        "node/13919138956"
+      ],
+      "university": [
+        "node/7003507569"
+      ],
+      "yes": [
+        "node/7003563807",
+        "node/7019712114",
+        "node/7019733935",
+        "way/750775611"
+      ],
+      "place_of_worship": [
+        "node/7008357598",
+        "node/7019658576",
+        "way/797861568",
+        "way/797861570"
+      ],
+      "general": [
+        "node/7008370382"
+      ],
+      "tea": [
+        "node/7019622969"
+      ],
+      "photo": [
+        "node/7019631381",
+        "way/750767012"
+      ],
+      "other": [
+        "node/7019712116",
+        "node/7101400292",
+        "node/7101400386",
+        "node/7101400391",
+        "node/7101400392",
+        "node/7101400485",
+        "node/7105030336",
+        "node/7467444273",
+        "node/7467444276",
+        "node/7467464890",
+        "node/7467464899",
+        "node/7467464918",
+        "node/13926122851",
+        "node/13926165528",
+        "node/13926193949",
+        "node/13926199068",
+        "node/13926199391",
+        "node/14063082029",
+        "way/797349673"
+      ],
+      "motorcycle_repair": [
+        "node/7019725301",
+        "node/7467464917"
+      ],
+      "car_repair": [
+        "node/7019733933"
+      ],
+      "convenience": [
+        "node/7019733934"
+      ],
+      "interior_decoration": [
+        "node/7467444271",
+        "node/7467464920"
+      ],
+      "bank": [
+        "node/7467444272",
+        "node/7467464892",
+        "node/13917466548"
+      ],
+      "shoes": [
+        "node/7467444275"
+      ],
+      "cafe": [
+        "node/7467444279",
+        "node/7467464913",
+        "node/13919134861",
+        "node/13926194840"
+      ],
+      "kindergarten": [
+        "node/7467464891",
+        "node/7467464895"
+      ],
+      "cosmetics": [
+        "node/7467464893"
+      ],
+      "pet": [
+        "node/7467464894",
+        "node/14063082055"
+      ],
+      "clothes": [
+        "node/7467464896"
+      ],
+      "computer": [
+        "node/7467464927",
+        "node/7467464929"
+      ],
+      "beauty": [
+        "node/7467464928",
+        "node/13926157343"
+      ],
+      "hospital": [
+        "node/9001210207",
+        "node/9001210208"
+      ],
+      "prep_school": [
+        "node/13917432240"
+      ],
+      "vacant": [
+        "node/13917489322"
+      ],
+      "hairdresser": [
+        "node/13926133126"
+      ],
+      "optician": [
+        "node/13926172250"
+      ],
+      "toys": [
+        "node/13926191023"
+      ],
+      "ice_cream": [
+        "node/13926191024"
+      ],
+      "waste_basket": [
+        "node/13927768670"
+      ],
+      "florist": [
+        "node/13984591446"
+      ],
+      "massage": [
+        "node/14063082052"
+      ],
+      "dairy": [
+        "node/14063082053"
+      ],
+      "college": [
+        "node/14063082054"
+      ],
+      "social_facility": [
+        "way/748897141"
+      ],
+      "bus_station": [
+        "way/797861572"
+      ]
+    },
+    "religious": {
+      "mosque": [],
+      "church": [],
+      "temple": [
+        "node/7008357598",
+        "node/7019658576",
+        "way/797861568",
+        "way/797861570"
+      ],
+      "other": []
+    }
+  },
+  "stats": {
+    "placesCount": 100,
+    "roadsCount": 0
+  },
+  "current": {
+    "lat": 8.524139,
+    "lng": 76.94663800000001,
+    "index": 1,
+    "dx": 1,
+    "dy": 0
+  }
+}
