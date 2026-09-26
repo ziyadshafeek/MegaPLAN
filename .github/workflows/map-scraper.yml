@@ -1,12 +1,10 @@
-name: Bounded recurring OSM map collection
+name: Bounded OSM collection for review
 on:
-  # GitHub schedules execute the default-branch version of this workflow ONLY.
-  # The branch-only collect-now workflow exercises the bounded runner before merge.
   schedule:
     - cron: '17 */4 * * *'
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: open-directory-${{ github.ref }}
   cancel-in-progress: false
@@ -16,23 +14,25 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Collect up to two previously missing OSM cells
-        run: node scripts/kerala-expansion-runner.mjs --phase 1 --batch 2 --workers 1
-      - name: Publish only verified OSM records
-        run: |
-          git config user.name 'megaplan-collector[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/map-directory public/data/map-directory
-          if git diff --cached --quiet; then echo 'No verified new cells'; exit 0; fi
-          git commit -m 'data: append verified OSM cells [skip ci]'
-          git fetch origin "${GITHUB_REF_NAME}"
-          git rebase FETCH_HEAD
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-      - name: Report bounded coverage
+      - name: Collect bounded records and measure distinct IDs
+        run: node scripts/collection-review.mjs map
+      - name: Save review artifact (NOT publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: map-review-${{ github.run_id }}
+          path: .collection-review/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report collection versus publication
         if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
         run: |
-          echo 'OSM map cells are a limited regional sample with overlapping place occurrences. Scheduled jobs run only after this workflow lands on the default branch.' >> "$GITHUB_STEP_SUMMARY"
-          jq '{totalCells,totalPlaces,lastIndex,lastScannedAt}' data/map-directory/index.json >> "$GITHUB_STEP_SUMMARY"
+          echo "Collection/review artifact job: $JOB_STATUS" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Publication: pending human PR review. This job cannot push or deploy data.' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f .collection-review/report.json ]; then cat .collection-review/report.json >> "$GITHUB_STEP_SUMMARY"; fi

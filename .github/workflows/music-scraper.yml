@@ -1,39 +1,38 @@
-name: Resumable open song-name collection (no audio)
+name: Bounded MusicBrainz metadata for review (no audio)
 on:
-  # GitHub schedules run only the workflow on the default branch after merge.
   schedule:
     - cron: '41 */6 * * *'
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: open-directory-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Jitter to avoid synchronized provider load
-        run: sleep $((RANDOM % 45))
-      - name: Fetch 3 paged MusicBrainz recording-name batches (at most 1 request per 1.2s)
-        run: node scripts/open-music-runner.mjs
-      - name: Publish metadata and resumable cursor, never audio
-        run: |
-          git config user.name 'megaplan-collector[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/music-directory public/data/music-directory
-          if git diff --cached --quiet; then echo 'No verified new music metadata'; exit 0; fi
-          git commit -m 'data: append verified open song metadata [skip ci]'
-          git fetch origin "${GITHUB_REF_NAME}"
-          git rebase FETCH_HEAD
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-      - name: Report coverage accurately
+      - name: Collect bounded records and measure distinct IDs
+        run: node scripts/collection-review.mjs music
+      - name: Save review artifact (NOT publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: music-review-${{ github.run_id }}
+          path: .collection-review/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report collection versus publication
         if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
         run: |
-          echo 'This is a bounded MusicBrainz search sample, not every Spotify song. The full catalog requires an official dump and external index.' >> "$GITHUB_STEP_SUMMARY"
-          jq '{totalTracks,lastScannedAt,coverage}' data/music-directory/index.json >> "$GITHUB_STEP_SUMMARY"
+          echo "Collection/review artifact job: $JOB_STATUS" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Publication: pending human PR review. This job cannot push or deploy data.' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f .collection-review/report.json ]; then cat .collection-review/report.json >> "$GITHUB_STEP_SUMMARY"; fi

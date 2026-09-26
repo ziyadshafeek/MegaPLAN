@@ -27,6 +27,11 @@ try {
   assert.equal(JSON.parse(fs.readFileSync(path.join(publicDir, 'index.json'))).totalTracks, 202);
   await assert.rejects(collectOpenMusic({ dir, publicDir, fetchImpl: async () => { throw Error('network offline'); }, searches: ['hindi','swahili'], pages: 1 }), /state unchanged/);
   assert.equal(JSON.parse(fs.readFileSync(path.join(dir, 'cursor.json'))).offset, 0, 'failed page never advances cursor');
+  let calls = 0;
+  await assert.rejects(collectOpenMusic({ dir, publicDir, searches: ['hindi', 'swahili'], pages: 2, delay: async () => {}, fetchImpl: async () => {
+    if (++calls === 2) throw Error('second page offline');
+    return { ok: true, json: async () => ({ recordings: [item(999)] }) };
+  } }), /Incomplete MusicBrainz collection/, 'partial upstream failure must not report success');
   const phase = { phase: 1, bbox: { latMin: 8.3, latMax: 8.7, lngMin: 76.7, lngMax: 77.2 }, grid: 0.01, radius: 600, estimatedCells: 50 };
   const retry = phaseTasks(phase, [], 4, 2, [0, 1, 3, 4]);
   assert.deepEqual(retry.map(t => t.index), [2, 5], 'failed map-cell gap must be retried before expansion');
