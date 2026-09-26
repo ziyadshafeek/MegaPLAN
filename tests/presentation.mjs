@@ -5,7 +5,7 @@ import { cleanTopic, normalizeImageLinks, researchTopic } from '../lib/presentat
 import { planDeck, makePresentation } from '../lib/presentation-deck.js';
 import { presentationTopic } from '../public/js/presentation-tool.js';
 import { snapshotReferences } from '../lib/presentation-context.js';
-assert.equal(snapshotReferences('music around Trivandrum')[0]?.title, 'Trivandrum OSM music places');
+assert.deepEqual(snapshotReferences('music around Trivandrum').map(item => item.title), ['Trivandrum OSM music places'], 'local music places must never imply a worldwide music catalogue');
 assert.equal(snapshotReferences('music worldwide')[0]?.source, 'MegaPLAN MusicBrainz CC0 snapshot', 'worldwide music must not use local OSM places');
 
 assert.equal(presentationTopic('Create a PPT about solar energy'), 'solar energy');

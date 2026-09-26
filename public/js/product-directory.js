@@ -110,18 +110,26 @@ export function mountProductDirectory(root, tool) {
         // Live search results are ephemeral; repository snapshots come from scheduled jobs.
       }
 
-      $(`products`).innerHTML = products.slice(0, 20).map(p => `
+      $(`products`).innerHTML = products.slice(0, 20).map(p => {
+        // Retail image URLs are never auto-rendered. Only HTTPS retailer pages
+        // may be opened; external data is not trusted as HTML or image safety.
+        let link = '';
+        try {
+          const u = new URL(p.external_url || p.productUrl || p.url);
+          if (u.protocol === 'https:' && /(^|\.)(flipkart\.com|amazon\.in)$/.test(u.hostname)) link = u.href;
+        } catch {}
+        return `
         <div style="border:1px solid #e0d5c4;border-radius:10px;padding:10px;background:#fff">
-          <img src="${esc(p.image||p.img||'')}" style="width:100%;height:120px;object-fit:contain;background:#f4efe6;border-radius:6px" onerror="this.style.display='none'">
           <b style="font-size:13px">${esc(p.title||'Unnamed')}</b><br>
           <div style="font-size:12px;margin-top:4px">
-            <div>💰 ₹${p.currentPrice||p.price||0} ${p.originalPrice ? `<small style="text-decoration:line-through;color:#8a7f72">₹${p.originalPrice}</small> <span style="color:#2f7d4a">${p.discountPercent||''}% off</span>` : ''}</div>
-            <div>⭐ ${p.rating||0} · Seller: ${esc(p.seller||'')} (${p.sellerRating||0}⭐) · ${esc(p.category||'')}</div>
-            <div>🏷 ${esc(p.platform||'')} · Price: ${esc(p.price_category||'')} · Rating: ${esc(p.rating_category||'')}</div>
-            <div style="margin-top:4px"><small>${esc((p.highlights||[]).slice(0,2).join(' · '))}</small></div>
+            <div>💰 ₹${esc(p.currentPrice||p.price||0)} ${p.originalPrice ? `<small style="text-decoration:line-through;color:#8a7f72">₹${esc(p.originalPrice)}</small> <span style="color:#2f7d4a">${esc(p.discountPercent||'')}% off</span>` : ''}</div>
+            <div>⭐ ${esc(p.rating||0)} · Seller: ${esc(p.seller||'')} (${esc(p.sellerRating||0)}⭐) · ${esc(p.category||'')}</div>
+            <div>🏷 ${esc(p.platform||p.source||'')} · Price: ${esc(p.price_category||'')} · Rating: ${esc(p.rating_category||'')}</div>
+            <div style="margin-top:4px"><small>${esc((Array.isArray(p.highlights) ? p.highlights : []).slice(0,2).join(' · '))}</small></div>
+            ${link ? `<a href="${esc(link)}" target="_blank" rel="noopener noreferrer">View retailer listing ↗</a>` : ''}
           </div>
         </div>
-      `).join('') || 'No products found';
+      `; }).join('') || 'No products found';
 
     } catch (e) {
       $(`info`).innerHTML = `Search failed: ${esc(e.message)}`;

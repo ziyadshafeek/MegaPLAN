@@ -15,7 +15,7 @@ export function validateProductFeed(input) {
     if (!String(p.id || '').trim() || !String(p.title || '').trim() || !String(p.seller || '').trim() || !String(p.category || '').trim()) throw Error('Product ID, title, seller and category required.');
     if (p.currency !== 'INR' || !Number.isFinite(Number(p.price)) || Number(p.price) <= 0) throw Error('Positive INR price required.');
     if (!Number.isFinite(Date.parse(p.verifiedAt)) || Math.abs(Date.now() - Date.parse(p.verifiedAt)) > 7 * 86400_000) throw Error('Verified timestamp must be within seven days.');
-    return { id: String(p.id).slice(0, 100), title: String(p.title).slice(0, 250), seller: String(p.seller).slice(0, 160), category: String(p.category).slice(0, 100), brand: String(p.brand || '').slice(0, 100), price: Number(p.price), currency: 'INR', rating: Number(p.rating) || null, external_url: url.href, source: domain, verifiedAt: p.verifiedAt, indexedAt: now, permissionEvidence: input.permissionEvidence };
+    return { id: String(p.id).slice(0, 100), title: String(p.title).slice(0, 250), seller: String(p.seller).slice(0, 160), category: String(p.category).slice(0, 100), brand: String(p.brand || '').slice(0, 100), price: Number(p.price), currentPrice: Number(p.price), currency: 'INR', rating: Number(p.rating) || null, external_url: url.href, source: domain, platform: domain, verifiedAt: p.verifiedAt, indexedAt: now, permissionEvidence: input.permissionEvidence };
   });
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
