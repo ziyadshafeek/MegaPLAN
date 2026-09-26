@@ -1,12 +1,96 @@
-.agent-standalone { background: #f4efe6; min-height: 100dvh; }
+.agent-standalone { background: #171411; min-height: 100dvh; color: #1c1916; }
 #wiki-agent-root, .wiki-agent { min-height: 100%; }
-.wiki-agent { padding: 18px; color: #1c1916; }
-.wiki-agent.standalone { max-width: 1180px; margin: 0 auto; }
-.wa-head { display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 16px; }
-.wa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.premium { margin-top: 12px; border: 1px solid #e0d5c4; border-radius: 12px; padding: 10px; }
-.premium summary { cursor: pointer; font-size: 13px; }
+.wiki-agent { padding: 0; color: #1c1916; }
+.wiki-agent.standalone { max-width: none; margin: 0; height: 100dvh; }
+
+.codex {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  height: min(860px, calc(100dvh - 24px));
+  background: #fffaf2;
+  border: 1px solid #2d2722;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.wiki-agent.standalone .codex { height: 100dvh; border: 0; border-radius: 0; }
+
+.codex-chat {
+  display: flex;
+  flex-direction: column;
+  background: #1c1916;
+  color: #f4efe6;
+  min-width: 0;
+}
+.codex-chat header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #2d2722;
+}
+.codex-chat header h1 { margin: 4px 0 0; font-size: 18px; letter-spacing: -.03em; }
+.codex-chat .lede { color: #cbbba8; font-size: 12px; margin: 6px 0 0; }
+.codex-thread {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bubble {
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  max-width: 95%;
+  white-space: pre-wrap;
+}
+.bubble.user { align-self: flex-end; background: #c45c26; color: #fffaf2; }
+.bubble.agent { align-self: flex-start; background: #2a241f; color: #f4efe6; }
+.bubble.step { align-self: flex-start; background: transparent; color: #cbbba8; font-size: 12px; padding: 2px 4px; }
+.codex-composer { padding: 10px; border-top: 1px solid #2d2722; display: grid; gap: 8px; }
+.codex-composer textarea {
+  width: 100%; min-height: 88px; resize: vertical; border-radius: 10px;
+  border: 1px solid #3a322c; background: #14110f; color: #f4efe6; padding: 10px; font: inherit;
+}
+.codex-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.codex-actions .btn { font-size: 12px; }
+.codex-chat details { color: #cbbba8; font-size: 12px; }
+.codex-chat .field { background: #14110f; color: #f4efe6; border-color: #3a322c; }
+
+.codex-browser {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #efe6d8;
+}
+.cb-chrome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #211c18;
+  color: #f4efe6;
+}
+.cb-dots { display: flex; gap: 6px; }
+.cb-dots i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+.cb-dots .r { background: #e25b4c; }
+.cb-dots .y { background: #e3b341; }
+.cb-dots .g { background: #2c9b6a; }
+.cb-url {
+  flex: 1; background: #14110f; border: 1px solid #3a322c; border-radius: 999px;
+  padding: 6px 12px; font-size: 12px; color: #cbbba8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cb-chrome .btn { font-size: 12px; padding: 6px 10px; }
+.codex-browser iframe { flex: 1; border: 0; background: #fff; min-height: 280px; }
+.cb-log {
+  max-height: 120px; overflow: auto; margin: 0; padding: 8px 12px;
+  background: #1c1916; color: #eadfce; font: 11px/1.4 ui-monospace, monospace; border: 0;
+}
+.cb-pages { display: flex; gap: 6px; overflow: auto; padding: 6px 10px; background: #f4efe6; border-top: 1px solid #e0d5c4; }
+.cb-pages a, .cb-pages span { font-size: 11px; color: #6e655b; white-space: nowrap; }
+
 @media (max-width: 840px) {
-  .wa-grid { grid-template-columns: 1fr; }
-  .wa-head { flex-direction: column; }
+  .codex { grid-template-columns: 1fr; height: auto; min-height: 100dvh; }
+  .wiki-agent.standalone .codex { height: auto; }
+  .codex-chat { min-height: 42vh; }
+  .codex-browser { min-height: 50vh; }
 }

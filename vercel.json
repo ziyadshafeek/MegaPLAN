@@ -2,7 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "outputDirectory": "public",
   "rewrites": [
+    { "source": "/api/:route", "destination": "/api/index?route=:route" },
+    { "source": "/api/:route/:path*", "destination": "/api/index?route=:route" },
     { "source": "/folder/:path*", "destination": "/index.html" },
     { "source": "/tools/:path*", "destination": "/index.html" },
     { "source": "/wiki/:path*", "destination": "/index.html" },
@@ -19,9 +22,6 @@
     }
   ],
   "functions": {
-    "api/split-pdf.js": { "maxDuration": 60 },
-    "api/ai.js": { "maxDuration": 60 },
-    "api/agent-plan.js": { "maxDuration": 60 },
-    "api/inspect.js": { "maxDuration": 15 }
+    "api/index.js": { "maxDuration": 60 }
   }
 }

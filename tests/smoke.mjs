@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 
 const registry = JSON.parse(fs.readFileSync(new URL('../data/tools.json', import.meta.url)));
-assert.equal(registry.length, 555, 'registry size changed unexpectedly');
+assert.ok(registry.length >= 555, `registry size changed unexpectedly: ${registry.length} < 555`);
 assert.ok(registry.every(t => t.slug && t.title && t.category && t.processing), 'registry schema broken');
 
 const index = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
@@ -19,12 +19,16 @@ const engines = fs.readFileSync(new URL('../public/js/engines.js', import.meta.u
 assert.ok(engines.includes('export async function mountTool'), 'mountTool missing');
 assert.ok(fs.existsSync(new URL('../public/js/pdf-engine.js', import.meta.url)), 'pdf engine missing');
 assert.ok(fs.existsSync(new URL('../public/js/engines-rest.js', import.meta.url)), 'rest engines missing');
-assert.ok(fs.existsSync(new URL('../api/ai.js', import.meta.url)), 'ai api missing');
-assert.ok(fs.existsSync(new URL('../api/lib/nvidia.js', import.meta.url)), 'nvidia helper missing');
+assert.ok(fs.existsSync(new URL('../api/index.js', import.meta.url)), 'api router missing (hobby 12 limit fix)');
+assert.ok(fs.existsSync(new URL('../lib/api/ai.js', import.meta.url)), 'ai api missing (lib/api)');
+assert.ok(fs.existsSync(new URL('../lib/nvidia.js', import.meta.url)), 'nvidia helper missing (lib/)');
+assert.ok(fs.existsSync(new URL('../lib/rate-limiter.js', import.meta.url)), 'rate-limiter missing (lib/)');
 
-const nvidia = fs.readFileSync(new URL('../api/lib/nvidia.js', import.meta.url), 'utf8');
+const nvidia = fs.readFileSync(new URL('../lib/nvidia.js', import.meta.url), 'utf8');
 assert.ok(nvidia.includes('integrate.api.nvidia.com'), 'NVIDIA endpoint missing');
 assert.ok(nvidia.includes('NEVER return the model'), 'identity rule missing');
+assert.ok(nvidia.includes('deepseek-ai/deepseek-v4.1-flash'), 'default V4.1 Flash model missing');
+assert.ok(nvidia.includes('providerConfigured'), 'providerConfigured missing');
 
 for (const title of ['Merge PDFs', 'Split PDF', 'Word Counter', 'Wiki Agent']) {
   assert.ok(
@@ -35,8 +39,10 @@ for (const title of ['Merge PDFs', 'Split PDF', 'Word Counter', 'Wiki Agent']) {
 
 const files = [
   'public/js/kit.js', 'public/js/engines.js', 'public/js/engines-rest.js', 'public/js/pdf-engine.js',
-  'public/js/pdf-ops.js', 'public/app.js', 'public/agent/agent.js', 'api/ai.js', 'api/agent-plan.js', 'api/inspect.js',
-  'api/lib/nvidia.js', 'scripts/dev-server.mjs', 'scripts/sync-github-ai-to-vercel.mjs'
+  'public/js/pdf-ops.js', 'public/js/audio-studio.js', 'public/js/youtube-tools.js', 'public/js/ai-mode.js', 'public/js/agentic-pdf.js',
+  'public/app.js', 'public/agent/agent.js', 'api/index.js', 'lib/api/ai.js', 'lib/api/agent-plan.js', 'lib/api/inspect.js',
+  'lib/nvidia.js', 'lib/rate-limiter.js', 'lib/api/youtube-transcript.js', 'lib/api/youtube-playlist.js',
+  'scripts/dev-server.mjs', 'scripts/sync-github-ai-to-vercel.mjs'
 ];
 for (const f of files) {
   const r = spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' });

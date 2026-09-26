@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "goal": "Scrape and build dataset of all digital products available in Flipkart Amazon etc — millions of products with price, categorizing, rating, seller rating etc — similar to map, big project, must complete entire Amazon and Flipkart",
+  "createdAt": "2026-09-26T00:00:00Z",
+  "platforms": ["Flipkart", "Amazon"],
+  "flipkart": {
+    "free_api": "https://github.com/dvishal485/flipkart-scraper-api — API does not require client id/secret, open source Rust, Docker image",
+    "affiliate_api": "https://github.com/hi-imcodeman/flipkart-scraper — requires Affiliate-Id and Token, but can scrape all products via affiliate API, 3.25k products/sec",
+    "scraping": "Python Flask API itzDM/Amazon-flipkart-scrap — scrape title, price, image, rating from URL",
+    "categories": [
+      "mobiles", "laptops", "televisions", "mens_clothing", "womens_clothing",
+      "electronics", "home_appliances", "books", "beauty", "toys",
+      "sports", "automotive", "grocery", "furniture", "jewellery"
+    ],
+    "estimated_products": "10M+",
+    "free_tier": "Flipkart affiliate API free tier, or scraper API Docker"
+  },
+  "amazon": {
+    "scraping": "Scrapy Ecommerce-Scraper ShauryaSwarup — 300 products in 15-20 sec without proxy, 30-40 sec with rotating proxy, uses ScraperAPI for rotating proxies",
+    "categories": [
+      "Electronics", "Mobiles", "Laptops", "TV", "Fashion", "Home",
+      "Books", "Beauty", "Toys", "Sports", "Automotive", "Grocery"
+    ],
+    "estimated_products": "100M+",
+    "anti_scraping": "Amazon blocks, need rotating proxies, user-agent rotation, ScraperAPI",
+    "free_tier": "ScrapeOps free tier, ScraperAPI free tier 1000 req/month"
+  },
+  "systematic_plan": {
+    "phase1": {
+      "name": "Categories Discovery",
+      "days": "1-2",
+      "tasks": [
+        "Scrape all categories from Flipkart and Amazon",
+        "Store categories with product counts",
+        "Prioritize digital products: mobiles, laptops, electronics"
+      ],
+      "estimated": "100 categories"
+    },
+    "phase2": {
+      "name": "Subcategories & Product URLs",
+      "days": "3-5",
+      "tasks": [
+        "For each category, scrape subcategories",
+        "For each subcategory, scrape product listing pages (pagination)",
+        "Collect product URLs, store in queue",
+        "Estimated: 10k listing pages, 1M product URLs"
+      ]
+    },
+    "phase3": {
+      "name": "Product Details Massive Scrapping",
+      "days": "6-15",
+      "tasks": [
+        "For each product URL, scrape details: title, price, original price, discount, rating, seller name, seller rating, thumbnails, highlights, offers, specifications, reviews",
+        "Use proxy rotation every request, user-agent rotation, rate limit 2 req/sec per worker",
+        "4 parallel workers, 3 proxy mirrors",
+        "Store in GitHub + Vercel + IndexedDB + search-index",
+        "Classify by price ranges, rating, seller rating, category, brand"
+      ],
+      "estimated": "1M products in 10 days with 4 workers (1.16 products/sec per worker)"
+    },
+    "phase4": {
+      "name": "Price & Rating Categorization + AI",
+      "days": "16-18",
+      "tasks": [
+        "Categorize by price: <1000, 1000-5000, 5000-10000, 10000-20000, 20000-50000, 50000+",
+        "Categorize by rating: 4.5+, 4.0+, 3.5+, <3.5",
+        "Categorize by seller rating",
+        "Use NVIDIA AI to create new sections automatically (e.g., 'Best budget mobiles under 10000 with 4.5+ rating')",
+        "Generate search-index, full-business equivalent for products"
+      ]
+    },
+    "phase5": {
+      "name": "Full Dataset for AI",
+      "days": "19-20",
+      "tasks": [
+        "Create full-index.jsonl with all products",
+        "Create search-index.json inverted term->ids",
+        "Create api/product-ai.js for AI multi-tool to query: price, rating, seller, category, brand, search, distance not applicable but similar",
+        "Make fully indexable for AI Mode"
+      ]
+    }
+  },
+  "free_storage": {
+    "github": "data/product-directory/cell_*.json + index.json + search-index.json + full-products.jsonl (free, versioned, 100MB per file limit, use many small files)",
+    "vercel": "public/data/product-directory/ static (free)",
+    "indexedDB": "mp-product-directory (GBs free in browser)",
+    "search_index": "Inverted index term->ids, fully indexable for AI",
+    "note": "All free, no API key for Flipkart scraper API Rust, Amazon needs rotating proxies (ScraperAPI free tier)"
+  },
+  "engineering": {
+    "parallel_workers": 4,
+    "proxy_mirrors": 3,
+    "batch_size": 50,
+    "interval_seconds": 2,
+    "rate_limit": "2 req/sec per worker, rotate proxy/location every time",
+    "anti_block": "User-Agent rotation, ScraperAPI rotating proxies, respect robots.txt, delay 2s between requests",
+    "storage": ["GitHub commits", "Vercel static", "IndexedDB", "localStorage", "search-index"],
+    "ai": "NVIDIA deepseek-ai/deepseek-v4.1-flash for categorization, new sections auto-created",
+    "flawless": "Retry with backoff, offline fallback to seed, deduplication by product id, progress persistence"
+  },
+  "seed": {
+    "flipkart_example": {
+      "title": "APPLE iPhone 15 (Black, 128 GB)",
+      "currentPrice": 70999,
+      "originalPrice": 79900,
+      "discount": true,
+      "discountPercent": 11,
+      "rating": 4.5,
+      "seller": "RetailNet",
+      "sellerRating": 4.3,
+      "thumbnails": ["https://..."],
+      "highlights": ["128 GB ROM", "15.49 cm Super Retina XDR Display"],
+      "offers": ["Bank Offer 10% off"],
+      "specifications": { "Brand": "APPLE", "Model": "iPhone 15" }
+    },
+    "amazon_example": {
+      "title": "Apple iPhone 15 (128 GB) - Black",
+      "price": 70999,
+      "rating": 4.5,
+      "seller": "Appario Retail",
+      "sellerRating": 4.4,
+      "image": "https://...",
+      "details": "128 GB ROM, 6.1 inch display"
+    }
+  }
+}

@@ -427,12 +427,56 @@ button { cursor: pointer; }
   border-radius: 999px; font-size: 13px; z-index: 90;
 }
 
+/* ========== MOBILE IMPROVEMENTS ========== */
 @media (max-width: 840px) {
   .desktop { display: none; }
+  .tool-pane { padding: 14px 12px 24px; }
+  .tool-pane h1 { font-size: 24px; line-height: 1.1; }
+  .tool-pane .lede { font-size: 13px; }
+  .panel { padding: 12px; border-radius: 12px; }
+  .work-grid { grid-template-columns: 1fr; gap: 12px; }
+  .field-row { grid-template-columns: 1fr; }
+  .button-row { gap: 6px; }
+  .btn { padding: 9px 12px; font-size: 13px; }
+  .input-area { min-height: 140px; }
+  .icon-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; padding: 8px 10px 20px; }
+  .icon .glyph { width: 44px; height: 38px; }
+  .icon .name { font-size: 11px; }
+  .files-head { padding: 12px 12px 6px; }
+  .a-search { height: 42px; font-size: 14px; }
+  .a-pins { grid-template-columns: 1fr; }
+  .a-pin { min-height: 72px; padding: 12px; display: flex; align-items: center; gap: 12px; }
+  .a-pin .glyph { width: 40px; height: 34px; flex-shrink: 0; }
+  .a-pin b { margin-top: 0; font-size: 13px; }
+  .a-pin span { font-size: 11px; }
+  .a-grid { grid-template-columns: repeat(4, 1fr); gap: 8px 0; }
+  .a-folder { padding: 8px 2px; }
+  .a-folder .glyph { width: 42px; height: 36px; }
+  .a-folder .name { font-size: 10px; }
+  .a-list { padding: 0 4px 16px; }
+  .a-row { padding: 8px 6px; gap: 8px; }
+  .a-nav { position: sticky; bottom: 0; z-index: 10; }
+  .a-screen { padding-bottom: env(safe-area-inset-bottom); }
+  .as-track { grid-template-columns: 1fr; }
+  .as-track-head { border-right: 0; border-bottom: 1px solid #e0d5c4; }
+  .as-wave canvas { height: 78px; }
 }
 @media (min-width: 841px) {
   .android { display: none; }
 }
 @media (max-width: 520px) {
   .a-grid { grid-template-columns: repeat(3, 1fr); }
+  .icon-grid { grid-template-columns: repeat(3, 1fr); }
+  .tool-pane { padding: 12px 10px 20px; }
+}
+@media (max-width: 380px) {
+  .a-grid { grid-template-columns: repeat(3, 1fr); gap: 4px 0; }
+  .icon-grid { grid-template-columns: repeat(2, 1fr); }
+  .a-pins { gap: 8px; }
+}
+
+/* Ensure touch targets are at least 40px */
+@media (pointer: coarse) {
+  .btn, .side-item, .folder-row, .icon, .a-folder, .a-row, .a-pin { min-height: 40px; }
+  .field, .sel, .num, .input-area { font-size: 16px; } /* prevent iOS zoom */
 }

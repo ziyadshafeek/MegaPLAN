@@ -16,16 +16,30 @@ This rebuild keeps the 555-tool registry and the serverless agent APIs, and repl
 
 ## Data flow
 ```
-Browser (public/) ──POST /api/ai──────────► api/lib/nvidia.js ──► NVIDIA NIM
-                 ──POST /api/agent-plan──► same helper
-                 ──POST /api/inspect─────► public HTTP/DNS/TLS
-                 ──POST /api/agent-publish► GitHub git API (wiki JSON only)
+Browser (public/) ──POST /api/ai──────────────────► api/lib/nvidia.js ──► NVIDIA NIM (DeepSeek V4.1 Flash default)
+                 ──POST /api/agent-plan──────────► same helper (tool calling emit_wiki_page)
+                 ──POST /api/inspect─────────────► public HTTP/DNS/TLS
+                 ──POST /api/agent-publish───────► GitHub git API (wiki JSON only)
+                 ──POST /api/youtube-transcript──► YouTube timedtext + Piped/Invidious fallback (no key)
+                 ──POST /api/youtube-playlist────► Piped + Invidious + YouTube scrape
+                 ──POST /api/agent-dispatch/status► GitHub Actions runner
 Self Agent ──────► user /v1/chat/completions (no MegaPLAN server)
+AI Mode ─────────► chains OCR, PDF split, YouTube transcript, audio studio, etc + prompts for Gemini 1M / NotebookLM
 ```
 
-Vercel: `public/` is the static root. `api/*.js` are Node serverless functions except `api/split-pdf.js` (Web `POST` handler for StudyBridge).
+Vercel: `public/` is the static root (`outputDirectory: public`). `api/*.js` are Node serverless functions except `api/split-pdf.js` (Web `POST` handler for StudyBridge). New APIs `youtube-transcript` and `youtube-playlist` are 30s max.
 
-Hosted writing key: **GitHub Actions secrets**. Vercel serverless `process.env` does not see GitHub secrets. Copy with `.github/workflows/sync-ai-env.yml` (`VERCEL_TOKEN`) or the Vercel dashboard. Until then Wiki Agent instant Build falls through to the GitHub runner when dispatch is configured.
+Hosted writing key: **GitHub Actions secrets**. Vercel serverless `process.env` does not see GitHub secrets. Copy with `.github/workflows/sync-ai-env.yml` (`VERCEL_TOKEN`) or the Vercel dashboard. Until then Wiki Agent instant Build falls through to the GitHub runner when dispatch is configured. Only `NVIDIA_API_KEY` required now, model defaults.
+
+## New frontier surfaces (2026-09-26 later)
+| Surface | Purpose | Implementation |
+|---|---|---|
+| AI Mode | Combine tools, complex workflows, 4-digit session, private tools | `public/js/ai-mode.js`, pinned app, future paid (free now) |
+| Audio Studio | Audacity-like multi-track, waveform, MP3/WAV, autosave | `public/js/audio-studio.js`, IndexedDB, lamejs |
+| YouTube Transcript | Any video with captions → SRT/VTT/text, AI summarize | `api/youtube-transcript.js` + `youtube-tools.js` |
+| YouTube Playlist Lister | Public playlist → video list, CSV/TXT | `api/youtube-playlist.js` |
+| Agentic PDF Splitter | AI reads PDF, splits into chapters/questions/batches, prompts for Gemini 1M / NotebookLM | `public/js/agentic-pdf.js`, pdf-lib + pdf.js + tesseract.js + /api/ai |
+| Question Paper to Notes | Scanned Q paper + textbook → OCR → notes per Q/batch | Same as above, Q&A focused |
 
 ## Identity hiding
 `api/lib/nvidia.js` reads `NVIDIA_API_KEY` + `NVIDIA_AGENT_MODEL`. Responses to the browser are `{ text }` or `{ spec }`. Health returns `aiConfigured: boolean` only.

@@ -7,7 +7,7 @@ Vercel serverless functions (`/api/ai`, `/api/agent-plan`) cannot read GitHub se
 ## GitHub Actions secrets (required)
 
 - `NVIDIA_API_KEY`
-- `NVIDIA_AGENT_MODEL` — example `deepseek-ai/deepseek-v4-flash`. Never return this value to the browser.
+- `NVIDIA_AGENT_MODEL` — optional. Defaults to `deepseek-ai/deepseek-v4.1-flash`. Never return this value to the browser.
 
 These power:
 

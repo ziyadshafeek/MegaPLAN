@@ -1,0 +1,60 @@
+{
+  "totalProducts": 2,
+  "totalCategories": 2,
+  "lastScannedAt": "2026-09-26T00:00:00Z",
+  "categories": {
+    "mobiles": 1,
+    "laptops": 1
+  },
+  "priceRanges": {
+    "<5k": 0,
+    "5k-10k": 1,
+    "10k-20k": 0,
+    "20k-50k": 0,
+    "50k+": 1
+  },
+  "ratingRanges": {
+    "4.5+": 1,
+    "4.0+": 1,
+    "3.5+": 0,
+    "<3.5": 0
+  },
+  "products": [
+    {
+      "id": "flipkart_mobiles_1",
+      "title": "APPLE iPhone 15 (Black, 128 GB)",
+      "currentPrice": 70999,
+      "originalPrice": 79900,
+      "discount": true,
+      "discountPercent": 11,
+      "rating": 4.5,
+      "seller": "RetailNet",
+      "sellerRating": 4.3,
+      "platform": "flipkart",
+      "category": "mobiles",
+      "brand": "APPLE",
+      "price_category": "50k+",
+      "rating_category": "4.5+",
+      "searchable_text": "apple iphone 15 mobiles"
+    },
+    {
+      "id": "flipkart_laptops_1",
+      "title": "HP Pavilion Laptop i5",
+      "currentPrice": 59990,
+      "originalPrice": 69990,
+      "discount": true,
+      "discountPercent": 14,
+      "rating": 4.2,
+      "seller": "RetailNet",
+      "sellerRating": 4.2,
+      "platform": "flipkart",
+      "category": "laptops",
+      "brand": "HP",
+      "price_category": "50k+",
+      "rating_category": "4.0+",
+      "searchable_text": "hp pavilion laptops"
+    }
+  ],
+  "freeStorage": "GitHub + Vercel + IndexedDB + search-index fully indexable for AI",
+  "systematic": "Categories -> Subcategories -> Product URLs -> Details"
+}

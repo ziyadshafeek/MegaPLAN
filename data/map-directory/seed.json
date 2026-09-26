@@ -1,0 +1,22 @@
+{
+  "center": { "lat": 8.524139, "lng": 76.936638, "name": "Trivandrum" },
+  "seedPlaces": [
+    { "id": "node/1", "name": "Sree Padmanabhaswamy Temple", "amenity": "place_of_worship", "tags": { "amenity": "place_of_worship", "religion": "hindu", "building": "temple", "name": "Sree Padmanabhaswamy Temple" }, "lat": 8.4828, "lng": 76.9438, "road": "Fort Road", "distance": 0.5 },
+    { "id": "node/2", "name": "Palayam Juma Masjid", "amenity": "mosque", "tags": { "amenity": "mosque", "religion": "muslim", "name": "Palayam Juma Masjid" }, "lat": 8.5065, "lng": 76.9490, "road": "Palayam Road", "distance": 1.2 },
+    { "id": "node/3", "name": "St. Joseph's Cathedral", "amenity": "church", "tags": { "amenity": "church", "religion": "christian", "name": "St. Joseph's Cathedral" }, "lat": 8.5080, "lng": 76.9500, "road": "Palayam Road", "distance": 1.3 },
+    { "id": "node/4", "name": "Indian Coffee House", "amenity": "cafe", "tags": { "amenity": "cafe", "name": "Indian Coffee House", "cuisine": "indian" }, "lat": 8.5245, "lng": 76.9360, "road": "M.G. Road", "distance": 0.2 },
+    { "id": "node/5", "name": "Zam Zam Restaurant", "amenity": "restaurant", "tags": { "amenity": "restaurant", "cuisine": "arabian", "name": "Zam Zam Restaurant" }, "lat": 8.5088, "lng": 76.9560, "road": "Palayam-Airport Road", "distance": 1.5 },
+    { "id": "node/6", "name": "Lulu Mall Trivandrum", "shop": "mall", "tags": { "shop": "mall", "name": "Lulu Mall Trivandrum" }, "lat": 8.5400, "lng": 76.9030, "road": "NH 66", "distance": 3.5 },
+    { "id": "node/7", "name": "Technopark", "office": "it", "tags": { "office": "it", "name": "Technopark" }, "lat": 8.5580, "lng": 76.8810, "road": "Technopark Road", "distance": 5.2 },
+    { "id": "node/8", "name": "University of Kerala", "amenity": "university", "tags": { "amenity": "university", "name": "University of Kerala" }, "lat": 8.5088, "lng": 76.9490, "road": "Palayam Road", "distance": 1.2 },
+    { "id": "node/9", "name": "Government Medical College", "amenity": "hospital", "tags": { "amenity": "hospital", "name": "Government Medical College" }, "lat": 8.5240, "lng": 76.9280, "road": "Medical College Road", "distance": 1.0 },
+    { "id": "node/10", "name": "State Bank of India", "amenity": "bank", "tags": { "amenity": "bank", "name": "State Bank of India" }, "lat": 8.5240, "lng": 76.9360, "road": "M.G. Road", "distance": 0.1 }
+  ],
+  "seedRoads": [
+    { "id": 1, "name": "M.G. Road", "highway": "primary" },
+    { "id": 2, "name": "Palayam Road", "highway": "secondary" },
+    { "id": 3, "name": "Fort Road", "highway": "secondary" },
+    { "id": 4, "name": "NH 66", "highway": "trunk" },
+    { "id": 5, "name": "Technopark Road", "highway": "secondary" }
+  ]
+}

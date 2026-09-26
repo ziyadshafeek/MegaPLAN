@@ -28,12 +28,15 @@ const FOLDER_META = {
   Finance: { color: '#2f7d4a', glyph: 'fin' },
   'Media / Downloads': { color: '#a33b3b', glyph: 'med' },
   'Health & Medical': { color: '#a3455c', glyph: 'medx' },
+  Games: { color: '#8a5a2b', glyph: 'game' },
   Miscellaneous: { color: '#6e655b', glyph: 'misc' }
 };
 
 const APPS = [
   { id: 'wiki-agent', title: 'Wiki Agent', blurb: 'Describe a page. The agent drafts, tests, and can publish it.', kind: 'wiki-agent' },
   { id: 'self-agent', title: 'Self Agent', blurb: 'Use your own OpenAI-compatible key. It never leaves this browser.', kind: 'self-agent' },
+  { id: 'ai-mode', title: 'AI Mode', blurb: 'Combine tools, upload files, 4-digit session. Future paid, free now.', kind: 'tool', slug: 'ai-mode' },
+  { id: 'audio-studio', title: 'Audio Studio', blurb: 'Audacity-like multi-track, waveform, MP3/WAV, autosave.', kind: 'tool', slug: 'audio-studio' },
   { id: 'my-wiki', title: 'My Wiki', blurb: 'Pages saved on this device.', kind: 'my-wiki' }
 ];
 
@@ -57,7 +60,14 @@ function fileSvg() {
   return `<svg class="glyph" viewBox="0 0 44 52" aria-hidden="true"><path d="M8 2h20l10 10v38H8z" fill="#fffaf2" stroke="#cbbba8"/><path d="M28 2v10h10" fill="#eadfce"/></svg>`;
 }
 function appSvg(kind) {
-  const fill = kind === 'self-agent' ? '#1f7a6b' : kind === 'my-wiki' ? '#3d4ea8' : '#1c1916';
+  const fills = {
+    'self-agent': '#1f7a6b',
+    'my-wiki': '#3d4ea8',
+    'ai-mode': '#7a4bb5',
+    'audio-studio': '#c45c26',
+    'tool': '#c4473a'
+  };
+  const fill = fills[kind] || '#1c1916';
   return `<svg class="glyph" viewBox="0 0 52 44"><rect x="6" y="6" width="40" height="32" rx="8" fill="${fill}"/><circle cx="18" cy="22" r="4" fill="#e8b44c"/><rect x="26" y="18" width="14" height="3" rx="1" fill="#f4efe6"/><rect x="26" y="24" width="10" height="3" rx="1" fill="#cbbba8"/></svg>`;
 }
 
@@ -76,6 +86,101 @@ async function load() {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
     if (e.key === 'Escape') document.getElementById('palette')?.classList.add('hidden');
   });
+
+  // Background Map Auto Scraper — runs continuously if enabled, starting from Trivandrum
+  // Fully automatic now: auto-enabled by default for all massive datasets
+  // Flawless engineering: checks localStorage flag, uses SW + interval fallback
+  try {
+    // Fully automatic by default — no manual start needed
+    if (localStorage.getItem('mp-map-auto-enabled') === null) {
+      localStorage.setItem('mp-map-auto-enabled', '1');
+      console.log('[MegaPLAN] Fully automatic enabled by default — map, product, music');
+    }
+    if (localStorage.getItem('mp-product-auto') === null) {
+      localStorage.setItem('mp-product-auto', '1');
+    }
+    if (localStorage.getItem('mp-music-auto') === null) {
+      localStorage.setItem('mp-music-auto', '1');
+    }
+
+    const autoEnabled = localStorage.getItem('mp-map-auto-enabled');
+    if (autoEnabled === '1') {
+      console.log('[MegaPLAN] Map auto scraper background enabled — starting from Trivandrum, fully automatic');
+      // Register SW if not already
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw-map-scraper.js').catch(()=>{});
+      }
+      // Fallback interval poller that runs even without opening map tool
+      // Only runs if user has visited map-directory before (has progress) OR auto enabled by default
+      let lastRun = 0;
+      let lastProductRun = 0;
+      let lastMusicRun = 0;
+      setInterval(async () => {
+        const now = Date.now();
+        // Map
+        if (now - lastRun >= 40000) { // 40s min interval to respect Overpass fair use
+          lastRun = now;
+          try {
+            const p = JSON.parse(localStorage.getItem('mp-map-dir-progress') || '{"lastIndex":-1}');
+            const nextIdx = (p.lastIndex ?? -1) + 1;
+            console.log(`[Background] Auto scanning map cell ${nextIdx} from Trivandrum`);
+            const r = await fetch(`/api/map-scraper-v2?index=${nextIdx}&radius=1000`);
+            const j = await r.json();
+            if (r.ok && j.places) {
+              localStorage.setItem('mp-map-dir-progress', JSON.stringify({
+                lastIndex: j.current.index,
+                lastLat: j.current.lat,
+                lastLng: j.current.lng,
+                totalCells: (p.totalCells||0)+1,
+                totalPlaces: (p.totalPlaces||0)+(j.places.length||0),
+                lastScannedAt: new Date().toISOString()
+              }));
+              fetch('/api/map-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(j) }).catch(()=>{});
+              console.log(`[Background] Scanned map cell ${nextIdx}: ${j.places.length} places, free storage GitHub+Vercel+IndexedDB`);
+            }
+          } catch (e) {
+            console.log('[Background] Map auto scan failed', e.message);
+          }
+        }
+        // Product — every 60s
+        if (now - lastProductRun >= 60000 && localStorage.getItem('mp-product-auto') === '1') {
+          lastProductRun = now;
+          try {
+            const cats = ['mobiles','laptops','electronics'];
+            const cat = cats[Math.floor(Math.random()*cats.length)];
+            const r = await fetch(`/api/product-scraper?action=search&term=${encodeURIComponent(cat)}&platform=flipkart`);
+            const j = await r.json();
+            if (j.products) {
+              fetch('/api/product-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ products: j.products.slice(0,5) }) }).catch(()=>{});
+              console.log(`[Background] Scraped ${j.products.length} products ${cat}`);
+            }
+          } catch {}
+        }
+        // Music — every 60s
+        if (now - lastMusicRun >= 60000 && localStorage.getItem('mp-music-auto') === '1') {
+          lastMusicRun = now;
+          try {
+            const terms = ['love','party','malayalam','hindi'];
+            const term = terms[Math.floor(Math.random()*terms.length)];
+            const r = await fetch(`/api/music-scraper?action=search&q=${encodeURIComponent(term)}&type=track`);
+            const j = await r.json();
+            if (j.results) {
+              fetch('/api/music-directory', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ tracks: j.results.slice(0,5) }) }).catch(()=>{});
+              console.log(`[Background] Scraped ${j.results.length} tracks ${term}`);
+            }
+          } catch {}
+        }
+      }, 40000); // 40s interval for map, 60s for product/music inside
+
+      // Also call auto-master every 5 minutes to run all
+      setInterval(async () => {
+        try {
+          await fetch('/api/auto-master?action=run');
+          console.log('[Background] Auto master ran all scrapers');
+        } catch {}
+      }, 300000); // 5 min
+    }
+  } catch {}
 }
 
 function routeFromLocation() {
@@ -122,6 +227,10 @@ function openTool(slug, nav = true) {
 
 function openApp(kind, nav = true) {
   const app = APPS.find(a => a.kind === kind) || APPS[0];
+  // If app is a tool (ai-mode, audio-studio), open as tool
+  if (app.kind === 'tool' && app.slug) {
+    return openTool(app.slug, nav);
+  }
   upsertTab({ id: app.id, kind: app.kind, title: app.title, path: `megaplan://${app.id}` });
   if (nav) push(kind === 'self-agent' ? '/self' : kind === 'wiki-agent' ? '/agent/' : '/wiki/');
   render();
