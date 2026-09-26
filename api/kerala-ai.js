@@ -119,8 +119,12 @@ export default async function handler(req, res) {
   }
 
   const url = new URL(req.url, 'http://localhost');
-  const q = url.searchParams.get('q') || 'search';
   const body = req.method === 'POST' ? readBody(req) : {};
+  let q = url.searchParams.get('q') || url.searchParams.get('action') || body?.q || body?.action || 'search';
+  // support from/to aliases for distance: if from/to present but q=search, treat as distance
+  if (q === 'search' && (url.searchParams.get('from') || body.from || url.searchParams.get('to') || body.to)) {
+    q = 'distance';
+  }
 
   try {
     // Distance query — user can ask "what is distance etc and get rough idea"
@@ -146,22 +150,44 @@ export default async function handler(req, res) {
       let from = parseLatLng(fromParam);
       let to = parseLatLng(toParam);
 
-      // If not lat/lng, try geocoding via Nominatim (free)
+      // If not lat/lng, try geocoding via Nominatim (free) with offline fallback
+      const geocodeFallback = {
+        'trivandrum': [8.5241, 76.9366],
+        'thiruvananthapuram': [8.5241, 76.9366],
+        'kochi': [9.9312, 76.2673],
+        'ernakulam': [9.9816, 76.2999],
+        'kollam': [8.8932, 76.6141],
+        'kozhikode': [11.2588, 75.7804],
+        'calicut': [11.2588, 75.7804]
+      };
+      
       if (!from && fromParam) {
-        try {
-          const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fromParam)}&limit=1`;
-          const r = await fetchWithTimeout(geoUrl, {}, 10000);
-          const data = await r.json();
-          if (data[0]) from = [Number(data[0].lat), Number(data[0].lon)];
-        } catch {}
+        const lower = String(fromParam).toLowerCase();
+        for (const [key, coords] of Object.entries(geocodeFallback)) {
+          if (lower.includes(key)) { from = coords; break; }
+        }
+        if (!from) {
+          try {
+            const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fromParam)}&limit=1`;
+            const r = await fetchWithTimeout(geoUrl, {}, 5000);
+            const data = await r.json();
+            if (data[0]) from = [Number(data[0].lat), Number(data[0].lon)];
+          } catch {}
+        }
       }
       if (!to && toParam) {
-        try {
-          const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(toParam)}&limit=1`;
-          const r = await fetchWithTimeout(geoUrl, {}, 10000);
-          const data = await r.json();
-          if (data[0]) to = [Number(data[0].lat), Number(data[0].lon)];
-        } catch {}
+        const lower = String(toParam).toLowerCase();
+        for (const [key, coords] of Object.entries(geocodeFallback)) {
+          if (lower.includes(key)) { to = coords; break; }
+        }
+        if (!to) {
+          try {
+            const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(toParam)}&limit=1`;
+            const r = await fetchWithTimeout(geoUrl, {}, 5000);
+            const data = await r.json();
+            if (data[0]) to = [Number(data[0].lat), Number(data[0].lon)];
+          } catch {}
+        }
       }
 
       if (!from || !to) {
@@ -173,20 +199,25 @@ export default async function handler(req, res) {
 
       const straightKm = haversine(fromLat, fromLng, toLat, toLng);
       
-      // Try OSRM routing for road distance
+      // Try OSRM routing for road distance with offline fallback
       let roadDistance = null;
       let duration = null;
       let route = null;
       try {
         const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${fromLng},${fromLat};${toLng},${toLat}?overview=false`;
-        const r = await fetchWithTimeout(osrmUrl, {}, 10000);
+        const r = await fetchWithTimeout(osrmUrl, {}, 5000);
         const data = await r.json();
         if (data.routes && data.routes[0]) {
           roadDistance = data.routes[0].distance / 1000; // km
           duration = data.routes[0].duration / 60; // minutes
           route = { distance_km: roadDistance, duration_min: duration };
         }
-      } catch {}
+      } catch {
+        // Offline fallback: estimate road distance as straight * 1.3
+        const straight = haversine(fromLat, fromLng, toLat, toLng);
+        roadDistance = straight * 1.3;
+        duration = (roadDistance / 40) * 60; // 40 km/h avg
+      }
 
       // Traffic estimate heuristic
       const hour = new Date().getHours();
