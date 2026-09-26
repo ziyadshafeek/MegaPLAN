@@ -1,0 +1,1708 @@
+{
+  "index": 5,
+  "lat": 8.524139,
+  "lng": 76.926638,
+  "dx": -1,
+  "dy": 0,
+  "grid": 0.01,
+  "scannedAt": "2026-09-26T16:01:29.144Z",
+  "places": [
+    {
+      "id": "node/253949506",
+      "lat": 8.5231268,
+      "lng": 76.9297678,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "sri gavuri nivas",
+        "tourism": "hotel"
+      },
+      "name": "sri gavuri nivas",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/1694292474",
+      "lat": 8.5219166,
+      "lng": 76.9291683,
+      "tags": {
+        "amenity": "bank",
+        "atm": "yes",
+        "brand": "State Bank of India",
+        "brand:wikidata": "Q1340361",
+        "brand:wikipedia": "en:State Bank of India",
+        "name": "State Bank of India",
+        "short_name": "SBI",
+        "website": "https://www.sbi.co.in"
+      },
+      "name": "State Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/2646853742",
+      "lat": 8.5206614,
+      "lng": 76.9245217,
+      "tags": {
+        "alt_name": "RCC",
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Regional Cancer Centre",
+        "wikidata": "Q7309013"
+      },
+      "name": "Regional Cancer Centre",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3796499798",
+      "lat": 8.5239219,
+      "lng": 76.9276813,
+      "tags": {
+        "amenity": "cafe"
+      },
+      "name": null,
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3904989062",
+      "lat": 8.5222244,
+      "lng": 76.9285153,
+      "tags": {
+        "amenity": "pharmacy",
+        "healthcare": "pharmacy",
+        "name": "Karunya Pharmacy",
+        "operator": "Medical College, Thiruvananthapuram"
+      },
+      "name": "Karunya Pharmacy",
+      "amenity": "pharmacy",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3904989063",
+      "lat": 8.5219563,
+      "lng": 76.9290283,
+      "tags": {
+        "amenity": "bank",
+        "name": "Government Treasury"
+      },
+      "name": "Government Treasury",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3904989124",
+      "lat": 8.5216892,
+      "lng": 76.9257075,
+      "tags": {
+        "amenity": "atm",
+        "name": "State Bank Group",
+        "operator": "State Bank of Travancore"
+      },
+      "name": "State Bank Group",
+      "amenity": "atm",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3904989125",
+      "lat": 8.5238688,
+      "lng": 76.9249893,
+      "tags": {
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Immunisation Clinic",
+        "operator": "Sree Avittom Thirunal Hospital"
+      },
+      "name": "Immunisation Clinic",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3904989145",
+      "lat": 8.5209794,
+      "lng": 76.9226146,
+      "tags": {
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Medical College, Thiruvananthapuram",
+        "operator": "Kerala State"
+      },
+      "name": "Medical College, Thiruvananthapuram",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/3906562538",
+      "lat": 8.522508,
+      "lng": 76.9300559,
+      "tags": {
+        "amenity": "bus_station",
+        "bus": "yes",
+        "internet_access": "no",
+        "name": "Medical College",
+        "name:ml": "മെഡിക്കൽ കോളേജ്",
+        "operator": "KSRTC",
+        "public_transport": "station",
+        "ref": "56"
+      },
+      "name": "Medical College",
+      "amenity": "bus_station",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4648645041",
+      "lat": 8.523588,
+      "lng": 76.9281025,
+      "tags": {
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Casuality"
+      },
+      "name": "Casuality",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4648645076",
+      "lat": 8.5234157,
+      "lng": 76.9268976,
+      "tags": {
+        "artwork_type": "statue",
+        "name": "Ammayum Kunjum",
+        "tourism": "artwork"
+      },
+      "name": "Ammayum Kunjum",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4658650665",
+      "lat": 8.5279953,
+      "lng": 76.928466,
+      "tags": {
+        "amenity": "atm"
+      },
+      "name": null,
+      "amenity": "atm",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4658650666",
+      "lat": 8.5289999,
+      "lng": 76.9288076,
+      "tags": {
+        "amenity": "atm"
+      },
+      "name": null,
+      "amenity": "atm",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4710027103",
+      "lat": 8.5219317,
+      "lng": 76.9297168,
+      "tags": {
+        "amenity": "pharmacy",
+        "healthcare": "pharmacy",
+        "name": "Saroja Medicals"
+      },
+      "name": "Saroja Medicals",
+      "amenity": "pharmacy",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4710027104",
+      "lat": 8.5237397,
+      "lng": 76.9293188,
+      "tags": {
+        "name": "HLL",
+        "shop": "medical_supply"
+      },
+      "name": "HLL",
+      "amenity": null,
+      "shop": "medical_supply",
+      "road": null
+    },
+    {
+      "id": "node/4710027277",
+      "lat": 8.5254454,
+      "lng": 76.9285466,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Azad",
+        "opening_hours": "Mo-Su 11:00-10:00"
+      },
+      "name": "Azad",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/4710027279",
+      "lat": 8.5273205,
+      "lng": 76.9282527,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "Sri Ilanakayil Bhagavathi Temple",
+        "religion": "hindu"
+      },
+      "name": "Sri Ilanakayil Bhagavathi Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/5286944523",
+      "lat": 8.5224562,
+      "lng": 76.9291783,
+      "tags": {
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Dental College OP Block"
+      },
+      "name": "Dental College OP Block",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/6957144844",
+      "lat": 8.521735,
+      "lng": 76.9265002,
+      "tags": {
+        "addr:district": "Thiruvananthapuram",
+        "addr:full": "Thiruvananthapuram",
+        "addr:postcode": "695011",
+        "addr:state": "Kerala",
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Sree Chitra Tirunal Institute For Medical Science",
+        "name:etymology:wikidata": "Q1766094",
+        "source": "OpenGovernmentData",
+        "wheelchair": "yes",
+        "wikidata": "Q7585631"
+      },
+      "name": "Sree Chitra Tirunal Institute For Medical Science",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7080201295",
+      "lat": 8.5230215,
+      "lng": 76.9313839,
+      "tags": {
+        "addr:housenumber": "Trivandrum Islamic Mission, Trust Buildings Mediacal College",
+        "addr:street": "Chalakuzhy",
+        "amenity": "place_of_worship",
+        "name": "Masjidu Rahma & Madrasathu Rahma",
+        "opening_hours": "Mo-Su 04:30-22:00",
+        "phone": "+91-471-2446169",
+        "religion": "muslim"
+      },
+      "name": "Masjidu Rahma & Madrasathu Rahma",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": "Chalakuzhy"
+    },
+    {
+      "id": "node/7140728594",
+      "lat": 8.5234671,
+      "lng": 76.9282718,
+      "tags": {
+        "amenity": "library",
+        "building": "yes",
+        "name:en": "Medical College N G O  Library & Recreation Club"
+      },
+      "name": null,
+      "amenity": "library",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7473845624",
+      "lat": 8.5236844,
+      "lng": 76.9296606,
+      "tags": {
+        "amenity": "pharmacy",
+        "dispensing": "yes",
+        "healthcare": "pharmacy",
+        "name": "Mayoora Medicals"
+      },
+      "name": "Mayoora Medicals",
+      "amenity": "pharmacy",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7473845625",
+      "lat": 8.5238232,
+      "lng": 76.9296414,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Malabar Restaurant"
+      },
+      "name": "Malabar Restaurant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7473845626",
+      "lat": 8.5239714,
+      "lng": 76.9296988,
+      "tags": {
+        "amenity": "restaurant",
+        "branch": "Medical College Thiruvananthapuram",
+        "brand": "Indian Coffee House",
+        "brand:wikidata": "Q3595301",
+        "cuisine": "coffee_shop;indian",
+        "name": "Indian Coffee House",
+        "operator": "Indian Coffee House"
+      },
+      "name": "Indian Coffee House",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7473845627",
+      "lat": 8.5247474,
+      "lng": 76.9294564,
+      "tags": {
+        "amenity": "atm",
+        "operator": "Federal Bank ATM"
+      },
+      "name": null,
+      "amenity": "atm",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7477620013",
+      "lat": 8.5259882,
+      "lng": 76.9282539,
+      "tags": {
+        "name": "OYO 2079 near Medical College Hotel Trivandrum",
+        "tourism": "hotel"
+      },
+      "name": "OYO 2079 near Medical College Hotel Trivandrum",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7477620014",
+      "lat": 8.5262208,
+      "lng": 76.9282843,
+      "tags": {
+        "name": "Kunnil Margin Free Market",
+        "shop": "supermarket"
+      },
+      "name": "Kunnil Margin Free Market",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "node/7477620015",
+      "lat": 8.5263896,
+      "lng": 76.928216,
+      "tags": {
+        "name": "Souhridham Tourist Home",
+        "tourism": "apartment"
+      },
+      "name": "Souhridham Tourist Home",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7477620016",
+      "lat": 8.5261308,
+      "lng": 76.9285877,
+      "tags": {
+        "name": "Kalpaka Tourist Home",
+        "tourism": "apartment"
+      },
+      "name": "Kalpaka Tourist Home",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7477620017",
+      "lat": 8.5265209,
+      "lng": 76.9285195,
+      "tags": {
+        "name": "Nex Gen menswear",
+        "shop": "clothes"
+      },
+      "name": "Nex Gen menswear",
+      "amenity": null,
+      "shop": "clothes",
+      "road": null
+    },
+    {
+      "id": "node/7477620018",
+      "lat": 8.5269486,
+      "lng": 76.9283222,
+      "tags": {
+        "amenity": "pharmacy",
+        "dispensing": "yes",
+        "healthcare": "pharmacy",
+        "name": "Suraji Medicals"
+      },
+      "name": "Suraji Medicals",
+      "amenity": "pharmacy",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7477620019",
+      "lat": 8.5275675,
+      "lng": 76.9282426,
+      "tags": {
+        "amenity": "school",
+        "name": "Government U.P.S"
+      },
+      "name": "Government U.P.S",
+      "amenity": "school",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7477721660",
+      "lat": 8.5281227,
+      "lng": 76.9283905,
+      "tags": {
+        "name": "M.J Vegetables & Provision Stores",
+        "shop": "greengrocer"
+      },
+      "name": "M.J Vegetables & Provision Stores",
+      "amenity": null,
+      "shop": "greengrocer",
+      "road": null
+    },
+    {
+      "id": "node/7477721665",
+      "lat": 8.5285766,
+      "lng": 76.9284171,
+      "tags": {
+        "amenity": "bank",
+        "brand": "Indian Overseas Bank",
+        "brand:wikidata": "Q2003611",
+        "brand:wikipedia": "en:Indian Overseas Bank",
+        "name": "Indian Overseas Bank"
+      },
+      "name": "Indian Overseas Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7489746972",
+      "lat": 8.5219551,
+      "lng": 76.9295565,
+      "tags": {
+        "branch": "Booth",
+        "brand": "Kerala Co-operative Milk Marketing Federation",
+        "brand:wikidata": "Q3532857",
+        "name": "Milma",
+        "shop": "dairy"
+      },
+      "name": "Milma",
+      "amenity": null,
+      "shop": "dairy",
+      "road": null
+    },
+    {
+      "id": "node/7489746973",
+      "lat": 8.5218013,
+      "lng": 76.9296396,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Thiruvonnam Hotel"
+      },
+      "name": "Thiruvonnam Hotel",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7489817040",
+      "lat": 8.5214263,
+      "lng": 76.9293495,
+      "tags": {
+        "amenity": "bank",
+        "name": "kerala state corporative bank"
+      },
+      "name": "kerala state corporative bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7489817041",
+      "lat": 8.5213755,
+      "lng": 76.9296624,
+      "tags": {
+        "amenity": "restaurant",
+        "diet:vegetarian": "only",
+        "name": "aaryas vegetarian hotel"
+      },
+      "name": "aaryas vegetarian hotel",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7489817042",
+      "lat": 8.5213339,
+      "lng": 76.929653,
+      "tags": {
+        "amenity": "cafe",
+        "name": "juice empire"
+      },
+      "name": "juice empire",
+      "amenity": "cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7489817043",
+      "lat": 8.5212092,
+      "lng": 76.9297651,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "pantry"
+      },
+      "name": "pantry",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7489817044",
+      "lat": 8.5212508,
+      "lng": 76.9296344,
+      "tags": {
+        "brand": "Margin Free Market",
+        "brand:wikidata": "Q99751436",
+        "name": "Margin Free Market",
+        "official_name": "Margin Free Market Pvt Ltd",
+        "shop": "supermarket"
+      },
+      "name": "Margin Free Market",
+      "amenity": null,
+      "shop": "supermarket",
+      "road": null
+    },
+    {
+      "id": "node/7489821708",
+      "lat": 8.5200549,
+      "lng": 76.929121,
+      "tags": {
+        "name": "Jayaram Bakery",
+        "shop": "bakery"
+      },
+      "name": "Jayaram Bakery",
+      "amenity": null,
+      "shop": "bakery",
+      "road": null
+    },
+    {
+      "id": "node/7494783802",
+      "lat": 8.5261911,
+      "lng": 76.9217648,
+      "tags": {
+        "amenity": "place_of_worship",
+        "name": "sree narayanaguru mandiram",
+        "religion": "hindu"
+      },
+      "name": "sree narayanaguru mandiram",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7498292397",
+      "lat": 8.5292032,
+      "lng": 76.9284149,
+      "tags": {
+        "name": "chips shop",
+        "shop": "yes"
+      },
+      "name": "chips shop",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7498333278",
+      "lat": 8.5291735,
+      "lng": 76.9283338,
+      "tags": {
+        "amenity": "vending_machine",
+        "payment:cash": "yes",
+        "vending": "drinks"
+      },
+      "name": null,
+      "amenity": "vending_machine",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7498403942",
+      "lat": 8.5291213,
+      "lng": 76.9282721,
+      "tags": {
+        "shop": "yes"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "node/7730027699",
+      "lat": 8.527513,
+      "lng": 76.930057,
+      "tags": {
+        "addr:district": "Thiruvananthapuram",
+        "addr:full": "P T Chacko Nagar, Ulloor",
+        "addr:postcode": "695044",
+        "addr:state": "Kerala",
+        "amenity": "clinic",
+        "healthcare": "clinic",
+        "name": "Lourde Matha Care Centre",
+        "source": "Local Knowledge"
+      },
+      "name": "Lourde Matha Care Centre",
+      "amenity": "clinic",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/7963610787",
+      "lat": 8.5216999,
+      "lng": 76.930311,
+      "tags": {
+        "name": "Newton Computer Centre",
+        "opening_hours": "Su-Fr 08:30-20:30",
+        "shop": "copyshop"
+      },
+      "name": "Newton Computer Centre",
+      "amenity": null,
+      "shop": "copyshop",
+      "road": null
+    },
+    {
+      "id": "node/7963684613",
+      "lat": 8.5241559,
+      "lng": 76.9248178,
+      "tags": {
+        "guest_house": "hostel",
+        "name": "Medical College Ladies Hostal",
+        "operator": "Medical College Trivandrum",
+        "tourism": "hostel"
+      },
+      "name": "Medical College Ladies Hostal",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8344351236",
+      "lat": 8.527315,
+      "lng": 76.9251854,
+      "tags": {
+        "amenity": "internet_cafe",
+        "name": "Akshaya E Centre, Ulloor",
+        "ref": "TVM281"
+      },
+      "name": "Akshaya E Centre, Ulloor",
+      "amenity": "internet_cafe",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8568549829",
+      "lat": 8.5284386,
+      "lng": 76.928401,
+      "tags": {
+        "amenity": "fuel",
+        "name": "Indian Oil"
+      },
+      "name": "Indian Oil",
+      "amenity": "fuel",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8704048817",
+      "lat": 8.5259102,
+      "lng": 76.9215832,
+      "tags": {
+        "craft": "builder",
+        "name": "Kkstore",
+        "survey:date": "2021-05-05"
+      },
+      "name": "Kkstore",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/8733270485",
+      "lat": 8.5256387,
+      "lng": 76.9289019,
+      "tags": {
+        "name": "Professional Book House",
+        "shop": "books"
+      },
+      "name": "Professional Book House",
+      "amenity": null,
+      "shop": "books",
+      "road": null
+    },
+    {
+      "id": "node/11037535606",
+      "lat": 8.5227421,
+      "lng": 76.9302966,
+      "tags": {
+        "amenity": "toilets"
+      },
+      "name": null,
+      "amenity": "toilets",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/11037540005",
+      "lat": 8.5230315,
+      "lng": 76.9300648,
+      "tags": {
+        "amenity": "restaurant",
+        "name": "Manna restaurant"
+      },
+      "name": "Manna restaurant",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/11037540105",
+      "lat": 8.5230003,
+      "lng": 76.9297084,
+      "tags": {
+        "amenity": "pharmacy",
+        "name": "Bhaskara medicals"
+      },
+      "name": "Bhaskara medicals",
+      "amenity": "pharmacy",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/11048231205",
+      "lat": 8.5285691,
+      "lng": 76.9286903,
+      "tags": {
+        "amenity": "bank",
+        "name": "Muthoot"
+      },
+      "name": "Muthoot",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "node/11190043327",
+      "lat": 8.52284,
+      "lng": 76.9306806,
+      "tags": {
+        "addr:city": "Chalakkuzhi,",
+        "addr:district": "Thiruvananthapuram",
+        "addr:postcode": "695011",
+        "addr:street": "Medical College",
+        "name": "Kudumbashree State Mission Office",
+        "office": "government"
+      },
+      "name": "Kudumbashree State Mission Office",
+      "amenity": null,
+      "shop": null,
+      "road": "Medical College"
+    },
+    {
+      "id": "node/13976505801",
+      "lat": 8.5227406,
+      "lng": 76.9306856,
+      "tags": {
+        "addr:postcode": "695011",
+        "addr:street": "Medical College - Chalakkuzhy Road",
+        "name": "Triva Hotel",
+        "opening_hours": "24/7",
+        "self_service": "no",
+        "tourism": "hotel",
+        "website": "https://www.treebo.com/"
+      },
+      "name": "Triva Hotel",
+      "amenity": null,
+      "shop": null,
+      "road": "Medical College - Chalakkuzhy Road"
+    },
+    {
+      "id": "way/386663999",
+      "lat": 8.5224625,
+      "lng": 76.9282145,
+      "tags": {
+        "addr:district": "Thiruvananthapuram",
+        "addr:full": "Thiruvanathapuram",
+        "addr:postcode": "695023",
+        "addr:state": "Kerala",
+        "amenity": "hospital",
+        "building": "hospital",
+        "healthcare": "hospital",
+        "name": "Medical College New OP Block",
+        "source": "OpenGovernmentData"
+      },
+      "name": "Medical College New OP Block",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/387175262",
+      "lat": 8.5216247,
+      "lng": 76.9238759,
+      "tags": {
+        "leisure": "pitch",
+        "name": "Medical College Ground"
+      },
+      "name": "Medical College Ground",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/387175264",
+      "lat": 8.522176,
+      "lng": 76.9250135,
+      "tags": {
+        "leisure": "pitch",
+        "name": "Medical College Ground"
+      },
+      "name": "Medical College Ground",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/387175265",
+      "lat": 8.5198614,
+      "lng": 76.9230357,
+      "tags": {
+        "building": "yes",
+        "name": "Principal's Office",
+        "office": "yes"
+      },
+      "name": "Principal's Office",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/470682938",
+      "lat": 8.5220015,
+      "lng": 76.9253171,
+      "tags": {
+        "addr:district": "Thiruvananthapuram",
+        "addr:full": "Trivandrum Medical College, Medical College PO",
+        "addr:postcode": "695011",
+        "addr:state": "Kerala",
+        "amenity": "college",
+        "contact:email": "principalmct@gmail.com",
+        "contact:nodal_officer_email": "sdevikl23@gmail.com",
+        "contact:nodal_officer_mobile": "+91-9495244081",
+        "contact:phone": "+91-4712528300",
+        "name": "Government Medical College, Thiruvananthapuram",
+        "name:ml": "ഗവൺമെന്റ് മെഡിക്കൽ കോളേജ്, തിരുവനന്തപുരം",
+        "operator:type": "government",
+        "website": "https://tmc.kerala.gov.in/",
+        "wikidata": "Q5588995",
+        "wikimedia_commons": "Category:Government Medical College, Trivandrum",
+        "wikipedia": "en:Government Medical College, Thiruvananthapuram"
+      },
+      "name": "Government Medical College, Thiruvananthapuram",
+      "amenity": "college",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/697796791",
+      "lat": 8.5229031,
+      "lng": 76.9247156,
+      "tags": {
+        "amenity": "hospital",
+        "healthcare": "hospital",
+        "name": "Sree Avittam Thirunnal Hospital, Thiruvananthapuram"
+      },
+      "name": "Sree Avittam Thirunnal Hospital, Thiruvananthapuram",
+      "amenity": "hospital",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/799537831",
+      "lat": 8.527681,
+      "lng": 76.9286039,
+      "tags": {
+        "amenity": "social_facility",
+        "building": "yes",
+        "name": "Public Food Shelter",
+        "social_facility": "food_bank"
+      },
+      "name": "Public Food Shelter",
+      "amenity": "social_facility",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/799546328",
+      "lat": 8.5280608,
+      "lng": 76.9286408,
+      "tags": {
+        "amenity": "parking",
+        "operator": "Ulloor Parking Lot"
+      },
+      "name": null,
+      "amenity": "parking",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/799546329",
+      "lat": 8.5284754,
+      "lng": 76.9287698,
+      "tags": {
+        "amenity": "bank",
+        "branch": "Money Transfer",
+        "brand": "Western Union",
+        "brand:wikidata": "Q861042",
+        "building": "yes",
+        "name": "Western Union"
+      },
+      "name": "Western Union",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/799745756",
+      "lat": 8.5284324,
+      "lng": 76.9283494,
+      "tags": {
+        "amenity": "fuel"
+      },
+      "name": null,
+      "amenity": "fuel",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/800760903",
+      "lat": 8.5215386,
+      "lng": 76.9282621,
+      "tags": {
+        "building": "yes",
+        "name": "Directorate Of Medical Education",
+        "office": "educational_institution"
+      },
+      "name": "Directorate Of Medical Education",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/800763762",
+      "lat": 8.5213411,
+      "lng": 76.9293074,
+      "tags": {
+        "amenity": "police",
+        "building": "yes",
+        "name": "Police station, Medical College",
+        "ref": "15291029"
+      },
+      "name": "Police station, Medical College",
+      "amenity": "police",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/800764769",
+      "lat": 8.5204182,
+      "lng": 76.9294659,
+      "tags": {
+        "amenity": "bar",
+        "building": "yes",
+        "name": "Ruby Arena"
+      },
+      "name": "Ruby Arena",
+      "amenity": "bar",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/801346340",
+      "lat": 8.5259626,
+      "lng": 76.9215219,
+      "tags": {
+        "building": "yes",
+        "note": "a small tyre repair shop",
+        "shop": "tyres"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "tyres",
+      "road": null
+    },
+    {
+      "id": "way/801350369",
+      "lat": 8.5262529,
+      "lng": 76.9220251,
+      "tags": {
+        "addr:city": "thiruvananthapuram",
+        "addr:housenumber": "vijay plaza buliding",
+        "addr:postcode": "695011",
+        "addr:street": "prasanth nagar junction",
+        "building": "yes",
+        "name": "sree murugan hot chips and bakery",
+        "shop": "bakery"
+      },
+      "name": "sree murugan hot chips and bakery",
+      "amenity": null,
+      "shop": "bakery",
+      "road": "prasanth nagar junction"
+    },
+    {
+      "id": "way/801364735",
+      "lat": 8.5257308,
+      "lng": 76.9214302,
+      "tags": {
+        "building": "yes",
+        "name": "K K Store",
+        "shop": "yes",
+        "survey:date": "2021-05-05"
+      },
+      "name": "K K Store",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "way/801662199",
+      "lat": 8.5289376,
+      "lng": 76.927748,
+      "tags": {
+        "building": "yes",
+        "name": "tea shop and tiffin",
+        "shop": "yes"
+      },
+      "name": "tea shop and tiffin",
+      "amenity": null,
+      "shop": "yes",
+      "road": null
+    },
+    {
+      "id": "way/801665282",
+      "lat": 8.5292137,
+      "lng": 76.9285163,
+      "tags": {
+        "amenity": "recycling",
+        "recycling_type": "centre"
+      },
+      "name": null,
+      "amenity": "recycling",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/801665820",
+      "lat": 8.5291422,
+      "lng": 76.928523,
+      "tags": {
+        "building": "yes",
+        "name": "Aswathy foot wear",
+        "shop": "shoes"
+      },
+      "name": "Aswathy foot wear",
+      "amenity": null,
+      "shop": "shoes",
+      "road": null
+    },
+    {
+      "id": "way/801667223",
+      "lat": 8.5291991,
+      "lng": 76.9284495,
+      "tags": {
+        "building": "yes",
+        "name": "fish daily organic",
+        "shop": "fishing"
+      },
+      "name": "fish daily organic",
+      "amenity": null,
+      "shop": "fishing",
+      "road": null
+    },
+    {
+      "id": "way/801667619",
+      "lat": 8.529162,
+      "lng": 76.9284301,
+      "tags": {
+        "building": "yes",
+        "shop": "lottery"
+      },
+      "name": null,
+      "amenity": null,
+      "shop": "lottery",
+      "road": null
+    },
+    {
+      "id": "way/801669482",
+      "lat": 8.5291698,
+      "lng": 76.9283709,
+      "tags": {
+        "building": "yes",
+        "name": "vegetable shop",
+        "shop": "greengrocer"
+      },
+      "name": "vegetable shop",
+      "amenity": null,
+      "shop": "greengrocer",
+      "road": null
+    },
+    {
+      "id": "way/801672243",
+      "lat": 8.5291454,
+      "lng": 76.9283162,
+      "tags": {
+        "addr:city": "thiruvananthapuram",
+        "addr:postcode": "695011",
+        "addr:street": "ulloor to akkulam road",
+        "amenity": "fast_food",
+        "building": "yes",
+        "name": "nakshatra fast food"
+      },
+      "name": "nakshatra fast food",
+      "amenity": "fast_food",
+      "shop": null,
+      "road": "ulloor to akkulam road"
+    },
+    {
+      "id": "way/801678976",
+      "lat": 8.5284798,
+      "lng": 76.9273145,
+      "tags": {
+        "addr:city": "thiruvananthapuram",
+        "addr:housenumber": "ulloor-akkulam",
+        "addr:postcode": "695011",
+        "addr:street": "near heera heaven apartments",
+        "amenity": "bank",
+        "atm": "yes",
+        "building": "yes"
+      },
+      "name": null,
+      "amenity": "bank",
+      "shop": null,
+      "road": "near heera heaven apartments"
+    },
+    {
+      "id": "way/802417265",
+      "lat": 8.5210742,
+      "lng": 76.9292101,
+      "tags": {
+        "amenity": "post_office",
+        "building": "yes",
+        "name": "Medical College Post Office"
+      },
+      "name": "Medical College Post Office",
+      "amenity": "post_office",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/835821472",
+      "lat": 8.528487,
+      "lng": 76.9271529,
+      "tags": {
+        "amenity": "bank",
+        "brand": "Bank of India",
+        "brand:wikidata": "Q2004439",
+        "brand:wikipedia": "en:Bank of India",
+        "building": "yes",
+        "name": "Bank of India"
+      },
+      "name": "Bank of India",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/835821473",
+      "lat": 8.5282888,
+      "lng": 76.9274145,
+      "tags": {
+        "amenity": "social_facility",
+        "building": "yes",
+        "name": "Divyamatha Nursing Home",
+        "social_facility": "nursing_home",
+        "social_facility:for": "senior"
+      },
+      "name": "Divyamatha Nursing Home",
+      "amenity": "social_facility",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/854416309",
+      "lat": 8.5190998,
+      "lng": 76.9281252,
+      "tags": {
+        "name": "Medical College, Men's Hostel",
+        "tourism": "hostel"
+      },
+      "name": "Medical College, Men's Hostel",
+      "amenity": null,
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/884275260",
+      "lat": 8.5224156,
+      "lng": 76.929804,
+      "tags": {
+        "amenity": "place_of_worship",
+        "building": "yes",
+        "name": "Ganapathi Temple",
+        "religion": "hindu"
+      },
+      "name": "Ganapathi Temple",
+      "amenity": "place_of_worship",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/923036946",
+      "lat": 8.5285713,
+      "lng": 76.9284408,
+      "tags": {
+        "amenity": "bank",
+        "brand": "Indian Overseas Bank",
+        "brand:wikidata": "Q2003611",
+        "brand:wikipedia": "en:Indian Overseas Bank",
+        "building": "yes",
+        "name": "Indian Overseas Bank"
+      },
+      "name": "Indian Overseas Bank",
+      "amenity": "bank",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/925805910",
+      "lat": 8.5264073,
+      "lng": 76.9217017,
+      "tags": {
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "sasi's tea shop"
+      },
+      "name": "sasi's tea shop",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": null
+    },
+    {
+      "id": "way/1196821893",
+      "lat": 8.5259929,
+      "lng": 76.92203,
+      "tags": {
+        "addr:postcode": "695011",
+        "addr:street": "Ulloor - Akkulam Road",
+        "building": "yes",
+        "name": "accurate ceiling system",
+        "note": "GYPSUM BOARD, G.I CHANNELS, CORNICE,etc.",
+        "shop": "hardware",
+        "source": "microsoft/BuildingFootprints"
+      },
+      "name": "accurate ceiling system",
+      "amenity": null,
+      "shop": "hardware",
+      "road": "Ulloor - Akkulam Road"
+    },
+    {
+      "id": "way/1209539396",
+      "lat": 8.520156,
+      "lng": 76.9296367,
+      "tags": {
+        "addr:street": "Medical College, Lane opposite Medical College Post Office",
+        "amenity": "restaurant",
+        "building": "yes",
+        "name": "Thamarassery Churam",
+        "source": "microsoft/BuildingFootprints"
+      },
+      "name": "Thamarassery Churam",
+      "amenity": "restaurant",
+      "shop": null,
+      "road": "Medical College, Lane opposite Medical College Post Office"
+    },
+    {
+      "id": "way/1209539458",
+      "lat": 8.5206337,
+      "lng": 76.9259227,
+      "tags": {
+        "addr:postcode": "695011",
+        "addr:street": "Medical College Road",
+        "building": "yes",
+        "name": "Achutha Menon Centre for Health Science Studies",
+        "office": "educational_institution",
+        "source": "microsoft/BuildingFootprints",
+        "wheelchair": "no"
+      },
+      "name": "Achutha Menon Centre for Health Science Studies",
+      "amenity": null,
+      "shop": null,
+      "road": "Medical College Road"
+    }
+  ],
+  "roads": [],
+  "classification": {
+    "roadWise": {
+      "Unknown Road": [
+        "node/253949506",
+        "node/1694292474",
+        "node/2646853742",
+        "node/3796499798",
+        "node/3904989062",
+        "node/3904989063",
+        "node/3904989124",
+        "node/3904989125",
+        "node/3904989145",
+        "node/3906562538",
+        "node/4648645041",
+        "node/4648645076",
+        "node/4658650665",
+        "node/4658650666",
+        "node/4710027103",
+        "node/4710027104",
+        "node/4710027277",
+        "node/4710027279",
+        "node/5286944523",
+        "node/6957144844",
+        "node/7140728594",
+        "node/7473845624",
+        "node/7473845625",
+        "node/7473845626",
+        "node/7473845627",
+        "node/7477620013",
+        "node/7477620014",
+        "node/7477620015",
+        "node/7477620016",
+        "node/7477620017",
+        "node/7477620018",
+        "node/7477620019",
+        "node/7477721660",
+        "node/7477721665",
+        "node/7489746972",
+        "node/7489746973",
+        "node/7489817040",
+        "node/7489817041",
+        "node/7489817042",
+        "node/7489817043",
+        "node/7489817044",
+        "node/7489821708",
+        "node/7494783802",
+        "node/7498292397",
+        "node/7498333278",
+        "node/7498403942",
+        "node/7730027699",
+        "node/7963610787",
+        "node/7963684613",
+        "node/8344351236",
+        "node/8568549829",
+        "node/8704048817",
+        "node/8733270485",
+        "node/11037535606",
+        "node/11037540005",
+        "node/11037540105",
+        "node/11048231205",
+        "way/386663999",
+        "way/387175262",
+        "way/387175264",
+        "way/387175265",
+        "way/470682938",
+        "way/697796791",
+        "way/799537831",
+        "way/799546328",
+        "way/799546329",
+        "way/799745756",
+        "way/800760903",
+        "way/800763762",
+        "way/800764769",
+        "way/801346340",
+        "way/801364735",
+        "way/801662199",
+        "way/801665282",
+        "way/801665820",
+        "way/801667223",
+        "way/801667619",
+        "way/801669482",
+        "way/802417265",
+        "way/835821472",
+        "way/835821473",
+        "way/854416309",
+        "way/884275260",
+        "way/923036946",
+        "way/925805910"
+      ],
+      "Chalakuzhy": [
+        "node/7080201295"
+      ],
+      "Medical College": [
+        "node/11190043327"
+      ],
+      "Medical College - Chalakkuzhy Road": [
+        "node/13976505801"
+      ],
+      "prasanth nagar junction": [
+        "way/801350369"
+      ],
+      "ulloor to akkulam road": [
+        "way/801672243"
+      ],
+      "near heera heaven apartments": [
+        "way/801678976"
+      ],
+      "Ulloor - Akkulam Road": [
+        "way/1196821893"
+      ],
+      "Medical College, Lane opposite Medical College Post Office": [
+        "way/1209539396"
+      ],
+      "Medical College Road": [
+        "way/1209539458"
+      ]
+    },
+    "businessWise": {
+      "restaurant": [
+        "node/253949506",
+        "node/4710027277",
+        "node/7473845625",
+        "node/7473845626",
+        "node/7489746973",
+        "node/7489817041",
+        "node/7489817043",
+        "node/11037540005",
+        "way/925805910",
+        "way/1209539396"
+      ],
+      "bank": [
+        "node/1694292474",
+        "node/3904989063",
+        "node/7477721665",
+        "node/7489817040",
+        "node/11048231205",
+        "way/799546329",
+        "way/801678976",
+        "way/835821472",
+        "way/923036946"
+      ],
+      "hospital": [
+        "node/2646853742",
+        "node/3904989125",
+        "node/3904989145",
+        "node/4648645041",
+        "node/5286944523",
+        "node/6957144844",
+        "way/386663999",
+        "way/697796791"
+      ],
+      "cafe": [
+        "node/3796499798",
+        "node/7489817042"
+      ],
+      "pharmacy": [
+        "node/3904989062",
+        "node/4710027103",
+        "node/7473845624",
+        "node/7477620018",
+        "node/11037540105"
+      ],
+      "atm": [
+        "node/3904989124",
+        "node/4658650665",
+        "node/4658650666",
+        "node/7473845627"
+      ],
+      "bus_station": [
+        "node/3906562538"
+      ],
+      "other": [
+        "node/4648645076",
+        "node/7477620013",
+        "node/7477620015",
+        "node/7477620016",
+        "node/7963684613",
+        "node/8704048817",
+        "node/11190043327",
+        "node/13976505801",
+        "way/387175262",
+        "way/387175264",
+        "way/387175265",
+        "way/800760903",
+        "way/854416309",
+        "way/1209539458"
+      ],
+      "medical_supply": [
+        "node/4710027104"
+      ],
+      "place_of_worship": [
+        "node/4710027279",
+        "node/7080201295",
+        "node/7494783802",
+        "way/884275260"
+      ],
+      "library": [
+        "node/7140728594"
+      ],
+      "supermarket": [
+        "node/7477620014",
+        "node/7489817044"
+      ],
+      "clothes": [
+        "node/7477620017"
+      ],
+      "school": [
+        "node/7477620019"
+      ],
+      "greengrocer": [
+        "node/7477721660",
+        "way/801669482"
+      ],
+      "dairy": [
+        "node/7489746972"
+      ],
+      "bakery": [
+        "node/7489821708",
+        "way/801350369"
+      ],
+      "yes": [
+        "node/7498292397",
+        "node/7498403942",
+        "way/801364735",
+        "way/801662199"
+      ],
+      "vending_machine": [
+        "node/7498333278"
+      ],
+      "clinic": [
+        "node/7730027699"
+      ],
+      "copyshop": [
+        "node/7963610787"
+      ],
+      "internet_cafe": [
+        "node/8344351236"
+      ],
+      "fuel": [
+        "node/8568549829",
+        "way/799745756"
+      ],
+      "books": [
+        "node/8733270485"
+      ],
+      "toilets": [
+        "node/11037535606"
+      ],
+      "college": [
+        "way/470682938"
+      ],
+      "social_facility": [
+        "way/799537831",
+        "way/835821473"
+      ],
+      "parking": [
+        "way/799546328"
+      ],
+      "police": [
+        "way/800763762"
+      ],
+      "bar": [
+        "way/800764769"
+      ],
+      "tyres": [
+        "way/801346340"
+      ],
+      "recycling": [
+        "way/801665282"
+      ],
+      "shoes": [
+        "way/801665820"
+      ],
+      "fishing": [
+        "way/801667223"
+      ],
+      "lottery": [
+        "way/801667619"
+      ],
+      "fast_food": [
+        "way/801672243"
+      ],
+      "post_office": [
+        "way/802417265"
+      ],
+      "hardware": [
+        "way/1196821893"
+      ]
+    },
+    "religious": {
+      "mosque": [
+        "node/7080201295"
+      ],
+      "church": [],
+      "temple": [
+        "node/4710027279",
+        "node/7494783802",
+        "way/884275260"
+      ],
+      "other": []
+    }
+  },
+  "stats": {
+    "placesCount": 94,
+    "roadsCount": 0
+  },
+  "current": {
+    "lat": 8.524139,
+    "lng": 76.926638,
+    "index": 5,
+    "dx": -1,
+    "dy": 0
+  }
+}
