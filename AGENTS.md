@@ -31,12 +31,12 @@ Other frontier tools:
 ## Hard rules
 - **Never** show a local-model shelf, Hugging Face repos, “downloading TrOCR”, cache-clear for models, or provider names (NVIDIA, DeepSeek, etc.) on customer pages.
 - **Never** put `NVIDIA_API_KEY` or `NVIDIA_AGENT_MODEL` in `public/`.
-- `api/lib/nvidia.js` is the only place that reads those env vars for chat.
+- `lib/nvidia.js` is the only place that reads those env vars for chat.
 - Those env vars’ **source of truth is GitHub Actions secrets**. Vercel does not inherit them. Instant website AI needs the sync workflow (`.github/workflows/sync-ai-env.yml`) or a manual Vercel copy.
 - Do not label a tool live if its runner is a fake. Prefer an honest limited engine (e.g. noise gate, public YouTube thumbnail URL) over a pretend download.
 - YouTube/SlideShare **downloaders must not** fetch private media or bypass platform controls. Keep the rights notice.
 - Ads: tasteful slots only, no fake AdSense IDs.
-- Public OSINT only. `api/inspect.js` blocks localhost and private IPs.
+- Public OSINT only. `lib/api/inspect.js` blocks localhost and private IPs.
 
 ## Brand
 - Public name: **MegaPLAN**
@@ -58,12 +58,12 @@ public/js/youtube-tools.js YouTube Transcript (timedtext + Piped fallback), Play
 public/js/ai-mode.js       AI Mode — combine tools, 4-digit session, private tools, prompts for Gemini 1M / NotebookLM
 public/js/agentic-pdf.js   Agentic PDF Splitter + Question Paper to Notes (OCR, detect Qs/chapters, batch, prompt gen)
 public/agent/              Wiki Agent (Codex-style) + Self Agent
-api/lib/nvidia.js          server-only provider client (defaults to deepseek-v4.1-flash)
-api/ai.js                  writing assistant (identity hidden)
-api/agent-*.js             wiki plan/publish/dispatch/status/health
-api/youtube-transcript.js  YouTube captions fetcher (YouTube timedtext + Piped/Invidious fallback, SRT/VTT/JSON)
-api/youtube-playlist.js    Playlist extractor (Piped + Invidious + YouTube scrape, CSV/TXT export)
-api/inspect.js             public URL/DNS/TLS/robots
+lib/nvidia.js          server-only provider client (defaults to deepseek-v4.1-flash)
+lib/api/ai.js                  writing assistant (identity hidden)
+lib/api/agent-*.js             wiki plan/publish/dispatch/status/health
+lib/api/youtube-transcript.js  YouTube captions fetcher (YouTube timedtext + Piped/Invidious fallback, SRT/VTT/JSON)
+lib/api/youtube-playlist.js    Playlist extractor (Piped + Invidious + YouTube scrape, CSV/TXT export)
+lib/api/inspect.js             public URL/DNS/TLS/robots
 scripts/dev-server.mjs     local static + API
 data/tools.json            canonical 562-tool registry (was 555, now includes frontier tools)
 public/data/               deployed copy of JSON
@@ -84,8 +84,8 @@ Codex-style split: chat on the left, live browser window on the right, Deploy in
 4. Self Agent: browser calls the user’s `/v1/chat/completions`.
 5. Constrained JSON schema (blocks + optional `api` expression). Prefer a working calculator/API when asked.
 6. Sandboxed iframe preview + declarative tests.
-7. Always saved to `localStorage` (`mp-wiki-pages`).
-8. Deploy: `POST /api/agent-publish` (needs `GITHUB_TOKEN` on Vercel) or stay on-device.
+7. Validated pages save to `localStorage` (`mp-wiki-pages`) after preview checks pass.
+8. Deploy: `POST /api/agent-publish` requires `GITHUB_TOKEN` and `AGENT_WRITE_TOKEN` on Vercel, plus an operator-supplied write token (kept in tab memory only). Otherwise stay on-device.
 
 ## Tests
 ```

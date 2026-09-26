@@ -1473,9 +1473,9 @@
     "slug": "audio-dereverb",
     "title": "Audio Dereverb",
     "category": "Audio",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Audio Dereverb \u2014 audio helper on this device. Heavy denoise is a simple gate, not a named model.",
+    "description": "Limited preview: uses a basic noise gate; it does not remove reverb or isolate a voice.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1487,9 +1487,9 @@
     "slug": "voice-isolation",
     "title": "Voice Isolation",
     "category": "Audio",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Voice Isolation \u2014 audio helper on this device. Heavy denoise is a simple gate, not a named model.",
+    "description": "Limited preview: uses a basic noise gate; it does not remove reverb or isolate a voice.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1879,9 +1879,9 @@
     "slug": "video-compressor",
     "title": "Video Compressor",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Compressor \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1893,9 +1893,9 @@
     "slug": "video-trimmer",
     "title": "Video Trimmer",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Trimmer \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1907,9 +1907,9 @@
     "slug": "video-cutter",
     "title": "Video Cutter",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Cutter \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1921,9 +1921,9 @@
     "slug": "video-merger",
     "title": "Video Merger",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Merger \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1935,9 +1935,9 @@
     "slug": "extract-audio",
     "title": "Extract Audio",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Extract Audio \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1949,9 +1949,9 @@
     "slug": "extract-frames",
     "title": "Extract Frames",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Extract Frames \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Limited preview: exports a single frame as an image; does not produce a GIF, sheet or frame sequence yet.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1963,9 +1963,9 @@
     "slug": "video-to-gif",
     "title": "Video to GIF",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video to GIF \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Limited preview: exports a single frame as an image; does not produce a GIF, sheet or frame sequence yet.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1977,9 +1977,9 @@
     "slug": "gif-to-mp4",
     "title": "GIF to MP4",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "GIF to MP4 \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1991,9 +1991,9 @@
     "slug": "mp4-to-webm",
     "title": "MP4 to WebM",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "MP4 to WebM \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2005,9 +2005,9 @@
     "slug": "webm-to-mp4",
     "title": "WebM to MP4",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "WebM to MP4 \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2019,9 +2019,9 @@
     "slug": "resize-video",
     "title": "Resize Video",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Resize Video \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2033,9 +2033,9 @@
     "slug": "crop-video",
     "title": "Crop Video",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Crop Video \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2047,9 +2047,9 @@
     "slug": "rotate-video",
     "title": "Rotate Video",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Rotate Video \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2061,9 +2061,9 @@
     "slug": "mute-video",
     "title": "Mute Video",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Mute Video \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Not implemented yet: this page can inspect video and capture a frame, but cannot perform this video conversion/edit.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2089,9 +2089,9 @@
     "slug": "video-contact-sheet",
     "title": "Video Contact Sheet",
     "category": "Video",
-    "status": "live",
+    "status": "beta",
     "processing": "browser",
-    "description": "Video Contact Sheet \u2014 inspect, caption, or capture frames in this browser. Full re-encode is limited by what the browser can do.",
+    "description": "Limited preview: exports a single frame as an image; does not produce a GIF, sheet or frame sequence yet.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7984,7 +7984,8 @@
       "puzzle",
       "blocks"
     ],
-    "processing": "local-browser"
+    "processing": "browser",
+    "status": "beta"
   },
   {
     "slug": "map-directory",
@@ -8002,7 +8003,8 @@
       "mosque",
       "restaurant"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "map-auto-scraper",
@@ -8017,7 +8019,8 @@
       "background",
       "osm"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "road-directory",
@@ -8030,7 +8033,8 @@
       "trivandrum",
       "map"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "business-directory",
@@ -8046,7 +8050,8 @@
       "temple",
       "shop"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "kerala-expansion",
@@ -8063,7 +8068,8 @@
       "mosque",
       "restaurant"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "kerala-districts",
@@ -8077,7 +8083,8 @@
       "trivandrum",
       "kollam"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "kerala-directory-full",
@@ -8095,7 +8102,8 @@
       "distance",
       "traffic"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "kerala-ai",
@@ -8112,7 +8120,8 @@
       "geohash",
       "traffic"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "spatial-index",
@@ -8128,7 +8137,8 @@
       "lng",
       "distance"
     ],
-    "processing": "local-browser"
+    "processing": "browser",
+    "status": "beta"
   },
   {
     "slug": "inception-labs",
@@ -8145,7 +8155,8 @@
       "reverse",
       "proxy"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "product-directory",
@@ -8161,7 +8172,8 @@
       "seller",
       "directory"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "product-scraper",
@@ -8174,7 +8186,8 @@
       "amazon",
       "flipkart"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "music-directory",
@@ -8189,7 +8202,8 @@
       "audio",
       "features"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   },
   {
     "slug": "music-scraper",
@@ -8201,6 +8215,7 @@
       "scraper",
       "spotify"
     ],
-    "processing": "hybrid"
+    "processing": "hybrid",
+    "status": "beta"
   }
 ]

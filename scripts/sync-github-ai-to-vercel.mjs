@@ -34,7 +34,7 @@ if (!TOKEN) {
   }
   fail('VERCEL_TOKEN is required to copy hosted writing env onto Vercel.');
 }
-if (!KEY || !MODEL) fail('NVIDIA_API_KEY and NVIDIA_AGENT_MODEL must be present as GitHub Actions secrets.');
+if (!KEY) fail('NVIDIA_API_KEY must be present as a GitHub Actions secret.');
 
 function qs(extra = '') {
   const p = new URLSearchParams();
@@ -105,7 +105,7 @@ const project = await resolveProject();
 const id = project.id || PROJECT_ID;
 if (!id) fail('Vercel project id missing.');
 await upsertEnv(id, 'NVIDIA_API_KEY', KEY);
-await upsertEnv(id, 'NVIDIA_AGENT_MODEL', MODEL);
+if (MODEL) await upsertEnv(id, 'NVIDIA_AGENT_MODEL', MODEL);
 console.log(`Copied hosted writing env onto Vercel project ${project.name || id} (production, preview, development).`);
 
 if (HOOK) {

@@ -42,6 +42,7 @@ Until that copy exists:
 Wiki publish:
 
 - `GITHUB_TOKEN`
+- `AGENT_WRITE_TOKEN` — high-entropy operator-only write authorization; required for publish and autonomous queue. Enter in the agent operator panel for that tab only. Never share it with visitors.
 - `GITHUB_OWNER=ziyadshafeek`
 - `GITHUB_REPO=MegaPLAN`
 - `GITHUB_BRANCH=main`

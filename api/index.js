@@ -8,65 +8,47 @@
  * But also works directly via /api?route=ai or /api/index?route=ai or parsing pathname
  */
 
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-
-// Lazy map: route -> import path (dynamic to avoid one failing breaking all)
-const ROUTE_PATHS = {
-  'agent-dispatch': '../lib/api/agent-dispatch.js',
-  'agent-health': '../lib/api/agent-health.js',
-  'agent-plan': '../lib/api/agent-plan.js',
-  'agent-publish': '../lib/api/agent-publish.js',
-  'agent-status': '../lib/api/agent-status.js',
-  'ai': '../lib/api/ai.js',
-  'auto-master': '../lib/api/auto-master.js',
-  'github-secret-setup': '../lib/api/github-secret-setup.js',
-  'inception': '../lib/api/inception.js',
-  'inspect': '../lib/api/inspect.js',
-  'kerala-ai': '../lib/api/kerala-ai.js',
-  'kerala-expansion': '../lib/api/kerala-expansion.js',
-  'map-auto': '../lib/api/map-auto.js',
-  'map-directory': '../lib/api/map-directory.js',
-  'map-scraper-v2': '../lib/api/map-scraper-v2.js',
-  'map-scraper': '../lib/api/map-scraper.js',
-  'maps': '../lib/api/maps.js',
-  'music-directory': '../lib/api/music-directory.js',
-  'music-scraper': '../lib/api/music-scraper.js',
-  'osint': '../lib/api/osint.js',
-  'product-directory': '../lib/api/product-directory.js',
-  'product-scraper': '../lib/api/product-scraper.js',
-  'rate-limiter': '../lib/api/rate-limiter.js',
-  'split-pdf': '../lib/api/split-pdf.js',
-  'youtube-playlist': '../lib/api/youtube-playlist.js',
-  'youtube-transcript': '../lib/api/youtube-transcript.js',
-  // aliases
-  'inception-labs': '../lib/api/inception.js',
-  'kerala': '../lib/api/kerala-ai.js',
-};
-
-const handlerCache = {};
+// Literal imports are required for Vercel @vercel/nft to bundle every handler.
+const ROUTES = ["agent-dispatch", "agent-health", "agent-plan", "agent-publish", "agent-status", "ai", "auto-master", "github-secret-setup", "inception", "inception-labs", "inspect", "kerala-ai", "kerala", "kerala-expansion", "map-auto", "map-directory", "map-scraper-v2", "map-scraper", "maps", "music-directory", "music-scraper", "osint", "product-directory", "product-scraper", "rate-limiter", "split-pdf", "youtube-playlist", "youtube-transcript"];
+const handlerCache = new Map();
 
 async function getHandler(route) {
-  const importPath = ROUTE_PATHS[route];
-  if (!importPath) return null;
-  if (handlerCache[route]) return handlerCache[route];
-  try {
-    const mod = await import(importPath);
-    const fn = mod.default;
-    if (typeof fn === 'function') {
-      handlerCache[route] = fn;
-      return fn;
-    }
-    return null;
-  } catch (e) {
-    console.error(`[Router] Failed to import ${route} from ${importPath}:`, e.message);
-    // Return a handler that reports the error
-    return (req, res) => {
-      res.statusCode = 500;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ error: `Failed to load handler ${route}: ${e.message}`, route }));
-    };
+  if (!ROUTES.includes(route)) return null;
+  if (handlerCache.has(route)) return handlerCache.get(route);
+  let mod;
+  switch (route) {
+    case 'agent-dispatch': mod = await import('../lib/api/agent-dispatch.js'); break;
+    case 'agent-health': mod = await import('../lib/api/agent-health.js'); break;
+    case 'agent-plan': mod = await import('../lib/api/agent-plan.js'); break;
+    case 'agent-publish': mod = await import('../lib/api/agent-publish.js'); break;
+    case 'agent-status': mod = await import('../lib/api/agent-status.js'); break;
+    case 'ai': mod = await import('../lib/api/ai.js'); break;
+    case 'auto-master': mod = await import('../lib/api/auto-master.js'); break;
+    case 'github-secret-setup': mod = await import('../lib/api/github-secret-setup.js'); break;
+    case 'inception': mod = await import('../lib/api/inception.js'); break;
+    case 'inception-labs': mod = await import('../lib/api/inception.js'); break;
+    case 'inspect': mod = await import('../lib/api/inspect.js'); break;
+    case 'kerala-ai': mod = await import('../lib/api/kerala-ai.js'); break;
+    case 'kerala': mod = await import('../lib/api/kerala-ai.js'); break;
+    case 'kerala-expansion': mod = await import('../lib/api/kerala-expansion.js'); break;
+    case 'map-auto': mod = await import('../lib/api/map-auto.js'); break;
+    case 'map-directory': mod = await import('../lib/api/map-directory.js'); break;
+    case 'map-scraper-v2': mod = await import('../lib/api/map-scraper-v2.js'); break;
+    case 'map-scraper': mod = await import('../lib/api/map-scraper.js'); break;
+    case 'maps': mod = await import('../lib/api/maps.js'); break;
+    case 'music-directory': mod = await import('../lib/api/music-directory.js'); break;
+    case 'music-scraper': mod = await import('../lib/api/music-scraper.js'); break;
+    case 'osint': mod = await import('../lib/api/osint.js'); break;
+    case 'product-directory': mod = await import('../lib/api/product-directory.js'); break;
+    case 'product-scraper': mod = await import('../lib/api/product-scraper.js'); break;
+    case 'rate-limiter': mod = await import('../lib/api/rate-limiter.js'); break;
+    case 'split-pdf': mod = await import('../lib/api/split-pdf.js'); break;
+    case 'youtube-playlist': mod = await import('../lib/api/youtube-playlist.js'); break;
+    case 'youtube-transcript': mod = await import('../lib/api/youtube-transcript.js'); break;
   }
+  if (typeof mod.default !== 'function') throw Error(`Handler unavailable: ${route}`);
+  handlerCache.set(route, mod.default);
+  return mod.default;
 }
 
 function getRouteFromRequest(req) {
@@ -121,19 +103,21 @@ export default async function handler(req, res) {
     return json(res, 200, {
       ok: true,
       message: 'MegaPLAN API Router — Single function to fix Hobby 12 limit',
-      routes: Object.keys(ROUTE_PATHS).sort(),
+      routes: ROUTES,
       usage: 'Call /api/<route> e.g. /api/ai, /api/inception?action=test, /api/kerala-ai?q=distance&from=Trivandrum&to=Kochi',
       hobby_fix: '27 functions merged into 1, now under 12 limit (was 27)',
       fully_automatic: true,
-      count: Object.keys(ROUTE_PATHS).length,
+      count: ROUTES.length,
     });
   }
 
-  const fn = await getHandler(route);
+  let fn;
+  try { fn = await getHandler(route); }
+  catch (err) { console.error(`[Router] Failed to load ${route}`, err); return json(res, 500, { error: `Handler ${route} is unavailable`, route }); }
   if (!fn) {
     return json(res, 404, { 
       error: `API route '${route}' not found`,
-      available: Object.keys(ROUTE_PATHS).sort(),
+      available: ROUTES,
       hint: 'Use /api/<route> e.g. /api/ai, /api/maps, /api/kerala-ai, /api/inception, /api/product-scraper, etc',
       requested: route,
       url: req.url,

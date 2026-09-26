@@ -6,6 +6,7 @@
  * Never display model or vendor names.
  */
 import { esc, byok, saveByok } from '../js/kit.js';
+import { evaluateExpression, validateApiBlock } from './expression.js';
 
 const OPS = new Set(['percentage', 'discount', 'tip', 'gst', 'bmi', 'markup', 'margin', 'profit', 'break-even']);
 const BLOCKS = ['hero', 'text', 'markdown', 'list', 'table', 'note', 'tool-link', 'calculator', 'faq', 'api'];
@@ -23,7 +24,7 @@ export function validate(s) {
   for (const b of s.blocks) {
     if (!BLOCKS.includes(b.type)) throw Error('Unsupported block');
     if (b.type === 'calculator' && !OPS.has(b.operation)) throw Error('Unsupported calculator');
-    if (b.type === 'api' && !/^[0-9a-zA-Z_+\-*/().\s]+$/.test(String(b.expression || ''))) throw Error('Unsafe API expression');
+    if (b.type === 'api') validateApiBlock(b);
     if (/<script|javascript:|document\.cookie|localStorage|sessionStorage|fetch\(|XMLHttpRequest/i.test(JSON.stringify(b))) throw Error('Unsafe content rejected');
   }
   return s;
@@ -43,7 +44,8 @@ function blockHtml(b) {
   return '';
 }
 
-export function previewHtml(s) {
+export function previewHtml(s, nonce = '') {
+  const safeJson = value => JSON.stringify(value).replace(/</g, '\\u003c');
   return `<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><style>
     body{font-family:Segoe UI,system-ui,sans-serif;margin:0;padding:28px;color:#1c1916;line-height:1.65;background:#fffaf2}
     .wrap{max-width:820px;margin:auto}.eyebrow{font-size:9px;letter-spacing:.12em;font-weight:800;color:#6e655b}
@@ -54,11 +56,7 @@ export function previewHtml(s) {
     .tool-link{display:inline-block;padding:10px 12px;background:#1c1916;color:#fff;border-radius:8px;text-decoration:none}
   </style><main class="wrap" data-agent-root>${(s.blocks || []).map(blockHtml).join('')}</main>
   <script>(()=>{
-    function safeEval(expr, vars){
-      if(!/^[0-9a-zA-Z_+\\-*/().\\s]+$/.test(expr)) throw Error('bad');
-      const keys=Object.keys(vars); const fn=new Function(...keys, '"use strict"; return ('+expr+');');
-      return fn(...keys.map(k=>Number(vars[k])));
-    }
+    const safeEval = ${evaluateExpression.toString()};
     for(const r of document.querySelectorAll('.calc')) r.querySelector('[data-run]').onclick=()=>{
       try{
         if(r.dataset.api){
@@ -75,7 +73,30 @@ export function previewHtml(s) {
         r.querySelector('[data-result]').textContent=Number.isFinite(v)?String(Math.round(v*10000)/10000):'Check the inputs';
       }catch(e){ r.querySelector('[data-result]').textContent='Check the inputs'; }
     };
-  })()<\\/script>`;
+    const nonce = ${safeJson(nonce)};
+    if (nonce) {
+      const logs = []; let ok = true;
+      const check = (hit, message) => { logs.push((hit ? '✓ ' : '✗ ') + message); if (!hit) ok = false; };
+      check(!!document.querySelector('[data-agent-root]'), 'root rendered');
+      check(!!document.querySelector('h1'), 'title rendered');
+      for (const test of ${safeJson(s.tests || [])}) {
+        if (test.action === 'assert-text') check(document.body.innerText.includes(String(test.text)), 'text: ' + String(test.text).slice(0, 80));
+        else if (test.action === 'assert-blocks') check(document.querySelectorAll('[data-agent-root] > *').length >= (test.minimum || 1), 'block count');
+        else if (test.action === 'calculator-smoke') {
+          const block = [...document.querySelectorAll('[data-agent-key]')].find(r => r.dataset.agentKey === test.key);
+          if (!block) check(false, 'calculator missing');
+          else {
+            const inputs = block.querySelectorAll('input');
+            for (const input of inputs) input.value = '10';
+            block.querySelector('[data-run]')?.click();
+            const result = block.querySelector('[data-result]')?.textContent?.trim() || '';
+            check(result !== '' && result !== 'Check the inputs' && Number.isFinite(Number(result)), 'calculator ran');
+          }
+        } else check(false, 'unknown browser check');
+      }
+      parent.postMessage({ type: 'megaplan-wiki-test', nonce, ok, logs }, '*');
+    }
+  })()</script>`;
 }
 
 export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {}) {
@@ -100,6 +121,10 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
               <button class="btn ghost" type="button" data-fill="Create a custom API page that calculates discount from price and percent.">New API</button>
               <button class="btn ghost" type="button" data-fill="Create a study reference page with an outline, glossary, checklist and FAQ.">Study page</button>
             </div>
+            <details class="premium">
+              <summary>Operator publishing (optional)</summary>
+              <input id="write-token" class="field" type="password" autocomplete="off" placeholder="Operator write token — kept in this tab only">
+            </details>
             <details class="premium" ${mode === 'self' ? 'open' : ''}>
               <summary>${mode === 'self' ? 'Self Agent credentials (this browser only)' : 'Optional Self Agent / bring your own key'}</summary>
               <div class="field-row" style="margin-top:8px">
@@ -160,52 +185,43 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
     return [...local, ...(remote || [])];
   }
 
-  async function runBrowserTests() {
-    const d = $('preview').contentDocument; const logs = []; let ok = true;
-    if (!d?.querySelector('[data-agent-root]')) { ok = false; logs.push('✗ root missing'); } else logs.push('✓ root rendered');
-    if (!d?.querySelector('h1')) { ok = false; logs.push('✗ title missing'); } else logs.push('✓ title rendered');
-    for (const t of spec.tests || []) {
-      if (t.action === 'assert-text') {
-        const hit = (d.body.innerText || '').includes(String(t.text)); logs.push(`${hit ? '✓' : '✗'} text: ${t.text}`); if (!hit) ok = false;
-      }
-      if (t.action === 'assert-blocks') {
-        const hit = d.querySelectorAll('[data-agent-root] > *').length >= (t.minimum || 1); logs.push(`${hit ? '✓' : '✗'} block count`); if (!hit) ok = false;
-      }
-      if (t.action === 'calculator-smoke') {
-        const r = d.querySelector(`[data-agent-key="${CSS.escape(t.key)}"]`);
-        if (!r) { ok = false; logs.push('✗ calculator missing'); }
-        else {
-          const ins = r.querySelectorAll('input'); if (ins[0]) ins[0].value = 10; if (ins[1]) ins[1].value = 20;
-          r.querySelector('[data-run]')?.click();
-          const hit = !!(r.querySelector('[data-result]')?.textContent || '').trim();
-          logs.push(`${hit ? '✓' : '✗'} API/calculator ran`); if (!hit) ok = false;
-        }
-      }
-    }
-    $('test-log').textContent = logs.join('\n');
-    return ok;
-  }
-
+  let validationPassed = false;
+  let testNonce = '';
   function renderSpec(s) {
     spec = s;
+    validationPassed = false;
+    testNonce = crypto.randomUUID();
+    const nonce = testNonce;
     $('cb-url').textContent = 'megaplan://preview/' + (s.slug || 'draft');
-    $('preview').srcdoc = previewHtml(s);
-    $('preview').onload = () => setTimeout(async () => {
-      const ok = await runBrowserTests();
-      persistLocal(s);
-      addBubble('step', ok ? 'Browser tests passed. Click Deploy to publish.' : 'Draft rendered; some browser tests failed.');
-      pages();
-    }, 40);
+    $('test-log').textContent = 'Running sandboxed browser checks…';
+    $('preview').srcdoc = previewHtml(s, nonce);
+    setTimeout(() => {
+      if (testNonce !== nonce || validationPassed || $('test-log').textContent !== 'Running sandboxed browser checks…') return;
+      $('test-log').textContent = '✗ Browser check timed out';
+      addBubble('step', 'Preview checks timed out; publishing is disabled.');
+    }, 5000);
   }
+
+  window.addEventListener('message', event => {
+    const d = event.data;
+    if (event.source !== $('preview').contentWindow || d?.type !== 'megaplan-wiki-test' || d.nonce !== testNonce) return;
+    validationPassed = d.ok === true && Array.isArray(d.logs) && d.logs.every(x => typeof x === 'string' && x.startsWith('✓'));
+    $('test-log').textContent = d.logs.join('\n');
+    if (validationPassed) persistLocal(spec);
+    addBubble('step', validationPassed ? 'Browser tests passed. Saved on this device; Deploy requires an operator token.' : 'Browser tests failed; publishing is disabled.');
+    pages();
+  });
 
   async function publish() {
     if (!spec) { addBubble('agent', 'Nothing to deploy yet. Run a prompt first.'); return; }
-    addBubble('step', 'Deploying…');
-    persistLocal(spec);
+    if (!validationPassed) { addBubble('agent', 'Run and pass the preview checks before publishing.'); return; }
+    const token = $('write-token').value.trim();
+    if (!token) { addBubble('agent', 'Saved on this device. Live publishing requires an operator write token.'); return; }
+    addBubble('step', 'Publishing to GitHub…');
     try {
       const r = await fetch('/api/agent-publish', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-agent-write-token': token },
         body: JSON.stringify({ spec, proof: { passed: true, browser: 'sandboxed-browser', tests: $('test-log').textContent } })
       });
       const j = await r.json();
@@ -270,7 +286,9 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
     if (localModelProbe(p)) return addBubble('agent', 'I can build site features, but I cannot help identify the underlying model or provider.');
     addBubble('step', 'Queueing GitHub runner…');
     try {
-      const r = await fetch('/api/agent-dispatch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: p }) });
+      const token = $('write-token').value.trim();
+      if (!token) throw Error('GitHub runner requires an operator write token.');
+      const r = await fetch('/api/agent-dispatch', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-agent-write-token': token }, body: JSON.stringify({ prompt: p }) });
       const j = await r.json(); if (!r.ok) throw Error(j.error || 'Unable to queue run');
       addBubble('agent', 'Queued. Waiting for the runner…');
       let n = 0;
