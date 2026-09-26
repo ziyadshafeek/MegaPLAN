@@ -5,7 +5,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Merge PDFs \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Combine multiple PDFs into one document. Reorder, preview thumbnails, keep quality. Runs in browser via pdf-lib.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -19,7 +19,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Split PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Split PDF by pages, ranges, or intelligently by chapters/questions. Preview and download split parts.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -33,7 +33,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Compress PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Reduce PDF size in browser. Downsamples images, removes metadata. Keeps text searchable.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -47,7 +47,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Repair PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Fix corrupted PDFs, recover pages, remove broken objects. Works locally via pdf-lib.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -61,7 +61,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "OCR PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Extract text from scanned PDFs using tesseract.js OCR in browser. Searchable text + downloadable.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -75,7 +75,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Redact PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Redact PDF \u2014 Permanently redact sensitive text \u2014 true removal, not overlay. Secure. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -89,7 +89,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Sign PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Sign PDF \u2014 Add signature, initials, text, date to PDF. Drag to place, resize, save locally. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -103,7 +103,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Fill PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Fill PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -117,7 +117,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Annotate PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Annotate PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -131,7 +131,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Rotate PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Rotate PDF \u2014 Rotate PDF pages 90\u00b0, 180\u00b0, 270\u00b0. Fix scanned orientation. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -145,7 +145,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Reorder PDF Pages \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Reorder PDF Pages \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -159,7 +159,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Extract PDF Pages \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Extract PDF Pages \u2014 Extract text, images, pages from PDF. Save as TXT or images. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -173,7 +173,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Delete PDF Pages \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Delete PDF Pages \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -187,7 +187,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Extract PDF Images \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Extract PDF Images \u2014 Extract text, images, pages from PDF. Save as TXT or images. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -201,7 +201,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF Metadata Viewer \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF Metadata Viewer \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -215,7 +215,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Remove PDF Metadata \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Remove PDF Metadata \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -229,7 +229,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Add PDF Watermark \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Add PDF Watermark \u2014 Add text/image watermark to PDF pages. Position, opacity, rotation control. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -243,7 +243,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Add PDF Page Numbers \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Add PDF Page Numbers \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -257,7 +257,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Overlay PDFs \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Overlay PDFs \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -271,7 +271,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Compare PDFs \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Compare PDFs \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -285,7 +285,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Crop PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Crop PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -299,7 +299,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Resize PDF Pages \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Resize PDF Pages \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -313,7 +313,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to Images \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to Images \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -327,7 +327,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to Text \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to Text \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -341,7 +341,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to Markdown \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to Markdown \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -355,7 +355,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to HTML \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to HTML \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -369,7 +369,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to Word \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to Word \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -383,7 +383,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to Excel \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to Excel \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -397,7 +397,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to PowerPoint \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to PowerPoint \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -411,7 +411,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to EPUB \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to EPUB \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -425,7 +425,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF to RTF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF to RTF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -439,7 +439,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Images to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Images to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -453,7 +453,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "JPG to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "JPG to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -467,7 +467,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PNG to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PNG to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -481,7 +481,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "WEBP to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "WEBP to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -495,7 +495,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "HEIC to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "HEIC to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -509,7 +509,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Word to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Word to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -523,7 +523,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Excel to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Excel to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -537,7 +537,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PowerPoint to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PowerPoint to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -551,7 +551,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Text to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Text to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -565,7 +565,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Markdown to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Markdown to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -579,7 +579,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "HTML to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "HTML to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -593,7 +593,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "EPUB to PDF \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "EPUB to PDF \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -607,7 +607,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF/A Helper \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF/A Helper \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -621,7 +621,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Booklet PDF Maker \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Booklet PDF Maker \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -635,7 +635,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Pages per Sheet \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Pages per Sheet \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -649,7 +649,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Two Pages per Sheet \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Two Pages per Sheet \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -663,7 +663,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF Page Counter \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF Page Counter \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -677,7 +677,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF Bookmark Helper \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF Bookmark Helper \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -691,7 +691,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF Form Field Viewer \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF Form Field Viewer \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -705,7 +705,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "Invoice PDF Maker \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "Invoice PDF Maker \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -719,7 +719,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF Batch Rename \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF Batch Rename \u2014 PDF tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -733,7 +733,7 @@
     "category": "PDF",
     "status": "live",
     "processing": "browser",
-    "description": "PDF Page Extractor \u2014 edit or convert PDFs in this browser. Files stay on your device.",
+    "description": "PDF Page Extractor \u2014 Extract text, images, pages from PDF. Save as TXT or images. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -747,7 +747,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Compressor \u2014 image utility that runs in this browser.",
+    "description": "Image Compressor \u2014 Compress JPEG/PNG/WebP by quality slider. Preview before/after size. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -761,7 +761,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Resizer \u2014 image utility that runs in this browser.",
+    "description": "Image Resizer \u2014 Resize image by pixels or percent. Keeps aspect ratio, preview. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -775,7 +775,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Cropper \u2014 image utility that runs in this browser.",
+    "description": "Image Cropper \u2014 Crop image by drag or X/Y/W/H inputs. Multiple aspect ratios. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -789,7 +789,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Rotator \u2014 image utility that runs in this browser.",
+    "description": "Image Rotator \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -803,7 +803,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Flipper \u2014 image utility that runs in this browser.",
+    "description": "Image Flipper \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -817,7 +817,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "JPG to PNG \u2014 image utility that runs in this browser.",
+    "description": "JPG to PNG \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -831,7 +831,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "PNG to JPG \u2014 image utility that runs in this browser.",
+    "description": "PNG to JPG \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -845,7 +845,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "WEBP to JPG \u2014 image utility that runs in this browser.",
+    "description": "WEBP to JPG \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -859,7 +859,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "JPG to WEBP \u2014 image utility that runs in this browser.",
+    "description": "JPG to WEBP \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -873,7 +873,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "PNG to WEBP \u2014 image utility that runs in this browser.",
+    "description": "PNG to WEBP \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -887,7 +887,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "AVIF Converter \u2014 image utility that runs in this browser.",
+    "description": "AVIF Converter \u2014 Convert between JPG, PNG, WebP, AVIF, HEIC, TIFF. Uses canvas, keeps quality. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -901,7 +901,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "HEIC Converter \u2014 image utility that runs in this browser.",
+    "description": "HEIC Converter \u2014 Convert between JPG, PNG, WebP, AVIF, HEIC, TIFF. Uses canvas, keeps quality. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -915,7 +915,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "TIFF Converter \u2014 image utility that runs in this browser.",
+    "description": "TIFF Converter \u2014 Convert between JPG, PNG, WebP, AVIF, HEIC, TIFF. Uses canvas, keeps quality. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -929,7 +929,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "SVG Previewer \u2014 image utility that runs in this browser.",
+    "description": "SVG Previewer \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -943,7 +943,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "SVG to PNG \u2014 image utility that runs in this browser.",
+    "description": "SVG to PNG \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -957,7 +957,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Favicon Generator \u2014 image utility that runs in this browser.",
+    "description": "Favicon Generator \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -971,7 +971,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "ICO Converter \u2014 image utility that runs in this browser.",
+    "description": "ICO Converter \u2014 Convert between JPG, PNG, WebP, AVIF, HEIC, TIFF. Uses canvas, keeps quality. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -985,7 +985,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Dimensions \u2014 image utility that runs in this browser.",
+    "description": "Image Dimensions \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -999,7 +999,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Color Picker \u2014 image utility that runs in this browser.",
+    "description": "Color Picker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1013,7 +1013,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Palette Generator \u2014 image utility that runs in this browser.",
+    "description": "Palette Generator \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1027,7 +1027,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Dominant Color Finder \u2014 image utility that runs in this browser.",
+    "description": "Dominant Color Finder \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1041,7 +1041,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Contrast Checker \u2014 image utility that runs in this browser.",
+    "description": "Contrast Checker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1055,7 +1055,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "EXIF Viewer \u2014 image utility that runs in this browser.",
+    "description": "EXIF Viewer \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1069,7 +1069,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Remove EXIF \u2014 image utility that runs in this browser.",
+    "description": "Remove EXIF \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1083,7 +1083,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Blur \u2014 image utility that runs in this browser.",
+    "description": "Image Blur \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1097,7 +1097,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Pixelate \u2014 image utility that runs in this browser.",
+    "description": "Image Pixelate \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1111,7 +1111,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Sharpen \u2014 image utility that runs in this browser.",
+    "description": "Image Sharpen \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1125,7 +1125,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Watermark \u2014 image utility that runs in this browser.",
+    "description": "Image Watermark \u2014 Add text watermark to image. Position, opacity, font size. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1139,7 +1139,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Background Remover \u2014 image utility that runs in this browser.",
+    "description": "Image Background Remover \u2014 Remove white/green background to transparent PNG. Simple but fast. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1153,7 +1153,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Border Maker \u2014 image utility that runs in this browser.",
+    "description": "Image Border Maker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1167,7 +1167,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Padding Tool \u2014 image utility that runs in this browser.",
+    "description": "Image Padding Tool \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1181,7 +1181,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Collage Maker \u2014 image utility that runs in this browser.",
+    "description": "Image Collage Maker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1195,7 +1195,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Contact Sheet Maker \u2014 image utility that runs in this browser.",
+    "description": "Contact Sheet Maker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1209,7 +1209,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Sprite Sheet Maker \u2014 image utility that runs in this browser.",
+    "description": "Sprite Sheet Maker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1223,7 +1223,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Passport Photo Cropper \u2014 image utility that runs in this browser.",
+    "description": "Passport Photo Cropper \u2014 Crop image by drag or X/Y/W/H inputs. Multiple aspect ratios. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1237,7 +1237,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Signature Cropper \u2014 image utility that runs in this browser.",
+    "description": "Signature Cropper \u2014 Crop image by drag or X/Y/W/H inputs. Multiple aspect ratios. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1251,7 +1251,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Scan Cleanup \u2014 image utility that runs in this browser.",
+    "description": "Scan Cleanup \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1265,7 +1265,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Screenshot Cropper \u2014 image utility that runs in this browser.",
+    "description": "Screenshot Cropper \u2014 Crop image by drag or X/Y/W/H inputs. Multiple aspect ratios. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1279,7 +1279,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image to PDF \u2014 image utility that runs in this browser.",
+    "description": "Image to PDF \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1293,7 +1293,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image OCR \u2014 image utility that runs in this browser.",
+    "description": "Image OCR \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1307,7 +1307,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Difference \u2014 image utility that runs in this browser.",
+    "description": "Image Difference \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1321,7 +1321,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image Average Color \u2014 image utility that runs in this browser.",
+    "description": "Image Average Color \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1335,7 +1335,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Image File Size Calculator \u2014 image utility that runs in this browser.",
+    "description": "Image File Size Calculator \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1349,7 +1349,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "DPI Calculator \u2014 image utility that runs in this browser.",
+    "description": "DPI Calculator \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1363,7 +1363,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Print Size Calculator \u2014 image utility that runs in this browser.",
+    "description": "Print Size Calculator \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1377,7 +1377,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Social Image Resizer \u2014 image utility that runs in this browser.",
+    "description": "Social Image Resizer \u2014 Resize image by pixels or percent. Keeps aspect ratio, preview. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1391,7 +1391,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Thumbnail Maker \u2014 image utility that runs in this browser.",
+    "description": "Thumbnail Maker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1405,7 +1405,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Photo Strip Maker \u2014 image utility that runs in this browser.",
+    "description": "Photo Strip Maker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1419,7 +1419,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Round Image Maker \u2014 image utility that runs in this browser.",
+    "description": "Round Image Maker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -1433,7 +1433,7 @@
     "category": "Images",
     "status": "live",
     "processing": "browser",
-    "description": "Transparent PNG Maker \u2014 image utility that runs in this browser.",
+    "description": "Transparent PNG Maker \u2014 Images tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2581,7 +2581,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Word Counter.",
+    "description": "Word Counter \u2014 Count words, characters, sentences, paragraphs. Live stats as you type. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2595,7 +2595,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Character Counter.",
+    "description": "Character Counter \u2014 Count words, characters, sentences, paragraphs. Live stats as you type. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2609,7 +2609,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Sentence Counter.",
+    "description": "Sentence Counter \u2014 Count words, characters, sentences, paragraphs. Live stats as you type. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2623,7 +2623,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Paragraph Counter.",
+    "description": "Paragraph Counter \u2014 Count words, characters, sentences, paragraphs. Live stats as you type. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2637,7 +2637,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Reading Time Calculator.",
+    "description": "Reading Time Calculator \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2651,7 +2651,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Case Converter.",
+    "description": "Case Converter \u2014 Convert text case: upper, lower, title, sentence. Fast. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2665,7 +2665,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Title Case.",
+    "description": "Title Case \u2014 Convert text case: upper, lower, title, sentence. Fast. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2679,7 +2679,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Uppercase Converter.",
+    "description": "Uppercase Converter \u2014 Convert text case: upper, lower, title, sentence. Fast. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2693,7 +2693,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Lowercase Converter.",
+    "description": "Lowercase Converter \u2014 Convert text case: upper, lower, title, sentence. Fast. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2707,7 +2707,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Whitespace Cleaner.",
+    "description": "Whitespace Cleaner \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2721,7 +2721,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Trim Lines.",
+    "description": "Trim Lines \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2735,7 +2735,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Remove Duplicate Lines.",
+    "description": "Remove Duplicate Lines \u2014 Remove duplicates, extra spaces, line breaks, etc. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2749,7 +2749,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Sort Lines.",
+    "description": "Sort Lines \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2763,7 +2763,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Reverse Lines.",
+    "description": "Reverse Lines \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2777,7 +2777,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Number Lines.",
+    "description": "Number Lines \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2791,7 +2791,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: List to CSV.",
+    "description": "List to CSV \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2805,7 +2805,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: CSV to List.",
+    "description": "CSV to List \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2819,7 +2819,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Text Diff.",
+    "description": "Text Diff \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2833,7 +2833,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Find and Replace.",
+    "description": "Find and Replace \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2847,7 +2847,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Slug Generator.",
+    "description": "Slug Generator \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2861,7 +2861,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Markdown Cleaner.",
+    "description": "Markdown Cleaner \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2875,7 +2875,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: HTML Text Extractor.",
+    "description": "HTML Text Extractor \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2889,7 +2889,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Text to QR.",
+    "description": "Text to QR \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2903,7 +2903,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: QR to Text.",
+    "description": "QR to Text \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2917,7 +2917,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Morse Encoder.",
+    "description": "Morse Encoder \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2931,7 +2931,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Morse Decoder.",
+    "description": "Morse Decoder \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2945,7 +2945,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: NATO Phonetic Converter.",
+    "description": "NATO Phonetic Converter \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2959,7 +2959,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Leetspeak Converter.",
+    "description": "Leetspeak Converter \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2973,7 +2973,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Unicode Inspector.",
+    "description": "Unicode Inspector \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -2987,7 +2987,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Unicode Normalizer.",
+    "description": "Unicode Normalizer \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3001,7 +3001,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Text Repeater.",
+    "description": "Text Repeater \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3015,7 +3015,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Random Line Picker.",
+    "description": "Random Line Picker \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3029,7 +3029,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Random Word Picker.",
+    "description": "Random Word Picker \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3043,7 +3043,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Lorem Ipsum Generator.",
+    "description": "Lorem Ipsum Generator \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3057,7 +3057,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Palindrome Checker.",
+    "description": "Palindrome Checker \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3071,7 +3071,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Anagram Checker.",
+    "description": "Anagram Checker \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3085,7 +3085,7 @@
     "category": "Text",
     "status": "live",
     "processing": "browser",
-    "description": "Free text tool: Text Statistics.",
+    "description": "Text Statistics \u2014 Text tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3099,7 +3099,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: JSON Formatter.",
+    "description": "JSON Formatter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3113,7 +3113,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: JSON Minifier.",
+    "description": "JSON Minifier \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3127,7 +3127,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: JSON Validator.",
+    "description": "JSON Validator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3141,7 +3141,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: JSON to CSV.",
+    "description": "JSON to CSV \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3155,7 +3155,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: CSV to JSON.",
+    "description": "CSV to JSON \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3169,7 +3169,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: YAML Formatter.",
+    "description": "YAML Formatter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3183,7 +3183,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: XML Formatter.",
+    "description": "XML Formatter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3197,7 +3197,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: XML Validator.",
+    "description": "XML Validator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3211,7 +3211,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Base64 Encoder.",
+    "description": "Base64 Encoder \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3225,7 +3225,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Base64 Decoder.",
+    "description": "Base64 Decoder \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3239,7 +3239,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: URL Encoder.",
+    "description": "URL Encoder \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3253,7 +3253,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: URL Decoder.",
+    "description": "URL Decoder \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3267,7 +3267,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: JWT Decoder.",
+    "description": "JWT Decoder \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3281,7 +3281,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: UUID Generator.",
+    "description": "UUID Generator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3295,7 +3295,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Nano ID Generator.",
+    "description": "Nano ID Generator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3309,7 +3309,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: SHA-256 Hash.",
+    "description": "SHA-256 Hash \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3323,7 +3323,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: SHA-512 Hash.",
+    "description": "SHA-512 Hash \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3337,7 +3337,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: MD5 Hash.",
+    "description": "MD5 Hash \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3351,7 +3351,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: HMAC Helper.",
+    "description": "HMAC Helper \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3365,7 +3365,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Regex Tester.",
+    "description": "Regex Tester \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3379,7 +3379,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Regex Generator Helper.",
+    "description": "Regex Generator Helper \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3393,7 +3393,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Cron Expression Helper.",
+    "description": "Cron Expression Helper \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3407,7 +3407,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Unix Timestamp Converter.",
+    "description": "Unix Timestamp Converter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3421,7 +3421,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Epoch Converter.",
+    "description": "Epoch Converter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3435,7 +3435,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free developer tool: HTTP Header Viewer.",
+    "description": "HTTP Header Viewer \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3449,7 +3449,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: User-Agent Parser.",
+    "description": "User-Agent Parser \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3463,7 +3463,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: MIME Type Lookup.",
+    "description": "MIME Type Lookup \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3477,7 +3477,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: URL Parser.",
+    "description": "URL Parser \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3491,7 +3491,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: HTML Escape.",
+    "description": "HTML Escape \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3505,7 +3505,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: HTML Unescape.",
+    "description": "HTML Unescape \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3519,7 +3519,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: SQL Formatter.",
+    "description": "SQL Formatter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3533,7 +3533,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Markdown Preview.",
+    "description": "Markdown Preview \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3547,7 +3547,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: JSON Path Helper.",
+    "description": "JSON Path Helper \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3561,7 +3561,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: JSON Pointer Helper.",
+    "description": "JSON Pointer Helper \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3575,7 +3575,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Semver Calculator.",
+    "description": "Semver Calculator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3589,7 +3589,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Color Hex Converter.",
+    "description": "Color Hex Converter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3603,7 +3603,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: RGB HSL Converter.",
+    "description": "RGB HSL Converter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3617,7 +3617,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: CSS Minifier.",
+    "description": "CSS Minifier \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3631,7 +3631,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: JS Minifier.",
+    "description": "JS Minifier \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3645,7 +3645,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: HTML Minifier.",
+    "description": "HTML Minifier \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3659,7 +3659,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: IP Subnet Calculator.",
+    "description": "IP Subnet Calculator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3673,7 +3673,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: CIDR Calculator.",
+    "description": "CIDR Calculator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3687,7 +3687,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Byte Converter.",
+    "description": "Byte Converter \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3701,7 +3701,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: File Hash Checker.",
+    "description": "File Hash Checker \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3715,7 +3715,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Random Hex Generator.",
+    "description": "Random Hex Generator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3729,7 +3729,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Random String Generator.",
+    "description": "Random String Generator \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3743,7 +3743,7 @@
     "category": "Developer",
     "status": "live",
     "processing": "browser",
-    "description": "Free developer tool: Package Name Checker.",
+    "description": "Package Name Checker \u2014 Developer tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3757,7 +3757,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Percentage Calculator.",
+    "description": "Percentage Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3771,7 +3771,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Discount Calculator.",
+    "description": "Discount Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3785,7 +3785,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Tip Calculator.",
+    "description": "Tip Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3799,7 +3799,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Markup Calculator.",
+    "description": "Markup Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3813,7 +3813,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Margin Calculator.",
+    "description": "Margin Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3827,7 +3827,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Profit Calculator.",
+    "description": "Profit Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3841,7 +3841,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Break Even Calculator.",
+    "description": "Break Even Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3855,7 +3855,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: GST Calculator.",
+    "description": "GST Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3869,7 +3869,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Sales Tax Calculator.",
+    "description": "Sales Tax Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3883,7 +3883,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: VAT Calculator.",
+    "description": "VAT Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3897,7 +3897,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: EMI Calculator.",
+    "description": "EMI Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3911,7 +3911,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Loan Amortization.",
+    "description": "Loan Amortization \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3925,7 +3925,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Compound Interest.",
+    "description": "Compound Interest \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3939,7 +3939,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Simple Interest.",
+    "description": "Simple Interest \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3953,7 +3953,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Inflation Calculator.",
+    "description": "Inflation Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3967,7 +3967,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: ROI Calculator.",
+    "description": "ROI Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3981,7 +3981,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: ROAS Calculator.",
+    "description": "ROAS Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -3995,7 +3995,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Salary Calculator.",
+    "description": "Salary Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4009,7 +4009,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Hourly Rate Calculator.",
+    "description": "Hourly Rate Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4023,7 +4023,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Age Calculator.",
+    "description": "Age Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4037,7 +4037,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Date Difference.",
+    "description": "Date Difference \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4051,7 +4051,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Business Days Calculator.",
+    "description": "Business Days Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4065,7 +4065,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Time Difference.",
+    "description": "Time Difference \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4079,7 +4079,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Time Zone Converter.",
+    "description": "Time Zone Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4093,7 +4093,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Unit Converter.",
+    "description": "Unit Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4107,7 +4107,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Length Converter.",
+    "description": "Length Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4121,7 +4121,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Weight Converter.",
+    "description": "Weight Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4135,7 +4135,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Temperature Converter.",
+    "description": "Temperature Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4149,7 +4149,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Area Converter.",
+    "description": "Area Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4163,7 +4163,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Volume Converter.",
+    "description": "Volume Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4177,7 +4177,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Speed Converter.",
+    "description": "Speed Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4191,7 +4191,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Data Size Converter.",
+    "description": "Data Size Converter \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4205,7 +4205,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: BMI Calculator.",
+    "description": "BMI Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4219,7 +4219,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: BSA Calculator.",
+    "description": "BSA Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4233,7 +4233,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Anion Gap Calculator.",
+    "description": "Anion Gap Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4247,7 +4247,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Corrected Calcium Calculator.",
+    "description": "Corrected Calcium Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4261,7 +4261,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Creatinine Clearance.",
+    "description": "Creatinine Clearance \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4275,7 +4275,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Body Fat Calculator.",
+    "description": "Body Fat Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4289,7 +4289,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Calorie Estimate.",
+    "description": "Calorie Estimate \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4303,7 +4303,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: IV Flow Rate Helper.",
+    "description": "IV Flow Rate Helper \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4317,7 +4317,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Drug Dilution Helper.",
+    "description": "Drug Dilution Helper \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4331,7 +4331,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Concentration Calculator.",
+    "description": "Concentration Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4345,7 +4345,7 @@
     "category": "Calculators",
     "status": "live",
     "processing": "browser",
-    "description": "Free calculators tool: Molarity Calculator.",
+    "description": "Molarity Calculator \u2014 Calculators tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4359,7 +4359,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Invoice Maker.",
+    "description": "Invoice Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4373,7 +4373,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Quotation Maker.",
+    "description": "Quotation Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4387,7 +4387,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Receipt Maker.",
+    "description": "Receipt Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4401,7 +4401,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Purchase Order Maker.",
+    "description": "Purchase Order Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4415,7 +4415,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Proforma Invoice.",
+    "description": "Proforma Invoice \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4429,7 +4429,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Credit Note Maker.",
+    "description": "Credit Note Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4443,7 +4443,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Debit Note Maker.",
+    "description": "Debit Note Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4457,7 +4457,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Delivery Challan.",
+    "description": "Delivery Challan \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4471,7 +4471,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Packing Slip.",
+    "description": "Packing Slip \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4485,7 +4485,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Payslip Maker.",
+    "description": "Payslip Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4499,7 +4499,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Timesheet Maker.",
+    "description": "Timesheet Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4513,7 +4513,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Attendance Sheet.",
+    "description": "Attendance Sheet \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4527,7 +4527,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Expense Report.",
+    "description": "Expense Report \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4541,7 +4541,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Petty Cash Sheet.",
+    "description": "Petty Cash Sheet \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4555,7 +4555,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Inventory Sheet.",
+    "description": "Inventory Sheet \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4569,7 +4569,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: SKU Generator.",
+    "description": "SKU Generator \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4583,7 +4583,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Barcode Generator.",
+    "description": "Barcode Generator \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4597,7 +4597,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Label Maker.",
+    "description": "Label Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4611,7 +4611,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Business Card Maker.",
+    "description": "Business Card Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4625,7 +4625,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Letterhead Maker.",
+    "description": "Letterhead Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4639,7 +4639,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Email Signature Maker.",
+    "description": "Email Signature Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4653,7 +4653,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Proposal Maker.",
+    "description": "Proposal Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4667,7 +4667,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: SOP Maker.",
+    "description": "SOP Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4681,7 +4681,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Meeting Minutes Maker.",
+    "description": "Meeting Minutes Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4695,7 +4695,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Meeting Agenda Maker.",
+    "description": "Meeting Agenda Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4709,7 +4709,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Purchase Tracker.",
+    "description": "Purchase Tracker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4723,7 +4723,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Pricing Calculator.",
+    "description": "Pricing Calculator \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4737,7 +4737,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Cashflow Calculator.",
+    "description": "Cashflow Calculator \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4751,7 +4751,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Break Even Dashboard.",
+    "description": "Break Even Dashboard \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4765,7 +4765,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: UTM Builder.",
+    "description": "UTM Builder \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4779,7 +4779,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: QR Business Card.",
+    "description": "QR Business Card \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4793,7 +4793,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Shipping Label Maker.",
+    "description": "Shipping Label Maker \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4807,7 +4807,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Expense Splitter.",
+    "description": "Expense Splitter \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4821,7 +4821,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Commission Calculator.",
+    "description": "Commission Calculator \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4835,7 +4835,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Sales Target Calculator.",
+    "description": "Sales Target Calculator \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4849,7 +4849,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Payroll Calculator.",
+    "description": "Payroll Calculator \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4863,7 +4863,7 @@
     "category": "Business",
     "status": "live",
     "processing": "browser",
-    "description": "Free business tool: Invoice Number Generator.",
+    "description": "Invoice Number Generator \u2014 Business tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4877,7 +4877,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: CGPA Calculator.",
+    "description": "CGPA Calculator \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4891,7 +4891,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Grade Calculator.",
+    "description": "Grade Calculator \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4905,7 +4905,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Marks Percentage.",
+    "description": "Marks Percentage \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4919,7 +4919,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Study Planner.",
+    "description": "Study Planner \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4933,7 +4933,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Study Timer.",
+    "description": "Study Timer \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4947,7 +4947,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Pomodoro Timer.",
+    "description": "Pomodoro Timer \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4961,7 +4961,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: MCQ Worksheet Maker.",
+    "description": "MCQ Worksheet Maker \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4975,7 +4975,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Citation Formatter.",
+    "description": "Citation Formatter \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -4989,7 +4989,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: APA Citation Helper.",
+    "description": "APA Citation Helper \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5003,7 +5003,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: MLA Citation Helper.",
+    "description": "MLA Citation Helper \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5017,7 +5017,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Chicago Citation Helper.",
+    "description": "Chicago Citation Helper \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5031,7 +5031,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Vancouver Citation Helper.",
+    "description": "Vancouver Citation Helper \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5045,7 +5045,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Reference List Cleaner.",
+    "description": "Reference List Cleaner \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5059,7 +5059,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Note Outline Maker.",
+    "description": "Note Outline Maker \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5073,7 +5073,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Lecture Note Formatter.",
+    "description": "Lecture Note Formatter \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5087,7 +5087,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: PDF Study Pack Maker.",
+    "description": "PDF Study Pack Maker \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5101,7 +5101,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Question Paper Formatter.",
+    "description": "Question Paper Formatter \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5115,7 +5115,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Answer Sheet Generator.",
+    "description": "Answer Sheet Generator \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5129,7 +5129,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Timetable Maker.",
+    "description": "Timetable Maker \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5143,7 +5143,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Exam Countdown.",
+    "description": "Exam Countdown \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5157,7 +5157,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: Semester Planner.",
+    "description": "Semester Planner \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5171,7 +5171,7 @@
     "category": "Education",
     "status": "live",
     "processing": "browser",
-    "description": "Free education tool: GPA Converter.",
+    "description": "GPA Converter \u2014 Education tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5185,7 +5185,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: GSTIN Format Checker.",
+    "description": "GSTIN Format Checker \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5199,7 +5199,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: GST Calculator India.",
+    "description": "GST Calculator India \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5213,7 +5213,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: PAN Format Helper.",
+    "description": "PAN Format Helper \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5227,7 +5227,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: IFSC Lookup Interface.",
+    "description": "IFSC Lookup Interface \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5241,7 +5241,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Pincode Formatter.",
+    "description": "Pincode Formatter \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5255,7 +5255,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Post Office Formatter.",
+    "description": "Post Office Formatter \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5269,7 +5269,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Indian Number Formatter.",
+    "description": "Indian Number Formatter \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5283,7 +5283,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Lakh Crore Converter.",
+    "description": "Lakh Crore Converter \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5297,7 +5297,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Indian Date Formatter.",
+    "description": "Indian Date Formatter \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5311,7 +5311,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: UPI QR Payload Builder.",
+    "description": "UPI QR Payload Builder \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5325,7 +5325,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Aadhaar Masking Helper.",
+    "description": "Aadhaar Masking Helper \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5339,7 +5339,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Vehicle Number Formatter.",
+    "description": "Vehicle Number Formatter \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5353,7 +5353,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Indian Salary Calculator.",
+    "description": "Indian Salary Calculator \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5367,7 +5367,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Indian Tax Calculator.",
+    "description": "Indian Tax Calculator \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5381,7 +5381,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: TDS Calculator.",
+    "description": "TDS Calculator \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5395,7 +5395,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Professional Tax Helper.",
+    "description": "Professional Tax Helper \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5409,7 +5409,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: E Invoice Field Helper.",
+    "description": "E Invoice Field Helper \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5423,7 +5423,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: HRA Calculator.",
+    "description": "HRA Calculator \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5437,7 +5437,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Gratuity Calculator.",
+    "description": "Gratuity Calculator \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5451,7 +5451,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: PF Calculator.",
+    "description": "PF Calculator \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5465,7 +5465,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: ESI Calculator.",
+    "description": "ESI Calculator \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5479,7 +5479,7 @@
     "category": "India",
     "status": "live",
     "processing": "browser",
-    "description": "Free india tool: Indian Time Zone Converter.",
+    "description": "Indian Time Zone Converter \u2014 India tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5493,7 +5493,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: PII Masker.",
+    "description": "PII Masker \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5507,7 +5507,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Email Masker.",
+    "description": "Email Masker \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5521,7 +5521,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Phone Number Masker.",
+    "description": "Phone Number Masker \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5535,7 +5535,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Text Anonymizer.",
+    "description": "Text Anonymizer \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5549,7 +5549,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Metadata Inspector.",
+    "description": "Metadata Inspector \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5563,7 +5563,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Remove Metadata.",
+    "description": "Remove Metadata \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5577,7 +5577,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Secure Password Generator.",
+    "description": "Secure Password Generator \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5591,7 +5591,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Passphrase Generator.",
+    "description": "Passphrase Generator \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5605,7 +5605,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Password Strength Checker.",
+    "description": "Password Strength Checker \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5619,7 +5619,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: URL Privacy Cleaner.",
+    "description": "URL Privacy Cleaner \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5633,7 +5633,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free privacy & security tool: HTTP Security Header Viewer.",
+    "description": "HTTP Security Header Viewer \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5647,7 +5647,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: CSP Helper.",
+    "description": "CSP Helper \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5661,7 +5661,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free privacy & security tool: Robots.txt Viewer.",
+    "description": "Robots.txt Viewer \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5675,7 +5675,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free privacy & security tool: Sitemap Viewer.",
+    "description": "Sitemap Viewer \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5689,7 +5689,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free privacy & security tool: TLS Certificate Inspector.",
+    "description": "TLS Certificate Inspector \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5703,7 +5703,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free privacy & security tool: Redirect Chain Viewer.",
+    "description": "Redirect Chain Viewer \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5717,7 +5717,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free privacy & security tool: DNS Record Viewer.",
+    "description": "DNS Record Viewer \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5731,7 +5731,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: IP/ASN Lookup Interface.",
+    "description": "IP/ASN Lookup Interface \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5745,7 +5745,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free privacy & security tool: Public URL Inspector.",
+    "description": "Public URL Inspector \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5759,7 +5759,7 @@
     "category": "Privacy & Security",
     "status": "live",
     "processing": "browser",
-    "description": "Free privacy & security tool: Image Perceptual Hash.",
+    "description": "Image Perceptual Hash \u2014 Privacy & Security tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5773,7 +5773,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free osint / public data tool: URL Metadata Inspector.",
+    "description": "URL Metadata Inspector \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5787,7 +5787,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free osint / public data tool: DNS Lookup.",
+    "description": "DNS Lookup \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5801,7 +5801,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: ASN Lookup.",
+    "description": "ASN Lookup \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5815,7 +5815,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free osint / public data tool: HTTP Headers Inspector.",
+    "description": "HTTP Headers Inspector \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5829,7 +5829,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free osint / public data tool: Redirect Chain Inspector.",
+    "description": "Redirect Chain Inspector \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5843,7 +5843,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free osint / public data tool: Robots.txt Inspector.",
+    "description": "Robots.txt Inspector \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5857,7 +5857,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free osint / public data tool: Sitemap Inspector.",
+    "description": "Sitemap Inspector \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5871,7 +5871,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Public Profile URL Checker.",
+    "description": "Public Profile URL Checker \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5885,7 +5885,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Username Permutation Generator.",
+    "description": "Username Permutation Generator \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5899,7 +5899,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Public Social Link Extractor.",
+    "description": "Public Social Link Extractor \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5913,7 +5913,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Public Instagram URL Inspector.",
+    "description": "Public Instagram URL Inspector \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5927,7 +5927,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "hybrid",
-    "description": "Free osint / public data tool: Public Page Metadata Inspector.",
+    "description": "Public Page Metadata Inspector \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5941,7 +5941,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Favicon Extractor.",
+    "description": "Favicon Extractor \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5955,7 +5955,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Image EXIF Inspector.",
+    "description": "Image EXIF Inspector \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5969,7 +5969,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Domain WHOIS Interface.",
+    "description": "Domain WHOIS Interface \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5983,7 +5983,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Email Domain Hygiene Checker.",
+    "description": "Email Domain Hygiene Checker \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -5997,7 +5997,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: Phone Country Analyzer.",
+    "description": "Phone Country Analyzer \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6011,7 +6011,7 @@
     "category": "OSINT / Public Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free osint / public data tool: IP Address Parser.",
+    "description": "IP Address Parser \u2014 OSINT / Public Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6025,7 +6025,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: CSV Cleaner.",
+    "description": "CSV Cleaner \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6039,7 +6039,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: CSV Deduplicator.",
+    "description": "CSV Deduplicator \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6053,7 +6053,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: CSV Column Selector.",
+    "description": "CSV Column Selector \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6067,7 +6067,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: CSV Splitter.",
+    "description": "CSV Splitter \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6081,7 +6081,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: CSV Merger.",
+    "description": "CSV Merger \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6095,7 +6095,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: CSV Transposer.",
+    "description": "CSV Transposer \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6109,7 +6109,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: CSV to TSV.",
+    "description": "CSV to TSV \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6123,7 +6123,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: TSV to CSV.",
+    "description": "TSV to CSV \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6137,7 +6137,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: JSON Lines Cleaner.",
+    "description": "JSON Lines Cleaner \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6151,7 +6151,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: JSON Lines Merger.",
+    "description": "JSON Lines Merger \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6165,7 +6165,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: TXT to CSV.",
+    "description": "TXT to CSV \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6179,7 +6179,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: CSV to XLSX.",
+    "description": "CSV to XLSX \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6193,7 +6193,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: XLSX to CSV.",
+    "description": "XLSX to CSV \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6207,7 +6207,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: File Renamer Pattern Generator.",
+    "description": "File Renamer Pattern Generator \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6221,7 +6221,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: Folder Tree Generator.",
+    "description": "Folder Tree Generator \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6235,7 +6235,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: File Extension Extractor.",
+    "description": "File Extension Extractor \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6249,7 +6249,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: Duplicate Filename Finder.",
+    "description": "Duplicate Filename Finder \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6263,7 +6263,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: File Size Calculator.",
+    "description": "File Size Calculator \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6277,7 +6277,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: Checksum Manifest Generator.",
+    "description": "Checksum Manifest Generator \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6291,7 +6291,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: Data URI Encoder.",
+    "description": "Data URI Encoder \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6305,7 +6305,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: Data URI Decoder.",
+    "description": "Data URI Decoder \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6319,7 +6319,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: Line Ending Converter.",
+    "description": "Line Ending Converter \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6333,7 +6333,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: UTF-8 Inspector.",
+    "description": "UTF-8 Inspector \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6347,7 +6347,7 @@
     "category": "Files & Data",
     "status": "live",
     "processing": "browser",
-    "description": "Free files & data tool: Binary Viewer Helper.",
+    "description": "Binary Viewer Helper \u2014 Files & Data tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6361,7 +6361,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: QR Code Generator.",
+    "description": "QR Code Generator \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6375,7 +6375,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Random Picker.",
+    "description": "Random Picker \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6389,7 +6389,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Checklist Maker.",
+    "description": "Checklist Maker \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6403,7 +6403,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Decision Table Maker.",
+    "description": "Decision Table Maker \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6417,7 +6417,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Meeting Agenda.",
+    "description": "Meeting Agenda \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6431,7 +6431,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Meeting Minutes.",
+    "description": "Meeting Minutes \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6445,7 +6445,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Task Priority Matrix.",
+    "description": "Task Priority Matrix \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6459,7 +6459,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Habit Tracker.",
+    "description": "Habit Tracker \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6473,7 +6473,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Countdown Timer.",
+    "description": "Countdown Timer \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6487,7 +6487,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Stopwatch.",
+    "description": "Stopwatch \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6501,7 +6501,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Pomodoro.",
+    "description": "Pomodoro \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6515,7 +6515,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Calendar Week Number.",
+    "description": "Calendar Week Number \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6529,7 +6529,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Date Planner.",
+    "description": "Date Planner \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6543,7 +6543,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Business Days Counter.",
+    "description": "Business Days Counter \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6557,7 +6557,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Timezone Meeting Planner.",
+    "description": "Timezone Meeting Planner \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6571,7 +6571,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: File Name Cleaner.",
+    "description": "File Name Cleaner \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6585,7 +6585,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Text Joiner.",
+    "description": "Text Joiner \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6599,7 +6599,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: Table Maker.",
+    "description": "Table Maker \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6613,7 +6613,7 @@
     "category": "Productivity",
     "status": "live",
     "processing": "browser",
-    "description": "Free productivity tool: CSV Previewer.",
+    "description": "CSV Previewer \u2014 Productivity tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6627,7 +6627,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Color Palette Generator.",
+    "description": "Color Palette Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6641,7 +6641,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Gradient Generator.",
+    "description": "Gradient Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6655,7 +6655,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Box Shadow Generator.",
+    "description": "Box Shadow Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6669,7 +6669,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Border Radius Generator.",
+    "description": "Border Radius Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6683,7 +6683,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: CSS Grid Generator.",
+    "description": "CSS Grid Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6697,7 +6697,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: CSS Flexbox Generator.",
+    "description": "CSS Flexbox Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6711,7 +6711,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Responsive Breakpoint Helper.",
+    "description": "Responsive Breakpoint Helper \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6725,7 +6725,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Meta Tag Generator.",
+    "description": "Meta Tag Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6739,7 +6739,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Open Graph Generator.",
+    "description": "Open Graph Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6753,7 +6753,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Twitter Card Generator.",
+    "description": "Twitter Card Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6767,7 +6767,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Schema Markup Generator.",
+    "description": "Schema Markup Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6781,7 +6781,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Canonical Tag Generator.",
+    "description": "Canonical Tag Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6795,7 +6795,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Robots Meta Generator.",
+    "description": "Robots Meta Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6809,7 +6809,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Sitemap XML Generator.",
+    "description": "Sitemap XML Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6823,7 +6823,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Favicon Pack Generator.",
+    "description": "Favicon Pack Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6837,7 +6837,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Web Manifest Generator.",
+    "description": "Web Manifest Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6851,7 +6851,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: QR Landing Page Maker.",
+    "description": "QR Landing Page Maker \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6865,7 +6865,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: OG Image Maker.",
+    "description": "OG Image Maker \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6879,7 +6879,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: Placeholder Image Generator.",
+    "description": "Placeholder Image Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6893,7 +6893,7 @@
     "category": "Design & Web",
     "status": "live",
     "processing": "browser",
-    "description": "Free design & web tool: SVG Pattern Generator.",
+    "description": "SVG Pattern Generator \u2014 Design & Web tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6907,7 +6907,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Loan Payment.",
+    "description": "Loan Payment \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6921,7 +6921,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Amortization.",
+    "description": "Amortization \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6935,7 +6935,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Investment Return.",
+    "description": "Investment Return \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6949,7 +6949,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Net Worth Tracker.",
+    "description": "Net Worth Tracker \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6963,7 +6963,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Budget Sheet.",
+    "description": "Budget Sheet \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6977,7 +6977,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Savings Goal.",
+    "description": "Savings Goal \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -6991,7 +6991,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Emergency Fund Calculator.",
+    "description": "Emergency Fund Calculator \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7005,7 +7005,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Debt Snowball.",
+    "description": "Debt Snowball \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7019,7 +7019,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Debt Avalanche.",
+    "description": "Debt Avalanche \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7033,7 +7033,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Inflation Adjuster.",
+    "description": "Inflation Adjuster \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7047,7 +7047,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Currency Converter.",
+    "description": "Currency Converter \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7061,7 +7061,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Profit Margin.",
+    "description": "Profit Margin \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7075,7 +7075,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Markup.",
+    "description": "Markup \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7089,7 +7089,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Break Even.",
+    "description": "Break Even \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7103,7 +7103,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Discount.",
+    "description": "Discount \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7117,7 +7117,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Tax Calculator.",
+    "description": "Tax Calculator \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7131,7 +7131,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: Subscription Cost Calculator.",
+    "description": "Subscription Cost Calculator \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7145,7 +7145,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: CAC Calculator.",
+    "description": "CAC Calculator \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7159,7 +7159,7 @@
     "category": "Finance",
     "status": "live",
     "processing": "browser",
-    "description": "Free finance tool: LTV Calculator.",
+    "description": "LTV Calculator \u2014 Finance tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7201,7 +7201,7 @@
     "category": "Media / Downloads",
     "status": "live",
     "processing": "browser",
-    "description": "Free media / downloads tool: YouTube Thumbnail Downloader.",
+    "description": "YouTube Thumbnail Downloader \u2014 Get max-res thumbnail URL from YouTube video. Public img.youtube.com, no download bypass. Runs in browser, private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7215,7 +7215,7 @@
     "category": "Media / Downloads",
     "status": "live",
     "processing": "browser",
-    "description": "Free media / downloads tool: YouTube Subtitle Helper.",
+    "description": "YouTube Subtitle Helper \u2014 Media / Downloads tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7243,7 +7243,7 @@
     "category": "Media / Downloads",
     "status": "live",
     "processing": "browser",
-    "description": "Free media / downloads tool: Public Video Frame Extractor.",
+    "description": "Public Video Frame Extractor \u2014 Media / Downloads tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7257,7 +7257,7 @@
     "category": "Media / Downloads",
     "status": "live",
     "processing": "browser",
-    "description": "Free media / downloads tool: Webpage Asset Saver.",
+    "description": "Webpage Asset Saver \u2014 Media / Downloads tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7271,7 +7271,7 @@
     "category": "Media / Downloads",
     "status": "live",
     "processing": "browser",
-    "description": "Free media / downloads tool: Public Image Downloader.",
+    "description": "Public Image Downloader \u2014 Media / Downloads tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7285,7 +7285,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: eGFR Reference Helper.",
+    "description": "eGFR Reference Helper \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7299,7 +7299,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Ideal Body Weight.",
+    "description": "Ideal Body Weight \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7313,7 +7313,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Adjusted Body Weight.",
+    "description": "Adjusted Body Weight \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7327,7 +7327,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Osmolality Calculator.",
+    "description": "Osmolality Calculator \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7341,7 +7341,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Sodium Correction.",
+    "description": "Sodium Correction \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7355,7 +7355,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: QTc Calculator.",
+    "description": "QTc Calculator \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7369,7 +7369,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: MAP Calculator.",
+    "description": "MAP Calculator \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7383,7 +7383,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Pulse Pressure.",
+    "description": "Pulse Pressure \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7397,7 +7397,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Mean Arterial Pressure.",
+    "description": "Mean Arterial Pressure \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7411,7 +7411,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Drip Rate Calculator.",
+    "description": "Drip Rate Calculator \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7425,7 +7425,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: IV Flow Rate.",
+    "description": "IV Flow Rate \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7439,7 +7439,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Dilution Calculator.",
+    "description": "Dilution Calculator \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7453,7 +7453,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Unit Conversion.",
+    "description": "Unit Conversion \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7467,7 +7467,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Medical Abbreviation Helper.",
+    "description": "Medical Abbreviation Helper \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7481,7 +7481,7 @@
     "category": "Health & Medical",
     "status": "live",
     "processing": "browser",
-    "description": "Free health & medical tool: Clinical Note Formatter.",
+    "description": "Clinical Note Formatter \u2014 Health & Medical tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7495,7 +7495,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Dice Roller.",
+    "description": "Dice Roller \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7509,7 +7509,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Coin Flip.",
+    "description": "Coin Flip \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7523,7 +7523,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Random Number Generator.",
+    "description": "Random Number Generator \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7537,7 +7537,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Random Name Picker.",
+    "description": "Random Name Picker \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7551,7 +7551,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Team Generator.",
+    "description": "Team Generator \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7565,7 +7565,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Decision Wheel.",
+    "description": "Decision Wheel \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7579,7 +7579,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: QR Code.",
+    "description": "QR Code \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7593,7 +7593,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Barcode.",
+    "description": "Barcode \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7607,7 +7607,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Color Blindness Simulator.",
+    "description": "Color Blindness Simulator \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7621,7 +7621,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Typing Speed Test.",
+    "description": "Typing Speed Test \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7635,7 +7635,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Keyboard Test.",
+    "description": "Keyboard Test \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7649,7 +7649,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Mouse Test.",
+    "description": "Mouse Test \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7663,7 +7663,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Screen Resolution Checker.",
+    "description": "Screen Resolution Checker \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7677,7 +7677,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Browser Feature Checker.",
+    "description": "Browser Feature Checker \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7691,7 +7691,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Network Speed Test Interface.",
+    "description": "Network Speed Test Interface \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7705,7 +7705,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Internet Time Checker.",
+    "description": "Internet Time Checker \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7719,7 +7719,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: World Clock.",
+    "description": "World Clock \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7733,7 +7733,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Calendar Generator.",
+    "description": "Calendar Generator \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7747,7 +7747,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: Printable Ruler.",
+    "description": "Printable Ruler \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7761,7 +7761,7 @@
     "category": "Miscellaneous",
     "status": "live",
     "processing": "browser",
-    "description": "Free miscellaneous tool: A4 Paper Generator.",
+    "description": "A4 Paper Generator \u2014 Miscellaneous tool that works in this browser. Upload file, process locally when possible, export result. Fast and private.",
     "privacy": "local where practical",
     "adSlots": [
       "top",
@@ -7777,6 +7777,89 @@
     "processing": "browser",
     "description": "Audacity-like multi-track editor: import, waveform view, trim, fade, mix, export MP3/WAV. Autosaves.",
     "privacy": "local",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "youtube-transcript",
+    "title": "YouTube Transcript",
+    "category": "Media / Downloads",
+    "status": "live",
+    "processing": "hybrid",
+    "description": "Get transcript/captions from any YouTube video that has captions (manual or auto-generated). Supports SRT, VTT, text export.",
+    "privacy": "hybrid",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "youtube-playlist-lister",
+    "title": "YouTube Playlist Lister",
+    "category": "Media / Downloads",
+    "status": "live",
+    "processing": "hybrid",
+    "description": "Extract all video URLs, titles, thumbnails from a public YouTube playlist. Export as CSV, TXT, or copy all.",
+    "privacy": "hybrid",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "youtube-chapter-generator",
+    "title": "YouTube Chapter Generator",
+    "category": "Media / Downloads",
+    "status": "live",
+    "processing": "browser",
+    "description": "Generate chapters from YouTube transcript timestamps. Creates clickable chapter list for description.",
+    "privacy": "local",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "ai-mode",
+    "title": "AI Mode \u2014 Combine Tools",
+    "category": "OCR & AI",
+    "status": "live",
+    "processing": "hybrid",
+    "description": "Upload files + complex request. AI chains multiple tools (OCR, split, summarize, etc). Future paid mode, currently free. 4-digit session code to remember your private tools.",
+    "privacy": "hybrid",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "agentic-pdf-splitter",
+    "title": "Agentic PDF Splitter",
+    "category": "PDF",
+    "status": "live",
+    "processing": "hybrid",
+    "description": "AI reads PDF content and intelligently splits into chapters/questions. Generates prompts for Gemini 1M / NotebookLM. Asks about API key, batch vs per-question.",
+    "privacy": "hybrid",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "question-paper-to-notes",
+    "title": "Question Paper to Notes AI",
+    "category": "Education",
+    "status": "live",
+    "processing": "hybrid",
+    "description": "Upload scanned question paper + textbook PDFs. AI does OCR, splits questions, creates study prompts for Google AI Studio (Gemini) or NotebookLM. Batch or per-question modes.",
+    "privacy": "hybrid",
     "adSlots": [
       "top",
       "inline",

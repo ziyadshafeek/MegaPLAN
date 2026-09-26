@@ -24,6 +24,8 @@
     "api/ai.js": { "maxDuration": 60 },
     "api/agent-plan.js": { "maxDuration": 60 },
     "api/agent-publish.js": { "maxDuration": 30 },
-    "api/inspect.js": { "maxDuration": 15 }
+    "api/inspect.js": { "maxDuration": 15 },
+    "api/youtube-transcript.js": { "maxDuration": 30 },
+    "api/youtube-playlist.js": { "maxDuration": 30 }
   }
 }

@@ -37,8 +37,10 @@ for (const title of ['Merge PDFs', 'Split PDF', 'Word Counter', 'Wiki Agent']) {
 
 const files = [
   'public/js/kit.js', 'public/js/engines.js', 'public/js/engines-rest.js', 'public/js/pdf-engine.js',
-  'public/js/pdf-ops.js', 'public/app.js', 'public/agent/agent.js', 'api/ai.js', 'api/agent-plan.js', 'api/inspect.js',
-  'api/lib/nvidia.js', 'scripts/dev-server.mjs', 'scripts/sync-github-ai-to-vercel.mjs'
+  'public/js/pdf-ops.js', 'public/js/audio-studio.js', 'public/js/youtube-tools.js', 'public/js/ai-mode.js', 'public/js/agentic-pdf.js',
+  'public/app.js', 'public/agent/agent.js', 'api/ai.js', 'api/agent-plan.js', 'api/inspect.js',
+  'api/lib/nvidia.js', 'api/youtube-transcript.js', 'api/youtube-playlist.js',
+  'scripts/dev-server.mjs', 'scripts/sync-github-ai-to-vercel.mjs'
 ];
 for (const f of files) {
   const r = spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' });

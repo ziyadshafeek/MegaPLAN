@@ -1,6 +1,9 @@
 import * as kit from './kit.js';
 import { HANDLERS, textTool, calcTool, fileTool, aiTool, imageOp, audioBufferTool, wavFromBuffer, docPdf, qrDataUrl } from './engines.js';
 import { mountAudioStudio } from './audio-studio.js';
+import { mountYouTubeTranscript, mountYouTubePlaylist, mountYouTubeChapter } from './youtube-tools.js';
+import { mountAIMode } from './ai-mode.js';
+import { mountAgenticPdfSplitter, mountQuestionPaperToNotes } from './agentic-pdf.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -693,7 +696,13 @@ Object.assign(HANDLERS, {
 });
 
 Object.assign(HANDLERS, {
-  'Audio Studio': (r, t) => mountAudioStudio(r, t)
+  'Audio Studio': (r, t) => mountAudioStudio(r, t),
+  'YouTube Transcript': (r, t) => mountYouTubeTranscript(r, t),
+  'YouTube Playlist Lister': (r, t) => mountYouTubePlaylist(r, t),
+  'YouTube Chapter Generator': (r, t) => mountYouTubeChapter(r, t),
+  'AI Mode — Combine Tools': (r, t) => mountAIMode(r, t),
+  'Agentic PDF Splitter': (r, t) => mountAgenticPdfSplitter(r, t),
+  'Question Paper to Notes AI': (r, t) => mountQuestionPaperToNotes(r, t)
 });
 
 for (const title of ['APA Citation Helper', 'MLA Citation Helper', 'Chicago Citation Helper', 'Vancouver Citation Helper']) {

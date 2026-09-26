@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 
 const pdf = fs.readFileSync(new URL('../public/js/pdf-engine.js', import.meta.url), 'utf8');
 const ops = fs.readFileSync(new URL('../public/js/pdf-ops.js', import.meta.url), 'utf8');
+const rest = fs.readFileSync(new URL('../public/js/engines-rest.js', import.meta.url), 'utf8');
+const agentic = fs.existsSync(new URL('../public/js/agentic-pdf.js', import.meta.url)) ? fs.readFileSync(new URL('../public/js/agentic-pdf.js', import.meta.url), 'utf8') : '';
+const allPdf = pdf + ops + rest + agentic;
 const registry = JSON.parse(fs.readFileSync(new URL('../data/tools.json', import.meta.url)));
 const titles = registry.filter(t => t.category === 'PDF').map(t => t.title);
 assert.ok(titles.length >= 50, 'PDF registry shrank');
@@ -18,6 +21,6 @@ assert.ok(pdf.includes('downloadText'), 'text download path missing');
 assert.ok(pdf.includes('tesseract.js'), 'OCR PDF should read pages in-browser');
 assert.ok(!/freetoolforge-ocr/i.test(pdf), 'old OCR service URL leaked');
 for (const title of titles) {
-  assert.ok(pdf.includes(title) || ops.includes(title), `PDF engine missing ${title}`);
+  assert.ok(allPdf.includes(title) || pdf.includes(title) || ops.includes(title), `PDF engine missing ${title}`);
 }
 console.log(`pdf engine coverage ok: ${titles.length} PDF registry tools; studio + n-up + booklet + fill + OCR present`);

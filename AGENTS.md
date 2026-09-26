@@ -16,9 +16,17 @@ MegaPLAN is **not** a clone of freetoolforge.org. The customer UI is a **desktop
 
 Pinned apps on the home screen:
 
-- **Wiki Agent** — hosted page builder (`/agent/`, `/api/agent-plan`)
+- **Wiki Agent** — hosted page builder (`/agent/`, `/api/agent-plan`) — Codex-style chat + live browser + Deploy
 - **Self Agent** — BYOK OpenAI-compatible builder (keys stay in `localStorage`)
+- **AI Mode** — combine tools, upload files + complex request, 4-digit session code for private tools, future paid (free now) — `/tools/ai-mode`, `public/js/ai-mode.js`
+- **Audio Studio** — Audacity-like multi-track DAW, waveform, MP3/WAV, autosave — `/tools/audio-studio`, `public/js/audio-studio.js`
 - **My Wiki** — pages saved on this device + published pages
+
+Other frontier tools:
+- **YouTube Transcript** — any video with captions, SRT/VTT/text, AI summarize — `/api/youtube-transcript`, `public/js/youtube-tools.js`
+- **YouTube Playlist Lister** — public playlist → video list, CSV/TXT export — `/api/youtube-playlist`
+- **Agentic PDF Splitter** — AI reads PDF, splits into chapters/questions/batches, generates prompts for Gemini 1M / NotebookLM — `public/js/agentic-pdf.js`
+- **Question Paper to Notes AI** — scanned question paper + textbook → OCR → notes per question/batch
 
 ## Hard rules
 - **Never** show a local-model shelf, Hugging Face repos, “downloading TrOCR”, cache-clear for models, or provider names (NVIDIA, DeepSeek, etc.) on customer pages.
@@ -38,21 +46,28 @@ Pinned apps on the home screen:
 ## Layout of code
 ```
 public/index.html          OS shell
-public/styles.css          desktop + Android Files
-public/app.js              router, tabs, folders, home apps
+public/styles.css          desktop + Android Files (improved mobile: touch ≥40px, 16px inputs, responsive grids)
+public/app.js              router, tabs, folders, home apps (now pins AI Mode + Audio Studio)
 public/js/kit.js           shared helpers (no model names)
 public/js/engines.js       text/calc/dev dispatch
-public/js/engines-rest.js  image/audio/video/ai/business/…
-public/js/pdf-engine.js    PDF studio (thumbs, n-up, booklet, fill, OCR)
+public/js/engines-rest.js  image/audio/video/ai/business/… + Audio Studio + YouTube + AI Mode + Agentic PDF
+public/js/pdf-engine.js    PDF studio (thumbs, n-up, booklet, fill, OCR via tesseract.js)
 public/js/pdf-ops.js       PDF algorithms used by the studio
-public/agent/              Wiki Agent + Self Agent
-api/lib/nvidia.js          server-only provider client
+public/js/audio-studio.js  Audacity-like multi-track DAW (waveform, mix, MP3 via lamejs, IndexedDB autosave)
+public/js/youtube-tools.js YouTube Transcript (timedtext + Piped fallback), Playlist Lister, Chapter Generator
+public/js/ai-mode.js       AI Mode — combine tools, 4-digit session, private tools, prompts for Gemini 1M / NotebookLM
+public/js/agentic-pdf.js   Agentic PDF Splitter + Question Paper to Notes (OCR, detect Qs/chapters, batch, prompt gen)
+public/agent/              Wiki Agent (Codex-style) + Self Agent
+api/lib/nvidia.js          server-only provider client (defaults to deepseek-v4.1-flash)
 api/ai.js                  writing assistant (identity hidden)
-api/agent-*.js             wiki plan/publish/dispatch
+api/agent-*.js             wiki plan/publish/dispatch/status/health
+api/youtube-transcript.js  YouTube captions fetcher (YouTube timedtext + Piped/Invidious fallback, SRT/VTT/JSON)
+api/youtube-playlist.js    Playlist extractor (Piped + Invidious + YouTube scrape, CSV/TXT export)
 api/inspect.js             public URL/DNS/TLS/robots
 scripts/dev-server.mjs     local static + API
-data/tools.json            canonical 555-tool registry
+data/tools.json            canonical 562-tool registry (was 555, now includes frontier tools)
 public/data/               deployed copy of JSON
+changes.patch              original 13-file Codex patch (737 lines, verified)
 ```
 
 ## How to add a tool

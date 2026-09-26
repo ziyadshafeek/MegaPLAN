@@ -21,6 +21,8 @@ assert.ok(!/NVIDIA_AGENT_MODEL/.test(js), 'model env leaked into agent client');
 const app = fs.readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 assert.ok(app.includes('Wiki Agent'), 'Wiki Agent missing from home OS');
 assert.ok(app.includes('Self Agent'), 'Self Agent missing from home OS');
+assert.ok(app.includes('AI Mode'), 'AI Mode missing from home OS');
+assert.ok(app.includes('Audio Studio'), 'Audio Studio missing from home OS');
 
 const css = fs.readFileSync(new URL('../public/agent/agent.css', import.meta.url), 'utf8');
 assert.match(css, /max-width: 840px/);
