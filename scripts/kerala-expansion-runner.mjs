@@ -1,12 +1,4 @@
-/**
- * Kerala Expansion Runner — finishes entire Kerala in 10 days from Trivandrum origin
- * Adaptive multi-resolution grid, parallel workers, multiple Overpass mirrors
- * 
- * Usage:
- * node scripts/kerala-expansion-runner.mjs --phase 1 --batch 20
- * node scripts/kerala-expansion-runner.mjs --kerala --batch 100 --workers 4
- */
-
+// Bounded OSM preview only; no completion/coverage promise. Bulk imports belong outside Git.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,13 +15,16 @@ const OVERPASS_MIRRORS = [
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const out = { phase: null, batch: 20, workers: 2, kerala: false, start: null };
+  const out = { phase: null, batch: 2, workers: 1, kerala: false, start: null };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--phase') out.phase = Number(args[++i]);
     if (args[i] === '--batch') out.batch = Number(args[++i]);
     if (args[i] === '--workers') out.workers = Number(args[++i]);
     if (args[i] === '--kerala') out.kerala = true;
     if (args[i] === '--start') out.start = Number(args[++i]);
+  }
+  if (!Number.isInteger(out.batch) || out.batch < 1 || out.batch > 2 || out.workers !== 1 || out.kerala) {
+    throw Error('Preview limit: 1–2 cells, one worker, one phase; use external bulk import for larger plans.');
   }
   return out;
 }
@@ -71,7 +66,7 @@ function writeIndex(idx) {
   fs.writeFileSync(path.join(root, 'public', 'data', 'map-directory', 'index.json'), JSON.stringify(idx, null, 2));
 }
 
-async function scanCellWithMirrors(index, grid, radius, center, mirrorIndex = 0) {
+export async function scanCellWithMirrors(index, grid, radius, center, mirrorIndex = 0, delay = ms => new Promise(r => setTimeout(r, ms))) {
   // The queue already calculated the exact point. Never apply the spiral twice.
   const { lat, lng, dx = 0, dy = 0 } = center;
 
@@ -92,25 +87,37 @@ out center 100;`;
     try {
       const url = `${mirror}?data=${encodeURIComponent(query)}`;
       const r = await fetchWithTimeout(url, {}, 25000);
-      if (!r.ok) throw Error(`Overpass ${mirror} ${r.status}`);
+      if (!r.ok) {
+        if (r.status === 429 || r.status === 503) {
+          const header = r.headers?.get('retry-after');
+          const seconds = header && /^\d+$/.test(header) ? Number(header) : 0;
+          const until = header && !seconds ? Date.parse(header) : NaN;
+          const wait = Math.max(30000, seconds * 1000, Number.isFinite(until) ? until - Date.now() : 0);
+          // Never retry earlier than Retry-After; a long wait aborts this bounded job.
+          if (wait > 120000) throw Error('Provider requests a long pause; retry on a later run');
+          await delay(wait);
+        }
+        throw Error(`Overpass ${mirror} ${r.status}`);
+      }
       const data = await r.json();
-      if (!Array.isArray(data.elements)) throw Error('Invalid Overpass response');
-      const places = data.elements.map(el => ({
+      if (data.remark || !Array.isArray(data.elements)) throw Error('Invalid Overpass response');
+      const places = data.elements.filter(el => ['node', 'way', 'relation'].includes(el.type) && Number.isSafeInteger(el.id) && el.id > 0).map(el => ({
         id: `${el.type}/${el.id}`,
-        lat: el.lat || el.center?.lat,
-        lng: el.lon || el.center?.lon,
+        lat: el.lat ?? el.center?.lat,
+        lng: el.lon ?? el.center?.lon,
         tags: el.tags || {},
         name: el.tags?.name || null,
         amenity: el.tags?.amenity || null,
         shop: el.tags?.shop || null,
         road: el.tags?.['addr:street'] || null
-      })).filter(p => p.lat && p.lng);
+      })).filter(p => Number.isFinite(p.lat) && Number.isFinite(p.lng));
       
       if (!places.length && index === 0) throw Error('Trivandrum center returned no verified places');
       return { index, lat, lng, dx, dy, grid, radius, places, roads: [], mirror };
     } catch (e) {
+      if (e.message === 'Provider requests a long pause; retry on a later run') throw e;
       console.log(`  Mirror ${mirror} failed for cell ${index}: ${e.message}, trying next...`);
-      await new Promise(r => setTimeout(r, 2000));
+      await delay(5000 * (attempt + 1));
     }
   }
   throw Error(`All mirrors failed for cell ${index}`);
@@ -148,6 +155,11 @@ async function saveCell(cellData) {
   }
 
   const fullCell = {
+    source: 'OpenStreetMap',
+    license: 'ODbL-1.0',
+    attribution: '© OpenStreetMap contributors',
+    sourceUrl: 'https://www.openstreetmap.org/copyright',
+    endpoint: cellData.mirror,
     index: cellData.index,
     lat: cellData.lat,
     lng: cellData.lng,
@@ -193,7 +205,7 @@ async function runPhase(phase, batch, workers) {
   // into a planet-scale repository. An OSM extract + spatial DB is required.
   if ((idx.cells || []).length >= 100) throw Error('Git map preview cap: 100 verified cells; use an OSM extract and external spatial database for further coverage.');
   const previousPhases = (loadExpansionPlan()?.phases || []).filter(p => p.phase < phase.phase);
-  const queue = phaseTasks(phase, previousPhases, idx.lastIndex, batch, idx.cells || []);
+  const queue = phaseTasks(phase, previousPhases, idx.lastIndex, Math.min(batch, 100 - (idx.cells || []).length), idx.cells || []);
   console.log(`Phase queue: ${queue.length} cells, next index ${queue[0]?.index ?? 'none'}; workers ${workers}`);
 
   console.log(`Queue: ${queue.length} cells`);
@@ -201,6 +213,7 @@ async function runPhase(phase, batch, workers) {
 
   // Parallel workers
   let completed = 0;
+  let failed = 0;
   let totalPlaces = 0;
 
   async function worker(workerId) {
@@ -215,6 +228,7 @@ async function runPhase(phase, batch, workers) {
         totalPlaces += result.places.length;
         console.log(`[Worker ${workerId}] Cell ${task.index} done: ${result.places.length} places, total ${completed}/${batch}`);
       } catch (e) {
+        failed++;
         console.log(`[Worker ${workerId}] Cell ${task.index} failed: ${e.message}`);
       }
       // Be nice to Overpass
@@ -229,6 +243,7 @@ async function runPhase(phase, batch, workers) {
   await Promise.all(workerPromises);
 
   console.log(`\nPhase ${phase.phase} done: ${completed} cells, ${totalPlaces} places`);
+  if (failed) throw Error(`Incomplete OSM collection: ${failed} cells failed; publication prohibited.`);
   if (!completed) throw Error(`No verified cells in phase ${phase.phase}; all Overpass mirrors failed.`);
   return { completed, totalPlaces };
 }
@@ -237,11 +252,10 @@ async function main() {
   const args = parseArgs();
   const plan = loadExpansionPlan();
   if (!plan) {
-    console.log('No expansion plan found');
-    return;
+    throw Error('No expansion plan found');
   }
 
-  console.log('Kerala Expansion Runner — 10 days to finish Kerala from Trivandrum');
+  console.log('Bounded regional OSM preview; not complete Kerala coverage');
   console.log(`Args: phase=${args.phase}, batch=${args.batch}, workers=${args.workers}, kerala=${args.kerala}`);
 
   ensureDir();
@@ -249,8 +263,7 @@ async function main() {
   if (args.phase) {
     const phase = plan.phases.find(p => p.phase === args.phase);
     if (!phase) {
-      console.log(`Phase ${args.phase} not found`);
-      return;
+      throw Error(`Phase ${args.phase} not found`);
     }
     await runPhase(phase, args.batch, args.workers);
   } else if (args.kerala) {
@@ -286,4 +299,4 @@ async function main() {
   console.log(JSON.stringify({ totalCells: finalIdx.totalCells, totalPlaces: finalIdx.totalPlaces, lastIndex: finalIdx.lastIndex, businessTypes: Object.keys(finalIdx.businessTypes||{}).length, roads: Object.keys(finalIdx.roadWise||{}).length, religious: finalIdx.religious }, null, 2));
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(e => { console.error(e); process.exitCode = 1; });

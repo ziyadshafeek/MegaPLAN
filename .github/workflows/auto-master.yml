@@ -1,60 +1,13 @@
-name: Scheduled directory indexing
-
+name: Retired Auto Master (no collection)
 on:
-  # Manual diagnostic only: separate map/music workflows own their staggered schedules.
   workflow_dispatch:
-    inputs:
-      batch:
-        description: 'Batch size for each scraper'
-        default: '10'
-        type: string
-
-concurrency:
-  group: open-directory-${{ github.ref }}
-  cancel-in-progress: false
+permissions:
+  contents: read
 jobs:
-  auto-master:
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install
-        run: npm ci || npm install
-      - name: Run verifiable map and open music indexing
-        env:
-          NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      - name: Refuse retired collector
         run: |
-          echo "Running scheduled indexing (upstream failures are not successful ingestions)"
-          # Map — Kerala 10-day sprint
-          echo "=== Map Kerala ==="
-          node scripts/kerala-expansion-runner.mjs --phase 1 --batch 2 --workers 1
-          # Product feeds are imported only after documented retailer permission.
-          echo 'Product collection skipped: no authorized retailer feed configured.'
-          # Worldwide open recording metadata; not Spotify catalogue
-          echo "=== MusicBrainz ==="
-          node scripts/open-music-runner.mjs
-      - name: Commit all
-        run: |
-          git config user.name "auto-master-bot"
-          git config user.email "bot@megaplan.local"
-          git add data/ public/data/
-          if git diff --cached --quiet; then echo "No new data"; exit 0; fi
-          MAP=$(jq -r '.totalCells // 0' data/map-directory/index.json 2>/dev/null || echo "0")
-          PROD=$(jq -r '.totalProducts // 0' data/product-directory/index.json 2>/dev/null || echo "0")
-          MUSIC=$(jq -r '.totalTracks // 0' data/music-directory/index.json 2>/dev/null || echo "0")
-          git commit -m "auto-master: fully automatic map ${MAP} cells, product ${PROD}, music ${MUSIC} [skip ci]"
-          git fetch origin "${GITHUB_REF_NAME}"
-          git rebase FETCH_HEAD
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-      - name: Summary
-        run: |
-          echo "### 🤖 Scheduled indexing" >> $GITHUB_STEP_SUMMARY
-          echo "Map: $(jq -r '.totalCells // 0' data/map-directory/index.json) cells" >> $GITHUB_STEP_SUMMARY
-          echo "Product: $(jq -r '.totalProducts // 0' data/product-directory/index.json) products" >> $GITHUB_STEP_SUMMARY
-          echo "Music: $(jq -r '.totalTracks // 0' data/music-directory/index.json) tracks" >> $GITHUB_STEP_SUMMARY
-          echo "Verified records only; Spotify catalogue and nationwide product coverage are not promised" >> $GITHUB_STEP_SUMMARY
+          echo 'Auto Master is retired. Use the bounded map or MusicBrainz review workflow.'
+          exit 1

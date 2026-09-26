@@ -1,83 +1,12 @@
-name: Collect verified directories (branch trial)
+name: Retired combined collection trial
 on:
-  push:
-    branches: [arena/01a0dd3c-megaplan]
-    paths:
-      - '.github/workflows/collect-now.yml'
-      - 'lib/city-directory.mjs'
-      - 'scripts/city-directory-runner.mjs'
-      - 'scripts/open-music-runner.mjs'
-      - 'scripts/image-links-runner.mjs'
   workflow_dispatch:
 permissions:
-  contents: write
-concurrency:
-  group: open-directory-${{ github.ref }}
-  cancel-in-progress: false
+  contents: read
 jobs:
-  collect:
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: true
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Collect city shop and music-place records (OSM)
-        id: city
-        run: |
-          if node scripts/city-directory-runner.mjs; then echo 'result=success' >> "$GITHUB_OUTPUT"; else echo 'result=failure' >> "$GITHUB_OUTPUT"; fi
-      - name: Collect a Kerala OSM cell
-        id: map
-        run: |
-          if node scripts/kerala-expansion-runner.mjs --phase 1 --batch 1 --workers 1; then echo 'result=success' >> "$GITHUB_OUTPUT"; else echo 'result=failure' >> "$GITHUB_OUTPUT"; fi
-      - name: Product ingestion requires authorized retailer feed
-        id: product
-        run: |
-          echo 'No approved Flipkart/Amazon feed configured; zero verified products must remain visible.'
-          echo 'result=skipped-policy' >> "$GITHUB_OUTPUT"
-      - name: Collect open MusicBrainz recordings, if verifiable
-        id: music
-        run: |
-          if node scripts/open-music-runner.mjs; then echo 'result=success' >> "$GITHUB_OUTPUT"; else echo 'result=failure' >> "$GITHUB_OUTPUT"; fi
-      - name: Collect image-link candidates (never publish without review)
-        continue-on-error: true
-        run: node scripts/image-links-runner.mjs
-      - name: Record source outcomes (not just job start)
-        env:
-          CITY: ${{ steps.city.outputs.result }}
-          MAP: ${{ steps.map.outputs.result }}
-          PRODUCT: ${{ steps.product.outputs.result }}
-          MUSIC: ${{ steps.music.outputs.result }}
-        run: node scripts/collector-status.mjs
-      - name: Publish verified files and status on this branch only
-        run: |
-          git config user.name 'megaplan-collector[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/city-directory public/data/city-directory data/map-directory public/data/map-directory data/product-directory public/data/product-directory data/music-directory public/data/music-directory data/image-links/
-          if git diff --cached --quiet; then echo 'No verified data changes'; exit 0; fi
-          git commit -m 'data: publish verified directory snapshots and status [skip ci]'
-          git fetch origin "${GITHUB_REF_NAME}"
-          git rebase "origin/${GITHUB_REF_NAME}"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-      - name: Report actual outcomes and fail incomplete collection
-        if: always()
-        env:
-          CITY: ${{ steps.city.outputs.result }}
-          MAP: ${{ steps.map.outputs.result }}
-          PRODUCT: ${{ steps.product.outputs.result }}
-          MUSIC: ${{ steps.music.outputs.result }}
-        run: |
-          {
-            echo '### Verified collection trial'
-            echo "City OSM: $CITY; Kerala OSM: $MAP; product: $PRODUCT; music tracks: $MUSIC"
-            echo 'Inspect committed snapshot counts; a started workflow is not proof of published data.'
-            echo "Branch: ${GITHUB_REF_NAME}"
-          } >> "$GITHUB_STEP_SUMMARY"
-          echo 'Product source skipped by policy unless an authorized feed is provided; skip does NOT mean product coverage.'
-          if [ "$CITY" != success ] || [ "$MAP" != success ] || [ "$MUSIC" != success ] || { [ "$PRODUCT" != success ] && [ "$PRODUCT" != skipped-policy ]; }; then
-            echo 'A permitted source failed. See committed status.json and individual step logs.'
-            exit 1
-          fi
+      - run: |
+          echo 'Combined trial retired; use source-specific review workflows.'
+          exit 1
