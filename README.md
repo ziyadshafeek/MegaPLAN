@@ -44,10 +44,10 @@ Optional Vercel env:
 
 ## Current limitations
 
-New Trivandrum music-place and shop directories use a bounded, attributed OpenStreetMap snapshot. They are **empty until real indexing succeeds**; the music-place directory is not a tracks catalogue. See `docs/ACTIVE-COLLECTION.md` for source, controls and live-collection blockers.
+New Trivandrum music-place and shop directories use a bounded, attributed OpenStreetMap snapshot; the music-place directory is not a tracks catalogue. See `docs/ACTIVE-COLLECTION.md` for source, controls and live-collection blockers.
 
 
-The map, product, and music repository snapshots start **empty**: earlier starter records were synthetic and have been removed. The scheduled indexers must successfully contact their upstream sources and publish verified records before directory searches will return indexed results. Product HTML parsing and Spotify public-token lookups are experimental. The Inception tool requires a separately configured `INCEPTION_API_KEY` and uses the official API only.
+Earlier synthetic starter records were removed. The branch now has verified OSM map cells, a bounded Trivandrum shops/music-places snapshot derived from them, and a small set of real Spotify track results; the product snapshot remains empty. Counts and source outcomes are published in the city collector status, and production remains on `main` until an authorized merge/deployment. Product HTML parsing and Spotify public-token lookups are experimental. The Inception tool requires a separately configured `INCEPTION_API_KEY` and uses the official API only.
 
 
 The 587-tool registry has mount/routing tests, not 587 full browser interaction tests. A number of tools remain beta (including video conversion). The Wiki Agent has a clearly labelled local outline mode; AI writing still requires a hosted key or Self Agent credentials. Published map/product/music data is a repository snapshot populated by scheduled jobs, not by visitor browsers or by writes to Vercel's filesystem. See `docs/QA-2026-09-26.md` for the current evidence and rollout blockers.

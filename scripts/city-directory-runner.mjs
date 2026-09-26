@@ -3,11 +3,24 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { collectCityDirectory } from '../lib/city-directory.mjs';
+import { collectCityDirectory, collectCityFromCells } from '../lib/city-directory.mjs';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const reportPath = path.join(root, 'data/city-directory/last-error.json');
 try {
-  const snapshot = await collectCityDirectory();
+  const mapDir = path.join(root, 'data/map-directory');
+  const cellFiles = fs.existsSync(mapDir) ? fs.readdirSync(mapDir).filter(name => /^cell_\d+\.json$/.test(name)).slice(-30) : [];
+  const cells = cellFiles.flatMap(name => {
+    try { return [JSON.parse(fs.readFileSync(path.join(mapDir, name), 'utf8'))]; }
+    catch { return []; }
+  });
+  let snapshot;
+  try {
+    snapshot = collectCityFromCells(cells);
+    console.log(`Using ${cells.length} verified OSM map cells as the city source.`);
+  } catch {
+    console.log('Not enough verified OSM map-cell data; trying bounded direct Overpass queries.');
+    snapshot = await collectCityDirectory();
+  }
   const output = JSON.stringify(snapshot, null, 2) + '\n';
   for (const prefix of ['data', 'public/data']) {
     const dir = path.join(root, prefix, 'city-directory');
