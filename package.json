@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
     "start": "node scripts/dev-server.mjs",
-    "test": "node tests/smoke.mjs && node tests/agent-static.mjs && node tests/agent-actions-static.mjs && node tests/agent-integration.mjs && node tests/site-regression.mjs && node tests/tool-mount.mjs && node tests/city-directory.mjs && node tests/map-phase-grid.mjs && node tests/upstream-honesty.mjs && node tests/presentation.mjs && node tests/data-sources.mjs && node tests/music-collection.mjs && python3 tests/music-dump.py && node tests/vercel-bundle.mjs && node tests/pdf-engine-coverage.mjs && python3 scripts/validate_registry.py && node tests/workflow-safety.mjs && node tests/collection-review.mjs",
+    "test": "node tests/smoke.mjs && node tests/agent-static.mjs && node tests/agent-actions-static.mjs && node tests/agent-integration.mjs && node tests/site-regression.mjs && node tests/tool-mount.mjs && node tests/city-directory.mjs && node tests/map-phase-grid.mjs && node tests/upstream-honesty.mjs && node tests/presentation.mjs && node tests/data-sources.mjs && node tests/music-collection.mjs && python3 tests/music-dump.py && node tests/vercel-bundle.mjs && node tests/pdf-engine-coverage.mjs && python3 scripts/validate_registry.py && node tests/workflow-safety.mjs && node tests/collection-review.mjs && node tests/music-retries.mjs",
     "test:agent-actions": "node tests/agent-actions-static.mjs",
     "validate": "python3 scripts/validate_registry.py",
     "test:bundle": "node tests/vercel-bundle.mjs"

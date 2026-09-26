@@ -119,3 +119,22 @@ Large datasets must remain external; no paid service was introduced.
   reviews draft PR #4 and manually dispatches the two read-only branch workflows.
   Leave PR draft until actual provider runs and artifacts can be reviewed. A run
   yielding zero new distinct IDs is acceptable; a failed upstream is not success.
+
+## Follow-up: owner-triggered branch tests
+
+- Owner disabled Auto Master; API confirmed `disabled_manually`.
+- Map run https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36254572038
+  at `7d306d6` failed. Supplied step screenshot shows cell 4 exhausted mirrors
+  (including HTTP 504), cell 5 returned 94 occurrences, then partial failure
+  correctly blocked review artifact/publication. No verified published delta.
+- Music run https://github.com/ziyadshafeek/MegaPLAN/actions/runs/36255011965
+  at `7d306d6` failed. Supplied screenshot shows two verified pages followed by
+  MusicBrainz HTTP 503; upload was skipped. No published count increase claimed.
+- Added at most two retries per MusicBrainz page for HTTP 429/500/502/503/504,
+  waiting 10s then 20s minimum, honoring Retry-After seconds/date up to 60s.
+  Longer requested pauses abort instead of retrying too early. Permanent HTTP
+  failures still stop immediately; exhausted retries still prohibit publication.
+  Network/JSON errors remain fail-closed without retry.
+- Full npm test on Node 24 passed after retry change, including deterministic
+  recovery, exhaustion, same-page URL, Retry-After and permanent-error fixtures.
+  This is test evidence, not a successful live collection run.
