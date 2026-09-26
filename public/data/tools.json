@@ -7865,5 +7865,125 @@
       "inline",
       "bottom"
     ]
+  },
+  {
+    "slug": "chess",
+    "title": "Chess",
+    "category": "Games",
+    "status": "live",
+    "processing": "browser",
+    "description": "Play chess in browser \u2014 2 players or vs AI (easy/hard). Full FIDE rules, castling, promotion, PGN export. Based on kbjorklu/chess and js-chess-engine.",
+    "privacy": "local",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "chess-2048",
+    "title": "2048",
+    "category": "Games",
+    "status": "live",
+    "processing": "browser",
+    "description": "Slide tiles, combine numbers to reach 2048. Score tracking, best score, arrow keys + swipe. Based on gabrielecirulli/2048.",
+    "privacy": "local",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "snake-game",
+    "title": "Snake Game",
+    "category": "Games",
+    "status": "live",
+    "processing": "browser",
+    "description": "Classic snake game \u2014 eat food, grow, avoid walls and self. Score and best score, arrow keys. Based on RetroBrowserGames.",
+    "privacy": "local",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "tic-tac-toe",
+    "title": "Tic Tac Toe",
+    "category": "Games",
+    "status": "live",
+    "processing": "browser",
+    "description": "Tic Tac Toe \u2014 2 players or vs AI (win/block/center strategy). Simple and fast.",
+    "privacy": "local",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "minesweeper",
+    "title": "Minesweeper",
+    "category": "Games",
+    "status": "live",
+    "processing": "browser",
+    "description": "Minesweeper \u2014 easy/medium/hard, flags, timer, flood fill. Based on michaelbutler/minesweeper WebWorker powered.",
+    "privacy": "local",
+    "adSlots": [
+      "top",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "maps",
+    "title": "Maps",
+    "category": "Productivity",
+    "status": "live",
+    "processing": "hybrid",
+    "description": "OpenStreetMap + Leaflet maps \u2014 search places via Nominatim, nearby cafes/restaurants/hospitals/schools/banks/parks via Overpass, directions via OSRM, distance calculator, current location. Google Maps alternative, no API key.",
+    "privacy": "hybrid",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "instagram-osint-checker",
+    "title": "Instagram OSINT Checker",
+    "category": "OSINT / Public Data",
+    "status": "live",
+    "processing": "hybrid",
+    "description": "Public Instagram profile checker \u2014 checks if public URL exists, no login, no private data. Also checks 20+ platforms for username. Safety: public OSINT only.",
+    "privacy": "hybrid",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "osint-advanced",
+    "title": "OSINT Advanced",
+    "category": "OSINT / Public Data",
+    "status": "live",
+    "processing": "hybrid",
+    "description": "Advanced public OSINT \u2014 username across platforms, URL metadata, DNS, TLS, WHOIS hint, favicon. No private data, no bypass.",
+    "privacy": "hybrid",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
+  },
+  {
+    "slug": "tetris",
+    "title": "Tetris",
+    "category": "Games",
+    "description": "Classic Tetris 10x20 grid, 7 tetrominoes, levels, score, next preview, arrow keys + mobile buttons, best score saved locally. Open source HTML5.",
+    "keywords": [
+      "tetris",
+      "game",
+      "puzzle",
+      "blocks"
+    ],
+    "processing": "local-browser"
   }
 ]

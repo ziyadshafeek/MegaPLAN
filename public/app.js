@@ -28,6 +28,7 @@ const FOLDER_META = {
   Finance: { color: '#2f7d4a', glyph: 'fin' },
   'Media / Downloads': { color: '#a33b3b', glyph: 'med' },
   'Health & Medical': { color: '#a3455c', glyph: 'medx' },
+  Games: { color: '#8a5a2b', glyph: 'game' },
   Miscellaneous: { color: '#6e655b', glyph: 'misc' }
 };
 

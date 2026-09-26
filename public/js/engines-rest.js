@@ -4,6 +4,9 @@ import { mountAudioStudio } from './audio-studio.js';
 import { mountYouTubeTranscript, mountYouTubePlaylist, mountYouTubeChapter } from './youtube-tools.js';
 import { mountAIMode } from './ai-mode.js';
 import { mountAgenticPdfSplitter, mountQuestionPaperToNotes } from './agentic-pdf.js';
+import { mountChess, mount2048, mountSnake, mountTicTacToe, mountMinesweeper, mountTetris } from './games.js';
+import { mountMaps } from './maps-tool.js';
+import { mountInstagramOSINT, mountOSINTAdvanced } from './osint-advanced.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -514,10 +517,50 @@ Object.assign(HANDLERS, {
   'Redirect Chain Inspector': (r, t) => HANDLERS['Redirect Chain Viewer'](r, t),
   'Robots.txt Inspector': (r, t) => HANDLERS['Robots.txt Viewer'](r, t),
   'Sitemap Inspector': (r, t) => HANDLERS['Sitemap Viewer'](r, t),
-  'Public Profile URL Checker': (r, t) => textTool(r, t, s => { try { const u = new URL(s); return `${u.hostname}${u.pathname}\nThis only checks URL shape, never logs in.`; } catch { throw Error('Invalid URL'); } }),
-  'Username Permutation Generator': (r, t) => textTool(r, t, s => { const b = s.trim().toLowerCase().replace(/\s+/g, ''); return [b, b + '1', b + '_', 'the' + b, b + 'hq'].join('\n'); }),
+  'Public Profile URL Checker': (r, t) => {
+    const body = mountShell(r, t, `<input id="url" class="field" placeholder="https://instagram.com/username or any public profile URL"><div class="button-row"><button class="btn primary" id="run">Inspect</button><button class="btn secondary" id="copy">Copy</button></div><pre id="tool-out" class="out" style="margin-top:12px"></pre><div id="extra" style="margin-top:8px"></div>`);
+    body.querySelector('#run').onclick = async () => {
+      const s = body.querySelector('#url').value.trim();
+      try {
+        const u = new URL(s.startsWith('http') ? s : 'https://' + s);
+        setOut(body, `Checking ${u.href}…`);
+        const r = await fetch('/api/inspect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'metadata', url: u.href }) });
+        const j = await r.json();
+        if (!r.ok) throw Error(j.error);
+        setOut(body, `URL: ${j.finalUrl}\nStatus: ${j.status}\nTitle: ${j.title}\nContent-Type: ${j.contentType}\n\nPublic OSINT only — checks if URL exists, no login, no bypass.\nOpen manually to verify: ${u.href}`);
+        body.querySelector('#extra').innerHTML = `<div class="note">Status ${j.status} — ${j.status===200 ? 'likely exists (public)' : 'may not exist or blocked'}. <a href="${esc(u.href)}" target="_blank" rel="noopener">Open ${esc(u.hostname)}</a></div>`;
+      } catch (e) { setOut(body, 'Error: ' + e.message); }
+    };
+    body.querySelector('#copy').onclick = async () => { const txt = body.querySelector('#tool-out').textContent; if (txt) { await navigator.clipboard.writeText(txt); toast('Copied'); } };
+  },
+  'Username Permutation Generator': (r, t) => textTool(r, t, s => { const b = s.trim().toLowerCase().replace(/\s+/g, ''); return [b, b + '1', b + '_', 'the' + b, b + 'hq', b + '123', b + '.official', 'real' + b].join('\n'); }),
   'Public Social Link Extractor': (r, t) => textTool(r, t, s => (s.match(/https?:\/\/[^\s]+/g) || []).join('\n') || 'No URLs found.'),
-  'Public Instagram URL Inspector': (r, t) => textTool(r, t, s => { const u = new URL(s); if (!/instagram\.com$/.test(u.hostname.replace(/^www\./, ''))) throw Error('Not an instagram.com URL'); return u.href; }),
+  'Public Instagram URL Inspector': (r, t) => {
+    const body = mountShell(r, t, `<input id="url" class="field" placeholder="https://instagram.com/username"><div class="button-row"><button class="btn primary" id="run">Inspect Instagram (public)</button><button class="btn secondary" id="all">Check all platforms</button></div><pre id="tool-out" class="out" style="margin-top:12px"></pre><div id="extra" style="margin-top:8px"></div>`);
+    body.querySelector('#run').onclick = async () => {
+      const s = body.querySelector('#url').value.trim();
+      try {
+        const u = new URL(s.startsWith('http') ? s : 'https://instagram.com/' + s.replace(/^@/, ''));
+        if (!/instagram\.com$/.test(u.hostname.replace(/^www\./, ''))) throw Error('Not an instagram.com URL');
+        setOut(body, `Checking ${u.href}… public OSINT only, no login`);
+        const r = await fetch('/api/inspect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'metadata', url: u.href }) });
+        const j = await r.json();
+        if (!r.ok) throw Error(j.error);
+        setOut(body, `Instagram URL: ${u.href}\nStatus: ${j.status}\nTitle: ${j.title}\nExists: ${j.status===200 ? 'Likely yes (public URL 200)' : 'No or blocked'}\n\nSafety: Only checks public URL existence, no private data, no bypass. Instagram may show login wall. Open manually: ${u.href}`);
+        body.querySelector('#extra').innerHTML = `<a href="${esc(u.href)}" target="_blank" rel="noopener" class="btn secondary" style="font-size:12px">Open Instagram</a>`;
+      } catch (e) { setOut(body, 'Error: ' + e.message); }
+    };
+    body.querySelector('#all').onclick = () => {
+      const user = body.querySelector('#url').value.trim().split('/').filter(Boolean).pop().replace(/^@/, '');
+      if (user) {
+        // Redirect to Instagram OSINT Checker tool
+        location.hash = '';
+        history.pushState({}, '', '/tools/instagram-osint-checker');
+        window.dispatchEvent(new Event('popstate'));
+        location.reload();
+      }
+    };
+  },
   'Public Page Metadata Inspector': (r, t) => HANDLERS['Public URL Inspector'](r, t),
   'Favicon Extractor': (r, t) => textTool(r, t, s => { const u = new URL(s.trim().startsWith('http') ? s.trim() : 'https://' + s.trim()); return new URL('/favicon.ico', u.origin).href; }),
   'Image EXIF Inspector': (r, t) => HANDLERS['EXIF Viewer'](r, t),
@@ -702,7 +745,16 @@ Object.assign(HANDLERS, {
   'YouTube Chapter Generator': (r, t) => mountYouTubeChapter(r, t),
   'AI Mode — Combine Tools': (r, t) => mountAIMode(r, t),
   'Agentic PDF Splitter': (r, t) => mountAgenticPdfSplitter(r, t),
-  'Question Paper to Notes AI': (r, t) => mountQuestionPaperToNotes(r, t)
+  'Question Paper to Notes AI': (r, t) => mountQuestionPaperToNotes(r, t),
+  'Chess': (r, t) => mountChess(r, t),
+  '2048': (r, t) => mount2048(r, t),
+  'Snake Game': (r, t) => mountSnake(r, t),
+  'Tic Tac Toe': (r, t) => mountTicTacToe(r, t),
+  'Minesweeper': (r, t) => mountMinesweeper(r, t),
+  'Maps': (r, t) => mountMaps(r, t),
+  'Instagram OSINT Checker': (r, t) => mountInstagramOSINT(r, t),
+  'OSINT Advanced': (r, t) => mountOSINTAdvanced(r, t),
+  'Tetris': (r, t) => mountTetris(r, t)
 });
 
 for (const title of ['APA Citation Helper', 'MLA Citation Helper', 'Chicago Citation Helper', 'Vancouver Citation Helper']) {

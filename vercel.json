@@ -26,6 +26,8 @@
     "api/agent-publish.js": { "maxDuration": 30 },
     "api/inspect.js": { "maxDuration": 15 },
     "api/youtube-transcript.js": { "maxDuration": 30 },
-    "api/youtube-playlist.js": { "maxDuration": 30 }
+    "api/youtube-playlist.js": { "maxDuration": 30 },
+    "api/osint.js": { "maxDuration": 20 },
+    "api/maps.js": { "maxDuration": 15 }
   }
 }

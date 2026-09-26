@@ -295,7 +295,8 @@ export function mountAIMode(root, tool) {
       const toolList = JSON.parse(localStorage.getItem('mp-tools-list') || '[]');
       const allTools = toolList.length ? toolList : [{ slug: 'ocr-pdf', title: 'OCR PDF' }, { slug: 'agentic-pdf-splitter', title: 'Agentic PDF Splitter' }, { slug: 'youtube-transcript', title: 'YouTube Transcript' }];
       
-      const aiPrompt = `User request: ${prompt}\nFiles: ${files.map(f => f.name).join(', ')}\nYouTube: ${youtubeUrls.join(', ')}\nMode: ${mode}\nTarget: ${target}\nHas API key: ${hasKey}\nSession: ${sessionCode}\n\nYou are MegaPLAN AI Mode. You combine ${allTools.length}+ tools. Plan the chain:\n- If PDF scanned → OCR\n- If question paper + textbook → agentic split into chapters/questions, then generate prompts for ${target}\n- If YouTube → transcript → summarize/chapters\n- Detect if new tool needed, if yes, propose to build private tool (session ${sessionCode})\nReturn JSON: { steps: [{tool, reason}], needsNewTool: bool, newToolSpec: {slug, title, summary}, prompts: { gemini, notebooklm } }`;
+      const inventorySnippet = allToolsInventory.slice(0, 80).map(t=>`${t.title}(${t.category})`).join(', ');
+      const aiPrompt = `User request: ${prompt}\nFiles: ${files.map(f => f.name).join(', ')}\nYouTube: ${youtubeUrls.join(', ')}\nMode: ${mode}\nTarget: ${target}\nHas API key: ${hasKey}\nSession: ${sessionCode}\nInventory: ${inventorySnippet} … total ${allToolsInventory.length||570}\n\nYou are MegaPLAN AI Mode — versatile wiki multi-tool-calling AI like Codex but with 570+ premade public tools.\nSystem-level info:\n- PDF 54 tools: OCR PDF (tesseract.js), Agentic PDF Splitter (OCR + batch + prompts for Gemini 1M / NotebookLM), Merge, Compress, etc\n- YouTube: Transcript any video with captions via /api/youtube-transcript (timedtext json3 + Piped/Invidious fallback), Playlist Lister via /api/youtube-playlist (Piped + scrape), Chapter Generator\n- Maps: OSM Leaflet 1.9.4 CDN dynamic load, tile layers osm/hot/topo/sat Esri, Nominatim search free no API key, Overpass nearby cafes/restaurants/hospitals/schools/banks/parks 2km, OSRM routing driving, haversine distance, my location\n- Games: Chess with AI levels minimax easy/hard castling promotion PGN export flip undo, 2048 original, Snake canvas 20x20 score/best, TicTacToe 2p vs AI win/block/center, Minesweeper easy 8x8/10 medium 12x12/24 hard 16x16/40 flags timer flood fill — all browser processing\n- OSINT Advanced: Instagram public checker via /api/inspect metadata title/status safety note no private/bypass, username across 20 platforms (instagram,youtube,twitter/github/reddit/tiktok/medium/pinterest/linkedin/facebook/twitch/vimeo/soundcloud/dribbble/behance/deviantart/steam/patreon/producthunt/keybase) via /api/osint POST username regex + fetchWithTimeout 8s UA Mozilla redirect manual heuristic 200 exists 404 not 302 login exists\n- Audio Studio, OCR & AI 30+, Text 37, Developer 47, etc\n\nPlan the chain:\n- If PDF scanned → OCR → agentic split\n- If question paper + textbook → agentic split into chapters/questions/batches → prompts for ${target}\n- If YouTube → transcript → summarize/chapters\n- If maps → geocode/reverse/nearby/route\n- If games → open game tool directly\n- If OSINT → public only, safety\n- Detect deficit → propose private tool under 4-digit session ${sessionCode}\nReturn JSON: { steps: [{tool, reason}], needsNewTool: bool, newToolSpec: {slug, title, summary}, prompts: { gemini, notebooklm } }`;
 
       const r = await fetch('/api/ai', {
         method: 'POST',
@@ -439,8 +440,29 @@ export function mountAIMode(root, tool) {
 
   $('chat-in').addEventListener('keydown', e => { if (e.key === 'Enter') $('chat-send').click(); });
 
-  // Initial greet
-  addBubble('agent', `Welcome to AI Mode! Session ${sessionCode}\n\nI combine 560+ tools:\n• PDF: OCR, agentic split, merge, etc\n• YouTube: transcript (all videos with captions), playlist lister, chapters\n• Audio: studio, transcription\n• And more\n\nUpload files + describe complex request, I will chain tools and generate prompts for Gemini 1M / NotebookLM.\nIf I detect deficit, I will build private tool under your 4-digit code ${sessionCode} — not public until you Push for review (rigorous testing).\n\nFuture: This will be paid, currently free. Try: "Question paper PDF + textbook → notes per question"`);
+  // Load full tool inventory for system-level info
+  let allToolsInventory = [];
+  try {
+    const raw = localStorage.getItem('mp-tools-list');
+    if (raw) allToolsInventory = JSON.parse(raw);
+  } catch {}
+  // Fetch if not in LS
+  if (!allToolsInventory.length) {
+    fetch('/data/tools.json').then(r=>r.json()).then(j=>{
+      allToolsInventory = j;
+      localStorage.setItem('mp-tools-list', JSON.stringify(j.slice(0, 600)));
+    }).catch(()=>{});
+  }
+
+  function getToolsSummary() {
+    if (!allToolsInventory.length) return '570+ tools across PDF, Image, Audio, Video, OCR/AI, Text, Developer, Games, OSINT, Maps, etc.';
+    const byCat = {};
+    allToolsInventory.forEach(t => { byCat[t.category] = (byCat[t.category]||0)+1; });
+    return Object.entries(byCat).map(([c,n])=>`${c}(${n})`).join(', ') + `. Total ${allToolsInventory.length}. Examples: ${allToolsInventory.slice(0,12).map(t=>t.title).join(', ')}…`;
+  }
+
+  // Initial greet — generic versatile wiki multi-tool agent like Codex
+  addBubble('agent', `Welcome to AI Mode! Session ${sessionCode}\n\nI am a versatile wiki multi-tool-calling AI — like Codex but with ${allToolsInventory.length||570}+ premade public tools.\n\nWHAT I KNOW:\n${getToolsSummary()}\n\nHOW I WORK:\n• Same model as agent mode — I understand files + request, chain tools\n• Pinned: Wiki Agent (builds pages), Self Agent (BYOK), AI Mode (this), Audio Studio, My Wiki\n• Folders: PDF 54 tools (OCR, agentic splitter, merge), Images 50, Audio 32+studio, Video 26 (YouTube Transcript for any captioned video via timedtext + Piped/Invidious fallback, Playlist Lister, Chapter Generator), Text 37, Developer 47, Games ${allToolsInventory.filter(t=>t.category==='Games').length||5} (Chess AI levels, 2048, Snake, TicTacToe, Minesweeper), OSINT ${allToolsInventory.filter(t=>String(t.category).includes('OSINT')).length||20}+ (Instagram public checker safe no bypass, username across platforms via /api/inspect + /api/osint), Maps (Leaflet 1.9.4 + OSM Nominatim free geocoding + Overpass nearby 2km + OSRM routing driving + distance + my location)\n• For complex request: upload files → I OCR if scanned (tesseract.js), split PDF intelligently (agentic), generate prompts for Gemini 1M (Google AI Studio free) / NotebookLM\n• If deficit: I build private tool under your 4-digit code ${sessionCode} — not public until you Push for review (rigorous testing)\n\nTRY:\n• "Question paper PDF + textbook → notes per question"\n• "YouTube video → transcript + chapters + summary"\n• "Find nearby cafes in Thiruvananthapuram and route"\n• "Check Instagram username @xyz across platforms (public only)"\n• "Play chess vs AI hard"\n\nFuture: This will be paid, currently free.`);
   renderPrivate();
   renderFiles();
 }
