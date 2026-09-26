@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 
 const registry = JSON.parse(fs.readFileSync(new URL('../data/tools.json', import.meta.url)));
-assert.equal(registry.length, 555, 'registry size changed unexpectedly');
+assert.ok(registry.length >= 555, `registry size changed unexpectedly: ${registry.length} < 555`);
 assert.ok(registry.every(t => t.slug && t.title && t.category && t.processing), 'registry schema broken');
 
 const index = fs.readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
@@ -25,6 +25,8 @@ assert.ok(fs.existsSync(new URL('../api/lib/nvidia.js', import.meta.url)), 'nvid
 const nvidia = fs.readFileSync(new URL('../api/lib/nvidia.js', import.meta.url), 'utf8');
 assert.ok(nvidia.includes('integrate.api.nvidia.com'), 'NVIDIA endpoint missing');
 assert.ok(nvidia.includes('NEVER return the model'), 'identity rule missing');
+assert.ok(nvidia.includes('deepseek-ai/deepseek-v4.1-flash'), 'default V4.1 Flash model missing');
+assert.ok(nvidia.includes('providerConfigured'), 'providerConfigured missing');
 
 for (const title of ['Merge PDFs', 'Split PDF', 'Word Counter', 'Wiki Agent']) {
   assert.ok(

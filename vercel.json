@@ -2,6 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "outputDirectory": "public",
   "rewrites": [
     { "source": "/folder/:path*", "destination": "/index.html" },
     { "source": "/tools/:path*", "destination": "/index.html" },
@@ -22,6 +23,7 @@
     "api/split-pdf.js": { "maxDuration": 60 },
     "api/ai.js": { "maxDuration": 60 },
     "api/agent-plan.js": { "maxDuration": 60 },
+    "api/agent-publish.js": { "maxDuration": 30 },
     "api/inspect.js": { "maxDuration": 15 }
   }
 }

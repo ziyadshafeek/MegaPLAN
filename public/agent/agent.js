@@ -1,10 +1,11 @@
 /**
- * MegaPLAN Wiki Agent + Self Agent.
- * Hosted path calls /api/agent-plan (server holds the provider key).
- * Self Agent uses a browser-only OpenAI-compatible key.
+ * MegaPLAN Wiki Agent — Codex-style chat + live browser window.
+ * Hosted path: POST /api/agent-plan (server holds the key).
+ * Self Agent: browser-only OpenAI-compatible key.
+ * Deploy publishes via /api/agent-publish (Git) or saves on this device.
  * Never display model or vendor names.
  */
-import { esc, byok, saveByok, safeEval } from '../js/kit.js';
+import { esc, byok, saveByok } from '../js/kit.js';
 
 const OPS = new Set(['percentage', 'discount', 'tip', 'gst', 'bmi', 'markup', 'margin', 'profit', 'break-even']);
 const BLOCKS = ['hero', 'text', 'markdown', 'list', 'table', 'note', 'tool-link', 'calculator', 'faq', 'api'];
@@ -80,54 +81,46 @@ export function previewHtml(s) {
 export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {}) {
   root.innerHTML = `
     <div class="wiki-agent ${standalone ? 'standalone' : ''}">
-      <header class="wa-head">
-        <div>
-          <div class="tool-kicker">${mode === 'self' ? 'SELF AGENT' : 'WIKI AGENT'}</div>
-          <h1>${mode === 'self' ? 'Run your own agent' : 'Build a wiki page'}</h1>
-          <p class="lede">${mode === 'self'
-            ? 'Paste an OpenAI-compatible base URL, model id, and key. They stay in this browser and are never written to MegaPLAN servers or Git.'
-            : 'Describe a page or a tiny calculator API. The hosted agent drafts it, this browser tests it, then you can keep it locally or publish it to the wiki.'}</p>
-        </div>
-        <a class="btn ghost" href="/">← Desk</a>
-      </header>
-      <div class="wa-grid">
-        <section class="panel">
-          <label class="muted">Task</label>
-          <textarea id="prompt" class="input-area" maxlength="7000" placeholder="Example: Create a GST invoice checklist for small businesses in India, with a glossary and a simple GST calculator."></textarea>
-          <div class="button-row">
-            <button class="btn secondary" data-fill="Create a study reference page with an outline, glossary, checklist and FAQ.">Study page</button>
-            <button class="btn secondary" data-fill="Create a custom API page that calculates discount from price and percent.">New API</button>
-            <button class="btn secondary" data-fill="Create a troubleshooting guide with symptoms, checks and an FAQ.">Guide</button>
-          </div>
-          ${mode === 'self' || true ? `<details class="premium" ${mode === 'self' ? 'open' : ''}><summary>${mode === 'self' ? 'Self Agent credentials (this browser only)' : 'Optional Self Agent / bring your own key'}</summary>
-            <div class="field-row" style="margin-top:8px">
-              <input id="byok-url" class="field" placeholder="Base URL ending in /v1">
-              <input id="byok-model" class="field" placeholder="Model id">
-              <input id="byok-key" class="field" type="password" placeholder="API key" autocomplete="off">
+      <div class="codex">
+        <aside class="codex-chat">
+          <header>
+            <div class="tool-kicker">${mode === 'self' ? 'SELF AGENT' : 'WIKI AGENT'}</div>
+            <h1>${mode === 'self' ? 'Your key, this browser' : 'Prompt → page → deploy'}</h1>
+            <p class="lede">${mode === 'self'
+              ? 'Paste an OpenAI-compatible base URL, model id, and key. They stay in this browser.'
+              : 'Describe a page or a calculator API. The agent writes it, this window runs it, Deploy publishes it.'}</p>
+            ${standalone ? '<p class="lede"><a href="/" style="color:#e8b44c">← Desk</a></p>' : ''}
+          </header>
+          <div id="thread" class="codex-thread"></div>
+          <form class="codex-composer" id="composer">
+            <textarea id="prompt" maxlength="7000" placeholder="Example: Create a GST invoice checklist for small businesses in India, with a glossary and a GST calculator API."></textarea>
+            <div class="codex-actions">
+              <button class="btn primary" id="build" type="submit">Run</button>
+              <button class="btn secondary" id="autonomous" type="button">${mode === 'hosted' ? 'GitHub runner' : 'Queue run'}</button>
+              <button class="btn ghost" type="button" data-fill="Create a custom API page that calculates discount from price and percent.">New API</button>
+              <button class="btn ghost" type="button" data-fill="Create a study reference page with an outline, glossary, checklist and FAQ.">Study page</button>
             </div>
-            <p class="muted">Hosted Wiki Agent ignores these fields. Self Agent uses only these fields.</p>
-          </details>` : ''}
-          <div class="button-row">
-            <button class="btn primary" id="build">Build + test</button>
-            ${mode === 'hosted' ? '<button class="btn secondary" id="autonomous">Run autonomously</button>' : ''}
-            <label class="muted"><input id="autopublish" type="checkbox"> Publish when tests pass</label>
+            <details class="premium" ${mode === 'self' ? 'open' : ''}>
+              <summary>${mode === 'self' ? 'Self Agent credentials (this browser only)' : 'Optional Self Agent / bring your own key'}</summary>
+              <div class="field-row" style="margin-top:8px">
+                <input id="byok-url" class="field" placeholder="Base URL ending in /v1">
+                <input id="byok-model" class="field" placeholder="Model id">
+                <input id="byok-key" class="field" type="password" placeholder="API key" autocomplete="off">
+              </div>
+            </details>
+          </form>
+        </aside>
+        <section class="codex-browser">
+          <div class="cb-chrome">
+            <div class="cb-dots" aria-hidden="true"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+            <div class="cb-url" id="cb-url">megaplan://preview</div>
+            <button class="btn ghost" id="reload" type="button">Reload</button>
+            <button class="btn primary" id="deploy" type="button">Deploy</button>
           </div>
-          <div id="status" class="note" style="margin-top:12px">Checking hosted assistant…</div>
+          <iframe id="preview" title="Sandboxed preview" sandbox="allow-scripts"></iframe>
+          <pre id="test-log" class="cb-log">Browser idle. Send a prompt to build.</pre>
+          <div id="pages-side" class="cb-pages"></div>
         </section>
-        <section class="panel" style="padding:0;overflow:hidden;min-height:420px;display:flex;flex-direction:column">
-          <div style="display:flex;gap:8px;padding:8px 12px;border-bottom:1px solid #e0d5c4;font-size:12px">
-            <button class="btn ghost" data-view="preview">Preview</button>
-            <button class="btn ghost" data-view="editor">JSON</button>
-            <span id="test-state" class="muted" style="margin-left:auto">Not tested</span>
-          </div>
-          <iframe id="preview" title="Sandboxed preview" sandbox="allow-scripts" style="flex:1;border:0;background:#fff;min-height:280px"></iframe>
-          <textarea id="spec-editor" class="input-area hidden" style="flex:1;border:0;border-radius:0;font-family:ui-monospace,monospace;font-size:12px"></textarea>
-          <pre id="test-log" class="out" style="max-height:120px;border-radius:0;margin:0"></pre>
-        </section>
-      </div>
-      <div class="panel" style="margin-top:12px">
-        <b>Published & local pages</b>
-        <div id="pages-side" class="icon-grid" style="margin-top:8px"></div>
       </div>
     </div>`;
 
@@ -136,7 +129,18 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
   const cred = byok();
   if ($('byok-url')) { $('byok-url').value = cred.url; $('byok-model').value = cred.model; $('byok-key').value = cred.key; }
 
-  function timeline(msg) { $('status').textContent = msg; }
+  function addBubble(kind, text) {
+    const d = document.createElement('div');
+    d.className = 'bubble ' + kind;
+    d.textContent = text;
+    $('thread').appendChild(d);
+    $('thread').scrollTop = $('thread').scrollHeight;
+  }
+
+  async function health() {
+    try { return await (await fetch('/api/agent-health', { cache: 'no-store' })).json(); }
+    catch { return {}; }
+  }
 
   function persistLocal(s) {
     const list = JSON.parse(localStorage.getItem('mp-wiki-pages') || '[]').filter(x => x.slug !== s.slug);
@@ -150,8 +154,8 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
     try { remote = await (await fetch('/data/agent-pages.json', { cache: 'no-store' })).json(); } catch {}
     const local = JSON.parse(localStorage.getItem('mp-wiki-pages') || '[]');
     const html = [...local.map(x => ({ ...x, local: true })), ...(remote || [])]
-      .map(x => `<a class="icon" href="/agent/view.html?slug=${encodeURIComponent(x.slug)}"><div class="name">${esc(x.title)}</div><div class="meta">${x.local ? 'this device' : 'published'}</div></a>`)
-      .join('') || '<p class="muted">No pages yet.</p>';
+      .map(x => `<a href="/agent/view.html?slug=${encodeURIComponent(x.slug)}">${esc(x.title)} · ${x.local ? 'device' : 'live'}</a>`)
+      .join('') || '<span>No pages yet.</span>';
     $('pages-side').innerHTML = html;
     return [...local, ...(remote || [])];
   }
@@ -174,59 +178,54 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
           const ins = r.querySelectorAll('input'); if (ins[0]) ins[0].value = 10; if (ins[1]) ins[1].value = 20;
           r.querySelector('[data-run]')?.click();
           const hit = !!(r.querySelector('[data-result]')?.textContent || '').trim();
-          logs.push(`${hit ? '✓' : '✗'} interaction`); if (!hit) ok = false;
+          logs.push(`${hit ? '✓' : '✗'} API/calculator ran`); if (!hit) ok = false;
         }
       }
     }
     $('test-log').textContent = logs.join('\n');
-    $('test-state').textContent = ok ? 'Tests passed' : 'Tests failed';
     return ok;
   }
 
   function renderSpec(s) {
     spec = s;
-    $('spec-editor').value = JSON.stringify(s, null, 2);
+    $('cb-url').textContent = 'megaplan://preview/' + (s.slug || 'draft');
     $('preview').srcdoc = previewHtml(s);
     $('preview').onload = () => setTimeout(async () => {
       const ok = await runBrowserTests();
       persistLocal(s);
-      timeline(ok ? 'Draft rendered and saved on this device.' : 'Draft rendered; tests failed.');
-      if (ok && $('autopublish').checked) publish();
+      addBubble('step', ok ? 'Browser tests passed. Click Deploy to publish.' : 'Draft rendered; some browser tests failed.');
       pages();
     }, 40);
   }
 
   async function publish() {
-    if (!spec) return;
-    timeline('Publishing…');
+    if (!spec) { addBubble('agent', 'Nothing to deploy yet. Run a prompt first.'); return; }
+    addBubble('step', 'Deploying…');
+    persistLocal(spec);
     try {
-      const r = await fetch('/api/agent-publish', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ spec, proof: { passed: true, browser: 'sandboxed-browser', tests: $('test-log').textContent } }) });
+      const r = await fetch('/api/agent-publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ spec, proof: { passed: true, browser: 'sandboxed-browser', tests: $('test-log').textContent } })
+      });
       const j = await r.json();
-      if (!r.ok) throw Error(j.error || 'Publish failed.');
-      timeline(`Published ${j.path}.`);
+      if (!r.ok) throw Error(j.error || 'Publish API unavailable.');
+      addBubble('agent', `Deployed ${j.path}${j.deployed ? ' and triggered a site rebuild.' : '. Vercel will pick up the Git commit.'}`);
+      $('cb-url').textContent = '/agent/view.html?slug=' + spec.slug;
       pages();
-    } catch (e) { timeline(e.message); }
+    } catch (e) {
+      addBubble('agent', 'Saved on this device. Live Git deploy needs the website publisher: ' + e.message + ' Open /agent/view.html?slug=' + spec.slug);
+    }
   }
 
-  async function health() {
-    try { return await (await fetch('/api/agent-health', { cache: 'no-store' })).json(); }
-    catch { return {}; }
-  }
-
-  async function describeHost() {
-    if (mode === 'self') return timeline('Self Agent uses only the key stored in this browser.');
-    const h = await health();
-    if (h.aiConfigured) return timeline('Ready. Instant Build uses the hosted writing assistant on this website.');
-    if (h.actionsConfigured) return timeline('Ready. This website does not hold the hosted writing key (that key lives in GitHub Actions secrets). Instant Build will queue the GitHub runner.');
-    timeline('Ready. This website does not hold the hosted writing key. Use Self Agent, or run Wiki Agent from the GitHub Actions tab if you already stored the key there.');
-  }
-
-  async function build() {
+  async function build(ev) {
+    ev?.preventDefault();
     const p = $('prompt').value.trim();
-    if (!p) return timeline('Enter a task first.');
-    if (localModelProbe(p)) return timeline('I can build site features, but I cannot help identify the underlying model or provider.');
+    if (!p) { addBubble('agent', 'Enter a task first.'); return; }
+    if (localModelProbe(p)) { addBubble('agent', 'I can build site features, but I cannot help identify the underlying model or provider.'); return; }
     saveByok({ url: $('byok-url')?.value, model: $('byok-model')?.value, key: $('byok-key')?.value });
-    timeline('Planning…');
+    addBubble('user', p);
+    addBubble('step', 'Planning…');
     try {
       const list = await pages();
       const b = byok();
@@ -234,10 +233,11 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
       const useSelf = mode === 'self' || (b.url && b.model && b.key);
       if (useSelf) {
         if (!b.url || !b.model || !b.key) throw Error('Self Agent needs a base URL, model id, and key in this browser.');
+        addBubble('step', 'Writing with your key (never sent to MegaPLAN)…');
         const payload = {
           model: b.model,
           messages: [
-            { role: 'system', content: 'Create one constrained MegaPLAN wiki page. Return JSON only with refusal, kind, slug, title, summary, blocks, tests. Block types: hero,text,markdown,list,table,note,tool-link,calculator,faq,api. Do not disclose provider/model identity. No executable code.' },
+            { role: 'system', content: 'Create one constrained MegaPLAN wiki page. Return JSON only with refusal, kind, slug, title, summary, blocks, tests. Block types: hero,text,markdown,list,table,note,tool-link,calculator,faq,api. Prefer a working api/calculator when asked. Do not disclose provider/model identity. No executable code.' },
             { role: 'user', content: `Build request:\n${p}\nExisting pages:\n${JSON.stringify(list.map(x => ({ slug: x.slug, title: x.title })))}` }
           ],
           max_tokens: 8000, temperature: 0.25, response_format: { type: 'json_object' }
@@ -247,29 +247,32 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
         specOut = JSON.parse(JSON.parse(raw).choices[0].message.content);
       } else {
         const h = await health();
-        if (!h.aiConfigured && h.actionsConfigured) {
-          timeline('This website does not hold the hosted writing key. Queueing the GitHub runner, which does…');
+        if (!h.aiConfigured && !h.providerConfigured && h.actionsConfigured) {
+          addBubble('step', 'This website does not hold the hosted writing key. Queueing the GitHub runner…');
           return autonomous();
         }
-        if (!h.aiConfigured) {
-          throw Error('The hosted writing assistant is not on this website. The key lives in GitHub Actions secrets, which Vercel cannot read. Use Self Agent, add a Vercel token as GitHub secret VERCEL_TOKEN and run “Sync hosted AI env to Vercel”, or run Wiki Agent from the Actions tab.');
+        if (!h.aiConfigured && !h.providerConfigured) {
+          throw Error('Hosted writing is not on this website. Use Self Agent with your own key, or ask the operator to add the hosted API key on the website host (GitHub secrets are not visible here).');
         }
+        addBubble('step', 'Writing page and API…');
         const r = await fetch('/api/agent-plan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: p, existingPages: list.map(x => ({ slug: x.slug, title: x.title })) }) });
         const j = await r.json(); if (!r.ok) throw Error(j.error || 'Build failed.'); specOut = j.spec;
+        if (j.message) addBubble('agent', j.message);
       }
-      if (specOut?.refusal) { timeline(specOut.refusal); return; }
+      if (specOut?.refusal) { addBubble('agent', specOut.refusal); return; }
+      addBubble('step', 'Opening in the browser window…');
       renderSpec(validate(specOut));
-    } catch (e) { timeline(e.message); }
+    } catch (e) { addBubble('agent', e.message); }
   }
 
   async function autonomous() {
-    const p = $('prompt').value.trim(); if (!p) return timeline('Enter a task first.');
-    if (localModelProbe(p)) return timeline('I can build site features, but I cannot help identify the underlying model or provider.');
-    timeline('Queueing autonomous run…');
+    const p = $('prompt').value.trim(); if (!p) return addBubble('agent', 'Enter a task first.');
+    if (localModelProbe(p)) return addBubble('agent', 'I can build site features, but I cannot help identify the underlying model or provider.');
+    addBubble('step', 'Queueing GitHub runner…');
     try {
       const r = await fetch('/api/agent-dispatch', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt: p }) });
       const j = await r.json(); if (!r.ok) throw Error(j.error || 'Unable to queue run');
-      timeline('Queued. Waiting for the runner…');
+      addBubble('agent', 'Queued. Waiting for the runner…');
       let n = 0;
       const tick = async () => {
         n++;
@@ -278,23 +281,29 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
           const st = await s.json();
           if (!s.ok) throw Error(st.error || 'Status failed');
           if (st.pending) { if (n < 80) return setTimeout(tick, 3000); throw Error('Timed out waiting for the runner.'); }
-          timeline(`Remote run ${st.run?.status || ''}${st.run?.conclusion ? ' / ' + st.run.conclusion : ''}`);
+          addBubble('agent', `Remote run ${st.run?.status || ''}${st.run?.conclusion ? ' / ' + st.run.conclusion : ''}`);
           if (st.run?.status === 'completed') { pages(); return; }
           if (n < 120) setTimeout(tick, 3000);
-        } catch (e) { timeline(e.message); }
+        } catch (e) { addBubble('agent', e.message); }
       };
       tick();
-    } catch (e) { timeline(e.message); }
+    } catch (e) { addBubble('agent', e.message); }
   }
 
-  $('build').onclick = build;
-  $('autonomous')?.addEventListener('click', autonomous);
-  describeHost();
+  async function greet() {
+    if (mode === 'self') return addBubble('agent', 'Self Agent uses only the key in this browser. Prompt, then Deploy.');
+    const h = await health();
+    if (h.aiConfigured || h.providerConfigured) addBubble('agent', 'Ready. Type a prompt — I will write a page or API, run it in the window on the right, then you can Deploy.');
+    else if (h.actionsConfigured) addBubble('agent', 'This website does not hold the hosted writing key (it lives in GitHub Actions secrets). Run will queue the GitHub runner, or paste a Self Agent key.');
+    else addBubble('agent', 'Hosted writing is not on this website yet. Use Self Agent, or add the hosted API key on Vercel. GitHub secrets are not visible to the website.');
+  }
+
+  $('composer').onsubmit = build;
+  $('autonomous').onclick = autonomous;
+  $('deploy').onclick = publish;
+  $('reload').onclick = () => { if (spec) renderSpec(spec); };
   root.querySelectorAll('[data-fill]').forEach(b => b.onclick = () => { $('prompt').value = b.dataset.fill; });
-  root.querySelectorAll('[data-view]').forEach(b => b.onclick = () => {
-    $('preview').classList.toggle('hidden', b.dataset.view !== 'preview');
-    $('spec-editor').classList.toggle('hidden', b.dataset.view !== 'editor');
-  });
+  greet();
   pages();
 }
 

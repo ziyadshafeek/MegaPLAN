@@ -7768,5 +7768,19 @@
       "inline",
       "bottom"
     ]
+  },
+  {
+    "slug": "audio-studio",
+    "title": "Audio Studio",
+    "category": "Audio",
+    "status": "live",
+    "processing": "browser",
+    "description": "Audacity-like multi-track editor: import, waveform view, trim, fade, mix, export MP3/WAV. Autosaves.",
+    "privacy": "local",
+    "adSlots": [
+      "top",
+      "inline",
+      "bottom"
+    ]
   }
 ]

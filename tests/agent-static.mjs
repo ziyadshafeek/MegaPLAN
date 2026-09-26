@@ -13,7 +13,7 @@ assert.ok(html.includes('Wiki Agent'), 'Wiki Agent title missing');
 assert.ok(!html.includes('Agent Online Store'), 'old Agent Online Store name still in agent home');
 
 const js = fs.readFileSync(new URL('../public/agent/agent.js', import.meta.url), 'utf8');
-for (const t of ['sandbox', 'runBrowserTests', 'agent-publish', 'localStorage', 'CSS.escape', 'Self Agent', 'mountWikiAgent']) {
+for (const t of ['sandbox', 'runBrowserTests', 'agent-publish', 'localStorage', 'CSS.escape', 'Self Agent', 'mountWikiAgent', 'codex', 'Deploy']) {
   assert.ok(js.includes(t), `missing ${t}`);
 }
 assert.ok(!/NVIDIA_AGENT_MODEL/.test(js), 'model env leaked into agent client');

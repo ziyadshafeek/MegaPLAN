@@ -62,14 +62,15 @@ public/data/               deployed copy of JSON
 4. Run `npm test`.
 
 ## How Wiki Agent works
+Codex-style split: chat on the left, live browser window on the right, Deploy in the chrome.
 1. User prompt.
 2. Probe for “what model are you?” → refusal.
-3. Hosted: `POST /api/agent-plan` → NVIDIA NIM using env model id.
+3. Hosted: `POST /api/agent-plan` → NVIDIA NIM. Default model `deepseek-ai/deepseek-v4.1-flash` if `NVIDIA_AGENT_MODEL` is unset. **Only `NVIDIA_API_KEY` is required, and it must be on Vercel** — GitHub Actions secrets are not visible to the website.
 4. Self Agent: browser calls the user’s `/v1/chat/completions`.
-5. Constrained JSON schema (blocks + optional `api` expression).
+5. Constrained JSON schema (blocks + optional `api` expression). Prefer a working calculator/API when asked.
 6. Sandboxed iframe preview + declarative tests.
 7. Always saved to `localStorage` (`mp-wiki-pages`).
-8. Optional publish via GitHub git API to `data/agent-pages/*` only.
+8. Deploy: `POST /api/agent-publish` (needs `GITHUB_TOKEN` on Vercel) or stay on-device.
 
 ## Tests
 ```

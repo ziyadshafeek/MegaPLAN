@@ -4,22 +4,24 @@
  * NEVER import this file from public/ frontend code.
  * NEVER return the model id, provider name, or raw upstream errors to the browser.
  *
- * Env (never committed, never returned to the browser):
- *   NVIDIA_API_KEY
- *   NVIDIA_AGENT_MODEL   e.g. deepseek-ai/deepseek-v4-flash
+ * Env:
+ *   NVIDIA_API_KEY          required for hosted chat
+ *   NVIDIA_AGENT_MODEL      optional; defaults to DeepSeek V4.1 Flash on NIM
  *
- * Source of truth: GitHub Actions secrets (autonomous Wiki Agent runner).
- * Vercel does not inherit GitHub secrets. Instant /api/ai and /api/agent-plan
- * only work after the same two names exist on the Vercel project — run
- * `.github/workflows/sync-ai-env.yml` (needs VERCEL_TOKEN) or paste them in
- * the Vercel dashboard.
+ * GitHub Actions secrets are the source of truth. Vercel does not inherit them.
+ * Instant /api/ai and /api/agent-plan need NVIDIA_API_KEY on the Vercel project.
  *
  * Endpoint: https://integrate.api.nvidia.com/v1/chat/completions
  */
 const ENDPOINT = 'https://integrate.api.nvidia.com/v1/chat/completions';
+const DEFAULT_MODEL = 'deepseek-ai/deepseek-v4.1-flash';
+
+export function resolvedModel() {
+  return process.env.NVIDIA_AGENT_MODEL || DEFAULT_MODEL;
+}
 
 export function providerConfigured() {
-  return Boolean(process.env.NVIDIA_API_KEY && process.env.NVIDIA_AGENT_MODEL);
+  return Boolean(process.env.NVIDIA_API_KEY);
 }
 
 export function publicError(err) {
@@ -34,11 +36,13 @@ export async function nvidiaChat({
   temperature = 0.3,
   top_p = 0.9,
   jsonMode = false,
-  timeoutMs = 45000
+  tools = null,
+  tool_choice = null,
+  timeoutMs = 50000
 } = {}) {
   const key = process.env.NVIDIA_API_KEY;
-  const model = process.env.NVIDIA_AGENT_MODEL;
-  if (!key || !model) {
+  const model = resolvedModel();
+  if (!key) {
     const err = new Error('not-configured');
     err.status = 503;
     throw err;
@@ -52,6 +56,8 @@ export async function nvidiaChat({
     top_p
   };
   if (jsonMode) payload.response_format = { type: 'json_object' };
+  if (Array.isArray(tools) && tools.length) payload.tools = tools;
+  if (tool_choice) payload.tool_choice = tool_choice;
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -74,6 +80,11 @@ export async function nvidiaChat({
         delete payload.response_format;
         continue;
       }
+      if (response.status === 400 && payload.tools) {
+        delete payload.tools;
+        delete payload.tool_choice;
+        continue;
+      }
       if ((response.status === 429 || response.status >= 500) && attempt < 2) {
         await new Promise(r => setTimeout(r, 700 * (attempt + 1) ** 2));
         continue;
@@ -88,13 +99,15 @@ export async function nvidiaChat({
       err.status = 502;
       throw err;
     }
-    const content = data?.choices?.[0]?.message?.content;
-    if (!content) {
+    const msg = data?.choices?.[0]?.message || {};
+    const content = msg.content || '';
+    const tool_calls = msg.tool_calls || null;
+    if (!content && !tool_calls?.length) {
       const err = new Error('empty');
       err.status = 502;
       throw err;
     }
-    return { content, usage: data.usage || null };
+    return { content, tool_calls, usage: data.usage || null };
   } finally {
     clearTimeout(timer);
   }

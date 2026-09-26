@@ -1,5 +1,6 @@
 import * as kit from './kit.js';
 import { HANDLERS, textTool, calcTool, fileTool, aiTool, imageOp, audioBufferTool, wavFromBuffer, docPdf, qrDataUrl } from './engines.js';
+import { mountAudioStudio } from './audio-studio.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -232,7 +233,36 @@ Object.assign(HANDLERS, {
     return `Approx. quiet frames: ${silent} / ${Math.ceil(d.length / 64)}`;
   }),
   'Silence Remover': (r, t) => HANDLERS['Silence Detector'](r, t),
-  'Waveform Viewer': (r, t) => audioBufferTool(r, t, async (_ac, buf) => `Duration ${buf.duration.toFixed(2)}s · ${buf.sampleRate} Hz · ${buf.numberOfChannels} ch`),
+  'Waveform Viewer': (r, t) => {
+    const body = mountShell(r, t, kit.fileForm({ accept: 'audio/*', extra: `<div style="margin-top:10px"><canvas id="wf" style="width:100%;height:120px;background:#1a1613;border-radius:8px"></canvas></div>`, label: 'Choose audio', run: 'Show waveform' }));
+    const drop = kit.wireDrop(body);
+    body.querySelector('#run').onclick = async () => {
+      try {
+        const f = drop.getFiles()[0]; if (!f) throw Error('Choose audio');
+        const ac = new AudioContext(); const buf = await ac.decodeAudioData(await f.arrayBuffer());
+        const canvas = body.querySelector('#wf');
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.clientWidth * dpr; canvas.height = canvas.clientHeight * dpr;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#1a1613'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const data = buf.getChannelData(0);
+        const step = Math.max(1, Math.floor(data.length / canvas.width));
+        ctx.strokeStyle = '#e8b44c'; ctx.beginPath();
+        for (let x = 0; x < canvas.width; x++) {
+          const s = Math.floor((x / canvas.width) * data.length);
+          const e = Math.min(data.length, s + step);
+          let min = 1, max = -1;
+          for (let i = s; i < e; i += Math.max(1, Math.floor(step / 4))) { const v = data[i]; if (v < min) min = v; if (v > max) max = v; }
+          const y1 = (1 - (max * 0.5 + 0.5)) * canvas.height;
+          const y2 = (1 - (min * 0.5 + 0.5)) * canvas.height;
+          if (x === 0) ctx.moveTo(x, y1); ctx.lineTo(x, y1); ctx.lineTo(x, y2);
+        }
+        ctx.stroke();
+        setOut(body, `${f.name}\nDuration ${buf.duration.toFixed(2)}s · ${buf.sampleRate}Hz · ${buf.numberOfChannels}ch`);
+        await ac.close();
+      } catch (e) { setOut(body, 'Error: ' + e.message); }
+    };
+  },
   'Audio Fade In': (r, t) => audioBufferTool(r, t, async (_ac, buf) => {
     const n = Math.min(buf.length, Math.floor(buf.sampleRate * 1.5));
     for (let c = 0; c < buf.numberOfChannels; c++) { const d = buf.getChannelData(c); for (let i = 0; i < n; i++) d[i] *= i / n; }
@@ -248,8 +278,52 @@ Object.assign(HANDLERS, {
     const rms = Math.sqrt(s / (d.length / 8));
     return `RMS (rough): ${rms.toFixed(4)}\nThis is not LUFS. Use it as a relative loudness check.`;
   }),
-  'WAV to MP3': (r, t) => audioBufferTool(r, t, async (_ac, buf) => { downloadBlob(wavFromBuffer(buf), 'audio.wav'); return 'Browsers cannot encode MP3 here. Saved WAV instead.'; }),
-  'MP3 to WAV': (r, t) => audioBufferTool(r, t, async (_ac, buf) => { downloadBlob(wavFromBuffer(buf), 'audio.wav'); return 'Decoded to WAV.'; }),
+  'WAV to MP3': (r, t) => {
+    const body = mountShell(r, t, kit.fileForm({ accept: 'audio/*', extra: `<p class="muted">Converts to MP3 in this browser using lamejs when available, otherwise saves WAV. For best results use Audio Studio.</p><div class="field-row" style="margin-top:8px"><select id="kbps" class="sel"><option value="128">128 kbps</option><option value="192" selected>192 kbps</option><option value="256">256 kbps</option><option value="320">320 kbps</option></select></div>`, label: 'Choose audio', run: 'Convert to MP3' }));
+    const drop = kit.wireDrop(body);
+    body.querySelector('#run').onclick = async () => {
+      try {
+        const f = drop.getFiles()[0]; if (!f) throw Error('Choose audio');
+        const ac = new AudioContext(); const buf = await ac.decodeAudioData(await f.arrayBuffer());
+        const kbps = Number(body.querySelector('#kbps').value) || 192;
+        setOut(body, 'Encoding MP3… (first time loads encoder)');
+        // try lamejs
+        let lame = window.lamejs;
+        if (!lame) {
+          await new Promise((res, rej) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js';
+            s.onload = res; s.onerror = rej; document.head.appendChild(s);
+          }).catch(() => {});
+          lame = window.lamejs;
+        }
+        if (lame) {
+          const Mp3Encoder = lame.Mp3Encoder;
+          const enc = new Mp3Encoder(buf.numberOfChannels, buf.sampleRate, kbps);
+          const left = buf.getChannelData(0);
+          const right = buf.numberOfChannels > 1 ? buf.getChannelData(1) : null;
+          const l = new Int16Array(left.length);
+          for (let i = 0; i < left.length; i++) l[i] = Math.max(-32768, Math.min(32767, left[i] * 32767));
+          let r = null;
+          if (right) { r = new Int16Array(right.length); for (let i = 0; i < right.length; i++) r[i] = Math.max(-32768, Math.min(32767, right[i] * 32767)); }
+          const block = 1152;
+          const out = [];
+          for (let i = 0; i < l.length; i += block) {
+            const b = enc.encodeBuffer(l.subarray(i, i + block), r ? r.subarray(i, i + block) : undefined);
+            if (b.length) out.push(b);
+          }
+          const end = enc.flush(); if (end.length) out.push(end);
+          downloadBlob(new Blob(out, { type: 'audio/mpeg' }), f.name.replace(/\.[^.]+$/, '') + '.mp3');
+          setOut(body, `Saved MP3 ${kbps} kbps · ${Math.round(out.reduce((s, x) => s + x.length, 0) / 1024)} KB`);
+        } else {
+          downloadBlob(wavFromBuffer(buf), f.name.replace(/\.[^.]+$/, '') + '.wav');
+          setOut(body, 'MP3 encoder not available offline — saved WAV instead. Try Audio Studio for offline WAV.');
+        }
+        await ac.close();
+      } catch (e) { setOut(body, 'Error: ' + e.message); }
+    };
+  },
+  'MP3 to WAV': (r, t) => audioBufferTool(r, t, async (_ac, buf, file) => { downloadBlob(wavFromBuffer(buf), (file.name.replace(/\.[^.]+$/, '') || 'audio') + '.wav'); return `Decoded ${file.name} to WAV · ${buf.duration.toFixed(2)}s`; }),
   'M4A to MP3': (r, t) => HANDLERS['WAV to MP3'](r, t),
   'OGG to MP3': (r, t) => HANDLERS['WAV to MP3'](r, t),
   'FLAC Converter': (r, t) => HANDLERS['MP3 to WAV'](r, t),
@@ -616,6 +690,10 @@ Object.assign(HANDLERS, {
       downloadBlob(new Blob([await doc.save()], { type: 'application/pdf' }), 'a4.pdf'); setOut(body, 'Saved blank A4.');
     };
   },
+});
+
+Object.assign(HANDLERS, {
+  'Audio Studio': (r, t) => mountAudioStudio(r, t)
 });
 
 for (const title of ['APA Citation Helper', 'MLA Citation Helper', 'Chicago Citation Helper', 'Vancouver Citation Helper']) {
