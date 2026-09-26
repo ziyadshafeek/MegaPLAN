@@ -1,0 +1,19 @@
+{
+  "city": "Thiruvananthapuram (Trivandrum)",
+  "center": {
+    "lat": 8.524139,
+    "lon": 76.936638
+  },
+  "radiusMeters": 6500,
+  "indexedAt": null,
+  "source": "OpenStreetMap via Overpass",
+  "license": "Open Database License (ODbL)",
+  "attributionUrl": "https://www.openstreetmap.org/copyright",
+  "note": "Not indexed yet. No records have been verified; use Run on the collector workflow. Bounded city sample, not a complete directory.",
+  "shops": [],
+  "music": [],
+  "counts": {
+    "shops": 0,
+    "music": 0
+  }
+}

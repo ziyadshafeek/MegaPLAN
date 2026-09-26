@@ -1,0 +1,69 @@
+name: Collect verified directories (branch trial)
+on:
+  push:
+    branches: [arena/01a0dd3c-megaplan]
+    paths:
+      - '.github/workflows/collect-now.yml'
+      - 'lib/city-directory.mjs'
+      - 'scripts/city-directory-runner.mjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: directory-collector-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Collect city shop and music-place records (OSM)
+        id: city
+        continue-on-error: true
+        run: node scripts/city-directory-runner.mjs
+      - name: Collect a Kerala OSM cell
+        id: map
+        continue-on-error: true
+        run: node scripts/kerala-expansion-runner.mjs --phase 1 --batch 1 --workers 1
+      - name: Collect Flipkart results, if verifiable
+        id: product
+        continue-on-error: true
+        run: node scripts/product-scraper-runner.mjs --batch 5 --platform flipkart --category mobiles
+      - name: Collect Spotify tracks, if verifiable
+        id: music
+        continue-on-error: true
+        run: node scripts/music-scraper-runner.mjs --batch 10 --query malayalam
+      - name: Publish only verified files on this branch
+        run: |
+          git config user.name 'megaplan-collector[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/city-directory public/data/city-directory data/map-directory public/data/map-directory data/product-directory public/data/product-directory data/music-directory public/data/music-directory
+          if git diff --cached --quiet; then echo 'No verified data changes'; exit 0; fi
+          git commit -m 'data: publish verified directory snapshots [skip ci]'
+          git fetch origin "${GITHUB_REF_NAME}"
+          git rebase "origin/${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Report actual outcomes
+        if: always()
+        env:
+          CITY: ${{ steps.city.outcome }}
+          MAP: ${{ steps.map.outcome }}
+          PRODUCT: ${{ steps.product.outcome }}
+          MUSIC: ${{ steps.music.outcome }}
+        run: |
+          {
+            echo '### Verified collection trial'
+            echo "City OSM: $CITY; Kerala OSM: $MAP; product: $PRODUCT; music tracks: $MUSIC"
+            echo 'A started workflow is not proof of published data. Inspect individual logs and committed indexes.'
+            echo "Branch: ${GITHUB_REF_NAME}"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$CITY" != success ] && [ "$MAP" != success ] && [ "$PRODUCT" != success ] && [ "$MUSIC" != success ]; then
+            echo 'All upstream collectors failed; no dataset is verified.'
+            exit 1
+          fi

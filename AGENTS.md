@@ -65,7 +65,7 @@ lib/api/youtube-transcript.js  YouTube captions fetcher (YouTube timedtext + Pip
 lib/api/youtube-playlist.js    Playlist extractor (Piped + Invidious + YouTube scrape, CSV/TXT export)
 lib/api/inspect.js             public URL/DNS/TLS/robots
 scripts/dev-server.mjs     local static + API
-data/tools.json            canonical 585-tool registry (some tools are beta)
+data/tools.json            canonical 587-tool registry (some tools are beta)
 public/data/               deployed copy of JSON
 changes.patch              original 13-file Codex patch (737 lines, verified)
 ```
@@ -88,6 +88,7 @@ Codex-style split: chat on the left, live browser window on the right, Deploy in
 8. Deploy: `POST /api/agent-publish` requires `GITHUB_TOKEN` and `AGENT_WRITE_TOKEN` on Vercel, plus an operator-supplied write token (kept in tab memory only). Otherwise stay on-device.
 
 ## Data ingestion
+`docs/ACTIVE-COLLECTION.md` documents the branch-scoped city/music-place/shop collector and its controls. Third-party Inception chat automation is out of scope; official API only.
 Visitor devices do not run automatic scraping. The public directory endpoints are read-only on Vercel; scheduled GitHub jobs attempt verified upstream indexing and only commit data on success. The initial snapshots are empty because synthetic seeds were removed. Manual map scans remain local to IndexedDB. Never re-enable public filesystem POST writes.
 
 ## Tests

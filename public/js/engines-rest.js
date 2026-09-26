@@ -13,6 +13,7 @@ import { mountKeralaDirectoryFull } from './kerala-directory-full.js';
 import { mountInceptionTool } from './inception-tool.js';
 import { mountProductDirectory } from './product-directory.js';
 import { mountMusicDirectory } from './music-directory.js';
+import { mountCityMusicDirectory, mountCityShopDirectory } from './city-directory.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -795,6 +796,8 @@ Object.assign(HANDLERS, {
   'Product Directory — Amazon & Flipkart Massive': (r, t) => mountProductDirectory(r, t),
   'Product Scraper — Amazon Flipkart': (r, t) => mountProductDirectory(r, { ...t, title: 'Product Scraper — Amazon Flipkart' }),
   'Music Directory — Spotify Full Dataset': (r, t) => mountMusicDirectory(r, t),
+  'Trivandrum Music Places Directory': (r, t) => mountCityMusicDirectory(r, t),
+  'Trivandrum Shop Directory': (r, t) => mountCityShopDirectory(r, t),
   'Music Scraper — Spotify': (r, t) => mountMusicDirectory(r, { ...t, title: 'Music Scraper — Spotify' })
 });
 

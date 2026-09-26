@@ -8217,5 +8217,36 @@
     ],
     "processing": "hybrid",
     "status": "beta"
+  },
+  {
+    "slug": "trivandrum-music-places",
+    "title": "Trivandrum Music Places Directory",
+    "category": "Maps",
+    "status": "beta",
+    "processing": "hybrid",
+    "description": "Attributed OpenStreetMap music venues, clubs and music shops near central Thiruvananthapuram. Bounded published snapshot, not a Spotify tracks catalogue; starts empty until a verified indexing job succeeds.",
+    "keywords": [
+      "trivandrum",
+      "thiruvananthapuram",
+      "music",
+      "venue",
+      "instruments",
+      "local"
+    ]
+  },
+  {
+    "slug": "trivandrum-shop-directory",
+    "title": "Trivandrum Shop Directory",
+    "category": "Maps",
+    "status": "beta",
+    "processing": "hybrid",
+    "description": "Attributed OpenStreetMap shops within 6.5 km of central Thiruvananthapuram. Bounded published snapshot, not live inventory; starts empty until a verified indexing job succeeds.",
+    "keywords": [
+      "trivandrum",
+      "thiruvananthapuram",
+      "shops",
+      "local",
+      "directory"
+    ]
   }
 ]
