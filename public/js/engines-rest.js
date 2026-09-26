@@ -9,6 +9,7 @@ import { mountMaps } from './maps-tool.js';
 import { mountInstagramOSINT, mountOSINTAdvanced } from './osint-advanced.js';
 import { mountMapDirectory, mountMapAutoScraper } from './map-directory.js';
 import { mountKeralaExpansion } from './kerala-expansion.js';
+import { mountKeralaDirectoryFull } from './kerala-directory-full.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -761,8 +762,11 @@ Object.assign(HANDLERS, {
   'Map Auto Scraper — Background': (r, t) => mountMapAutoScraper(r, t),
   'Road Directory — Wise Listing': (r, t) => mountMapDirectory(r, { ...t, title: 'Road Directory — Wise Listing' }),
   'Business Directory — By Type': (r, t) => mountMapDirectory(r, { ...t, title: 'Business Directory — By Type' }),
-  'Kerala Expansion — 10 Day Sprint': (r, t) => mountKeralaExpansion(r, t),
-  'Kerala Districts — Directory': (r, t) => mountKeralaExpansion(r, { ...t, title: 'Kerala Districts — Directory' })
+  'Kerala Expansion — 10 Day Sprint': (r, t) => mountKeralaDirectoryFull(r, t),
+  'Kerala Districts — Directory': (r, t) => mountKeralaDirectoryFull(r, { ...t, title: 'Kerala Districts — Directory' }),
+  'Kerala Directory — Full Business Info': (r, t) => mountKeralaDirectoryFull(r, t),
+  'Kerala AI — Map Intelligence': (r, t) => mountKeralaDirectoryFull(r, { ...t, title: 'Kerala AI — Map Intelligence' }),
+  'Spatial Index — Geohash Grid System': (r, t) => mountKeralaDirectoryFull(r, { ...t, title: 'Spatial Index — Geohash Grid System' })
 });
 
 for (const title of ['APA Citation Helper', 'MLA Citation Helper', 'Chicago Citation Helper', 'Vancouver Citation Helper']) {

@@ -243,11 +243,12 @@ export function mountMapDirectory(root, tool) {
   async function scanOne(index = null) {
     const prog = getProgress();
     const targetIndex = index !== null ? index : (prog.lastIndex + 1);
-    log(`Scanning cell ${targetIndex} from Trivandrum origin…`);
-    $(`dir`).innerHTML = `Scanning cell ${targetIndex}… querying Overpass (free, no key)…`;
+    log(`Scanning cell ${targetIndex} from Trivandrum origin… massive scrapping all business info + railways + roads + spatial index geohash`);
+    $(`dir`).innerHTML = `Scanning cell ${targetIndex}… querying Overpass V2 (free, no key)… massive scrapping all tags, railways, roads, geohash`;
 
     try {
-      const r = await fetch(`/api/map-scraper?index=${targetIndex}`);
+      // Use V2 scraper for full business info, railways, roads, spatial index
+      const r = await fetch(`/api/map-scraper-v2?index=${targetIndex}&radius=1000`);
       const j = await r.json();
       if (!r.ok) throw Error(j.error || 'Scraper failed');
 

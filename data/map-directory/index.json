@@ -40,5 +40,21 @@
   "cells": [
     0
   ],
-  "seed": true
+  "seed": true,
+  "freeStorage": {
+    "github": "data/map-directory/cell_*.json + index.json + search-index.json + full-business.json + roads.json + railways.json + full-index.jsonl",
+    "vercelStatic": "public/data/map-directory/",
+    "indexedDB": "mp-map-directory cells + places",
+    "searchIndex": "33 terms inverted index",
+    "fullBusiness": "10 places with all tags",
+    "roads": "5 roads with length, maxspeed, traffic heuristic",
+    "railways": "0 railways, 0 stations",
+    "spatialIndex": "geohash6/7, grid01/02/05, latIdx/lngIdx for AI distance queries",
+    "aiUsable": "api/kerala-ai.js endpoints distance, nearby, search, business, road, railway, geohash, traffic - callable by AI Mode"
+  },
+  "spatialSystem": {
+    "geohash": "Precision 6 ~1.2km x 0.6km, 7 ~150m, 8 ~20m, hierarchical",
+    "grid": "0.01\u00b0 ~1.1km, 0.02\u00b0 ~2.2km, 0.05\u00b0 ~5.5km",
+    "lat_lng": "WGS84, haversine for distance, OSRM for road distance, traffic heuristic"
+  }
 }

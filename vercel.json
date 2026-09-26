@@ -30,8 +30,10 @@
     "api/osint.js": { "maxDuration": 20 },
     "api/maps.js": { "maxDuration": 15 },
     "api/map-scraper.js": { "maxDuration": 30 },
+    "api/map-scraper-v2.js": { "maxDuration": 30 },
     "api/map-directory.js": { "maxDuration": 15 },
     "api/map-auto.js": { "maxDuration": 60 },
-    "api/kerala-expansion.js": { "maxDuration": 15 }
+    "api/kerala-expansion.js": { "maxDuration": 15 },
+    "api/kerala-ai.js": { "maxDuration": 20 }
   }
 }

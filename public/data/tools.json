@@ -8078,5 +8078,56 @@
       "kollam"
     ],
     "processing": "hybrid"
+  },
+  {
+    "slug": "kerala-directory-full",
+    "title": "Kerala Directory \u2014 Full Business Info",
+    "category": "Productivity",
+    "description": "Kerala directory full \u2014 massive scrapping, shows ALL business info from OSM not only names: phone, website, opening_hours, cuisine, religion, operator, brand, building, wheelchair, etc + railways + roads with length/maxspeed/traffic heuristic + spatial index geohash6/7 grid01/02/05 via lat/lng, distance via haversine+OSRM, free storage GitHub+Vercel+IndexedDB+search-index fully indexable for AI multi-tool, visible in Kerala directory page.",
+    "keywords": [
+      "kerala",
+      "directory",
+      "full",
+      "business",
+      "railway",
+      "road",
+      "geohash",
+      "distance",
+      "traffic"
+    ],
+    "processing": "hybrid"
+  },
+  {
+    "slug": "kerala-ai",
+    "title": "Kerala AI \u2014 Map Intelligence",
+    "category": "OCR & AI",
+    "description": "Kerala AI \u2014 AI-friendly API for massive directory map, fully indexable, free storage, endpoints: distance (haversine+OSRM+traffic heuristic), nearby, search, business full info, road with length/maxspeed/traffic, railway stations, geohash spatial index, traffic estimate. Callable by AI Mode Codex-like via tool chaining for distance queries.",
+    "keywords": [
+      "kerala",
+      "ai",
+      "distance",
+      "nearby",
+      "road",
+      "railway",
+      "geohash",
+      "traffic"
+    ],
+    "processing": "hybrid"
+  },
+  {
+    "slug": "spatial-index",
+    "title": "Spatial Index \u2014 Geohash Grid System",
+    "category": "Developer",
+    "description": "Spatial index system via longitude/latitude \u2014 geohash6 (~1.2km), geohash7 (~150m), grid01 0.01\u00b0, grid02 0.02\u00b0, grid05 0.05\u00b0, latIdx_lngIdx, hierarchical for AI distance queries, railways/roads mapped via lat/lng, traffic heuristic, fully indexable for AI multi-tool.",
+    "keywords": [
+      "spatial",
+      "index",
+      "geohash",
+      "grid",
+      "lat",
+      "lng",
+      "distance"
+    ],
+    "processing": "local-browser"
   }
 ]
