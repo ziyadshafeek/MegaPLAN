@@ -8,8 +8,9 @@ Read before editing:
 
 1. `docs/ARCHITECTURE.md` — how the desk, wiki, and APIs fit together
 2. `docs/CHANGELOG.md` — what changed in the MegaPLAN rebuild
-3. `MASTER_CONTEXT.md` — product rules that still apply
-4. This file
+3. `docs/AI-MODE-PLAN.md` — how all 590 tools get driven by natural language, phase by phase
+4. `MASTER_CONTEXT.md` — product rules that still apply
+5. This file
 
 ## What this product is
 MegaPLAN is **not** a clone of freetoolforge.org. The customer UI is a **desktop file manager** (folders + browser chrome) on large screens and **Android Files** on phones.
