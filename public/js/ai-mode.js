@@ -16,8 +16,24 @@ import {
   planRequest, buildIndex, planToText, normalizeRequest, draftToolSpec, PLANNER_VERSION
 } from './planner.js';
 import { runStep, buildBatchesLocally, batchToMarkdown, triggerDownload, canExecute, readFileText } from './ai-executors.js';
+import { recognizeImages } from './ocr-engine.js';
 import { citationList, renderCitationsText, summarize, truncate, revisionQuestions, safeUrl } from './ai-compose.js';
 import { GUIDE } from './ai-guide.js';
+
+
+/**
+ * Reads one rendered page bitmap, returning just the text.
+ *
+ * A scanned PDF has no text layer, so the page is rendered to a canvas and read
+ * by the same recogniser the image tools use. It is passed into the executors
+ * as a callback rather than imported, so the OCR bundle is only fetched the
+ * first time a scan is actually met.
+ */
+const readScanText = async bitmap => {
+  const blob = await new Promise((res, rej) => bitmap.toBlob(b => (b ? res(b) : rej(Error('The page could not be rendered.'))), 'image/png'));
+  const res = await recognizeImages([new File([blob], 'page.png', { type: 'image/png' })]);
+  return res.pages.map(p => p.text).join('\n');
+};
 
 const LS = {
   session: 'mp-ai-mode-session',
@@ -621,7 +637,11 @@ export function mountAIMode(root, tool) {
       plan: state.plan,
       steps: state.plan.steps,
       prompt: el.prompt.value.trim(),
-      results: state.results
+      results: state.results,
+      // Scanned pages are read here, in the page, by the same recogniser the
+      // image tools use. It is handed to the executors rather than imported so
+      // the Tesseract bundle is only fetched when a scan is actually met.
+      ocr: readScanText
     };
 
     const runnable = steps.filter(s => s.auto && canExecute(s.executor));
@@ -671,7 +691,7 @@ export function mountAIMode(root, tool) {
   function showPaneIfNarrow(name) { if (isNarrow()) showPane(name); }
 
   async function runStepAndRefresh(step, plan) {
-    const ctx = { files: state.files, tools: state.tools, plan, steps: plan?.steps || [], prompt: el.prompt.value.trim(), results: state.results };
+    const ctx = { files: state.files, tools: state.tools, plan, steps: plan?.steps || [], prompt: el.prompt.value.trim(), results: state.results, ocr: readScanText };
     const steps = (plan?.steps || []).map(s => ({ ...s, state: s.id === step.id ? 'running' : (state.results[s.id] ? (state.results[s.id].ok ? 'done' : 'failed') : 'pending'), result: state.results[s.id] || null }));
     renderSteps(steps, plan);
     const result = await runStep(step, ctx);

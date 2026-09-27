@@ -255,4 +255,73 @@ assert.deepEqual(a.steps.map(s => s.executor), b.steps.map(s => s.executor));
   assert.match(q.notes.join(' '), /will not take those/i, 'a SlideShare request is answered, not ignored');
 }
 
+/* ---------- a question about an uploaded PDF is answered from that PDF ---------- */
+{
+  const files = [{ name: 'contract.pdf', kind: 'pdf', size: 900000 }];
+  for (const prompt of [
+    'what dose is recommended in this pdf?',
+    'find the termination clause in this pdf',
+    'where does it mention the penalty?',
+    'who is the escalation contact on nights?'
+  ]) {
+    const p = plan({ prompt, files });
+    const answer = p.steps.find(s => s.executor === 'pdf-answer');
+    assert.ok(answer, `"${prompt}" must be answered from the document: ${p.steps.map(s => s.executor).join(', ')}`);
+    assert.ok(answer.params.question.length > 4, 'and the question that was extracted is not empty');
+    assert.doesNotMatch(answer.params.question, /\b(pdf|document|file|attached|uploaded)\b/i, 'the question is about the content, not the attachment: ' + answer.params.question);
+  }
+  // A job is not a question.
+  for (const prompt of ['summarise this contract', 'split this pdf', 'delete pages 5 to 9 of this pdf', 'make a gif of the meeting']) {
+    const p = plan({ prompt, files });
+    assert.ok(!p.steps.some(s => s.executor === 'pdf-answer'), `"${prompt}" is a job, not a question`);
+  }
+  // A question about a document is not a question about the world.
+  const asked = plan({ prompt: 'who is the escalation contact on nights?', files });
+  assert.ok(!asked.steps.some(s => s.executor === 'research' || s.executor === 'article'),
+    'no web search for a question the attachment answers');
+  assert.ok(!asked.steps.some(s => /contact sheet/i.test(s.title || '')),
+    'and no tool that merely shares a noun with the sentence: ' + asked.steps.map(s => s.title).join(', '));
+  // Asking the web is still possible when it is asked for.
+  const web = plan({ prompt: 'research the history of metformin online', files });
+  assert.ok(web.steps.some(s => s.executor === 'research'), 'an explicit request for research still goes out');
+  // Every automatic step can really run.
+  for (const p of [asked, web]) {
+    for (const s of p.steps) assert.ok(!s.auto || canRun(s.executor), `${s.executor} queued automatically with no runner`);
+  }
+}
+
+/* ---------- the 27 studio hand-offs say what they are ---------- */
+{
+  const files = [{ name: 'contract.pdf', kind: 'pdf', size: 1200 }];
+  for (const [prompt, title] of [
+    ['sign this contract', 'Sign PDF'],
+    ['redact the bank details from this pdf', 'Redact PDF'],
+    ['fill in this form pdf', 'Fill PDF'],
+    ['repair this broken pdf', 'Repair PDF'],
+    ['ocr this scanned pdf', 'OCR PDF'],
+    ['annotate this pdf', 'Annotate PDF']
+  ]) {
+    const p = plan({ prompt, files });
+    const step = p.steps.find(s => s.toolTitle === title);
+    assert.ok(step, `"${prompt}" must reach ${title}: ${p.steps.map(s => s.toolTitle || s.title).join(', ')}`);
+    assert.equal(step.executor, null, `${title} is a hand-off, so no executor claims to run it`);
+    assert.equal(step.auto, false, `${title} is never queued as automatic`);
+    assert.match(step.title, /^Open /, 'and the plan says it opens the tool');
+    assert.match(step.why, /cannot do this one unattended/i, `${title} must admit the hand-off: ${step.why}`);
+    assert.match(step.why, /Nothing is uploaded/i, `${title} must say the file stays here: ${step.why}`);
+  }
+  // A word from a document request is not a place to look up.
+  const redacted = plan({ prompt: 'redact the bank details from this pdf', files });
+  assert.ok(!redacted.steps.some(s => /map|nearby|route/i.test(s.title || '')),
+    'no map step for a redaction: ' + redacted.steps.map(s => s.title).join(', '));
+  // A real place request still works.
+  const near = plan({ prompt: 'find the nearest hospital' });
+  assert.ok(near.steps.some(s => /nearby|hospital/i.test(s.title || '')), 'a genuine place lookup is untouched');
+  // A runnable PDF job is run, not handed off.
+  const merged = plan({ prompt: 'merge these two pdfs', files: [...files, { name: 'b.pdf', kind: 'pdf', size: 900 }] });
+  const run = merged.steps.find(s => s.executor === 'pdf-ops');
+  assert.ok(run, 'merge is still run by AI Mode');
+  assert.match(run.why, /no need to open the studio/i);
+}
+
 console.log(`ai-mode planner ok: ${PLANNER_VERSION}; ${index.size} tools indexed; ${Object.keys(CAPABILITIES).length} capabilities; PDF/PPT/YouTube/literature/prompt-pack chains and honest refusals verified`);

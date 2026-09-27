@@ -19,6 +19,10 @@
  */
 
 import { loadPdfLib, loadPdfJs } from './kit.js';
+import {
+  tokenize, stem, buildIndex, rank, sentences, queryTerms, bestSentences, citations,
+  answerFrom, outlineSections, sectionRanges, labelPages, sectionBoostFactory
+} from './pdf-rag.js';
 
 /** Registry slug → the operation this module can genuinely perform. */
 export const PDF_OP_MAP = {
@@ -48,7 +52,15 @@ export const PDF_OP_MAP = {
   'pdf-to-text': 'text',
   'pdf-to-markdown': 'text',
   'pdf-form-field-viewer': 'forms',
-  'agentic-pdf-splitter': 'sections'
+  'agentic-pdf-splitter': 'sections',
+  // The 1000-page ask: ask a question, get quoted answers with page numbers.
+  'pdf-question-answerer': 'research',
+  'ask-this-pdf': 'research',
+  'pdf-search': 'research',
+  'chat-with-pdf': 'research',
+  'pdf-knowledge-base': 'research',
+  'pdf-section-finder': 'sections',
+  'find-in-pdf': 'research'
 };
 
 export function pdfOpForSlug(slug) {
@@ -387,13 +399,21 @@ async function opOverlay(PDFLib, docs, params) {
   return { files: [{ name: `megaplan-overlaid-${stamp()}.pdf`, bytes: await out.save() }], text: `Overlaid ${over.__name} onto ${base.__name} (${out.getPageCount()} page(s)).`, detail: `overlaid ${over.__name} onto ${base.__name}` };
 }
 
+/**
+ * Reads the text layer of every attached PDF.
+ *
+ * A scanned page has no text layer at all, which is why `ocr` exists: when a
+ * document turns out to be a scan, the pages are rendered and read in the
+ * browser, so a scanned contract can still be searched and cited. Nothing is
+ * uploaded, and OCR is only attempted when it is needed.
+ */
 async function opText(PDFLib, docs, params, deps) {
   const chunks = [];
   const pages = [];
   let total = 0;
-  const pdfjs = await deps.loadPdfJs();
+  const blank = [];
+  const src = await deps.loadPdfJs();
   for (const doc of docs) {
-    const src = await deps.loadPdfJs();
     const pdf = await src.getDocument({ data: doc.__bytes }).promise;
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
@@ -403,15 +423,73 @@ async function opText(PDFLib, docs, params, deps) {
       if (line) {
         pages.push({ n: i, of: pdf.numPages, name: doc.__name, body: line });
         chunks.push(`\n\n--- ${doc.__name} page ${i} of ${pdf.numPages} ---\n${line}`);
-      }
+      } else blank.push({ doc, n: i, of: pdf.numPages, page });
       if (i >= Number(params.maxPages || 2000)) break;
     }
+    doc.__pdf = pdf;
+  }
+  let ocrPages = [];
+  if (blank.length && (params.ocr || deps.recognize)) {
+    ocrPages = await readScannedPages(blank, deps, params).catch(e => {
+      deps.onOcrError?.(e);
+      return [];
+    });
+    for (const p of ocrPages) {
+      if (!p.body) continue;
+      pages.push(p);
+      chunks.push(`\n\n--- ${p.name} page ${p.n} of ${p.of} (read by OCR) ---\n${p.body}`);
+    }
+    pages.sort((a, b) => (a.name === b.name ? a.n - b.n : a.name.localeCompare(b.name)));
   }
   const text = chunks.join('').trim();
   if (!text) {
-    return { files: [], text: '', pages, scannedOnly: true, detail: 'no text layer found — this looks like a scan' };
+    return {
+      files: [], text: '', pages, scannedOnly: true,
+      detail: blank.length
+        ? `no text layer on ${blank.length} page(s) — this looks like a scan, and OCR was not run`
+        : 'no text layer found'
+    };
   }
-  return { files: [], text, pages, detail: `${total.toLocaleString('en-IN')} characters of text` };
+  const notes = [];
+  if (ocrPages.length) notes.push(`${ocrPages.length} scanned page(s) were read in your browser.`);
+  if (blank.length > ocrPages.length) notes.push(`${blank.length - ocrPages.length} page(s) still have no readable text.`);
+  return {
+    files: [], text, pages,
+    ocrPages: ocrPages.length,
+    detail: `${total.toLocaleString('en-IN')} characters of text${notes.length ? ' · ' + notes.join(' · ') : ''}`
+  };
+}
+
+/** pdf.js renders a page onto a canvas. Injectable so the path can be tested. */
+async function defaultRenderPage(page, scale, deps) {
+  const viewport = page.getViewport({ scale });
+  const w = Math.ceil(viewport.width), h = Math.ceil(viewport.height);
+  const canvas = deps.createCanvas
+    ? deps.createCanvas(w, h)
+    : Object.assign(deps.document.createElement('canvas'), { width: w, height: h });
+  await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+  return canvas;
+}
+
+/** Renders scanned pages to bitmaps and reads them with the in-page OCR. */
+async function readScannedPages(blank, deps, params) {
+  const out = [];
+  const limit = Number(params.ocrMaxPages || 20);
+  const work = blank.slice(0, limit);
+  const render = deps.renderPage || defaultRenderPage;
+  for (const b of work) {
+    deps.onOcrPage?.(out.length, work.length, b.n);
+    const scale = Number(params.ocrScale || 1.6);
+    const bitmap = await render(b.page, scale, deps);
+    const text = await deps.recognize(bitmap);
+    out.push({
+      n: b.n, of: b.of, name: b.doc.__name,
+      body: String(text || '').replace(/\s+/g, ' ').trim(),
+      ocr: true
+    });
+    b.page.cleanup?.();
+  }
+  return out;
 }
 
 async function opForms(PDFLib, docs) {
@@ -450,6 +528,93 @@ async function opImages(PDFLib, files) {
     page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
   });
   return { files: [{ name: `megaplan-from-images-${stamp()}.pdf`, bytes: await out.save() }], text: `Placed ${embedded.length} image(s) on ${embedded.length} page(s) at full size.`, detail: `${embedded.length} images → PDF` };
+}
+
+/**
+ * The 1000-page ask: a question in, quoted answers with page numbers out.
+ *
+ * No model is involved. The pages are ranked with BM25 over the text layer, the
+ * answer is the sentences from the top pages that carry the query terms, and
+ * every sentence names the page it was taken from. A question the document does
+ * not answer produces a "not in this document" reply, never a guess.
+ */
+async function opResearch(PDFLib, docs, params, deps) {
+  const doc = docs[0];
+  const count = doc.getPageCount();
+  const question = String(params.prompt || '').trim();
+  if (!question) {
+    return { files: [], text: `“${doc.__name}” has ${count} page(s). Ask a question and AI Mode will find the pages that answer it and quote them with page numbers.`, detail: 'no question asked' };
+  }
+  const extracted = await opText(PDFLib, docs, { maxPages: count, ocr: params.ocr !== false }, deps).catch(() => null);
+  const pages = extracted?.pages || [];
+  if (!pages.length) {
+    return {
+      files: [], text: '', needsOcr: true,
+      text_note: 'no readable text',
+      detail: extracted?.scannedOnly ? 'this looks like a scan and OCR could not read it' : 'no text layer'
+    };
+  }
+
+  // The table of contents is the document's own opinion about its structure.
+  let ranges = [];
+  const outline = await readOutline(deps, doc);
+  if (outline.length) ranges = sectionRanges(outline, count);
+  const labelled = ranges.length ? labelPages(pages, ranges) : pages;
+
+  const index = buildIndex(labelled);
+  const boost = sectionBoostFactory(ranges, question);
+  const ranked = rank(index, question, { limit: Number(params.limit || 12), boost });
+  if (!ranked.length) {
+    const tried = queryTerms(question).map(t => `“${t.term}”`).slice(0, 5).join(', ');
+    return {
+      files: [], text: `“${doc.__name}” has ${count} page(s) and ${pages.length} with readable text, but none of them mention ${tried || 'anything in the question'}.\n\nNothing was guessed: if it is not in the document, it is not in the answer. Try fewer or broader words, or upload the pages you mean.`,
+      detail: 'no match', notFound: true
+    };
+  }
+
+  const answer = answerFrom(question, ranked, { name: doc.__name });
+  const cite = citations(ranked);
+  const sections = [...new Set(ranked.map(r => r.section).filter(Boolean))].slice(0, 4);
+  const summary = [
+    answer,
+    '',
+    `Searched ${pages.length} readable page(s) of ${count} across ${index.vocab} distinct words.`,
+    sections.length ? `The hits fall in: ${sections.join('; ')}.` : '',
+    cite.text + '.',
+    `Everything above was read in your browser — nothing was uploaded and nothing was written by a model.`
+  ].filter(Boolean).join('\n');
+
+  const wantPdf = params.pages !== false;
+  const files = [];
+  if (wantPdf) {
+    // copyPages takes 0-based indices; the reader's page numbers are 1-based.
+    const wanted = [...new Set(ranked.map(r => r.n))].sort((a, b) => a - b).map(n => n - 1);
+    files.push({ name: `megaplan-answers-${baseName(doc.__name)}-${stamp()}.pdf`, bytes: await extractInto(PDFLib, doc, wanted) });
+  }
+  return { files, text: summary, detail: `${ranked.length} page(s) cited`, ranked: ranked.map(r => r.n), outline: outline.slice(0, 30) };
+}
+
+/** The PDF's own bookmarks, with destinations resolved to page numbers. */
+async function readOutline(deps, doc) {
+  const pdf = doc.__pdf;
+  if (!pdf?.getOutline) return [];
+  try {
+    const outline = await pdf.getOutline();
+    if (!outline?.length) return [];
+    const dests = await pdf.getDestinations();
+    const resolve = item => {
+      const dest = item.dest;
+      let ref = dest;
+      if (typeof dest === 'string') ref = dests[dest];
+      if (!ref) return null;
+      const index = Array.isArray(ref) ? ref[0] : ref;
+      const num = typeof index === 'number' ? index : null;
+      return num == null ? null : num + 1;      // pdf.js gives 0-based page indexes
+    };
+    return outlineSections(outline, doc.getPageCount(), { resolve });
+  } catch {
+    return [];                                     // a broken outline is not a reason to fail
+  }
 }
 
 async function opSections(PDFLib, docs, params, deps) {
@@ -528,7 +693,7 @@ const OPS = {
   count: opCount, metadata: opMetadata, merge: opMerge, extract: opExtract, delete: opDelete, split: opSplit,
   reorder: opReorder, rotate: opRotate, numbers: opNumbers, watermark: opWatermark, compress: opCompress,
   crop: opCrop, nup: (P, d, p) => opNup(P, d, p, 4), nup2: (P, d, p) => opNup(P, d, p, 2),
-  overlay: opOverlay, text: opText, forms: opForms, images: opImages, sections: opSections
+  overlay: opOverlay, text: opText, forms: opForms, images: opImages, sections: opSections, research: opResearch
 };
 
 export const PDF_OP_TITLES = {

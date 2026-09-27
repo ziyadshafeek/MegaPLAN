@@ -142,10 +142,26 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 - [x] A matched PDF job **runs** on the attached file instead of only offering to open the studio
 - [x] Page ranges read out of the sentence ("delete pages 5 to 9"); alias slugs queue once
 - [x] Large-PDF keyword page search (`op: sections`) for the 1000-page ask
-- [ ] In-browser OCR so scans become searchable
-- [ ] Large-PDF handling: TOC/bookmark detection + keyword page ranking (the 1000-page ask)
-- [ ] RAG-lite: section chunking, in-browser BM25, answers only from cited pages
-- [ ] The other 27 stay honest studio hand-offs (sign, fill, redact, repair, office↔PDF)
+- [x] In-browser OCR so scans become searchable: a page with no text layer is rendered and read by the same recogniser the image tools use
+- [x] Large-PDF handling: the document's own bookmarks are read, sections are labelled, and a chapter match boosts its pages
+- [x] RAG-lite: BM25 over the page text, extractive answers, every sentence carrying the page it came from — `public/js/pdf-rag.js`
+- [x] The other 27 stay honest studio hand-offs, and each one says so: what it opens, what it does, and that nothing is uploaded
+
+The 1000-page ask is now a real answer rather than a suggestion. Uploading a
+PDF and asking a question of it runs `pdf-answer`: every page is ranked with
+BM25, the sentences that carry the question are quoted out, and each quote names
+its page. No model is involved, so there is nothing to hallucinate — and a
+question the document does not answer returns "none of them mention it", not a
+guess. The document's own table of contents is read when it has one, so the
+chapter a question lands in can be preferred over a page that merely repeats the
+word.
+
+Three defects surfaced while doing it. `runPdfRead` **gave up on scans** and told
+the user to go and open a different tool; a scanned contract is now read in the
+page. A question about an uploaded PDF also fired **open-source web research**,
+which mixes a citation with a summary and answers from the wrong document. And
+"redact the bank details from this pdf" queued a **map lookup** for banks,
+because "bank" is a place word.
 
 ## Phase 4 — Images → OCR → deck
 - [ ] Composed chain: images → OCR → facts → outline → real `.pptx`

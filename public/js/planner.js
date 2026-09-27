@@ -495,6 +495,7 @@ export function rankTools(index, ctx, { limit = 24 } = {}) {
     if (subjects.size && subjectHits === 0) score *= 0.6;              // ignores what it is about
     const wantCats = new Set([...formats].map(f => FORMAT_CATEGORY[f]).filter(Boolean));
     if (wantCats.size) score *= wantCats.has(m.tool.category) ? 1.5 : 0.55;
+    if (ctx.aboutDocument && !DOCUMENT_CATEGORIES.has(m.tool.category)) score *= 0.15;
     if (ctx.conversion && ctx.conversion.to) {
       const tname = String(m.tool.title).toLowerCase();
       const { from, to } = ctx.conversion;
@@ -838,7 +839,10 @@ const INTENT_RULES = [
       if (/\b(where (is|are)|locate|coordinates?|how far|how (do|can) i (get|reach)|show (it|them|me).*\bmap|postcode|pin ?code)\b/i.test(c.prompt)) hits.push('a place lookup was asked for');
       // A place name on its own is not a map request \u2014 "the Kerala backwaters" is a subject, not a destination.
       if (c.place && /\b(where|near|locat|address|map|weather|distance|direction|route|towards?)\b/i.test(c.prompt)) hits.push(`place detected: ${c.place.text}`);
-      if (/\b(cafe|cafes|restaurant|hotels?|hospital|school|college|bank|atm|pharmacy|park|petrol|station|airport|temple|church|mosque|shop|stores?|mall|gym|salon|clinic)\b/i.test(c.prompt)) hits.push('point-of-interest category named');
+      // A shop or a bank in a document request is not a place to look up:
+      // "redact the bank details from this pdf" is about the file, not the map.
+      const aboutFile = c.files?.length && !/\b(near|nearest|nearby|around|route|directions?|distance|weather|locate|where is|how far|address|map)\b/i.test(c.prompt);
+      if (!aboutFile && /\b(cafe|cafes|restaurant|hotels?|hospital|school|college|bank|atm|pharmacy|park|petrol|station|airport|temple|church|mosque|shop|stores?|mall|gym|salon|clinic)\b/i.test(c.prompt)) hits.push('point-of-interest category named');
       return hits.length ? { score: 2 + hits.length * 2, evidence: hits } : null;
     }
   },
@@ -1059,6 +1063,7 @@ export const CAPABILITIES = {
   presentation: { title: 'Create the .pptx', stage: 'output', executor: 'presentation', output: 'file' },
   toolbus: { title: 'Run a MegaPLAN tool', stage: 'transform', executor: 'toolbus', output: 'text' },
   'pdf-ops': { title: 'PDF operation on your file', stage: 'transform', executor: 'pdf-ops', output: 'file' },
+  'pdf-answer': { title: 'Answer from the PDF, with page numbers', stage: 'transform', executor: 'pdf-answer', output: 'text' },
   'new-tool': { title: 'Draft a private tool', stage: 'output', executor: 'new-tool', output: 'json' }
 };
 
@@ -1074,7 +1079,7 @@ const STAGE_ORDER = { gather: 0, transform: 1, output: 2, assist: 3 };
  */
 export const IMPLEMENTED_EXECUTORS = [
   'research', 'article', 'web-read', 'youtube-transcript', 'youtube-playlist',
-  'file-read', 'pdf-read', 'map-place', 'map-nearby', 'map-route', 'map-weather',
+  'file-read', 'pdf-read', 'pdf-answer', 'map-place', 'map-nearby', 'map-route', 'map-weather',
   'outline', 'combine', 'prompts', 'assistant', 'presentation', 'article-pdf',
   'toolbus', 'pdf-ops', 'new-tool'
 ];
@@ -1100,6 +1105,47 @@ export const PDF_RUNNABLE_OPS = {
 
 export function pdfOpFor(tool) {
   return PDF_RUNNABLE_OPS[String(tool?.slug || '')] || null;
+}
+
+/** What the studio hand-offs actually do, so the plan does not have to guess. */
+const PDF_STUDIO_NOTE = {
+  'sign-pdf': 'your signature is drawn or typed by you and placed where you want it',
+  'fill-pdf': 'the fields are filled by you and the file is saved locally',
+  'redact-pdf': 'redaction is drawn by hand, so you can see exactly what is removed',
+  'annotate-pdf': 'notes and marks are placed by you',
+  'repair-pdf': 'the damaged file is opened and recovered with your say-so',
+  'ocr-pdf': 'scanned pages are read in this browser, page by page',
+  'pdf-to-word': 'the conversion needs a layout engine a browser does not ship',
+  'pdf-to-excel': 'tables are detected and mapped by hand',
+  'pdf-to-powerpoint': 'slides are laid out by hand from the extracted text',
+  'pdf-to-epub': 'the reflowable book is built with a library loaded on demand',
+  'pdf-to-rtf': 'the document is rebuilt in the studio',
+  'pdf-to-html': 'the page layout is rebuilt as HTML',
+  'pdf-to-images': 'each page is rendered at the resolution you choose',
+  'extract-pdf-images': 'the embedded images are listed and you pick which to save',
+  'resize-pdf-pages': 'page sizes are changed one by one',
+  'pdf-a-helper': 'the conformance report lists what is missing',
+  'pdf-bookmark-helper': 'bookmarks are added by hand to a page list',
+  'pdf-batch-rename': 'the new names are applied to a list you confirm',
+  'word-to-pdf': 'the layout is rendered in this browser',
+  'excel-to-pdf': 'each sheet is paginated in this browser',
+  'powerpoint-to-pdf': 'each slide is rendered in this browser',
+  'epub-to-pdf': 'the book is paginated in this browser'
+};
+
+/**
+ * The wording for a studio hand-off. Every path that offers a tool AI Mode
+ * cannot run unattended goes through here, so the plan always says the same
+ * thing: this is a hand-off, this is what it does, nothing is uploaded.
+ */
+export function handoffWhy(tool, ctx, ruleWhy = '') {
+  if (tool?.category === 'PDF') {
+    const note = PDF_STUDIO_NOTE[tool?.slug] || 'the work is done in this browser with your file';
+    const file = ctx?.files?.length ? ` (${ctx.files.filter(f => f.kind === 'pdf').map(f => f.name).join(', ') || 'your file'})` : '';
+    return `AI Mode cannot do this one unattended, so it opens the ${tool.title} studio${file}: ${note}. Nothing is uploaded.`;
+  }
+  if (tool?.status === 'beta') return `${ruleWhy || 'This tool is still marked beta.'} It opens the tool so you can do it by hand.`;
+  return ruleWhy || `Matched ${tool?.category || 'the library'}.`;
 }
 
 /** How each runnable PDF op reads, so the planner only claims what it can do. */
@@ -1191,6 +1237,24 @@ export function planRequest(raw = {}) {
   const wantsPresentation = intentIds.has('presentation');
   const wantsOcr = intentIds.has('ocr');
   const wantsWriting = intentIds.has('writing');
+  // "What is the dose of metformin in this document?" — the part that is
+  // actually a question, with the attachment's own name taken out of it.
+  const pdfQuestion = ctx.files.some(f => f.kind === 'pdf') && ctx.prompt
+    ? ctx.prompt
+      .replace(/\b(this|these|the|that|attached|uploaded|document|file|pdf|paper)\b/gi, ' ')
+      .replace(/\b(in|from|of|inside|within|according to|as (?:stated|per|shown) in)\b/gi, ' ')
+      .replace(/\b(in this|from this|of this)\b/gi, ' ')
+      .replace(/\?+/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+    : '';
+  // A question only counts if it is a question, not a job ("summarise this").
+  // "Find the termination clause" and "where does it say X" are questions too.
+  const isQuestion = /\?|\b(what|which|when|where|who|whom|whose|why|find|search|locate|show|tell me|list|say about|state)\b|\bhow (?:much|many|often|long|do|does|is|are)\b|\b(is|are|does|do|did|can|should|must) (?:it|this|they|the|we|you)\b/i.test(pdfQuestion);
+  // A question about an attached document is answered from that document. Going
+  // out to the web as well mixes the two, and a web summary is not a citation.
+  const answerFromFile = isQuestion && pdfQuestion.length > 8 && ctx.files.some(f => f.kind === 'pdf');
+  ctx.aboutDocument = answerFromFile;
 
   /* ---- 1. gather: things we can pull in automatically ---- */
   const gathered = [];
@@ -1216,7 +1280,7 @@ export function planRequest(raw = {}) {
       params: { url: link.url }, why: 'A web link was supplied; its public text can feed later steps.', outputKind: 'text', optional: true }));
   }
 
-  if (wantsResearch || (wantsPdf && ctx.topic && !ctx.files.length)) {
+  if (!answerFromFile && (wantsResearch || (wantsPdf && ctx.topic && !ctx.files.length))) {
     const q = ctx.topic || ctx.prompt;
     gathered.push(push({ executor: 'research', title: `Search open sources for “${q}”`,
       detail: 'Wikipedia, Wiktionary, Wikidata, Commons, Openverse, arXiv, Crossref, Europe PMC, Open Library, Gutenberg, Internet Archive, Stack Exchange, Hacker News, GitHub, npm, PyPI, OSM places, Open-Meteo, MusicBrainz, iTunes, TVMaze — all without an API key.',
@@ -1236,7 +1300,8 @@ export function planRequest(raw = {}) {
   if (ctx.files.length) {
     for (const f of ctx.files) {
       if (f.kind === 'pdf') {
-        gathered.push(push({ executor: 'pdf-read', title: `Read “${f.name}”`, detail: 'Extract the text layer, count pages, and report whether the scan needs OCR.',
+        gathered.push(push({ executor: 'pdf-read', title: `Read “${f.name}”`,
+          detail: 'Extract the text layer, read any scanned pages in this browser, and count the pages.',
           params: { fileIndex: f.index, name: f.name }, why: 'A PDF was uploaded; its text feeds every later step.',
           outputKind: 'text', requires: [] }));
       } else if (f.kind === 'text' || f.kind === 'csv' || f.kind === 'json') {
@@ -1246,6 +1311,16 @@ export function planRequest(raw = {}) {
         gathered.push(push({ executor: 'toolbus', title: `Read text from “${f.name}”`, tool: 'ocr-image-to-text', toolTitle: 'OCR Image to Text', category: 'OCR & AI',
           params: { fileIndexes: [f.index] }, why: 'An image was uploaded and text was requested.', outputKind: 'text' }));
       }
+    }
+    if (answerFromFile) {
+      gathered.push(push({
+        executor: 'pdf-answer',
+        title: `Answer from ${ctx.files.find(f => f.kind === 'pdf').name}`,
+        detail: 'Rank every page with BM25, quote the sentences that carry the question, and name the page each came from.',
+        params: { fileIndex: ctx.files.find(f => f.kind === 'pdf').index, question: pdfQuestion, name: ctx.files.find(f => f.kind === 'pdf').name },
+        why: 'A question was asked about an uploaded document. The answer is quoted from the pages it is cited to.',
+        outputKind: 'text', requires: []
+      }));
     }
     if (wantsOcr && ctx.files.some(f => f.kind === 'pdf')) {
       notes.push('Scanned PDFs are read with in-browser OCR. If a PDF has no text layer, AI Mode opens OCR PDF with your file ready instead of guessing.');
@@ -1349,6 +1424,15 @@ export function planRequest(raw = {}) {
     // Wrong-domain tools are out: a jpg request must not queue a video tool.
     const wantCats = new Set([...ctx.formats].map(f => FORMAT_CATEGORY[f]).filter(Boolean));
     if (wantCats.size && !wantCats.has(tool.category) && m.subjectHits === 0) { alsoMatched.push(summariseMatch(m)); continue; }
+    // A question about an uploaded document is answered from that document. A
+    // video or audio tool has nothing to say about a contract, however well its
+    // title happens to match a word in the sentence.
+    // No exemption for a matching noun here: "the escalation contact" must not
+    // queue a contact-sheet maker. The answer comes from the document.
+    if (answerFromFile && !DOCUMENT_CATEGORIES.has(tool.category)) {
+      alsoMatched.push(summariseMatch(m));
+      continue;
+    }
     // After the first two tools, only complementary operations join the chain.
     if (toolSteps.filter(x => x.auto).length >= 1 && fresh.length === 0 && m.score < cut) { alsoMatched.push(summariseMatch(m)); continue; }
     const bespoke = isBespoke(tool);
@@ -1389,7 +1473,9 @@ export function planRequest(raw = {}) {
         : { matchScore: m.score, matched: m.matched, text: ctx.topic || ctx.prompt },
       why: canRunPdf
         ? `AI Mode runs this itself on the attached file (${PDF_OP_VERB[pdfOp]?.toLowerCase() || pdfOp})${ctx.files.length ? `: ${ctx.files.map(f => f.name).join(', ')}` : ''} — no need to open the studio.`
-        : `Matched ${(m.matched || []).join(', ') || tool.category} in the ${index.size}-tool library${m.verbHits ? ` (operation: ${ctx.verbs.join('/')})` : ''}.`,
+        : (isTopBespoke && tool.category === 'PDF'
+          ? handoffWhy(tool, ctx)
+          : `Matched ${(m.matched || []).join(', ') || tool.category} in the ${index.size}-tool library${m.verbHits ? ` (operation: ${ctx.verbs.join('/')})` : ''}.`),
       outputKind: isAuto ? (canRunPdf ? 'file' : 'text') : 'link',
       stage: isAuto ? 'transform' : 'output',
       // A step that genuinely runs is not a "maybe" — only hand-offs and the
@@ -1429,6 +1515,16 @@ export function planRequest(raw = {}) {
       why: 'Paste the video link (or drop it in the links box) and AI Mode reads the captions itself.' },
     { when: () => wantsPdf && ctx.hasKind('image') && !ctx.hasKind('pdf'), slugs: ['image-to-pdf', 'jpg-to-pdf'],
       why: 'Images become a PDF in the image-to-PDF tool.' },
+    { when: () => /\b(sign|signature|signing|signed)\b/i.test(ctx.prompt) && ctx.hasKind('pdf'),
+      slugs: ['sign-pdf'], why: 'A signature is placed by hand, so the studio is the honest place for it.' },
+    { when: () => /\b(fill (?:in|out)|fill the (?:form|fields?)|fillable|form fields?)\b/i.test(ctx.prompt) && ctx.hasKind('pdf'),
+      slugs: ['fill-pdf'], why: 'Form fields are filled one by one in the studio.' },
+    { when: () => /\b(annotate|comments? in|highlight)\b/i.test(ctx.prompt) && ctx.hasKind('pdf'),
+      slugs: ['annotate-pdf'], why: 'Marks are placed by hand in the studio.' },
+    { when: () => /\b(repair|fix|broken|corrupt|damaged|unreadable)\b/i.test(ctx.prompt) && /\bpdf\b/i.test(ctx.prompt),
+      slugs: ['repair-pdf'], why: 'A damaged file is recovered with your say-so, in the studio.' },
+    { when: () => /\b(ocr|scan(ned)?|read (?:this )?(?:pdf|file)|searchable)\b/i.test(ctx.prompt) && ctx.hasKind('pdf'),
+      slugs: ['ocr-pdf'], why: 'Scanned pages are read in this browser, page by page.' },
     { when: () => intentIds.has('privacy') && /\b(mask|redact|hide|pii|anonymi[sz]e)\b/i.test(ctx.prompt),
       slugs: ctx.hasKind('pdf') ? ['redact-pdf'] : ['pii-masker', 'text-anonymizer'], why: 'Redaction and masking are permanent, local operations.' },
     { when: () => intentIds.has('business-doc') && /\b(invoice|bill)\b/i.test(ctx.prompt), slugs: ['invoice-maker', 'invoice-pdf-maker'],
@@ -1468,7 +1564,9 @@ export function planRequest(raw = {}) {
         params: canRun
           ? { op, prompt: ctx.prompt, range: pdfRangeFrom(ctx.prompt), purpose: true, mode: ctx.options.mode, target: ctx.options.target }
           : { mode: ctx.options.mode, target: ctx.options.target, purpose: true },
-        why: canRun ? `${rule.why} AI Mode runs it on the attached file directly.` : rule.why,
+        why: canRun
+          ? `${rule.why} AI Mode runs it on the attached file directly.`
+          : (bespoke && !canRun ? handoffWhy(tool, ctx, rule.why) : rule.why),
         outputKind: bespoke && !canRun ? 'link' : (canRun ? 'file' : 'text'),
         stage: bespoke && !canRun ? 'output' : 'transform'
       }));
@@ -1645,6 +1743,11 @@ function isSelfReferential(tool) {
 /** Tools whose UI is a bespoke app the generic bus cannot drive blindly. */
 const BESPOKE_SLUGS = new Set(['ai-mode', 'audio-studio', 'maps', 'map-directory', 'map-auto-scraper', 'kerala-ai', 'presentation-creator', 'osint-advanced', 'instagram-osint-checker', 'youtube-transcript', 'youtube-playlist-lister', 'youtube-chapter-generator', 'agentic-pdf-splitter', 'question-paper-to-notes', 'data-sources-status', 'trivandrum-music-places', 'trivandrum-shop-directory', 'music-directory', 'product-directory', 'chess', 'snake-game', 'tetris', 'minesweeper', 'tic-tac-toe', 'game-2048', 'inception-tool', 'reviewed-image-link-directory', 'wiki-agent', 'self-agent']);
 const BESPOKE_CATEGORIES = new Set(['Games', 'Maps']);
+
+/** Categories that can plausibly help with a document that was just uploaded. */
+const DOCUMENT_CATEGORIES = new Set([
+  'PDF', 'Text', 'Files & Data', 'Productivity', 'OCR & AI', 'Business', 'Education', 'Developer', 'AI', 'Health & Medical'
+]);
 
 export function isBespoke(tool) {
   if (!tool) return true;

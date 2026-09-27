@@ -232,37 +232,78 @@ async function runFileRead(step) {
   }
 }
 
+/**
+ * Reads an attached PDF, and reads a scan when that is what it is.
+ *
+ * A scanned page has no text layer, which used to end the chain with "open the
+ * OCR tool". The pages are now rendered here and read by the same in-browser
+ * recogniser the image tools use, so a scanned contract can be searched,
+ * summarised and cited like any other.
+ */
 async function runPdfRead(step) {
   const file = step.ctx?.files?.[step.params?.fileIndex];
   if (!file) return fail('That PDF is no longer attached.');
-  let pages = 0, scanned = 0;
-  const chunks = [];
   try {
-    const pdfjs = await loadPdfJs();
-    const buffer = await file.arrayBuffer();
-    const doc = await pdfjs.getDocument({ data: new Uint8Array(buffer) }).promise;
-    pages = doc.numPages;
-    const limit = Math.min(pages, 400);
-    for (let i = 1; i <= limit; i++) {
-      const page = await doc.getPage(i);
-      const content = await page.getTextContent();
-      const text = content.items.map(it => it.str || '').join(' ').replace(/\s+/g, ' ').trim();
-      if (text.length < 24) scanned++;
-      chunks.push(`\n\n--- page ${i} of ${pages} ---\n${text}`);
+    const res = await runPdfOp({
+      op: 'text',
+      files: [file],
+      params: { ocr: true, ocrMaxPages: step.params?.ocrMaxPages || 24, maxPages: step.params?.maxPages || 2000 }
+    }, pdfDeps(step));
+    const text = res.text || '';
+    if (!text) {
+      return fail(
+        `${file.name} has no readable text, and OCR could not read it in this browser. If it is a scan, try a sharper copy or the OCR PDF tool with a smaller page range.`,
+        { needsOcr: true, scannedOnly: res.scannedOnly }
+      );
     }
+    const pages = res.pages?.length || 0;
+    const ocrNote = res.ocrPages ? ` · ${res.ocrPages} page(s) read by OCR` : '';
+    return ok(`Read ${file.name} — ${pages} page(s) with text, ${text.length.toLocaleString('en-IN')} characters${ocrNote}`, { text, pages, ocrPages: res.ocrPages || 0 });
   } catch (err) {
-    return fail(`The PDF could not be opened: ${err?.message || 'unreadable file'}`);
+    return fail(`The PDF could not be read: ${err?.message || 'unreadable file'}`);
   }
-  const text = chunks.join('').trim();
-  const ratio = pages ? scanned / pages : 1;
-  const needsOcr = text.length < 80 || ratio > 0.6;
-  if (needsOcr) {
-    return fail(
-      `${file.name} has no usable text layer (${scanned}/${pages} pages look scanned). Open the OCR PDF tool — it reads scans in this browser.`,
-      { needsOcr: true, pages, scanned }
-    );
+}
+
+/**
+ * Answers a question from an attached PDF, quoting the pages it used.
+ * The ranking and the extraction live in `pdf-rag.js`; this only supplies the
+ * files and reports what happened.
+ */
+async function runPdfAnswer(step) {
+  const file = step.ctx?.files?.[step.params?.fileIndex];
+  const question = String(step.params?.question || '').trim();
+  if (!file) return fail('That PDF is no longer attached.');
+  if (!question) return fail('No question was detected in the request.');
+  try {
+    const res = await runPdfOp({ op: 'research', files: [file], params: { prompt: question, ocr: true } }, pdfDeps(step));
+    if (res.notFound) return ok(res.text, { notFound: true, ranked: [] });
+    const head = `“${question}” — ${res.detail}`;
+    const outlineNote = res.outline?.length
+      ? `\n\nThe document's own table of contents (${res.outline.length} entries): ${res.outline.slice(0, 6).map(o => `${o.title} (p.${o.page})`).join('; ')}${res.outline.length > 6 ? '…' : ''}`
+      : '';
+    return ok(`${head}\n\n${res.text}${outlineNote}`, { pages: res.ranked || [], text: res.text });
+  } catch (err) {
+    return fail(`The PDF could not be searched: ${err?.message || 'unreadable file'}`);
   }
-  return ok(`Read ${file.name} — ${pages} page(s), ${text.length.toLocaleString('en-IN')} characters`, { text, pages });
+}
+
+/** The PDF operations need their libraries plus, when asked, the OCR reader. */
+function pdfDeps(step) {
+  const deps = { loadPdfLib, loadPdfJs, onStatus: msg => step.onStatus?.(msg) };
+  if (step.ctx?.ocr) {
+    deps.recognize = async bitmap => {
+      const text = await step.ctx.ocr(bitmap);
+      return typeof text === 'string' ? text : (text?.text || '');
+    };
+    deps.createCanvas = (w, h) => {
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      return c;
+    };
+    deps.document = document;
+  }
+  deps.onOcrPage = (done, total, page) => step.onStatus?.(`Reading page ${page} as an image (${done + 1} of ${total})…`);
+  return deps;
 }
 
 async function runMapPlace(step) {
@@ -655,6 +696,7 @@ const EXECUTORS = {
   'youtube-playlist': runYoutubePlaylist,
   'file-read': runFileRead,
   'pdf-read': runPdfRead,
+  'pdf-answer': runPdfAnswer,
   'map-place': runMapPlace,
   'map-nearby': runMapNearby,
   'map-route': runMapRoute,

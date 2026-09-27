@@ -10,6 +10,10 @@
 import assert from 'node:assert/strict';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { runPdfOp, parsePageList, pageListFromPrompt, canRunPdfTool, PDF_OP_MAP } from '../public/js/ai-pdf-ops.js';
+import {
+  buildIndex, rank, sentences, bestSentences, answerFrom, outlineSections,
+  sectionRanges, labelPages, sectionBoostFactory, tokenize, stem, citations
+} from '../public/js/pdf-rag.js';
 
 /*
  * The browser loads pdf-lib and pdf.js from a CDN at runtime. Node cannot import
@@ -22,7 +26,7 @@ const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
 // rendering, not text extraction, and the warning would bury real failures.
 const quiet = () => { try { pdfjsLib.setVerbosityLevel?.(0); } catch { /* older builds */ } };
 const deps = { loadPdfLib: async () => await import('pdf-lib'), loadPdfJs: async () => pdfjsLib };
-const op = (job) => runPdfOp(job, deps);
+const op = (job, extra = {}) => runPdfOp(job, { ...deps, ...extra });
 
 /** Build a real multi-page PDF with identifiable text on every page. */
 async function makePdf(pages, label = 'Doc') {
@@ -281,6 +285,208 @@ await test('an operation outside the map is refused, not approximated', async ()
   await assert.rejects(() => op({ op: 'sign', files: [] }), /PDF studio/i);
   await assert.rejects(() => op({ op: undefined, files: [] }), /cannot run/i);
 });
+
+
+/* ------------------------------------------------------------------ *
+ * Retrieval over a long document
+ * ------------------------------------------------------------------ */
+
+/** A real multi-page PDF where each page carries its own sentences. */
+async function makeReadablePdf(pages) {
+  const doc = await PDFDocument.create();
+  const font = await doc.embedFont(StandardFonts.Helvetica);
+  for (const [i, lines] of pages.entries()) {
+    const page = doc.addPage([595, 842]);
+    let y = 790;
+    for (const line of lines) {
+      for (const wrapped of wrapForPdf(line, 520, font)) {
+        page.drawText(wrapped, { x: 50, y, size: 11, font });
+        y -= 15;
+      }
+    }
+  }
+  return await doc.save();
+}
+
+function wrapForPdf(text, width, font) {
+  const words = String(text).split(/\s+/);
+  const lines = [];
+  let line = '';
+  for (const w of words) {
+    if (!line) { line = w; continue; }
+    if (font.widthOfTextAtSize(line + ' ' + w, 11) > width) { lines.push(line); line = w; } else line += ' ' + w;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+const CHAPTER = [
+  'Chapter 1. Scope of the agreement. This agreement takes effect on the date of signature by both parties.',
+  'The supplier shall deliver the goods within thirty days of the purchase order being raised.'
+];
+const DOSAGE = [
+  'Chapter 2. Dosage and administration. Metformin 500 mg is to be taken twice daily with food.',
+  'The starting dose is 500 mg once daily and may be increased after two weeks of treatment.'
+];
+const TERMINATION = [
+  'Chapter 3. Termination. Either party may terminate this agreement with ninety days written notice.',
+  'On termination the supplier shall return all materials and settle outstanding invoices.'
+];
+
+await test('a question is answered from the page that holds it, with a citation', async () => {
+  const bytes = await makeReadablePdf([CHAPTER, DOSAGE, TERMINATION]);
+  const res = await op({ op: 'research', files: [asFile(bytes, 'manual.pdf')], params: { prompt: 'what dose of metformin?' } });
+  assert.match(res.text, /Metformin 500 mg/, 'the answer quotes the document: ' + res.text.slice(0, 200));
+  assert.match(res.text, /p\. 2/, 'and says which page: ' + res.text.slice(0, 300));
+  assert.deepEqual(res.ranked, [2], 'page 2 is the one that answers it');
+  assert.equal(res.files.length, 1, 'the cited page is saved as a PDF');
+  const cited = await pdfPageCount(res.files[0].bytes);
+  assert.equal(cited, 1, 'the saved PDF holds exactly the cited page');
+  assert.match(res.text, /nothing was uploaded/i);
+});
+
+await test('a question the document does not answer is refused, not guessed at', async () => {
+  const bytes = await makeReadablePdf([CHAPTER, DOSAGE, TERMINATION]);
+  const res = await op({ op: 'research', files: [asFile(bytes, 'manual.pdf')], params: { prompt: 'what is the price of the offshore lease?' } });
+  assert.equal(res.notFound, true);
+  assert.equal(res.files.length, 0, 'no PDF is produced from nothing');
+  assert.match(res.text, /none of them mention/i);
+  assert.match(res.text, /Nothing was guessed/i);
+});
+
+await test('an empty question asks for a question rather than summarising', async () => {
+  const bytes = await makeReadablePdf([CHAPTER]);
+  const res = await op({ op: 'research', files: [asFile(bytes, 'manual.pdf')], params: { prompt: '  ' } });
+  assert.match(res.text, /Ask a question/);
+  assert.equal(res.files.length, 0);
+});
+
+await test('a rare word outranks a word that appears everywhere', async () => {
+  const pages = [
+    { n: 1, of: 3, name: 'x.pdf', body: 'The parties agree the agreement and the agreement is the agreement.' },
+    { n: 2, of: 3, name: 'x.pdf', body: 'The parties agree the parties and the parties. Metformin appears once here.' },
+    { n: 3, of: 3, name: 'x.pdf', body: 'Nothing of interest on this sheet at all.' }
+  ];
+  const index = buildIndex(pages);
+  const forCommon = rank(index, 'agreement');
+  const forRare = rank(index, 'metformin');
+  assert.equal(forCommon[0].n, 1, 'a common word still finds its page');
+  assert.equal(forRare.length, 1);
+  assert.equal(forRare[0].n, 2, 'a rare word is decisive');
+  assert.ok(rank(index, '').length === 0, 'an empty query ranks nothing rather than everything');
+});
+
+await test('the extractor keeps abbreviations and decimals in one sentence', () => {
+  const s = sentences('Dr. Smith gave 1.5 mg. Then he stopped. See Fig. 2 for detail.');
+  assert.equal(s.length, 3, JSON.stringify(s));
+  assert.match(s[0], /Dr\. Smith/);
+  assert.match(s[0], /1\.5 mg/);
+  assert.match(s[1], /he stopped/);
+});
+
+await test('the answer never cites a page it did not read', async () => {
+  const pages = [];
+  for (let i = 1; i <= 40; i++) {
+    pages.push(i === 17
+      ? ['The escalation contact is the duty manager on nights.']
+      : [`Routine page ${i}. Standard administrative content of the usual kind, printed as filler.`]);
+  }
+  const bytes = await makeReadablePdf(pages);
+  const res = await op({ op: 'research', files: [asFile(bytes, 'big.pdf')], params: { prompt: 'who is the escalation contact on nights?' } });
+  assert.deepEqual(res.ranked, [17], 'exactly the page that mentions it: ' + JSON.stringify(res.ranked));
+  const cited = [...res.text.matchAll(/p\. (\d+)/g)].map(m => Number(m[1]));
+  assert.ok(cited.every(n => n === 17), 'every citation is page 17: ' + JSON.stringify(cited));
+});
+
+await test('a scanned PDF says so instead of returning nothing', async () => {
+  // A real PDF whose pages carry no text layer, as a scan does.
+  const doc = await PDFDocument.create();
+  const page = doc.addPage([595, 842]);
+  page.drawRectangle({ x: 0, y: 0, width: 595, height: 842, color: rgb(0.9, 0.9, 0.88) });
+  page.drawText('', { x: 10, y: 10 });
+  const bytes = await doc.save();
+  const res = await op({ op: 'research', files: [asFile(bytes, 'scan.pdf')], params: { prompt: 'what does it say?', ocr: false } });
+  assert.equal(res.needsOcr, true);
+  assert.match(res.detail, /scan/i);
+});
+
+await test('a scan is read by the OCR callback when one is supplied', async () => {
+  const doc = await PDFDocument.create();
+  const page = doc.addPage([595, 842]);
+  page.drawRectangle({ x: 0, y: 0, width: 595, height: 842, color: rgb(0.9, 0.9, 0.88) });
+  const bytes = await doc.save();
+  let asked = 0, rendered = 0;
+  const res = await op({ op: 'text', files: [asFile(bytes, 'scan.pdf')], params: { ocr: true } }, {
+    ...deps,
+    recognize: async bitmap => { asked++; assert.equal(bitmap.page, 1, 'it is told which page it is reading'); return 'SCANNED WORD'; },
+    renderPage: async page => { rendered++; return { page: 1, w: page.getViewport({ scale: 1 }).width }; }
+  });
+  assert.equal(rendered, 1, 'the blank page was rendered');
+  assert.equal(asked, 1, 'and the bitmap was sent to the reader');
+  assert.match(res.text, /SCANNED WORD/, 'and its text came back: ' + res.text);
+  assert.equal(res.ocrPages, 1, 'the page is marked as read by OCR');
+});
+
+await test('the table of contents is read and used to label the pages', () => {
+  const outline = [
+    { title: 'Chapter 1 — Scope', dest: 0 },
+    { title: '1.1 Parties', dest: 0, items: [{ title: '1.1.1 Notices', dest: 0 }] },
+    { title: 'Chapter 2 — Dosage', dest: 2, items: [{ title: '2.1 Adults', dest: 2 }] },
+    { title: 'Chapter 3 — Termination', dest: 4 }
+  ];
+  const sections = outlineSections(outline, 5, { resolve: it => it.dest + 1 });
+  assert.equal(sections.length, 6, 'nested headings are not lost');
+  assert.equal(sections.filter(s => s.depth === 2).length, 2, 'and they keep their depth');
+  const ranges = sectionRanges(sections, 5);
+  assert.deepEqual(ranges.map(r => [r.from, r.to]), [[1, 2], [3, 4], [5, 5]], 'ranges do not overlap');
+  const pages = [1, 2, 3, 4, 5].map(n => ({ n, of: 5, name: 'd', body: 'x' }));
+  assert.match(labelPages(pages, ranges)[2].section, /Dosage/);
+  const boost = sectionBoostFactory(ranges, 'which dose is for adults?');
+  assert.equal(boost({ section: 'Chapter 2 — Dosage' }), 1.5, 'a page in the right chapter is preferred');
+  assert.equal(boost({ section: 'Chapter 3 — Termination' }), 0);
+  assert.equal(boost({ section: null }), 0);
+});
+
+await test('a document with no outline still ranks, it is just not labelled', () => {
+  assert.deepEqual(outlineSections(null, 10), []);
+  assert.deepEqual(sectionRanges([], 10), []);
+  const pages = [{ n: 1, of: 1, name: 'd', body: 'anything' }];
+  assert.equal(labelPages(pages, [])[0].section, undefined);
+  assert.equal(sectionBoostFactory([], 'anything')({ section: 'x' }), 0);
+});
+
+await test('a sentence is only quoted if it carries the question', () => {
+  const ranked = [{ n: 7, of: 9, name: 'd.pdf', body: 'The dose is 500 mg. Lunch is at one o clock. See the appendix for the audit trail.' }];
+  const quotes = bestSentences(ranked, 'what is the dose');
+  assert.ok(quotes.length >= 1);
+  assert.ok(quotes.every(q => /500 mg|dose/i.test(q.text)), JSON.stringify(quotes.map(q => q.text)));
+  assert.equal(quotes[0].page, 7, 'and it knows its page');
+  assert.equal(bestSentences(ranked, 'zzzz unrelated').length, 0, 'nothing relevant, nothing quoted');
+  assert.equal(answerFrom('zzzz unrelated', ranked), null);
+});
+
+await test('BM25 ranks the same way twice, and rewards the page that says it most', () => {
+  // Pages of equal length, so the only difference is how often the term is said.
+  const page = (n, times) => ({ n, of: 6, name: 'd', body: ['metformin', ...Array(times).fill('metformin'), ...Array(10 - times).fill('placeholder')].join(' ') });
+  const pages = [page(1, 0), page(2, 1), page(3, 3), page(4, 10), page(5, 0), page(6, 0)];
+  const index = buildIndex(pages);
+  const first = rank(index, 'metformin').map(r => r.n);
+  const second = rank(index, 'metformin').map(r => r.n);
+  assert.deepEqual(first, second, 'the same question twice gives the same order');
+  assert.equal(first[0], 4, 'the page that says it ten times comes first');
+  assert.deepEqual(first.slice(0, 4), [4, 3, 2, 1], 'and the rest fall in frequency order: ' + JSON.stringify(first));
+  assert.deepEqual(rank(index, 'nothinginthisdocument').length, 0, 'a word that is not there ranks nothing');
+});
+
+await test('a short dense page beats a long padded one, as BM25 is meant to', () => {
+  const pages = [
+    { n: 1, of: 2, name: 'd', body: 'metformin' },
+    { n: 2, of: 2, name: 'd', body: 'metformin ' + 'filler '.repeat(40) }
+  ];
+  const index = buildIndex(pages);
+  assert.equal(rank(index, 'metformin')[0].n, 1, 'one mention in a short passage beats one buried in a long one');
+});
+
 
 /* ------------------------------------------------------------------ */
 
