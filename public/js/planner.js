@@ -1037,8 +1037,17 @@ const GAPS = [
   { test: /\b(slideshare|scribd|issuu|docdroid|pdfdrive|slides? from (?:a )?(?:presentation|deck))\b|\b(download|save|get)\b[^\n]{0,30}\b(slideshare|scribd|issuu)\b/i,
     message: 'SlideShare and its neighbours host other people\'s documents. AI Mode will not take those. Upload the file you have and the text extractors, the note tools and the PDF desk will read it here.',
     suggest: ['smart-note-maker', 'transcript-summarizer', 'pdf-text-extractor'] },
-  { test: /\b(medical diagnosis|diagnose me|prescribe|dose for patient|legal advice|court|buy (?:guns?|weapons?|drugs?))\b/i,
+  { test: /\b(medical diagnosis|diagnos(?:e|es|ing)|prescribe|dose for (?:a |my )?patient|legal advice|\bcourt\b|buy (?:guns?|weapons?|drugs?))\b/i,
     message: 'AI Mode will not give diagnoses, prescriptions or legal advice. Calculators and formatters are educational helpers only.',
+    suggest: [] },
+  { test: /\b(hack|breach|break into|get into|spy on|track (?:a|my|his|her|their) (?:ex|phone|girlfriend|boyfriend|wife|husband|spouse)|stalk|dox)\b|\bwithout (?:them|him|her|his|their) (?:knowing|consent|permission)\b|\b(crack|brute[- ]force|keylog|steal (?:a )?(?:password|account|wallet))\b|\b(someone else's|another person's) (?:password|account|phone|email|bank)\b/i,
+    message: 'Getting into an account or a device that is not yours is not something this desk will do, whatever the reason given for it. It will read the documents, images and links you already have.',
+    suggest: [] },
+  { test: /\b(order|buy|deliver|collect|get me|reserve|call|phone|book|pay|checkout)\b[^\n]{0,30}\b(sandwich|pizza|food|lunch|dinner|groceries|taxi|cab|flight ticket|grocery)\b/i,
+    message: 'This is a file desk, not a delivery app: it reads, converts and builds documents, decks, notes and PDFs from what you give it. It cannot order or book anything.',
+    suggest: [] },
+  { test: /\b(win|guarantee|beat|rig)\b[^\n]{0,20}\b(lottery|lotto|jackpot|casino|bet|odds|slots)\b/i,
+    message: 'Nothing here can win a lottery or beat the odds. The tools that do exist are calculators, converters and document builders, and they are exact.',
     suggest: [] }
 ];
 
@@ -1086,7 +1095,7 @@ const STAGE_ORDER = { gather: 0, transform: 1, output: 2, assist: 3 };
  */
 export const IMPLEMENTED_EXECUTORS = [
   'research', 'article', 'web-read', 'youtube-transcript', 'youtube-playlist',
-  'file-read', 'pdf-read', 'pdf-answer', 'map-place', 'map-nearby', 'map-route', 'map-weather',
+  'file-read', 'pdf-read', 'pdf-answer', 'image-read', 'map-place', 'map-nearby', 'map-route', 'map-weather',
   'outline', 'combine', 'prompts', 'assistant', 'presentation', 'article-pdf',
   'toolbus', 'pdf-ops', 'new-tool'
 ];
@@ -1226,8 +1235,18 @@ function step(partial) {
 export function planRequest(raw = {}) {
   const ctx = normalizeRequest(raw);
   const index = raw.index || buildIndex(ctx.tools);
+  // A request with nothing in it — no subject, no operation, no file, no link
+  // — is a question about the desk, not a task. Answering it with a research
+  // run would be a plan that does something random and calls it done.
+  const metaQuestion = /^(help|hi|hello|hey|thanks|thank you|test|testing|what can you do|what do you do|how does this work|what are you|who are you|what is this|show me what you can do)\b/i.test(ctx.prompt.trim());
+  const saysNothing = !ctx.files.length && !ctx.links.length && !ctx.place &&
+    (metaQuestion || !ctx.subjects.length && !ctx.verbs.length && !ctx.genericVerbs.length);
   const intents = detectIntents(ctx);
   const gaps = detectGaps(ctx);
+  // A gap with no lawful alternative is the answer, not a footnote. Queuing a
+  // research run underneath a refusal produces a plan that looks busy and says
+  // no, which is the worst of both.
+  const blocked = gaps.find(g => !g.suggest || !g.suggest.length);
   const intentIds = new Set(intents.map(i => i.id));
   const steps = [];
   const notes = [];
@@ -1235,6 +1254,24 @@ export function planRequest(raw = {}) {
   const push = partial => { const s = step({ ...partial, id: `s${++n}` }); steps.push(s); return s; };
 
   const ranked = rankTools(index, ctx, { limit: 24 });
+
+  if (blocked) {
+    const steps = [step({ id: 's1', executor: null, action: 'open', auto: false, stage: 'output',
+      title: 'This one is not something AI Mode will do',
+      detail: blocked.message,
+      why: 'The request asks for something outside what this desk will do, so nothing is queued to run it.',
+      input: 'request', outputKind: 'text' })];
+    return finishPlan(ctx, index, steps, [], [], [], [], gaps, ranked, null, promptsFrom(ctx, []), blocked.message, intents);
+  }
+
+  if (saysNothing) {
+    const steps = [step({ id: 's1', executor: null, action: 'open', auto: false, stage: 'output',
+      title: metaQuestion ? 'Here is what this desk does' : 'Tell me what to ask for',
+      detail: 'Attach a file or a link, or name a subject: this desk reads PDFs, images, video captions, text and spreadsheets; it searches open sources and the news; and it writes notes, questions, decks and PDFs.',
+      why: 'The request did not name a file, a link or a subject, so there is nothing to act on yet.',
+      input: 'request', outputKind: 'text' })];
+    return finishPlan(ctx, index, steps, [], [], [], [], gaps, ranked, null, promptsFrom(ctx, []), 'Nothing to act on yet — no file, no link and no subject in the request.');
+  }
 
   const wantsPdf = intentIds.has('pdf-output');
   const wantsResearch = intentIds.has('research');
@@ -1245,6 +1282,9 @@ export function planRequest(raw = {}) {
   const wantsOcr = intentIds.has('ocr');
   const wantsNews = intentIds.has('news');
   const wantsWriting = intentIds.has('writing');
+  // Naming a scholarly or encyclopaedic source outranks news wording: "the
+  // latest research papers on X" is a literature request wearing news words.
+  const newsOnly = wantsNews && !/\b(wikipedia|wiki|papers?|publications?|studies|research|literature|journal|journals|doi|citations?|peers?[- ]reviewed|encyclopedia)\b/i.test(ctx.prompt);
   // "What is the dose of metformin in this document?" — the part that is
   // actually a question, with the attachment's own name taken out of it.
   const pdfQuestion = ctx.files.some(f => f.kind === 'pdf') && ctx.prompt
@@ -1298,9 +1338,6 @@ export function planRequest(raw = {}) {
   if (!answerFromFile && (wantsResearch || wantsNews || (wantsPdf && ctx.topic && !ctx.files.length))) {
     // A news request is a request for news. Sending it to every source at once
     // would bury three headlines under a Wikipedia article and a Crossref DOI.
-    // Naming a scholarly or encyclopaedic source outranks news wording: "the
-    // latest research papers on X" is a literature request wearing news words.
-    const newsOnly = wantsNews && !/\b(wikipedia|wiki|papers?|publications?|studies|research|literature|journal|journals|doi|citations?|peers?[- ]reviewed|encyclopedia)\b/i.test(ctx.prompt);
     // An empty news query is not a failure: it asks the feeds for their latest.
     const q = newsOnly ? newsWords : (ctx.topic || ctx.prompt);
     gathered.push(push({ executor: 'research', title: newsOnly ? `Read the news feeds for “${q}”` : `Search open sources for “${q}”`,
@@ -1314,7 +1351,7 @@ export function planRequest(raw = {}) {
           : 'No subject was named, so the news feeds are read for their latest items — the newest first, each with its publisher and the publisher\u2019s own timestamp.')
         : intents.find(i => i.id === 'research')?.evidence?.join('; ') || 'A subject to look up was detected.',
       outputKind: 'json' }));
-    if (ctx.topic) {
+    if (ctx.topic && !newsOnly) {
       const art = push({ executor: 'article', title: `Fetch the full article text for “${ctx.topic}”`,
         detail: 'Plain-text Wikipedia extract with section headings, lead image and licence, plus a description from Wikidata when available.',
         params: { query: ctx.topic, language: ctx.options.language || 'en', includeImage: ctx.options.includeImages },
@@ -1442,6 +1479,10 @@ export function planRequest(raw = {}) {
   for (const m of ranked) {
     const tool = m.tool;
     if (covered.has(tool.slug) || isSelfReferential(tool)) continue;
+    // A news request is answered by the news feeds. "The latest news on Kerala"
+    // matched four Kerala directory tools, because Kerala is a word in a
+    // subject; a directory of districts cannot answer a question about events.
+    if (newsOnly) { alsoMatched.push(summariseMatch(m)); continue; }
     if (tool.status === 'catalogued') {
       // Listed, and deliberately not runnable. It is never queued, and the
       // reason travels with it so nothing downstream invents a capability.
@@ -1718,9 +1759,21 @@ export function planRequest(raw = {}) {
   const prompts = buildPromptPack(ctx, all);
   const summary = summarise(ctx, intents, all, gaps, newTool);
 
+  return finishPlan(ctx, index, all, notes, alsoMatched, refusals, [], gaps, ranked, newTool, prompts, summary, intents);
+}
+
+/** Prompt pack for a plan with no steps. */
+const promptsFrom = (ctx, all) => buildPromptPack(ctx, all);
+
+/**
+ * The plan envelope, built in one place. An early return that shaped its own
+ * object would drift from this one within a week, and the two shapes are what
+ * the UI and the API both read.
+ */
+function finishPlan(ctx, index, steps, notes, alsoMatched, refusals, gathered, gaps, ranked, newTool, prompts, summary, intents = []) {
   return {
     version: 2,
-    id: `plan-${all.length}-${hashString(ctx.prompt + ctx.files.map(f => f.name).join())}`,
+    id: `plan-${steps.length}-${hashString(ctx.prompt + ctx.files.map(f => f.name).join())}`,
     created: Date.now(),
     request: {
       prompt: ctx.prompt, topic: ctx.topic, place: ctx.place, language: ctx.options.language,
@@ -1728,17 +1781,20 @@ export function planRequest(raw = {}) {
       links: ctx.links.map(l => ({ url: l.url, kind: l.kind })),
       options: ctx.options
     },
-    intents, gaps, steps: all, notes: dedupe([...notes, ...gaps.map(g => g.message)]),
-    alsoMatched: alsoMatched.slice(0, 12),
-    library: ranked.slice(0, 12).map(m => ({ ...summariseMatch(m), ...(refusals.has(m.tool.slug) ? { unavailable: refusals.get(m.tool.slug) } : {}) })),
+    intents, gaps, steps, notes: dedupe([...notes, ...gaps.map(g => g.message)]),
+    alsoMatched: (alsoMatched || []).slice(0, 12),
+    library: (ranked || []).slice(0, 12).map(m => {
+      const why = refusals && typeof refusals.get === 'function' ? refusals.get(m.tool.slug) : null;
+      return { ...summariseMatch(m), ...(why ? { unavailable: why } : {}) };
+    }),
     needsNewTool: Boolean(newTool), newTool,
     prompts, summary,
     stats: {
-      steps: all.length,
-      auto: all.filter(s => s.auto).length,
-      manual: all.filter(s => !s.auto).length,
-      capabilities: new Set(all.filter(s => s.kind !== 'tool').map(s => s.executor)).size,
-      tools: all.filter(s => s.kind === 'tool').length,
+      steps: steps.length,
+      auto: steps.filter(s => s.auto).length,
+      manual: steps.filter(s => !s.auto).length,
+      capabilities: new Set(steps.filter(s => s.kind !== 'tool').map(s => s.executor)).size,
+      tools: steps.filter(s => s.kind === 'tool').length,
       librarySize: index.size
     }
   };

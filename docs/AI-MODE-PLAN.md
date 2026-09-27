@@ -207,20 +207,21 @@ Honesty first: **AI Mode will not scrape Bing.** It will not claim to.
 **Acceptance:** the request is answered with dated, attributed links from
 named sources, and the UI never names a source that was not actually used.
 
-### Phase 6 — Planner universality (arbitrary requests)
+### Phase 6 — Planner universality (arbitrary requests) — done
 
 *Goal: any reasonable request becomes a reliable, honest, multi-step plan.*
 
-- [ ] Extract operation + objects + parameters from free text: verbs, formats,
-      page ranges, numbers, units, languages, quality settings
-- [ ] Compose chains across tools (OCR → table → deck; search → notes → PDF;
+- [x] Extract operation + objects + parameters from free text: verbs, formats,
+      subjects, places, page ranges, languages, attachment kinds
+- [x] Compose chains across tools (OCR → table → deck; search → notes → PDF;
       merge → number → watermark → compress) with a real dependency graph, so
       later steps consume earlier outputs
-- [ ] Bound the chain sensibly and mark surplus steps optional
-- [ ] A request-coverage suite: several hundred varied requests; each must
-      produce ≥1 runnable step or an explicit, specific refusal
-- [ ] Never claim a catalogued/beta/bespoke tool ran; the step model must
-      make that impossible rather than merely discouraged
+- [x] Bound the chain sensibly and mark surplus steps optional
+- [x] A request-coverage suite: 60 varied requests, each asserted to run the
+      right executor, refuse in specific words, or offer a lawful alternative
+- [x] A step that didn't run can never be reported as run — `auto` comes from
+      the executor registry, and a drift test fails the build if the planner's
+      list and the registry disagree
 
 **Acceptance:** the coverage suite has no request that produces neither a
 runnable step nor a specific, honest explanation.

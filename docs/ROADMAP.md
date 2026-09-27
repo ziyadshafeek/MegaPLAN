@@ -221,10 +221,36 @@ are read for their latest, newest first. It is not passed to the feeds as the
 literal string "headlines today" and allowed to match nothing.
 
 ## Phase 6 — Planner universality
-- [ ] Operation/object/parameter extraction (page ranges, numbers, units, formats)
-- [ ] Multi-tool composition with a real dependency graph
-- [ ] Request-coverage suite: every request gets a runnable step or a specific honest refusal
-- [ ] A step that didn't run can never be reported as run
+- [x] Operation/object/parameter extraction: verbs, formats, subjects, places,
+      page ranges, languages and the attachment kind are all read from the
+      request itself, so a tool nobody wrote a rule for still gets routed
+- [x] Multi-tool composition with a real dependency graph — later steps name
+      the steps they consume, and the coverage suite fails on a dependency that
+      does not exist or that runs later than its dependant
+- [x] Request-coverage suite: 60 varied requests, each asserted to run the right
+      executor, refuse in specific words, or offer a lawful alternative
+- [x] A step that didn't run can never be reported as run: `auto` is derived
+      from the executor registry, and a drift test fails the build if the
+      planner's list and the registry disagree
+
+**What the coverage suite found.** It was written to fail, and on the first run
+it did — `image-read` was missing from the planner's executor list, so every
+"read the text in this photo" produced a plan that did nothing at all and said
+nothing about it. That one class of bug is the dangerous one: no error, no
+refusal, just a plan that looks like it is working. The drift test now exists
+specifically to catch it.
+
+The rest were plans that ran the wrong thing. "Give me the latest news on
+Kerala" queued four Kerala *directory* tools, because Kerala is a word in a
+subject, and a directory of districts cannot answer a question about events.
+"Diagnose my chest pain" queued a research run underneath its own refusal. And
+"hack into my ex phone" queued a research run *and* two phone tools, with the
+refusal sitting quietly in the notes underneath — a plan that looks busy and
+says no, which is the worst of both.
+
+So a refusal with no lawful alternative now stops the plan instead of
+annotating it, and the plan envelope is built in one function so an early
+return cannot drift from the normal one.
 
 ## Phase 7 — Codex-like agent parity
 - [ ] Audit `public/agent/agent.js` against plan / preview / save / Deploy / BYOK

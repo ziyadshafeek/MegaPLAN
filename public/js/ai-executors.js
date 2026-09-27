@@ -765,6 +765,9 @@ export function canExecute(executor) {
   return Boolean(EXECUTORS[executor]);
 }
 
+/** Every executor that exists, so tests can catch the planner's list drifting. */
+export const EXECUTOR_NAMES = Object.keys(EXECUTORS);
+
 /**
  * Execute one step.
  * @param {object} step
