@@ -6,6 +6,7 @@ import {
   addSimplePageBookmarks, getPdfTextLines, rasterizePdf, imageFilesToPdf,
   wrapDocx, wrapXlsx, wrapPptx, wrapEpub
 } from './pdf-ops.js';
+import { buildDocument, documentToText } from './business-docs.js';
 
 const { esc, downloadBlob, downloadText, mountShell, wireDrop, setOut, setProgress, fileForm, loadPdfLib, loadPdfJs, loadJSZip, clamp } = kit;
 
@@ -31,7 +32,7 @@ function extraHtml(title) {
     'Sign PDF': '<input id="sigText" class="field" value="Signed"><input id="sigPage" class="num" type="number" min="1" value="1"><input id="sigX" class="num" value="50"><input id="sigY" class="num" value="70"><input id="sigSize" class="num" type="number" min="8" value="20"><p class="muted">PDF first, optional PNG/JPG second. Click preview to place. Visible stamp, not a cryptographic signature.</p>',
     'Booklet PDF Maker': '<select id="bookletSize" class="sel"><option value="A4">A4 landscape</option><option value="Letter">Letter landscape</option></select><p class="muted">2-up saddle-stitch imposition. Blanks pad to a multiple of four.</p>',
     'PDF Batch Rename': '<input id="renamePattern" class="field" value="document-{n}">',
-    'Invoice PDF Maker': '<input id="invTitle" class="field" value="Invoice"><input id="invTo" class="field" placeholder="Bill to"><textarea id="invItems" class="input-area" placeholder="Description | Qty | Rate"></textarea>',
+    'Invoice PDF Maker': '<input id="invTitle" class="field" value="Invoice"><input id="invTo" class="field" placeholder="Bill to"><input id="invDate" class="field" type="date"><textarea id="invItems" class="input-area" placeholder="One item per line:&#10;Description | Qty | Rate&#10;or Description,Amount   (a heading row is detected)&#10;3 x Widget | 500 also works"></textarea>',
     'Text to PDF': '<textarea id="textpdf" class="input-area" placeholder="Text…"></textarea><select id="textSize" class="sel"><option value="11">11 pt</option><option value="12" selected>12 pt</option><option value="14">14 pt</option></select>',
     'Markdown to PDF': '<textarea id="textpdf" class="input-area" placeholder="Markdown…"></textarea>',
     'HTML to PDF': '<textarea id="htmlpdf" class="input-area" placeholder="HTML…"><h1>MegaPLAN</h1><p>Hello.</p></textarea>',
@@ -254,21 +255,19 @@ export async function mountPdf(root, tool) {
         host.remove(); setOut(body, 'Generated PDF from HTML.'); return;
       }
       if (title === 'Invoice PDF Maker') {
-        const doc = await PDFDocument.create();
-        const font = await doc.embedFont(StandardFonts.Helvetica);
-        const bold = await doc.embedFont(StandardFonts.HelveticaBold);
-        const p = doc.addPage([595, 842]); let y = 790, total = 0;
-        p.drawText(q('invTitle').value || 'Invoice', { x: 45, y, size: 22, font: bold }); y -= 32;
-        p.drawText('Bill to: ' + (q('invTo').value || ''), { x: 45, y, size: 11, font }); y -= 28;
-        for (const row of (q('invItems').value || '').split(/\r?\n/)) {
-          if (!row.trim()) continue;
-          const [desc, qtyS, rateS] = row.split('|').map(x => x.trim());
-          const qty = Number(qtyS) || 0, rate = Number(rateS) || 0; total += qty * rate;
-          p.drawText((desc || row).slice(0, 60), { x: 45, y, size: 10, font });
-          p.drawText((qty * rate).toFixed(2), { x: 480, y, size: 10, font }); y -= 16;
-        }
-        p.drawText('Total: ' + total.toFixed(2), { x: 400, y: y - 8, size: 13, font: bold });
-        await saveDoc(doc, 'megaplan-invoice.pdf'); setOut(body, 'Invoice saved.'); return;
+        // Same engine as the business invoice, so a 90-line invoice paginates
+        // here too instead of running off the bottom of one page.
+        const doc = buildDocument('Invoice Maker', {
+          to: q('invTo').value,
+          date: q('invDate')?.value || '',
+          body: q('invItems').value
+        });
+        if (!doc.items.length) { setOut(body, 'No line items were read.\n\nUse one item per line:  Description | Qty | Rate'); return; }
+        const text = documentToText(doc);
+        setOut(body, text);
+        const { renderBusinessPdf } = await import('./engines.js');
+        await renderBusinessPdf(doc, text, { title: q('invTitle').value || 'Invoice' });
+        return;
       }
       if (title === 'HEIC to PDF') {
         const heic2any = await loadScript('https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js', 'heic2any');

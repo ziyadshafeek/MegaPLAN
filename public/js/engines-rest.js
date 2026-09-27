@@ -1,5 +1,5 @@
 import * as kit from './kit.js';
-import { HANDLERS, textTool, calcTool, fileTool, aiTool, imageOp, audioBufferTool, wavFromBuffer, docPdf, qrDataUrl } from './engines.js';
+import { HANDLERS, textTool, calcTool, fileTool, aiTool, imageOp, audioBufferTool, wavFromBuffer, businessDoc, qrDataUrl } from './engines.js';
 import { mountAudioStudio } from './audio-studio.js';
 import { mountYouTubeTranscript, mountYouTubePlaylist, mountYouTubeChapter } from './youtube-tools.js';
 import { mountAIMode } from './ai-mode.js';
@@ -652,8 +652,11 @@ for (const [title, [task, extra]] of Object.entries(AI_MAP)) {
   HANDLERS[title] = (r, t) => aiTool(r, t, task, extra);
 }
 
-const DOCS = ['Invoice Maker', 'Quotation Maker', 'Receipt Maker', 'Purchase Order Maker', 'Proforma Invoice', 'Credit Note Maker', 'Debit Note Maker', 'Delivery Challan', 'Packing Slip', 'Payslip Maker', 'Timesheet Maker', 'Attendance Sheet', 'Expense Report', 'Petty Cash Sheet', 'Inventory Sheet', 'Label Maker', 'Business Card Maker', 'Letterhead Maker', 'Proposal Maker', 'SOP Maker', 'Meeting Minutes Maker', 'Meeting Agenda Maker', 'Shipping Label Maker', 'Invoice PDF Maker'];
-for (const title of DOCS) HANDLERS[title] = (r, t) => docPdf(r, t, { title });
+const DOCS = ['Invoice Maker', 'Purchase Tracker', 'Quotation Maker', 'Receipt Maker', 'Purchase Order Maker', 'Proforma Invoice', 'Credit Note Maker', 'Debit Note Maker', 'Delivery Challan', 'Packing Slip', 'Payslip Maker', 'Timesheet Maker', 'Attendance Sheet', 'Expense Report', 'Petty Cash Sheet', 'Inventory Sheet', 'Label Maker', 'Business Card Maker', 'Letterhead Maker', 'Proposal Maker', 'SOP Maker', 'Meeting Minutes Maker', 'Meeting Agenda Maker', 'Shipping Label Maker'];
+// Every business document now runs the real generator: its own schema, real
+// arithmetic, a numbering series that continues, and a PDF that paginates
+// instead of dropping every line past the bottom of page one.
+for (const title of DOCS) HANDLERS[title] = (r, t) => businessDoc(r, t);
 
 Object.assign(HANDLERS, {
   'SKU Generator': (r, t) => textTool(r, t, () => 'SKU-' + randomString(8, 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789')),
@@ -665,18 +668,6 @@ Object.assign(HANDLERS, {
   'UTM Builder': (r, t) => textTool(r, t, (s, body) => {
     const u = new URL(s); u.searchParams.set('utm_source', body.querySelector('#src').value); u.searchParams.set('utm_medium', body.querySelector('#med').value); u.searchParams.set('utm_campaign', body.querySelector('#camp').value); return u.toString();
   }, `<div class="field-row" style="margin-top:8px"><input id="src" class="field" placeholder="source"><input id="med" class="field" placeholder="medium"><input id="camp" class="field" placeholder="campaign"></div>`),
-  'Purchase Tracker': (r, t) => textTool(r, t, s => {
-    let total = 0;
-    const rows = s.trim().split(/\r?\n/).filter(Boolean).map(line => {
-      const [name, qty, price] = line.split('|').map(x => x.trim());
-      const q = Number(qty), p = Number(price);
-      if (!name || !Number.isFinite(q) || q <= 0 || !Number.isFinite(p) || p < 0) throw Error('Use Item | Quantity | Unit price on each line.');
-      const amount = q * p; total += amount;
-      return `${name}: ${q} × ${p.toFixed(2)} = ${amount.toFixed(2)}`;
-    });
-    if (!rows.length) throw Error('Add at least one purchase.');
-    return rows.join('\n') + `\nTotal: ${total.toFixed(2)}`;
-  }, '<p class="muted">One purchase per line: Item | Quantity | Unit price</p>'),
   'CGPA Calculator': (r, t) => textTool(r, t, s => {
     const rows = s.split(/\r?\n/).map(x => x.split(/[,\s]+/).map(Number)).filter(x => x.length >= 2 && x.every(Number.isFinite));
     const cr = rows.reduce((a, [g, c]) => a + c, 0), gp = rows.reduce((a, [g, c]) => a + g * c, 0);

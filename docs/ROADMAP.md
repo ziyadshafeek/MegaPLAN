@@ -71,6 +71,16 @@ model, and their copy now says so.
 
 What is left in OCR & AI: those three, and Video is 16 of the 40 `beta` tools.
 
+The 24 business document tools all shared one template that fitted on a single
+page: it **silently dropped every line past the bottom of page one**, printed
+"Saved PDF." with no figures, and turned a bad paste into a zero-rupee invoice
+through `Number(x) || 0`. They now have their own generator
+(`public/js/business-docs.js`) and a form each — a quotation is not an invoice, a
+delivery challan carries no tax, a payslip pays earnings less deductions — with a
+numbering series that continues, Indian amount-in-words, and a PDF that
+**paginates and repeats its column headings**. 29 tests hold the arithmetic, the
+parsing of what people actually paste, and the finished PDF bytes.
+
 Each phase is a checkbox; do them in order, `npm test` green at every step.
 
 ## Phase 0 — Land the in-flight batch
@@ -92,7 +102,7 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 ## Phase 2 — Make the dead tools real
 - [x] OCR cluster (9 tools): real in-browser reader, image input, structured receipt/invoice/form/ID JSON, 15 extraction tests
 - [x] Notes/extractors: 12 deterministic engines (20 tests); 3 keep the assistant and say why
-- [ ] Business (23 tools): real generators with numbering series and tax maths
+- [x] Business (24 of the 40 Business tools): real generators with numbering series, per-document fields, tax maths and a paginating PDF — `public/js/business-docs.js`, 29 tests
 - [ ] Video (26, 16 beta): promote only what is genuinely done, keep the rest honest
 - [ ] Catalogued 3: keep refused, name the gap, offer transcript retrieval instead
 

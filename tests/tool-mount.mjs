@@ -16,6 +16,9 @@ const originalInterval = globalThis.setInterval;
 globalThis.setInterval = () => 0; // prevent game loops persisting after unmount
 window.requestAnimationFrame = () => 0;
 globalThis.fetch = async () => new Response('{}', { status: 200 });
+// Keep the PDF library local so the download path runs offline.
+const kit = await import('../public/js/kit.js');
+kit.LIB_SOURCES.pdfLib = async () => await import('pdf-lib');
 const { mountTool } = await import('../public/js/engines.js');
 await import('../public/js/engines-rest.js');
 const registry = JSON.parse(fs.readFileSync(new URL('../data/tools.json', import.meta.url)));
@@ -30,7 +33,9 @@ try {
     root.replaceChildren();
   }
   for (const [title, input, output] of [
-    ['Purchase Tracker', 'Notebook | 2 | 12.50', 'Total: 25.00'],
+    // The tracker is a real document now: a number, the line, and the total.
+    ['Purchase Tracker', 'Notebook | 2 | 12.50', 'Notebook'],
+    ['Purchase Tracker', 'Notebook | 2 | 12.50', '25.00'],
     ['Timetable Maker', 'Monday | 10:00 | Algebra', '| Monday | 10:00 | Algebra |'],
     ['CSV Merger', 'name,notes\n"Ada, Lovelace","line1\nline2"\n---\nname,notes\nGrace,compiler', 'Grace,compiler'],
     ['Subtitle Extractor', '1\n00:00:01,000 --> 00:00:02,000\nHello world', 'Hello world']

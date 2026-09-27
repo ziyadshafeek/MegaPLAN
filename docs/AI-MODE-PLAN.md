@@ -36,6 +36,7 @@ registered tool — not estimated.
 | **AI Mode can drive** (R + N) | **502** (it previously claimed 521) |
 | PDF tools AI Mode can run itself (`ai-pdf-ops`) | **27 / 54** |
 | **OCR & AI tools with a real engine** | **24 / 27** (the nine OCR tools and twelve note tools were rebuilt in Phase 2) |
+| **Business tools with a real engine** | **24 of 40** (the 24 document makers; the 9 calculators/trackers and 3 beta directory tools were already live) |
 
 ### 2.1 What the audit found
 
@@ -128,7 +129,7 @@ Ordered by how much dead surface each removes.
 | --- | --- | --- | --- | --- |
 | **OCR** | 9 tools (`ocr-image-to-text`, `handwriting-ocr`, `receipt-ocr`, `invoice-ocr`, `table-ocr`, `form-ocr`, `id-document-ocr`, `document-classifier`, `document-json-extractor`) | **done** — in-browser read + deterministic parsers | shipped: `public/js/ocr-engine.js`, 15 extraction tests |
 | **Assistant/notes** | 15 (`smart-note-maker` … `entity-extractor`) | **12 done** on `public/js/note-tools.js`; 3 keep the assistant and say so | extractive key points, action items, citations, entities, abstract, cleaning, flashcards, quiz, notes and email summaries — all verified to copy rather than invent |
-| **Business** | 23 | one `docPdf` template | real generators: numbering series, tax/total maths, CSV round-trip, per-region invoice fields | new `public/js/business-engine.js` |
+| **Business** | 24 of the 40 | **done** — one generator with a schema per document | shipped: `public/js/business-docs.js`, numbering series, tax/total maths, Indian amount-in-words, a PDF that paginates; 29 tests |
 | **Video** | 26 (16 beta) | mostly beta | promote only what ffmpeg.wasm can truly do; keep the rest honestly beta | `public/js/video-engine.js` |
 | **Audio** | 34 (5 beta) | good, 5 beta | close the 5 or state why not | `public/js/audio-studio.js` |
 | **Catalogued** | 3 | refused | keep refused; AI Mode must name the gap and offer YouTube *transcripts* instead | `planner.js` messaging |

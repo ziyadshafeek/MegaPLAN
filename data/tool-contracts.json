@@ -4317,13 +4317,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 9
   },
   {
    "slug": "quotation-maker",
@@ -4331,13 +4331,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 9
   },
   {
    "slug": "receipt-maker",
@@ -4345,13 +4345,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 9
   },
   {
    "slug": "purchase-order-maker",
@@ -4359,13 +4359,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 9
   },
   {
    "slug": "proforma-invoice",
@@ -4373,13 +4373,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 9
   },
   {
    "slug": "credit-note-maker",
@@ -4387,13 +4387,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 9
   },
   {
    "slug": "debit-note-maker",
@@ -4401,13 +4401,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 9
   },
   {
    "slug": "delivery-challan",
@@ -4419,9 +4419,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "packing-slip",
@@ -4433,9 +4433,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "payslip-maker",
@@ -4443,13 +4443,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(1)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 7
   },
   {
    "slug": "timesheet-maker",
@@ -4461,9 +4461,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "attendance-sheet",
@@ -4475,9 +4475,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "expense-report",
@@ -4485,13 +4485,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(1)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 8
   },
   {
    "slug": "petty-cash-sheet",
@@ -4503,9 +4503,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "inventory-sheet",
@@ -4517,9 +4517,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "sku-generator",
@@ -4559,9 +4559,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "business-card-maker",
@@ -4573,9 +4573,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "letterhead-maker",
@@ -4587,9 +4587,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "email-signature-maker",
@@ -4611,13 +4611,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 9
   },
   {
    "slug": "sop-maker",
@@ -4629,9 +4629,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "meeting-minutes-maker",
@@ -4643,9 +4643,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "meeting-agenda-maker",
@@ -4657,9 +4657,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "purchase-tracker",
@@ -4667,13 +4667,13 @@
    "category": "Business",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text",
+   "kind": "calc",
+   "inputs": "text+numbers(2)",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 1
+   "controls": 9
   },
   {
    "slug": "pricing-calculator",
@@ -4755,9 +4755,9 @@
    "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "structural",
+   "verified": "driven",
    "notes": "",
-   "controls": 3
+   "controls": 6
   },
   {
    "slug": "expense-splitter",

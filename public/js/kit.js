@@ -86,11 +86,18 @@ export async function inspect(action, payload) {
 }
 
 let _pdfLib, _pdfjs, _jszip;
+/**
+ * Offline / test hook. The browser loads these from a CDN; a test runner (and a
+ * self-hosted deployment) can point them at a local copy instead. Same idea as
+ * the `deps` argument on the PDF operations.
+ */
+export const LIB_SOURCES = {};
 export async function loadPdfLib() {
-  if (!_pdfLib) _pdfLib = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
+  if (!_pdfLib) _pdfLib = await (LIB_SOURCES.pdfLib ? LIB_SOURCES.pdfLib() : import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm'));
   return _pdfLib;
 }
 export async function loadPdfJs() {
+  if (LIB_SOURCES.pdfJs) return LIB_SOURCES.pdfJs();
   if (!_pdfjs) {
     _pdfjs = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs');
     _pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs';
@@ -98,7 +105,7 @@ export async function loadPdfJs() {
   return _pdfjs;
 }
 export async function loadJSZip() {
-  if (!_jszip) _jszip = (await import('https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm')).default;
+  if (!_jszip) _jszip = (await (LIB_SOURCES.jszip ? LIB_SOURCES.jszip() : import('https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm'))).default;
   return _jszip;
 }
 

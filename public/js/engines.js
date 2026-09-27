@@ -4,6 +4,7 @@
  */
 import * as kit from './kit.js';
 import { mountPdf } from './pdf-engine.js';
+import { schemaFor, buildDocument, documentToText } from './business-docs.js';
 
 const { esc, downloadBlob, downloadText, askAssistant, inspect, loadPdfLib, loadJSZip,
   randomString, sha, utf8ToBase64, base64ToUtf8, parseCsv, toCsv, md5, clamp,
@@ -610,4 +611,191 @@ function fallback(root, tool) {
 
 export function implementedTitles() {
   return Object.keys(HANDLERS);
+}
+
+/**
+ * Business documents — the real generator behind the 24 business tools.
+ *
+ * Replaces the old single-page template, which cut off at the bottom of page
+ * one and **silently dropped every remaining line item** — an invoice with more
+ * items than fit came out short and looked fine. This version paginates, repeats
+ * the column headings on every page, and always shows the figures it used.
+ */
+export function businessDoc(root, tool) {
+  const schema = schemaFor(tool.title);
+  const body = mountShell(root, tool, `
+    <div class="field-row">
+      <input class="field" id="from" placeholder="From (your business)">
+      <input class="field" id="to" placeholder="To (customer)">
+    </div>
+    <div class="field-row">
+      <input class="field" id="number" placeholder="Number (blank = next in series)">
+      <input class="field" id="date" type="date">
+      <input class="field" id="ref" placeholder="${schema.fields[3] || 'Reference'}">
+    </div>
+    ${schema.earnings ? '<div class="field-row"><input class="field" id="deductions" type="number" placeholder="Total deductions" min="0"></div>' : ''}
+    ${schema.tax || schema.discount ? `<div class="field-row">
+      ${schema.discount ? '<input class="field" id="discount" type="number" placeholder="Discount %" min="0" max="100">' : ''}
+      ${schema.tax ? '<input class="field" id="tax" type="number" placeholder="Tax %" value="0" min="0" max="100">' : ''}
+      <input class="field" id="taxlabel" placeholder="Tax label" value="Tax">
+    </div>` : ''}
+    <textarea id="tool-in" class="input-area" placeholder="One item per line:&#10;Description | Qty | Rate&#10;or Description,Amount   (a heading row is detected)&#10;3 x Widget | 500 also works"></textarea>
+    <div class="button-row">
+      <button class="btn primary" id="run">Make ${esc(tool.title.replace(/ Maker$/, ''))}</button>
+    </div>
+    <pre id="tool-out" class="out" style="margin-top:12px"></pre>`);
+
+  const seriesKey = `mp-doc-series-${tool.slug}`;
+  const priorNumbers = () => {
+    try { const v = JSON.parse(localStorage.getItem(seriesKey) || '[]'); return Array.isArray(v) ? v : []; } catch { return []; }
+  };
+
+  body.querySelector('#run').onclick = async () => {
+    try {
+      const q = sel => body.querySelector(sel);
+      const doc = buildDocument(schema, {
+        number: q('#number').value.trim(),
+        date: q('#date').value,
+        extra: q('#ref')?.value || '',
+        from: q('#from').value,
+        to: q('#to').value,
+        deductions: Number(q('#deductions')?.value) || 0,
+        discountPercent: Number(q('#discount')?.value) || 0,
+        taxPercent: Number(q('#tax')?.value) || 0,
+        taxLabel: q('#taxlabel')?.value?.trim() || 'Tax',
+        body: q('#tool-in').value,
+        existingNumbers: priorNumbers()
+      });
+      if (schema.items && !doc.items.length && !schema.earnings && !schema.cash) {
+        // Say what was wrong with the paste instead of only how to format it.
+        const why = doc.skipped.length
+          ? doc.skipped.map(s => `  "${String(s.line).slice(0, 60)}" — ${s.reason}`).join('\n')
+          : '  (nothing that looked like a line item)';
+        setOut(body, `No line items could be read from the text:\n${why}\n\nOne item per line works best:\n  Description | Qty | Rate\n  Description,Amount\n  3 x Widget | 500\n\nA line with no numbers is kept as a note, and a line whose number cannot be read is reported rather than billed at zero.`);
+        return;
+      }
+      const text = documentToText(doc);
+      setOut(body, text);
+      if (doc.number) {
+        try {
+          const next = [...priorNumbers(), doc.number].slice(-50);
+          localStorage.setItem(seriesKey, JSON.stringify(next));
+        } catch { /* private mode: the document still works, the series just restarts */ }
+      }
+      // A failure to build the PDF must not throw away the document the user
+      // just made; it is reported underneath the text instead.
+      try {
+        await renderBusinessPdf(doc, text, tool);
+      } catch (e) {
+        setOut(body, text + `\n\nThe PDF could not be created (${e.message}). The document above is complete — copy or download it as text.`);
+      }
+    } catch (e) { setOut(body, 'Error: ' + e.message); }
+  };
+}
+
+/** Lay the document out over as many pages as it needs, with repeated headers. */
+export async function renderBusinessPdf(doc, text, tool) {
+  const { PDFDocument, StandardFonts, rgb } = await loadPdfLib();
+  const pdf = await PDFDocument.create();
+  const font = await pdf.embedFont(StandardFonts.Helvetica);
+  const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
+  const M = 45, W = 595, H = 842, BOTTOM = 60;
+  let page = null, y = 0;
+  const ink = rgb(0.11, 0.1, 0.09), grey = rgb(0.4, 0.4, 0.4);
+  const newPage = (first) => {
+    page = pdf.addPage([W, H]);
+    y = H - 56;
+    page.drawText(doc.title.toUpperCase(), { x: M, y, size: 16, font: bold, color: ink });
+    y -= 18;
+    if (first) {
+      const bits = [];
+      if (doc.number) bits.push(`No. ${doc.number}`);
+      if (doc.date) bits.push(`Date ${doc.date}`);
+      if (bits.length) { page.drawText(bits.join('    '), { x: M, y, size: 9, font, color: grey }); y -= 14; }
+      for (const [label, value] of [['From', doc.from], ['To', doc.to], ['Ref', doc.extraField]]) {
+        if (!value) continue;
+        page.drawText(`${label}: ${String(value).slice(0, 80)}`, { x: M, y, size: 9, font, color: ink });
+        y -= 12;
+      }
+      y -= 4;
+    }
+    // Column headings repeat on every page, which is the point of paginating.
+    const cols = [
+      { label: 'Item', x: M, align: 'left', w: 250 },
+      { label: 'Qty', x: 330, align: 'right', w: 50 },
+      { label: 'Rate', x: 400, align: 'right', w: 70 },
+      { label: 'Amount', x: W - M, align: 'right', w: 90 }
+    ];
+    for (const c of cols) {
+      const t = c.label;
+      page.drawText(t, { x: c.align === 'right' ? c.x - font.widthOfTextAtSize(t, 9) : c.x, y, size: 9, font: bold, color: grey });
+    }
+    y -= 6;
+    page.drawLine({ start: { x: M, y }, end: { x: W - M, y }, thickness: 0.5, color: grey });
+    y -= 14;
+  };
+  const room = (need) => { if (y - need < BOTTOM) newPage(false); };
+  const row = (cells, opts = {}) => {
+    room(16);
+    const size = opts.size || 9;
+    for (const c of cells) {
+      if (c.text == null) continue;
+      page.drawText(String(c.text).slice(0, 60), {
+        x: c.align === 'right' ? c.x - font.widthOfTextAtSize(String(c.text).slice(0, 60), size) : c.x,
+        y, size, font: opts.bold ? bold : font, color: opts.color || ink
+      });
+    }
+    y -= opts.lead || 16;
+  };
+
+  newPage(true);
+  const money = n => (Number(n) || 0).toFixed(2);
+  if (doc.items?.length) {
+    for (const it of doc.items) {
+      row([
+        { text: it.description, x: M },
+        { text: it.qty, x: 330, align: 'right' },
+        { text: money(it.rate), x: 400, align: 'right' },
+        { text: money(it.amount), x: W - M, align: 'right' }
+      ]);
+    }
+    y -= 4;
+    const totalRow = (label, value, opts = {}) => row([
+      { text: label, x: 330, align: 'right', bold: true },
+      { text: value, x: W - M, align: 'right', bold: true }
+    ], { bold: true, color: opts.strong ? ink : grey, lead: 18 });
+    totalRow('Subtotal', money(doc.totals.subtotal));
+    if (doc.totals.discount) totalRow('Discount', `- ${money(doc.totals.discount)}`);
+    if (doc.totals.tax) totalRow(doc.totals.taxLabel, money(doc.totals.tax));
+    if (doc.totals.roundOff) totalRow('Round off', money(doc.totals.roundOff));
+    totalRow('Total', money(doc.totals.total), { strong: true });
+    if (doc.words) { room(28); y -= 4; page.drawText(doc.words, { x: M, y, size: 9, font: bold, color: ink }); y -= 14; }
+  }
+  for (const [label, value] of [['Earnings', doc.earningsTotal], ['Deductions', doc.deductions], ['NET PAY', doc.netPay]]) {
+    if (value == null) continue;
+    room(20);
+    page.drawText(`${label}: ${money(value)}`, { x: 330, y, size: label === 'NET PAY' ? 11 : 9, font: bold, color: ink });
+    y -= 16;
+  }
+  for (const line of [...(doc.notes || []), ...(doc.lines || [])]) { room(16); row([{ text: `• ${line}`, x: M }]); }
+  if (doc.skipped?.length) {
+    room(20); y -= 4;
+    page.drawText(`${doc.skipped.length} line(s) were not billed because a number could not be read:`, { x: M, y, size: 9, font: bold, color: grey }); y -= 13;
+    for (const s of doc.skipped.slice(0, 10)) { room(14); page.drawText(`"${String(s.line).slice(0, 70)}"`, { x: M, y, size: 8, font, color: grey }); y -= 11; }
+  }
+  if (doc.terms) {
+    room(30); y -= 6;
+    for (const line of String(doc.terms).match(/.{1,90}(\s|$)/g) || [doc.terms]) {
+      room(12); page.drawText(line.trim(), { x: M, y, size: 8, font, color: grey }); y -= 11;
+    }
+  }
+
+  // Page furniture, after the content, so every page is numbered.
+  pdf.getPages().forEach((p, i) => {
+    p.drawText(`${tool.title} · page ${i + 1} of ${pdf.getPageCount()}`, { x: M, y: 30, size: 8, font, color: grey });
+  });
+  const bytes = await pdf.save();
+  const name = `megaplan-${(doc.number || tool.slug).toLowerCase().replace(/[^a-z0-9-]+/g, '-').slice(0, 48)}.pdf`;
+  downloadBlob(new Blob([bytes], { type: 'application/pdf' }), name);
+  return name;
 }
