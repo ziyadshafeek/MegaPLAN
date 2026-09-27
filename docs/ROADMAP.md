@@ -194,10 +194,31 @@ artifacts. And the presentation studio was opened *and* the deck built, so there
 was no way to tell which one ran.
 
 ## Phase 5 — Search, news and links
-- [ ] `web-search` over licensed/keyless sources (Wikipedia, Europe PMC, Open-Meteo, optional Brave key)
-- [ ] `news` from RSS with real timestamps and publisher attribution
-- [ ] Copy names only the sources actually used — no pretending to search Bing
-- [ ] Works for any topic, not a fixed list
+- [x] `web-search` over keyless sources — Wikipedia, PubMed/Europe PMC, arXiv,
+      Crossref, OpenAlex, Semantic Scholar, Open Library, Gutenberg, Stack
+      Exchange, MusicBrainz — every one named in the plan
+- [x] `news` from publisher RSS (`lib/ai-mode/news.js`) with the publisher's own
+      timestamp, the desk that ran it, and unreached feeds reported as such
+- [x] Copy names only the sources actually used; a group that failed is listed
+      as failed, and a dead feed never appears in the source list
+- [x] Works for any topic: the desk is chosen from the question's own words
+- [x] Copy-paste prompt packs and NotebookLM/Gemini hand-offs name the real
+      sources instead of implying a general web search
+
+**News is not a search with a date filter.** The failure this fixes is
+specific: an item with no `pubDate` came out looking like today's news, because
+"now" is what a headline implies and a missing field quietly filled it in. So a
+date is only ever the date the publisher put there — otherwise the cell says no
+date was given, and the result says how many of its items are undated. A feed
+that could not be read is named with its reason; it is never dropped, because a
+silently missing source reads as "there was nothing to find".
+
+The other half is attribution. The same story carried by three desks is one
+item that lists who else ran it, not three near-identical bullets, and each item
+names the publisher and desk rather than a search engine. A bare "give me the
+headlines" is a real request: the request words are stripped away and the feeds
+are read for their latest, newest first. It is not passed to the feeds as the
+literal string "headlines today" and allowed to match nothing.
 
 ## Phase 6 — Planner universality
 - [ ] Operation/object/parameter extraction (page ranges, numbers, units, formats)

@@ -190,7 +190,7 @@ PDF” all produce a real file from the browser alone.
 **Acceptance:** upload photos of a prescription or notes → get a real `.pptx`
 whose slides are traceable to the OCR text, plus the source images listed.
 
-### Phase 5 — Search, news and links (the “latest news” workload)
+### Phase 5 — Search, news and links (done) (the “latest news” workload)
 
 Honesty first: **AI Mode will not scrape Bing.** It will not claim to.
 

@@ -802,6 +802,13 @@ const INTENT_RULES = [
     }
   },
   {
+    id: 'news', label: 'Current news',
+    test: c => {
+      if (!/\b(news|headlines?|latest|breaking|today|yesterday|this week|current events?|what(?:'s| is) (?:happening|going on|in the news))\b/i.test(c.prompt)) return null;
+      return { score: 4, evidence: ['news wording used'] };
+    }
+  },
+  {
     id: 'ocr', label: 'Read text from scans/images',
     test: c => {
       const hits = [];
@@ -995,7 +1002,7 @@ export function detectIntents(ctx) {
   }
   // A task intent beats a vague research intent: "invoice for 3 items" is not a
   // request to read an encyclopedia, even though "items" is a subject word.
-  const TASK_INTENTS = new Set(['games', 'business-doc', 'presentation', 'calculate', 'ocr', 'youtube',
+  const TASK_INTENTS = new Set(['games', 'business-doc', 'presentation', 'calculate', 'ocr', 'youtube', 'news',
     'data-work', 'text-work', 'image-work', 'audio-work', 'video-work', 'developer', 'design',
     'privacy', 'india', 'pdf-work', 'osint']);
   const research = found.find(f => f.id === 'research');
@@ -1236,6 +1243,7 @@ export function planRequest(raw = {}) {
   const wantsYouTube = intentIds.has('youtube');
   const wantsPresentation = intentIds.has('presentation');
   const wantsOcr = intentIds.has('ocr');
+  const wantsNews = intentIds.has('news');
   const wantsWriting = intentIds.has('writing');
   // "What is the dose of metformin in this document?" — the part that is
   // actually a question, with the attachment's own name taken out of it.
@@ -1281,12 +1289,30 @@ export function planRequest(raw = {}) {
       params: { url: link.url }, why: 'A web link was supplied; its public text can feed later steps.', outputKind: 'text', optional: true }));
   }
 
-  if (!answerFromFile && (wantsResearch || (wantsPdf && ctx.topic && !ctx.files.length))) {
-    const q = ctx.topic || ctx.prompt;
-    gathered.push(push({ executor: 'research', title: `Search open sources for “${q}”`,
-      detail: 'Wikipedia, Wiktionary, Wikidata, Commons, Openverse, arXiv, Crossref, Europe PMC, Open Library, Gutenberg, Internet Archive, Stack Exchange, Hacker News, GitHub, npm, PyPI, OSM places, Open-Meteo, MusicBrainz, iTunes, TVMaze — all without an API key.',
-      params: { query: q, language: ctx.options.language || 'en', groups: null },
-      why: intents.find(i => i.id === 'research')?.evidence?.join('; ') || 'A subject to look up was detected.',
+  // "Give me the headlines today" has no subject of its own: the words are all
+  // request words. What is left over is what the feeds should be asked for.
+  const newsWords = (ctx.topic || ctx.prompt)
+    .replace(/\b(news|headlines?|latest|breaking|today|yesterday|this week|current events?|what(?:'s| is) (?:happening|going on|in the news)|give me|tell me|show me|about|on|in|for|the|of|and|please)\b/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!answerFromFile && (wantsResearch || wantsNews || (wantsPdf && ctx.topic && !ctx.files.length))) {
+    // A news request is a request for news. Sending it to every source at once
+    // would bury three headlines under a Wikipedia article and a Crossref DOI.
+    // Naming a scholarly or encyclopaedic source outranks news wording: "the
+    // latest research papers on X" is a literature request wearing news words.
+    const newsOnly = wantsNews && !/\b(wikipedia|wiki|papers?|publications?|studies|research|literature|journal|journals|doi|citations?|peers?[- ]reviewed|encyclopedia)\b/i.test(ctx.prompt);
+    // An empty news query is not a failure: it asks the feeds for their latest.
+    const q = newsOnly ? newsWords : (ctx.topic || ctx.prompt);
+    gathered.push(push({ executor: 'research', title: newsOnly ? `Read the news feeds for “${q}”` : `Search open sources for “${q}”`,
+      detail: newsOnly
+        ? 'Publisher RSS feeds, each item carrying the publisher\u2019s own timestamp and desk. A feed that cannot be read is named, not quietly dropped.'
+        : 'Wikipedia, Wiktionary, Wikidata, Commons, Openverse, arXiv, Crossref, Europe PMC, Open Library, Gutenberg, Internet Archive, Stack Exchange, Hacker News, GitHub, npm, PyPI, OSM places, Open-Meteo, MusicBrainz, iTunes, TVMaze — all without an API key.',
+      params: { query: q, language: ctx.options.language || 'en', groups: newsOnly ? ['news'] : null },
+      why: newsOnly
+        ? (newsWords
+          ? 'News wording was used, so the news feeds answer it and the encyclopaedia stays out of it.'
+          : 'No subject was named, so the news feeds are read for their latest items — the newest first, each with its publisher and the publisher\u2019s own timestamp.')
+        : intents.find(i => i.id === 'research')?.evidence?.join('; ') || 'A subject to look up was detected.',
       outputKind: 'json' }));
     if (ctx.topic) {
       const art = push({ executor: 'article', title: `Fetch the full article text for “${ctx.topic}”`,
