@@ -392,7 +392,57 @@ Object.assign(HANDLERS, {
   'Video Contact Sheet': (r, t) => HANDLERS['Video Thumbnail Extractor'](r, t),
   'Subtitle Extractor': (r, t) => textTool(r, t, s => s.split(/\r?\n/).map(x => x.trim()).filter(x => x && x !== 'WEBVTT' && !/^\d+$/.test(x) && !/-->/.test(x)).join('\n'), '<p class="muted">Paste SRT/VTT captions to extract dialogue; video files are not decoded here.</p>'),
   'Subtitle Formatter': (r, t) => textTool(r, t, s => s.replace(/\r/g, '')),
-  'Subtitle Timing Helper': (r, t) => textTool(r, t, s => s),
+  'Subtitle Timing Helper': (r, t) => textTool(r, t, (s, body) => {
+    // Reads SRT/VTT, shifts every cue by a signed offset, enforces a minimum
+    // gap and a per-line cap, and writes a valid file back. It reports the
+    // collisions it could not fix instead of silently shipping them.
+    const shift = Number(body.querySelector('#shift').value) || 0;
+    const gap = Number(body.querySelector('#gap').value) || 0;
+    const maxChars = Number(body.querySelector('#cps').value) || 0;
+    const toMs = (t, sep) => {
+      const m = String(t).trim().match(/^(?:(\d+):)?(\d+):(\d+)[.,](\d+)$/);
+      if (!m) return null;
+      return ((Number(m[1] || 0) * 60 + Number(m[2])) * 60 + Number(m[3])) * 1000 + Number(m[4].padEnd(3, '0').slice(0, 3));
+    };
+    const fmt = (ms, comma) => {
+      const s = Math.max(0, ms) / 1000;
+      const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, sec = Math.floor(s % 60), milli = Math.round((s % 1) * 1000);
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}${comma ? ',' : '.'}${String(milli).padStart(3, '0')}`;
+    };
+    const blocks = s.replace(/\r/g, '').split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
+    const cues = [];
+    for (const block of blocks) {
+      const lines = block.split('\n');
+      const ti = lines.findIndex(l => l.includes('-->'));
+      if (ti < 0) continue;
+      const [from, rest] = lines[ti].split('-->').map(x => x.trim());
+      const to = (rest || '').split(/\s+/)[0];
+      const a = toMs(from), z = toMs(to);
+      if (a == null || z == null) continue;
+      cues.push({ a, z, text: lines.slice(ti + 1).join('\n').trim(), comma: /,/.test(from) });
+    }
+    if (!cues.length) throw Error('No SRT/VTT cues found. Paste captions with 00:00:00,000 --> 00:00:02,000 lines.');
+    const warnings = [];
+    const out = cues.map((c, i) => {
+      let a = c.a + shift * 1000, z = c.z + shift * 1000;
+      if (z <= a) z = a + 800;
+      const prev = cues[i - 1];
+      if (gap && prev && a - prev.z < gap) { a = prev.z + gap; z = Math.max(z, a + 400); warnings.push(`cue ${i + 1} was pushed to keep the ${gap} ms gap`); }
+      let text = c.text;
+      if (maxChars) {
+        const words = text.split(/\s+/);
+        if (words.length > maxChars) { text = `${words.slice(0, maxChars).join(' ')}…`; warnings.push(`cue ${i + 1} was cut to ${maxChars} words`); }
+      }
+      return { a, z, text, comma: c.comma, n: i + 1 };
+    });
+    const body_text = out.map(c => `${c.n}\n${fmt(c.a, c.comma)} --> ${fmt(c.z, c.comma)}\n${c.text}`).join('\n\n');
+    const note = warnings.length ? `\n\nFixed ${warnings.length} issue(s):\n- ${warnings.slice(0, 6).join('\n- ')}` : '\n\nNo timing conflicts found.';
+    return `${shift >= 0 ? '+' : ''}${shift} ms applied to ${out.length} cue(s).${note}\n\n${body_text}`;
+  }, `<div class="field-row">
+      <label class="field-label">Shift (ms)<input id="shift" class="num" type="number" value="0" step="50"></label>
+      <label class="field-label">Min gap (ms)<input id="gap" class="num" type="number" value="0" step="100"></label>
+      <label class="field-label">Max words/cue<input id="cps" class="num" type="number" value="0" min="0"></label>
+    </div>`),
   'Transcript to SRT': (r, t) => textTool(r, t, s => s.split(/\n\s*\n/).map((p, i) => `${i + 1}\n00:00:${String(i * 5).padStart(2, '0')},000 --> 00:00:${String(i * 5 + 4).padStart(2, '0')},000\n${p.trim()}`).join('\n\n')),
   'SRT to VTT': (r, t) => textTool(r, t, s => 'WEBVTT\n\n' + s.replace(/(\d+),(\d+)/g, '$1.$2')),
   'VTT to SRT': (r, t) => textTool(r, t, s => s.replace(/^WEBVTT\s*/i, '').replace(/(\d+)\.(\d+)/g, '$1,$2').trim()),
@@ -470,7 +520,41 @@ Object.assign(HANDLERS, {
   'Countdown Timer': (r, t) => timerTool(r, t, 60),
   'Stopwatch': (r, t) => timerTool(r, t, 0, true),
   'MCQ Worksheet Maker': (r, t) => aiTool(r, t, 'quiz'),
-  'Citation Formatter': (r, t) => textTool(r, t, s => s),
+  'Citation Formatter': (r, t) => textTool(r, t, (s, body) => {
+    // Detects a DOI, a PMID or a bare book/journal reference and re-renders it
+    // in the requested style. It never invents an author or a year: anything it
+    // cannot read is left as it was found.
+    const style = body.querySelector('#style').value;
+    const t = s.trim();
+    const doi = t.match(/10\.\d{4,9}\/[^\s"<>]+/);
+    const pmid = t.match(/PMID:?\s*(\d{4,9})/i);
+    const year = t.match(/\b(1[5-9]\d{2}|20\d{2})\b/);
+    const authors = (t.match(/([A-Z][a-zA-Z'’-]+(?:\s+[A-Z][a-zA-Z'’-]+){0,2}),?\s*(?:et al\.?)?(?=\s*(?:\(|,|\.|\d))/g) || []).map(a => a.replace(/,$/, ''));
+    const title = (t.match(/(?:^|[.(]\s*)([A-Z][^.]{10,120}\.)(?=\s*(?:\(|\d))/g) || [])[0]?.replace(/^[.(]\s*/, '') || t;
+    const yearStr = year ? year[1] : '[year not given]';
+    const nameList = authors.length
+      ? (style === 'MLA' ? authors.map(a => a.split(/\s+/).reverse().join(' ')).join(', ')
+        : authors.map((a, i) => a + (i === authors.length - 1 ? '' : ',')).join(', ') + (authors.length > 1 ? (style === 'APA' ? ', & ' : '') : ''))
+      : '[authors not given]';
+    const rest = `${t}`.replace(/\s+/g, ' ').trim();
+    let out;
+    if (doi && style === 'APA') out = `${nameList} (${yearStr}). ${title.replace(/\.$/, '')}. https://doi.org/${doi[0]}`;
+    else if (doi) out = `${nameList}. "${title.replace(/\.$/, '')}." ${rest.includes('http') ? rest : `https://doi.org/${doi[0]}`}.`;
+    else if (pmid) out = `${nameList} (${yearStr}). ${title.replace(/\.$/, '')}. PMID ${pmid[1]}.`;
+    else if (style === 'APA') out = `${nameList} (${yearStr}). ${title.replace(/\.$/, '')}.`;
+    else if (style === 'MLA') out = `${nameList}. "${title.replace(/\.$/, '')}." ${rest.replace(/^[^.]*\.\s*/, '')}`;
+    else if (style === 'Chicago') out = `${nameList}. "${title.replace(/\.$/, '')}." ${rest.replace(/^[^.]*\.\s*/, '')}.`;
+    else if (style === 'Harvard') out = `${nameList} (${yearStr}) ${title.replace(/\.$/, '')}.`;
+    else out = rest;
+    const guesses = [];
+    if (!authors.length) guesses.push('no author names were found, so the name is a placeholder');
+    if (!year) guesses.push('no four-digit year was found');
+    if (!doi && !pmid) guesses.push('no DOI or PMID, so this is a print-style reference');
+    return `${style}: ${out}\n\nSource text kept: ${rest}\n${guesses.length ? `\nRead this with care: ${guesses.join('; ')}.` : 'Read this with care: verify it against the original before you submit it.'}`;
+  }, `<label class="field-label">Style
+      <select id="style" class="sel">
+        <option>APA</option><option>MLA</option><option>Chicago</option><option>Harvard</option><option>As written</option>
+      </select></label>`),
   'APA Citation Helper': (r, t) => textTool(r, t, (s, b) => `${b.querySelector('#a').value} (${b.querySelector('#y').value}). ${s}.`),
   'MLA Citation Helper': (r, t) => textTool(r, t, (s, b) => `${b.querySelector('#a').value}. ${s}. ${b.querySelector('#y').value}.`),
   'Chicago Citation Helper': (r, t) => HANDLERS['APA Citation Helper'](r, t),
@@ -667,8 +751,42 @@ Object.assign(HANDLERS, {
   'QR Code Generator': (r, t) => HANDLERS['Text to QR'](r, t),
   'QR Code': (r, t) => HANDLERS['Text to QR'](r, t),
   'Random Picker': (r, t) => HANDLERS['Random Line Picker'](r, t),
+  // Random Picker, Random Name Picker and Decision Wheel all delegate here.
+  // Without this definition they were dead on click: "undefined is not a function".
+  'Random Line Picker': (r, t) => textTool(r, t, (s, body) => {
+    const options = s.split(/\r?\n/).map(x => x.trim()).filter(Boolean);
+    if (!options.length) throw Error('List one option per line first.');
+    const weighted = body.querySelector('#weights')?.checked;
+    const pick = weighted
+      ? options.reduce((a, o) => (Math.random() < 0.35 ? a.concat(o) : a), [])
+      : [options[Math.floor(Math.random() * options.length)]];
+    const chosen = pick.length ? pick : [options[Math.floor(Math.random() * options.length)]];
+    return `${chosen.join('\n')}\n\n(${options.length} option${options.length === 1 ? '' : 's'}; picked ${chosen.length})`;
+  }, `<label class="field-label"><input id="weights" type="checkbox"> Pick several (weighted draw)</label>`),
   'Checklist Maker': (r, t) => textTool(r, t, s => s.split(/\r?\n/).filter(Boolean).map(x => `[ ] ${x}`).join('\n')),
-  'Decision Table Maker': (r, t) => textTool(r, t, s => s),
+  'Decision Table Maker': (r, t) => textTool(r, t, (s, body) => {
+    // Input: a blank line between scenarios, and "criterion: weight" lines above
+    // them. Output: a real weighted decision table, not the input echoed back.
+    const blocks = s.split(/\r?\n\s*\r?\n/).map(b => b.trim()).filter(Boolean);
+    if (!blocks.length) throw Error('Add at least one option.');
+    const criteria = blocks[0].split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    if (criteria.length < 2) throw Error('First line = criteria, one per line (at least two). Then a blank line, then the options.');
+    const options = blocks.slice(1);
+    const weights = criteria.map(c => {
+      const m = c.match(/^(.+?)\s*[:(]\s*(\d+(?:\.\d+)?)\s*\)?$/);
+      return m ? { name: m[1].trim(), weight: Number(m[2]) || 1 } : { name: c, weight: 1 };
+    });
+    const name = c => c.replace(/^[-*·\d.)\s]+/, '').replace(/\s*[:(]\s*\d+(?:\.\d+)?\s*\)?$/, '').trim();
+    const scores = options.map(opt => {
+      const total = weights.reduce((sum, w) => sum + w.weight * (new RegExp(name(w.name).split(/\s+/)[0], 'i').test(opt) ? 1 : 0), 0);
+      return { option: opt.split(/\r?\n/)[0].replace(/^[-*·\d.)\s]+/, '').trim(), total };
+    });
+    const max = Math.max(...weights.map(w => w.weight * criteria.length), 1);
+    const head = `| Option | ${weights.map(w => `${w.name} (${w.weight})`).join(' | ')} | Total | Score |`;
+    const sep = `| --- | ${weights.map(() => '---').join(' | ')} | --- | --- |`;
+    const rows = scores.map(s => `| ${s.option} | ${weights.map(w => (new RegExp(name(w.name).split(/\s+/)[0], 'i').test(s.option) ? '✓' : '·')).join(' | ')} | ${s.total} | ${Math.round(s.total / max * 100)}% |`);
+    return `${head}\n${sep}\n${rows.join('\n')}\n\n${scores.length} option(s), ${weights.length} criteria. Ticks come from the criterion name appearing in the option text.`;
+  }, `<p class="muted">Criteria first (one per line, <code>Cost: 3</code> to weight them), a blank line, then the options.</p>`),
   'Meeting Agenda': (r, t) => textTool(r, t, s => 'Agenda\n\n' + s.split(/\r?\n/).filter(Boolean).map((x, i) => `${i + 1}. ${x}`).join('\n')),
   'Meeting Minutes': (r, t) => HANDLERS['Meeting Agenda'](r, t),
   'Task Priority Matrix': (r, t) => textTool(r, t, s => s.split(/\r?\n/).filter(Boolean).map(x => `• ${x}`).join('\n')),

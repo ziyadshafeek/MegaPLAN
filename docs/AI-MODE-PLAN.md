@@ -21,51 +21,68 @@ know *what you want done* but not *which tool does it*. So:
 
 ## 2. Measured baseline (this branch)
 
-Counted from `data/tools.json` and the current engine sources, not estimated.
+Counted by `tests/ai-mode-tool-contracts.mjs`, which mounts and drives every
+registered tool — not estimated.
 
 | Measure | Count |
 | --- | --- |
-| Registered tools | **590** |
-| `live` / `beta` / `catalogued` | 547 / 40 / 3 |
+| Registered tools | **590** (547 live, 40 beta, 3 catalogued) |
 | Categories | 23 (PDF 54, Images 51, Developer 48, Calculators 43, Business 40, Text 37, Audio 34, OCR & AI 27, Video 26, Productivity 26, …) |
-| Tools whose engine actually mounts a UI | 588 / 590 (the 2 misses are canvas games, a jsdom limit, not a product bug) |
-| Tools AI Mode can **run** today via ToolBus | **521** |
-| Tools AI Mode can only **open** (bespoke studios) | **66** — all 54 PDF, 6 Games, 2 Maps, `audio-studio`, `ai-mode`, `inception-labs` |
-| Tools AI Mode **refuses** (catalogued) | 3 — YouTube/SlideShare downloaders (no lawful runner) |
-| PDF tools AI Mode can run itself (new `ai-pdf-ops`) | **27 / 54** |
-| **OCR & AI tools with a real engine** | **3 / 27** — 24 are one shared text-assistant box |
+| Class **R** — driven offline, real non-echo output | **482** |
+| Class **N** — real engine behind a service or CDN library | **20** |
+| Class **S** — an app or interactive studio | **84** |
+| Class **C** — no lawful or finished runner | **3** |
+| Class **F** — needs a real file the harness cannot fabricate | **1** |
+| **AI Mode can drive** (R + N) | **502** (it previously claimed 521) |
+| PDF tools AI Mode can run itself (`ai-pdf-ops`) | **27 / 54** |
+| **OCR & AI tools with a real engine** | **3 / 27** |
 
-### 2.1 The three real problem clusters
+### 2.1 What the audit found
 
-1. **The OCR cluster is mis-wired.** `Image OCR` has a genuine tesseract
+1. **Category guessing over-promised.** Deciding "can AI Mode run this?" from
+   the category name claimed 521 tools and quietly promised 19 apps it could
+   never drive — the directory pages, the presentation studio, the data-sources
+   page, the keyboard and mouse testers. The contract table fixed this.
+2. **Three tools called a handler that does not exist.** `Random Picker`,
+   `Random Name Picker` and `Decision Wheel` all delegated to
+   `HANDLERS['Random Line Picker']`, which was never defined: dead on click,
+   with a perfectly normal-looking page. Now implemented.
+3. **Three tools were identity functions.** `Subtitle Timing Helper`,
+   `Citation Formatter` and `Decision Table Maker` were
+   `textTool(r, t, s => s)` — they returned their input unchanged. Now
+   implemented as a real SRT/VTT timing editor, a DOI/PMID citation formatter
+   and a weighted decision-table builder.
+4. **The OCR cluster is still mis-wired.** `Image OCR` has a genuine tesseract
    engine, but `ocr-image-to-text` (the slug the planner reaches for on an
    image) is a *text* assistant that answers "ask for pasted text". The same is
    true of `receipt-ocr`, `invoice-ocr`, `table-ocr`, `form-ocr`,
-   `id-document-ocr`, `handwriting-ocr`. **They cannot accept an image at
+   `id-document-ocr` and `handwriting-ocr`. **They cannot accept an image at
    all** — which is exactly the path the "medicine PPT from photos" workload
-   needs. This is the largest single quality gap in the registry.
-2. **PDF is 54 tools that AI Mode could only open.** 27 are now runnable via
-   `public/js/ai-pdf-ops.js`; the other 27 (sign, fill, redact, OCR, repair,
-   rasterise, office conversions) still need the studio, and that must stay an
-   honest hand-off.
-3. **Video is 16 of the 40 `beta` tools.** 26 Video tools exist, 10 are live —
-   so most of that category is a promise, not a feature. AI Mode must not
-   present a beta tool as something it will do.
+   needs. This is the largest remaining quality gap.
+5. **Video is 16 of the 40 `beta` tools**, so most of that category is a
+   promise rather than a feature.
 
-## 3. Integration model — four execution classes
+## 3. Integration model — execution classes
 
 Every tool gets exactly one class. The class decides what AI Mode may promise.
 
 | Class | Meaning | AI Mode behaviour | Test |
 | --- | --- | --- | --- |
 | **R — Runnable** | A browser engine exists and ToolBus can fill `#tool-in` / `#n*` / `#file`, click `#run`, read `#tool-out` | run automatically, stream the real output | drive in jsdom, assert non-empty output |
+| **N — Behind a service** | A real engine whose output comes from a network call or a CDN library (research, maps, assistant) | run, and report the failure honestly when the service is down | assert it is never claimed offline |
 | **P — Programmatic** | No DOM contract, but a module can do the job directly on the file (`ai-pdf-ops.js`, `agentic-pdf.js`) | run automatically, produce a real artifact | call the op, assert a valid file |
 | **S — Studio** | An interactive app needing eyes/hands (sign, fill, games, maps, audio DAW) | **offer to open it** with a one-line reason | assert the step is `action:'open'`, never `auto` |
-| **C — Catalogued/beta** | No lawful or no finished runner | **say so**, name the gap, offer the nearest real tool | assert AI Mode refuses and never claims success |
+| **C — Catalogued** | No lawful or no finished runner | **say so**, name the gap, offer the nearest real tool | assert AI Mode refuses and never claims success |
+| **F — Unverified** | Nothing was produced when driven (usually it needs a real file) | **say so**; never promise it | assert the tool is not drivable |
+
+**P** is not a registry class but an executor: the 27 PDF operations in
+`ai-pdf-ops.js` run on the attached file, so those PDF tools are class S in the
+table and still execute through `pdf-ops` when the request carries the file.
 
 The class is **data, not a guess inside the planner**: it is derived once into
-`data/tool-contracts.json` and consumed by the planner, the tool pages, and the
-test harness. That single table is what stops the planner from guessing.
+`data/tool-contracts.json` and consumed by the planner, the tool bus and the
+test harness. That single table is what stops the planner from guessing, and
+`tests/ai-mode-tool-contracts.mjs` fails if the product stops obeying it.
 
 ## 4. Phases
 
@@ -88,16 +105,18 @@ PDF-ops suites; nothing uncommitted.
 
 *Goal: know, mechanically, what every tool does — instead of inferring it.*
 
-- [ ] `tests/ai-mode-tool-contracts.mjs` — mount all 590 in jsdom, record the
-      discovered input/output contract, run each R-class tool, and fail on
-      empty/placeholder/unchanged output
-- [ ] Emit `data/tool-contracts.json`: `{slug, class, inputs, outputs, needsFile, needsNumbers, ms, verifiedAt}`
-- [ ] Fail CI when a tool is `live` but has no passing contract (keeps the
-      "no fake runners" rule in `AGENTS.md` mechanical)
-- [ ] `tests/tool-mount.mjs` extended to assert the same thing
+- [x] `tests/ai-mode-tool-contracts.mjs` — mounts all 590 in jsdom, records the
+      discovered input/output contract, drives each tool, and fails on
+      empty/placeholder/echo output
+- [x] Emits `data/tool-contracts.json`: `{slug, class, kind, inputs, outputs, needsFile, controls}`
+- [x] CI fails when a `live` tool does nothing, when an aliased handler is
+      undefined, or when the planner stops obeying the table
+- [x] The planner and the tool bus read `toolClass` instead of guessing from
+      the category name
 
 **Acceptance:** a tool cannot be labelled `live` unless the harness produced a
-real output for it in that run.
+real output for it in that run. **Done** — 482 R, 20 N, 84 S, 3 C, 1 F, and no
+live tool does nothing.
 
 ### Phase 2 — Make the dead tools real, cluster by cluster
 

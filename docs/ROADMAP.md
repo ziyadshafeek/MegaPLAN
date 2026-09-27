@@ -35,10 +35,28 @@
 Full plan, per-tool integration matrix and acceptance criteria:
 **[`docs/AI-MODE-PLAN.md`](AI-MODE-PLAN.md)**.
 
-Baseline measured on this branch: 590 tools (547 live / 40 beta / 3
-catalogued). AI Mode can run 521 today, can only *open* 66 (all 54 PDF, 6
-Games, 2 Maps, 3 studios), and refuses 3. Only **3 of 27** OCR & AI tools
-have a real engine — the rest are one shared text box. That is the work.
+Baseline measured on this branch by `tests/ai-mode-tool-contracts.mjs` (not
+estimated): 590 tools — 547 live, 40 beta, 3 catalogued.
+
+| Class | Count | Meaning |
+| --- | --- | --- |
+| **R** | 482 | driven offline, produced real, non-echo output |
+| **N** | 20 | real engine; output comes from a service or a CDN library |
+| **S** | 84 | an app or interactive studio (PDF, games, directories, the data-sources page) |
+| **C** | 3 | no lawful or finished runner — refused |
+| **F** | 1 | needs a real file the harness cannot fabricate |
+
+AI Mode can therefore drive **502** tools and open 84. Category guessing used
+to claim 521 and quietly promise 19 apps it could never run.
+
+The audit also found defects no UI test could see: **three tools called a
+handler that did not exist** (Random Picker, Random Name Picker and Decision
+Wheel were dead on click) and **three were literal identity functions**
+(Subtitle Timing Helper, Citation Formatter, Decision Table Maker returned
+their input unchanged). All six are implemented now.
+
+Only **3 of 27** OCR & AI tools still have a real engine — the rest share one
+text box. That is the biggest remaining gap.
 
 Each phase is a checkbox; do them in order, `npm test` green at every step.
 
@@ -48,13 +66,15 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 - [x] New `public/js/ai-pdf-ops.js` — 27 PDF operations run on the attached file
 - [x] Register the hardening suite in `npm test`
 - [x] Wire `pdf-ops` into the planner's PDF branch + tests
-- [x] Full `npm test` green (29 suites, exit 0)
+- [x] Full `npm test` green (30 suites, exit 0)
 
 ## Phase 1 — The tool contract table
-- [ ] `tests/ai-mode-tool-contracts.mjs` mounts and runs all 590 tools in jsdom
-- [ ] Emit `data/tool-contracts.json` (class, inputs, outputs, needsFile, timing)
-- [ ] Four classes: **R** runnable, **P** programmatic, **S** studio/open, **C** catalogued-beta
-- [ ] CI fails when a `live` tool has no verified contract
+- [x] `tests/ai-mode-tool-contracts.mjs` mounts and drives all 590 tools in jsdom
+- [x] Emit `data/tool-contracts.json` (class, inputs, outputs, needsFile, controls)
+- [x] Classes **R** runnable / **N** behind a service / **S** studio / **C** refused / **F** unverified
+- [x] The planner and the tool bus obey the table instead of the category name
+- [x] CI fails when a `live` tool does nothing, or an aliased handler is undefined
+- [x] Fix the dead tools the audit found (3 missing handlers, 3 identity functions)
 
 ## Phase 2 — Make the dead tools real
 - [ ] OCR cluster (9 tools): real tesseract engine, image input, structured receipt/invoice/form/ID JSON

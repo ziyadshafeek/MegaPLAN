@@ -42,6 +42,10 @@ function hostEl() {
 export function isDrivable(tool) {
   if (!tool) return false;
   if (tool.status === 'catalogued') return false;
+  // The measured contract table is authoritative when present: R and N are the
+  // only classes this bus may drive. S is an app, C has no runner, F was never
+  // seen producing output. Guessing from the category is the fallback only.
+  if (tool.toolClass) return tool.toolClass === 'R' || tool.toolClass === 'N';
   if (PROBE_DENY.has(tool.category)) return false;
   if (DENY_SLUG.test(String(tool.slug || ''))) return false;
   if (tool.category === 'PDF') return false;

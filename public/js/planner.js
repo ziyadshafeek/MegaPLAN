@@ -1630,6 +1630,10 @@ const BESPOKE_CATEGORIES = new Set(['Games', 'Maps']);
 
 export function isBespoke(tool) {
   if (!tool) return true;
+  // The measured contract table wins over inference when it is present:
+  // S = an app or interactive studio, C = no runner, F = not verifiably real.
+  // Everything else falls back to the rules below.
+  if (tool.toolClass === 'S' || tool.toolClass === 'C' || tool.toolClass === 'F') return true;
   if (BESPOKE_SLUGS.has(String(tool.slug))) return true;
   if (BESPOKE_CATEGORIES.has(String(tool.category))) return true;
   if (/^(chess|2048|snake|minesweeper|tic|tetris)/i.test(String(tool.slug))) return true;

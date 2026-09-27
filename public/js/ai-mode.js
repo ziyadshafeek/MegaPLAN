@@ -352,7 +352,23 @@ export function mountAIMode(root, tool) {
         if (Array.isArray(tools) && tools.length) lsSet('mp-tools-list', tools.slice(0, 600));
       }
     } catch { tools = []; }
-    state.tools = Array.isArray(tools) ? tools : [];
+    // The measured contract table decides what AI Mode may promise. It is
+    // optional: without it the planner falls back to its own rules, and with it
+    // no studio, app or catalogued tool is ever queued as runnable.
+    let classes = null;
+    try {
+      const res = await fetch('/data/tool-contracts.json', { cache: 'no-store' });
+      if (res.ok) {
+        const doc = await res.json();
+        if (Array.isArray(doc?.tools)) {
+          classes = new Map(doc.tools.map(t => [t.slug, t.class]));
+          state.contractCounts = doc.counts || null;
+        }
+      }
+    } catch { classes = null; }
+    state.tools = (Array.isArray(tools) ? tools : []).map(t => (
+      classes && classes.has(t.slug) ? { ...t, toolClass: classes.get(t.slug) } : t
+    ));
     state.toolCount = state.tools.length;
     state.index = buildIndex(state.tools);
     setStatus('on', `${state.toolCount} tools ready · session ${code}`);
