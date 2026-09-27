@@ -7,12 +7,73 @@
  */
 import { esc, byok, saveByok } from '../js/kit.js';
 import { evaluateExpression, validateApiBlock } from './expression.js';
+import { planRequest, buildIndex } from '../js/planner.js';
 
 const OPS = new Set(['percentage', 'discount', 'tip', 'gst', 'bmi', 'markup', 'margin', 'profit', 'break-even']);
 const BLOCKS = ['hero', 'text', 'markdown', 'list', 'table', 'note', 'tool-link', 'calculator', 'faq', 'api'];
 
 function localModelProbe(s) {
   return /\b(what model|which model|model name|llm|deepseek|nvidia|provider|system prompt|hidden prompt|training data|are you gpt|are you deepseek|identify yourself|reveal your instructions)\b/i.test(s);
+}
+
+/** Artifacts the agent actually writes, and artifacts that belong to AI Mode. */
+const PAGE_WORDS = /\b(page|pages|site|website|landing page|article|docs?|documentation|guide|checklist|glossary|faq|calculator|api|section|hero|home page|reference)\b/i;
+const OTHER_ARTIFACTS = [
+  { re: /\b(deck|slides?|slide deck|powerpoint|pptx|presentation)\b/i, what: 'a slide deck' },
+  { re: /\b(pdf|merge these|split this|compress|watermark|rotate|pages?\b.*\b(pdf|file))/i, what: 'PDF work' },
+  { re: /\b(photo|image|picture|scan|ocr|read the text|screenshot)\b/i, what: 'reading images' },
+  { re: /\b(route|directions?|nearby|weather|map)\b/i, what: 'maps' },
+  { re: /\b(news|headlines?|latest)\b/i, what: 'the news feeds' },
+  { re: /\b(subtitle|transcript|caption|srt|vtt|audio|video)\b/i, what: 'video and subtitle work' }
+];
+
+/**
+ * What the agent can and cannot do with a request.
+ *
+ * The agent writes pages. It does not build decks, merge PDFs, read a photo or
+ * route a map — those are real capabilities elsewhere on this desk. Saying so
+ * is better than writing a page *about* the topic and calling the request
+ * answered, which is the failure this used to have.
+ *
+ * The shared planner is consulted for the capability names, so the message can
+ * be specific, but the decision is made from the request's own words: the
+ * planner will happily queue a directory tool for any page request, and a
+ * request that says "page" should still get a page.
+ *
+ * Pure, so it can be tested without a browser.
+ *
+ * @returns {{mode:'page'|'ask-ai-mode'|'unclear', plan:object, needs:string[], line:string}}
+ */
+export function planAgentRequest(prompt, { tools = [], index, files = [], links = [] } = {}) {
+  const text = String(prompt || '').trim();
+  const built = index || (tools.length ? buildIndex(tools) : null);
+  const plan = built ? planRequest({ prompt: text, tools, index: built, files, links }) : { steps: [], notes: [], summary: '' };
+  const automatic = (plan.steps || []).filter(s => s.auto && s.executor);
+  const needs = [...new Set(automatic.map(s => s.executor))];
+  const asksForPage = PAGE_WORDS.test(text);
+
+  // An artifact the agent does not build, asked for on its own and not as part
+  // of a page request.
+  const other = asksForPage ? null : OTHER_ARTIFACTS.find(a => a.re.test(text));
+  if (other) {
+    const named = needs.filter(n => !['outline', 'combine', 'prompts', 'assistant'].includes(n));
+    return {
+      mode: 'ask-ai-mode',
+      plan,
+      needs: named,
+      line: `That is ${other.what}, which this agent does not build — it writes pages. AI Mode runs it on the same desk; ask it there and it will make the file.`
+    };
+  }
+  if (!asksForPage) {
+    if (!text || text.split(/\s+/).length < 3) {
+      return { mode: 'unclear', plan, needs, line: 'Tell me what the page should be — a subject, a section list, a calculator or an API — and I will write it here.' };
+    }
+    if (needs.length) {
+      return { mode: 'ask-ai-mode', plan, needs, line: 'That reads as a desk task rather than a page. AI Mode runs it directly; I write pages, calculators and APIs.' };
+    }
+    return { mode: 'page', plan, needs, line: '' };
+  }
+  return { mode: 'page', plan, needs, line: '' };
 }
 
 export function validate(s) {
@@ -187,6 +248,31 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
     catch { return {}; }
   }
 
+  // The same registry AI Mode plans against, so both halves of the desk read
+  // the request the same way. A failure to load it is not fatal: the agent
+  // falls back to writing the page, which is what it is for.
+  let registry = null;
+  let registryIndex = null;
+  async function tools() {
+    if (registry) return { tools: registry, index: registryIndex };
+    try {
+      const res = await fetch('/data/tools.json', { cache: 'no-store' });
+      const json = await res.json();
+      registry = Array.isArray(json) ? json : (json.tools || []);
+      registryIndex = buildIndex(registry);
+    } catch { registry = []; registryIndex = null; }
+    return { tools: registry, index: registryIndex };
+  }
+
+  /** Say what the request actually needs, before promising a page. */
+  async function checkRequest(p) {
+    const { tools: list, index } = await tools();
+    if (!index) return { mode: 'page', line: '' };
+    const verdict = planAgentRequest(p, { tools: list, index });
+    if (verdict.mode !== 'page' && verdict.line) addBubble('agent', verdict.line);
+    return verdict;
+  }
+
   function readLocalPages() {
     try { const value = JSON.parse(localStorage.getItem('mp-wiki-pages') || '[]'); return Array.isArray(value) ? value : []; }
     catch { return []; }
@@ -266,6 +352,10 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
     if (localModelProbe(p)) { addBubble('agent', 'I can build site features, but I cannot help identify the underlying model or provider.'); return; }
     saveByok({ url: $('byok-url')?.value, model: $('byok-model')?.value, key: $('byok-key')?.value });
     addBubble('user', p);
+    const verdict = await checkRequest(p);
+    // A question, or a task that belongs to another tool, is answered there —
+    // not by writing a page about the subject of the question.
+    if (verdict.mode === 'ask-ai-mode') return;
     addBubble('step', 'Planning…');
     try {
       const list = await pages();
@@ -309,6 +399,8 @@ export function mountWikiAgent(root, { mode = 'hosted', standalone = false } = {
   async function autonomous() {
     const p = $('prompt').value.trim(); if (!p) return addBubble('agent', 'Enter a task first.');
     if (localModelProbe(p)) return addBubble('agent', 'I can build site features, but I cannot help identify the underlying model or provider.');
+    const verdict = await checkRequest(p);
+    if (verdict.mode === 'ask-ai-mode') return;
     addBubble('step', 'Queueing GitHub runner…');
     try {
       const token = $('write-token').value.trim();

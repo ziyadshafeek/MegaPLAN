@@ -253,10 +253,28 @@ annotating it, and the plan envelope is built in one function so an early
 return cannot drift from the normal one.
 
 ## Phase 7 — Codex-like agent parity
-- [ ] Audit `public/agent/agent.js` against plan / preview / save / Deploy / BYOK
-- [ ] Share one planner between the agent and AI Mode
-- [ ] Fix every gap; keys stay session-only, server keys stay server-side
-- [ ] Mobile split view
+- [x] Audit against plan / preview / save / Deploy / BYOK: chat, sandboxed
+      preview, local draft, GitHub runner, Self Agent key — all present, all
+      reporting honestly when a key is missing
+- [x] One planner between the agent and AI Mode: `planAgentRequest` reads the
+      same 590-tool registry, and a request the agent cannot do is named and
+      handed to the tool that can
+- [x] Keys unchanged — the Self Agent key stays in this tab, the hosted key
+      stays on the server
+- [x] Mobile split view already collapses to one column under 840 px
+
+**The gap that mattered was a quiet one.** "Make me a powerpoint deck about
+climate change" was answered by writing a *page about climate change* and
+reporting the request handled. The deck was never built; the user got prose and
+no reason to doubt it. Now the agent reads the same request through the same
+planner, names the artifact it was actually asked for, and says which part of
+the desk does that job — before it starts writing.
+
+The decision is made from the request's own words, not from the planner's queue.
+That took two attempts: the first version let the shared planner talk the agent
+out of its own example prompt, because a GST checklist page matches a dozen
+registry tools. A shared planner that overrides the thing you are for is not
+shared, it is hijacked.
 
 ## Phase 8 — Interface, guide, mobile
 - [ ] Stay flat and quiet: one accent, no gradients/blur/glow

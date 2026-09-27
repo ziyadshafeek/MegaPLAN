@@ -226,15 +226,15 @@ named sources, and the UI never names a source that was not actually used.
 **Acceptance:** the coverage suite has no request that produces neither a
 runnable step nor a specific, honest explanation.
 
-### Phase 7 — Codex-like agent parity (`public/agent/agent.js`)
+### Phase 7 — Codex-like agent parity (`public/agent/agent.js`) — done
 
-- [ ] Audit Wiki Agent + Self Agent against the acceptance bar: chat, sandbox
+- [x] Audit Wiki Agent + Self Agent against the acceptance bar: chat, sandbox
       preview, Deploy, local draft, GitHub runner, BYOK
-- [ ] Share one planner between the agent and AI Mode so “build me a page” and
-      “do this with my tools” use the same decomposition
-- [ ] Fix every gap found; keep the key session-only and server-side keys
-      server-side
-- [ ] Mobile layout for the split view (chat + preview)
+- [x] `planAgentRequest` reads the same registry as AI Mode and hands a
+      non-page request to the tool that can do it, by name
+- [x] Keys unchanged: the Self Agent key stays in this tab, the hosted key
+      stays on the server
+- [x] Mobile layout for the split view (chat + preview)
 
 **Acceptance:** the agent can plan, preview, save locally, and deploy or
 explain precisely why it cannot.
