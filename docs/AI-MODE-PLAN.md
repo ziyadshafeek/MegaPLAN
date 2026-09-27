@@ -35,7 +35,7 @@ registered tool — not estimated.
 | Class **F** — needs a real file the harness cannot fabricate | **1** |
 | **AI Mode can drive** (R + N) | **502** (it previously claimed 521) |
 | PDF tools AI Mode can run itself (`ai-pdf-ops`) | **27 / 54** |
-| **OCR & AI tools with a real engine** | **12 / 27** (the nine OCR tools were rebuilt in Phase 2) |
+| **OCR & AI tools with a real engine** | **24 / 27** (the nine OCR tools and twelve note tools were rebuilt in Phase 2) |
 
 ### 2.1 What the audit found
 
@@ -127,7 +127,7 @@ Ordered by how much dead surface each removes.
 | Cluster | Tools | Today | Target | Files to modify |
 | --- | --- | --- | --- | --- |
 | **OCR** | 9 tools (`ocr-image-to-text`, `handwriting-ocr`, `receipt-ocr`, `invoice-ocr`, `table-ocr`, `form-ocr`, `id-document-ocr`, `document-classifier`, `document-json-extractor`) | **done** — in-browser read + deterministic parsers | shipped: `public/js/ocr-engine.js`, 15 extraction tests |
-| **Assistant/notes** | 14 (`smart-note-maker` … `entity-extractor`) | all one assistant call | real extractive engines where it is honestly better (entity/keyword/citation extraction) and **keep the assistant only where a model is genuinely required**; each tool's copy must describe what it actually does | `public/js/ai-compose.js` gains per-task extractors; `engines-rest.js` |
+| **Assistant/notes** | 15 (`smart-note-maker` … `entity-extractor`) | **12 done** on `public/js/note-tools.js`; 3 keep the assistant and say so | extractive key points, action items, citations, entities, abstract, cleaning, flashcards, quiz, notes and email summaries — all verified to copy rather than invent |
 | **Business** | 23 | one `docPdf` template | real generators: numbering series, tax/total maths, CSV round-trip, per-region invoice fields | new `public/js/business-engine.js` |
 | **Video** | 26 (16 beta) | mostly beta | promote only what ffmpeg.wasm can truly do; keep the rest honestly beta | `public/js/video-engine.js` |
 | **Audio** | 34 (5 beta) | good, 5 beta | close the 5 or state why not | `public/js/audio-studio.js` |

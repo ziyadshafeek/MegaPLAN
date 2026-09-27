@@ -17,6 +17,11 @@ import { mountCityMusicDirectory, mountCityShopDirectory } from './city-director
 import { mountPresentationTool } from './presentation-tool.js';
 import { mountSourceStatus } from './source-status-tool.js';
 import { recognizeImages, ocrForm, parseReceipt, parseInvoice, parseTable, parseForm, classifyDocument, documentToJson } from './ocr-engine.js';
+import {
+  keyPoints, actionItems, extractCitations, extractEntities, makeFlashcards, makeQuiz,
+  makeAbstract, sectionise, detectHeadings, cleanText, summariseLongText,
+  renderKeyPoints, renderActionItems, renderCitations, renderEntities
+} from './note-tools.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -550,22 +555,98 @@ Object.assign(HANDLERS, {
 
 const res0 = r => r.pages.map(p => ({ name: p.name, text: p.text }));
 
+/* ------------------------------------------------------------------ *
+ * Note and text tools.
+ *
+ * Fifteen of these shared one "send it to the assistant" call. Twelve of them
+ * do not need a model at all, so they are done deterministically here and their
+ * copy says exactly what they do. The three that genuinely need one — the
+ * rewriter, the study guide and the long transcript summary — keep the
+ * assistant and say so.
+ * ------------------------------------------------------------------ */
+
+Object.assign(HANDLERS, {
+  'Key Point Extractor': (r, t) => textTool(r, t, s => renderKeyPoints(s, 8)),
+  'Action Item Extractor': (r, t) => textTool(r, t, s => renderActionItems(s)),
+  'Citation Extractor': (r, t) => textTool(r, t, s => renderCitations(s)),
+  'Entity Extractor': (r, t) => textTool(r, t, s => renderEntities(s)),
+  'Abstract Summarizer': (r, t) => textTool(r, t, (s, b) => {
+    const n = Number(b.querySelector('#n')?.value) || 4;
+    const a = makeAbstract(s, n);
+    return `Abstract (${n} sentence(s), copied from your text):\n${a.abstract}\n\nTerms: ${a.terms.join(', ') || 'none'}\n${a.note}`;
+  }, '<label class="field-label">Sentences <input id="n" class="num" type="number" value="4" min="1" max="12"></label>'),
+  'Text Cleaner': (r, t) => textTool(r, t, (s, b) => {
+    const before = { chars: s.length, lines: s.split(/\r?\n/).length };
+    const out = cleanText(s, { dedupeLines: b.querySelector('#dedupe')?.checked });
+    return `${out}\n\n---\n${before.chars - out.length} character(s) and ${before.lines - out.split(/\r?\n/).length} line(s) removed. Curves, tabs and double spaces are normalised; your wording is untouched.`;
+  }, '<label class="field-label"><input id="dedupe" type="checkbox"> Also drop repeated lines</label>'),
+  'Flashcard Maker': (r, t) => textTool(r, t, (s, b) => {
+    const cards = makeFlashcards(s, Number(b.querySelector('#n')?.value) || 20);
+    if (!cards.length) throw Error('No questions found. Write them as "Q: … A: …" or give some headed sections.');
+    return cards.map((c, i) => `Q${i + 1}. ${c.q}\nA. ${c.a}`).join('\n\n') + `\n\n${cards.length} card(s). Questions you wrote are used as they are; the rest are built from your own sentences.`;
+  }, '<label class="field-label">Maximum cards <input id="n" class="num" type="number" value="20" min="1" max="100"></label>'),
+  'Quiz Maker': (r, t) => textTool(r, t, (s, b) => {
+    const quiz = makeQuiz(s, Number(b.querySelector('#n')?.value) || 6);
+    if (!quiz.length) throw Error('Not enough text for questions. Write "Q: … A: …" pairs, or paste a few paragraphs.');
+    return quiz.map((q, i) => {
+      if (q.options) return `Q${i + 1}. ${q.q}\n${q.options.map(o => `  - ${o}`).join('\n')}\n  answer: ${q.a}`;
+      return `Q${i + 1}. ${q.q}\nA. ${q.a}`;
+    }).join('\n\n') + `\n\n${quiz.length} question(s).`;
+  }, '<label class="field-label">Questions <input id="n" class="num" type="number" value="6" min="1" max="40"></label>'),
+  'Smart Note Maker': (r, t) => textTool(r, t, s => {
+    const secs = sectionise(s);
+    const out = secs.length > 1
+      ? secs.map(x => `## ${x.heading || 'Notes'}\n${x.text}`).join('\n\n')
+      : s.trim();
+    const pts = keyPoints(s, 5);
+    return `${out}\n\n---\n## Key points\n${pts.map(p => `- ${p.text}`).join('\n') || '- none'}`;
+  }),
+  'Lecture Note Maker': (r, t) => textTool(r, t, s => {
+    const sum = summariseLongText(s);
+    const head = `# Lecture notes\n${sum.stats.sentences} sentences · ${sum.stats.words} words · ${sum.stats.headings} heading(s) detected`;
+    const body = sum.sections.length > 1
+      ? sum.sections.map(sec => `## ${sec.heading}\n${sec.points.map(p => `- ${p}`).join('\n') || '_no clear point in this section_'}`).join('\n\n')
+      : `## Key points\n${sum.keyPoints.map(p => `- ${p}`).join('\n') || '_nothing ranked_'}`;
+    const todo = sum.actionItems.length ? `\n\n## Announced work\n${sum.actionItems.map(a => `- [ ] ${a.text}${a.when ? ` (${a.when})` : ''}`).join('\n')}` : '';
+    return `${head}\n\n${body}${todo}\n\nEverything above is lifted from your transcript.`;
+  }),
+  'Meeting Note Maker': (r, t) => textTool(r, t, s => {
+    const sum = summariseLongText(s);
+    const items = sum.actionItems;
+    return [
+      `# Meeting notes`,
+      `## Decision-like lines`,
+      (items.length ? items.map(a => `- ${a.text}`).join('\n') : '- none detected (no "will", "must", "decided", "by <date>")'),
+      '',
+      '## Action items',
+      items.length ? items.map((a, i) => `${i + 1}. ${a.text}${a.when ? ` — due ${a.when}` : ''}${a.who ? ` — ${a.who}` : ''}`).join('\n') : '- none detected',
+      '',
+      '## Open questions',
+      (s.match(/^.*\?\s*$/gm) || []).slice(0, 10).map(q => `- ${q.trim()}`).join('\n') || '- none detected',
+      '',
+      '## What was actually said',
+      sum.keyPoints.slice(0, 6).map(p => `- ${p}`).join('\n')
+    ].join('\n');
+  }),
+  'Email Summarizer': (r, t) => textTool(r, t, s => {
+    const items = actionItems(s);
+    const ask = sentences(s).filter(x => /\?\s*$/.test(x));
+    const first = sentences(s)[0] || '';
+    return [
+      `## In one line`, first,
+      '', '## What they are asking for', ask.length ? ask.map((a, i) => `${i + 1}. ${a}`).join('\n') : '- no direct questions found',
+      '', '## What was promised', items.length ? items.map((a, i) => `${i + 1}. ${a.text}${a.when ? ` (${a.when})` : ''}`).join('\n') : '- no commitment sentences found',
+      '', '## Dates mentioned', [...new Set((s.match(/\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b|\b\d{4}-\d{2}-\d{2}\b/g) || []))].join(', ') || '- none'
+    ].join('\n');
+  })
+});
+
+// The remaining tools genuinely rewrite or teach, which a deterministic pass
+// cannot do honestly. They keep the assistant and say so in their own copy.
 const AI_MAP = {
-  'Smart Note Maker': ['notes'],
-  'Lecture Note Maker': ['lecture'],
-  'Meeting Note Maker': ['meeting'],
-  'Transcript Summarizer': ['summarize'],
-  'Study Guide Maker': ['study'],
-  'Flashcard Maker': ['flashcards'],
-  'Quiz Maker': ['quiz'],
-  'Action Item Extractor': ['meeting'],
-  'Citation Extractor': ['citations'],
-  'Abstract Summarizer': ['summarize'],
-  'Key Point Extractor': ['notes'],
-  'Email Summarizer': ['email'],
-  'Text Rewriter': ['rewrite'],
-  'Text Cleaner': ['cleaner'],
-  'Entity Extractor': ['entities']
+  'Transcript Summarizer': ['summarize', 'Condense a long transcript into themes. This one needs a language model, so it runs on the hosted writing assistant when this deployment has one configured; otherwise paste it into any assistant with the prompt below.'],
+  'Study Guide Maker': ['study', 'Turn notes into a revision plan with timings. This needs a language model to sequence the material sensibly.'],
+  'Text Rewriter': ['rewrite', 'Rewriting needs a language model. Choose the tone below; if the hosted assistant is not configured, the prompt pack at the end of AI Mode carries the same instruction.']
 };
 for (const [title, [task, extra]] of Object.entries(AI_MAP)) {
   HANDLERS[title] = (r, t) => aiTool(r, t, task, extra);

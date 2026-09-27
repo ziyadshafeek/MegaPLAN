@@ -2330,12 +2330,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "lecture-note-maker",
@@ -2344,12 +2344,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "meeting-note-maker",
@@ -2358,12 +2358,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "transcript-summarizer",
@@ -2372,12 +2372,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "study-guide-maker",
@@ -2386,12 +2386,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "flashcard-maker",
@@ -2399,8 +2399,8 @@
    "category": "OCR & AI",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text+extra",
+   "kind": "calc",
+   "inputs": "text+numbers(1)",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
@@ -2413,11 +2413,11 @@
    "category": "OCR & AI",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text+extra",
+   "kind": "calc",
+   "inputs": "text+numbers(1)",
    "outputs": true,
    "needsFile": false,
-   "verified": "driven",
+   "verified": "structural",
    "notes": "",
    "controls": 2
   },
@@ -2428,12 +2428,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "citation-extractor",
@@ -2442,12 +2442,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "abstract-summarizer",
@@ -2455,8 +2455,8 @@
    "category": "OCR & AI",
    "status": "live",
    "class": "R",
-   "kind": "text",
-   "inputs": "text+extra",
+   "kind": "calc",
+   "inputs": "text+numbers(1)",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
@@ -2470,12 +2470,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "email-summarizer",
@@ -2484,12 +2484,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
-   "verified": "driven",
+   "verified": "structural",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "text-rewriter",
@@ -2498,12 +2498,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "text-cleaner",
@@ -2512,7 +2512,7 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
@@ -2526,12 +2526,12 @@
    "status": "live",
    "class": "R",
    "kind": "text",
-   "inputs": "text+extra",
+   "inputs": "text",
    "outputs": true,
    "needsFile": false,
    "verified": "driven",
    "notes": "",
-   "controls": 2
+   "controls": 1
   },
   {
    "slug": "word-counter",

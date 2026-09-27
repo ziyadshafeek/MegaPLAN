@@ -61,8 +61,15 @@ The nine OCR tools (`ocr-image-to-text`, `handwriting-ocr`, `receipt-ocr`,
 writing assistant, so they could not accept an image at all. They now read the
 picture in the browser and parse it — all nine are class R with a file input.
 
-What is left in OCR & AI: 14 note/extractor tools still share one assistant
-call, and Video is 16 of the 40 `beta` tools.
+Twelve more tools that shared one assistant call are now deterministic:
+key points, action items, citations, entities, abstract, text cleaning,
+flashcards, quiz, smart notes, lecture notes, meeting notes and email
+summaries. They extract and never invent, and 20 tests hold them to it. Three
+tools still use the assistant on purpose — `Text Rewriter`, `Study Guide Maker`
+and `Transcript Summarizer` — because rewriting and sequencing genuinely need a
+model, and their copy now says so.
+
+What is left in OCR & AI: those three, and Video is 16 of the 40 `beta` tools.
 
 Each phase is a checkbox; do them in order, `npm test` green at every step.
 
@@ -84,7 +91,7 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 
 ## Phase 2 — Make the dead tools real
 - [x] OCR cluster (9 tools): real in-browser reader, image input, structured receipt/invoice/form/ID JSON, 15 extraction tests
-- [ ] Notes/extractors (14 tools still share one assistant call): per-task engines
+- [x] Notes/extractors: 12 deterministic engines (20 tests); 3 keep the assistant and say why
 - [ ] Business (23 tools): real generators with numbering series and tax maths
 - [ ] Video (26, 16 beta): promote only what is genuinely done, keep the rest honest
 - [ ] Catalogued 3: keep refused, name the gap, offer transcript retrieval instead
