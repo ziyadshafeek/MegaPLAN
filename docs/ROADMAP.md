@@ -40,7 +40,7 @@ estimated): 590 tools — 547 live, 40 beta, 3 catalogued.
 
 | Class | Count | Meaning |
 | --- | --- | --- |
-| **R** | 482 | driven offline, produced real, non-echo output |
+| **R** | 482 | runnable — 319 were *driven* here and produced real output; 163 have a real, wired contract but need a file, a canvas or a service this harness will not fake |
 | **N** | 20 | real engine; output comes from a service or a CDN library |
 | **S** | 84 | an app or interactive studio (PDF, games, directories, the data-sources page) |
 | **C** | 3 | no lawful or finished runner — refused |
@@ -55,8 +55,14 @@ Wheel were dead on click) and **three were literal identity functions**
 (Subtitle Timing Helper, Citation Formatter, Decision Table Maker returned
 their input unchanged). All six are implemented now.
 
-Only **3 of 27** OCR & AI tools still have a real engine — the rest share one
-text box. That is the biggest remaining gap.
+The nine OCR tools (`ocr-image-to-text`, `handwriting-ocr`, `receipt-ocr`,
+`invoice-ocr`, `table-ocr`, `form-ocr`, `id-document-ocr`,
+`document-classifier`, `document-json-extractor`) used to be wired to the
+writing assistant, so they could not accept an image at all. They now read the
+picture in the browser and parse it — all nine are class R with a file input.
+
+What is left in OCR & AI: 14 note/extractor tools still share one assistant
+call, and Video is 16 of the 40 `beta` tools.
 
 Each phase is a checkbox; do them in order, `npm test` green at every step.
 
@@ -77,8 +83,8 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 - [x] Fix the dead tools the audit found (3 missing handlers, 3 identity functions)
 
 ## Phase 2 — Make the dead tools real
-- [ ] OCR cluster (9 tools): real tesseract engine, image input, structured receipt/invoice/form/ID JSON
-- [ ] Notes/extractors (15 tools): per-task engines instead of one assistant call
+- [x] OCR cluster (9 tools): real in-browser reader, image input, structured receipt/invoice/form/ID JSON, 15 extraction tests
+- [ ] Notes/extractors (14 tools still share one assistant call): per-task engines
 - [ ] Business (23 tools): real generators with numbering series and tax maths
 - [ ] Video (26, 16 beta): promote only what is genuinely done, keep the rest honest
 - [ ] Catalogued 3: keep refused, name the gap, offer transcript retrieval instead

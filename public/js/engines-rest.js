@@ -16,6 +16,7 @@ import { mountMusicDirectory } from './music-directory.js';
 import { mountCityMusicDirectory, mountCityShopDirectory } from './city-directory.js';
 import { mountPresentationTool } from './presentation-tool.js';
 import { mountSourceStatus } from './source-status-tool.js';
+import { recognizeImages, ocrForm, parseReceipt, parseInvoice, parseTable, parseForm, classifyDocument, documentToJson } from './ocr-engine.js';
 
 const { esc, downloadBlob, downloadText, inspect, loadImageFile, canvasToFile, clamp, mountShell, setOut, parseCsv, toCsv, randomString, askAssistant, loadJSZip } = kit;
 
@@ -450,16 +451,106 @@ Object.assign(HANDLERS, {
   'Video Bitrate Calculator': (r, t) => calcTool(r, t, ['Size MB', 'Duration s'], (m, d) => d ? `${((m * 8 * 1024) / d).toFixed(1)} kbps` : 'Enter duration.'),
 });
 
+/* ------------------------------------------------------------------ *
+ * The nine OCR tools. These used to be wired to the writing assistant, which
+ * meant they could not accept an image at all. They now read the picture in
+ * the browser and parse what was actually recognised.
+ * ------------------------------------------------------------------ */
+
+/** Report a page that produced nothing instead of pretending it worked. */
+function ocrReadout(res) {
+  const empty = res.pages.filter(p => !p.text);
+  const head = `Read ${res.pages.length} image(s) · ${res.pages.reduce((n, p) => n + p.text.length, 0).toLocaleString('en-IN')} characters` +
+    (res.meanConfidence != null ? ` · average confidence ${res.meanConfidence}%` : '');
+  const warn = empty.length ? `\n\nNo text was found in ${empty.length} image(s) (${empty.map(p => p.name).join(', ')}). A sharper, straighter photo works better.` : '';
+  return head + warn;
+}
+
+Object.assign(HANDLERS, {
+  'OCR Image to Text': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: true, label: 'Choose one or more images', run: 'Read text' },
+    async files => {
+      const res = await recognizeImages(files);
+      return `${ocrReadout(res)}\n\n${res.pages.map(p => `--- ${p.name} ---\n${p.text || '(no text)'}`).join('\n\n')}`;
+    }),
+
+  'Handwriting OCR': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: true, label: 'Choose a photo of the handwriting', run: 'Read handwriting' },
+    async files => {
+      const res = await recognizeImages(files, { lang: 'eng' });
+      const joined = res.pages.map(p => p.text).filter(Boolean).join('\n\n');
+      if (!joined) throw Error('No handwriting was recognised. Photograph the page straight on, in good light, filling the frame.');
+      // Tesseract splits words on loose handwriting; join the worst breaks and
+      // capitalise sentence starts, but never rewrite the words themselves.
+      const tidied = joined
+        .replace(/([a-z])\s+([a-z]{1,3})\s+([a-z]{1,3})\b/g, '$1$2$3')
+        .replace(/([.!?])\s+([a-z])/g, (m, p, c) => p + ' ' + c.toUpperCase())
+        .replace(/\n{3,}/g, '\n\n');
+      return `${ocrReadout(res)}\nHandwriting is read on a best-effort basis — check names, numbers and dates against the page.\n\n${tidied}`;
+    }),
+
+  'Receipt OCR': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: false, label: 'Choose a receipt photo', run: 'Read receipt' },
+    async files => {
+      const res = await recognizeImages(files);
+      const text = res.pages[0].text;
+      if (!text) throw Error('No text was recognised in that image. Photograph the receipt flat, with the whole receipt in frame.');
+      const r0 = parseReceipt(text);
+      return `${ocrReadout(res)}\n\n${JSON.stringify(r0, null, 2)}\n\nRaw text kept so you can check the numbers:\n${text}`;
+    }),
+
+  'Invoice OCR': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: false, label: 'Choose an invoice photo', run: 'Read invoice' },
+    async files => {
+      const res = await recognizeImages(files);
+      const text = res.pages[0].text;
+      if (!text) throw Error('No text was recognised in that image. Photograph the invoice flat and in focus.');
+      return `${ocrReadout(res)}\n\n${JSON.stringify(parseInvoice(text), null, 2)}\n\nRaw text kept so you can check the numbers:\n${text}`;
+    }),
+
+  'Table OCR': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: true, label: 'Choose the image(s) of the table', run: 'Read table' },
+    async files => {
+      const res = await recognizeImages(files);
+      const blocks = res.pages.map(p => parseTable(p.text)).filter(Boolean);
+      if (!blocks.length) throw Error('No table was found. Tables need a straight photo where the columns line up; plain running text is not a table.');
+      return blocks.map((b, i) => `--- table ${i + 1} (${b.rows.length} row(s), ${b.header.length} column(s)) ---\n${b.markdown}`).join('\n\n');
+    }),
+
+  'Form OCR': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: false, label: 'Choose a photo of the form', run: 'Read fields' },
+    async files => {
+      const res = await recognizeImages(files);
+      const text = res.pages[0].text;
+      if (!text) throw Error('No text was recognised in that image.');
+      const f = parseForm(text);
+      const found = Object.entries(f.fields).map(([k, v]) => `${k}: ${v}`).join('\n') || '(no labelled fields found)';
+      return `${ocrReadout(res)}\n\nFields found:\n${found}\n\nStill blank in the form: ${f.blankFields.join(', ') || 'none'}\n${f.complete ? '' : '\nBlank fields are left blank on purpose — nothing was invented.'}\n\n${JSON.stringify(f, null, 2)}`;
+    }),
+
+  'ID Document OCR': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: false, label: 'Choose a photo of the document', run: 'Read labels only' },
+    async files => {
+      const res = await recognizeImages(files);
+      const text = res.pages[0].text;
+      if (!text) throw Error('No text was recognised in that image.');
+      const f = parseForm(text);
+      // Only labels and non-identifying descriptors. The number itself stays masked.
+      const keep = ['name', 'date', 'address', 'city', 'state', 'country', 'pincode', 'institution', 'designation', 'expiry'];
+      const out = Object.fromEntries(keep.filter(k => f.fields[k]).map(k => [k, f.fields[k]]));
+      if (f.fields.idNumber) out.idNumber = `${f.fields.idNumber} (last 4 only, kept here)`;
+      return `${ocrReadout(res)}\nDocument type: ${classifyDocument(text).primary || 'not certain'}\n\n${JSON.stringify(out, null, 2)}\n\nIdentity numbers are masked except the last four characters, and nothing is stored.`;
+    }),
+
+  'Document Classifier': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: true, label: 'Choose the page(s) to identify', run: 'Identify' },
+    async files => {
+      const res = await recognizeImages(files);
+      return res.pages.map(p => {
+        const c = classifyDocument(p.text);
+        return `--- ${p.name} ---\nmost likely: ${c.primary || 'not certain'}\nconfidence: ${Math.round(c.confidence * 100)}%\nalso possible: ${(c.candidates || []).slice(1).map(x => x.label).join(', ') || 'none'}\n${c.reason}`;
+      }).join('\n\n');
+    }),
+
+  'Document JSON Extractor': (r, t) => fileTool(r, t, { accept: 'image/*', multiple: true, label: 'Choose the document image(s)', run: 'Extract JSON' },
+    async files => JSON.stringify(documentToJson(res0(await recognizeImages(files))), null, 2))
+});
+
+const res0 = r => r.pages.map(p => ({ name: p.name, text: p.text }));
+
 const AI_MAP = {
-  'OCR Image to Text': ['extract', 'Read all visible text from the description. If only an image was mentioned, ask for pasted text; this writing path is for text.'],
-  'Handwriting OCR': ['extract', 'Clean handwriting-like text.'],
-  'Receipt OCR': ['json', 'Extract merchant, date, items, totals as JSON.'],
-  'Invoice OCR': ['json', 'Extract invoice number, dates, parties, line items, totals as JSON.'],
-  'Table OCR': ['custom', 'Turn the text into a markdown table.'],
-  'Form OCR': ['json', 'Extract form fields as JSON.'],
-  'ID Document OCR': ['custom', 'Mask ID numbers except last 4. Extract labels only. Do not store identities.'],
-  'Document Classifier': ['classify'],
-  'Document JSON Extractor': ['json'],
   'Smart Note Maker': ['notes'],
   'Lecture Note Maker': ['lecture'],
   'Meeting Note Maker': ['meeting'],

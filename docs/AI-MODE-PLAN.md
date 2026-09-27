@@ -28,14 +28,14 @@ registered tool — not estimated.
 | --- | --- |
 | Registered tools | **590** (547 live, 40 beta, 3 catalogued) |
 | Categories | 23 (PDF 54, Images 51, Developer 48, Calculators 43, Business 40, Text 37, Audio 34, OCR & AI 27, Video 26, Productivity 26, …) |
-| Class **R** — driven offline, real non-echo output | **482** |
+| Class **R** — runnable (319 driven here, 163 wired but needing a file/canvas/service) | **482** |
 | Class **N** — real engine behind a service or CDN library | **20** |
 | Class **S** — an app or interactive studio | **84** |
 | Class **C** — no lawful or finished runner | **3** |
 | Class **F** — needs a real file the harness cannot fabricate | **1** |
 | **AI Mode can drive** (R + N) | **502** (it previously claimed 521) |
 | PDF tools AI Mode can run itself (`ai-pdf-ops`) | **27 / 54** |
-| **OCR & AI tools with a real engine** | **3 / 27** |
+| **OCR & AI tools with a real engine** | **12 / 27** (the nine OCR tools were rebuilt in Phase 2) |
 
 ### 2.1 What the audit found
 
@@ -52,13 +52,15 @@ registered tool — not estimated.
    `textTool(r, t, s => s)` — they returned their input unchanged. Now
    implemented as a real SRT/VTT timing editor, a DOI/PMID citation formatter
    and a weighted decision-table builder.
-4. **The OCR cluster is still mis-wired.** `Image OCR` has a genuine tesseract
-   engine, but `ocr-image-to-text` (the slug the planner reaches for on an
-   image) is a *text* assistant that answers "ask for pasted text". The same is
-   true of `receipt-ocr`, `invoice-ocr`, `table-ocr`, `form-ocr`,
-   `id-document-ocr` and `handwriting-ocr`. **They cannot accept an image at
-   all** — which is exactly the path the "medicine PPT from photos" workload
-   needs. This is the largest remaining quality gap.
+4. **The OCR cluster was mis-wired — now fixed.** `Image OCR` had a genuine
+   reader, but `ocr-image-to-text` (the slug the planner reaches for on an
+   image) was a *text* assistant that answered "ask for pasted text", and so
+   were `receipt-ocr`, `invoice-ocr`, `table-ocr`, `form-ocr`,
+   `id-document-ocr` and `handwriting-ocr`. **None of them could accept an
+   image at all** — the exact path the "medicine PPT from photos" workload
+   needs. Phase 2 rebuilt all nine on `public/js/ocr-engine.js`. What is left
+   in this category: 14 note/extractor tools still share a single assistant
+   call.
 5. **Video is 16 of the 40 `beta` tools**, so most of that category is a
    promise rather than a feature.
 
@@ -124,8 +126,8 @@ Ordered by how much dead surface each removes.
 
 | Cluster | Tools | Today | Target | Files to modify |
 | --- | --- | --- | --- | --- |
-| **OCR** | 9 real OCR tools (`ocr-image-to-text`, `handwriting-ocr`, `receipt-ocr`, `invoice-ocr`, `table-ocr`, `form-ocr`, `id-document-ocr`, `document-classifier`, `document-json-extractor`) | text assistant, no image input | tesseract.js worker with progress; structured JSON for receipt/invoice/form/ID; TSV→table for `table-ocr` | new `public/js/ocr-engine.js`; `engines-rest.js` reroutes all 9 to it; retire the duplicate `Image OCR` alias |
-| **Assistant/notes** | 15 (`smart-note-maker` … `entity-extractor`) | all one assistant call | real extractive engines where it is honestly better (entity/keyword/citation extraction) and **keep the assistant only where a model is genuinely required**; each tool's copy must describe what it actually does | `public/js/ai-compose.js` gains per-task extractors; `engines-rest.js` |
+| **OCR** | 9 tools (`ocr-image-to-text`, `handwriting-ocr`, `receipt-ocr`, `invoice-ocr`, `table-ocr`, `form-ocr`, `id-document-ocr`, `document-classifier`, `document-json-extractor`) | **done** — in-browser read + deterministic parsers | shipped: `public/js/ocr-engine.js`, 15 extraction tests |
+| **Assistant/notes** | 14 (`smart-note-maker` … `entity-extractor`) | all one assistant call | real extractive engines where it is honestly better (entity/keyword/citation extraction) and **keep the assistant only where a model is genuinely required**; each tool's copy must describe what it actually does | `public/js/ai-compose.js` gains per-task extractors; `engines-rest.js` |
 | **Business** | 23 | one `docPdf` template | real generators: numbering series, tax/total maths, CSV round-trip, per-region invoice fields | new `public/js/business-engine.js` |
 | **Video** | 26 (16 beta) | mostly beta | promote only what ffmpeg.wasm can truly do; keep the rest honestly beta | `public/js/video-engine.js` |
 | **Audio** | 34 (5 beta) | good, 5 beta | close the 5 or state why not | `public/js/audio-studio.js` |
