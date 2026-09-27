@@ -149,6 +149,63 @@ assert.match(spec.slug, /^[a-z0-9-]+$/);
 assert.ok(spec.title.length > 3);
 assert.ok(spec.basedOn.length > 0);
 
+/* ---------- PDF operations run in place instead of only being opened ---------- */
+const pdfFile = (name = 'manual.pdf') => ({ id: name, name, size: 1_200_000, type: 'application/pdf' });
+const pdfSteps = p => p.steps.filter(s => s.category === 'PDF');
+
+{
+  const p = plan({ prompt: 'rotate this pdf 90 degrees', files: [pdfFile()] });
+  const run = pdfSteps(p).filter(s => s.auto);
+  assert.ok(run.length >= 1, 'a matched PDF job runs automatically when the file is attached');
+  assert.equal(run[0].executor, 'pdf-ops');
+  assert.equal(run[0].params.op, 'rotate');
+  assert.equal(run[0].action, 'run');
+  assert.ok(!run[0].optional, 'a step that really runs is not marked optional');
+}
+{
+  const p = plan({ prompt: 'delete pages 5 to 9 from this pdf', files: [pdfFile()] });
+  const del = pdfSteps(p).find(s => s.params?.op === 'delete');
+  assert.ok(del, 'the page range in the sentence reaches the operation');
+  assert.equal(del.params.range.replace(/\s/g, ''), '5-9');
+  assert.equal(canRun(del.executor), true, 'the executor is really implemented');
+}
+{
+  const p = plan({ prompt: 'merge these two pdfs', files: [pdfFile('a.pdf'), pdfFile('b.pdf')] });
+  assert.ok(pdfSteps(p).some(s => s.params?.op === 'merge' && s.auto), 'merging two attached PDFs runs');
+}
+{
+  const p = plan({ prompt: 'merge these two pdfs', files: [pdfFile('a.pdf')] });
+  assert.ok(!pdfSteps(p).some(s => s.params?.op === 'merge' && s.auto),
+    'merging is not claimed when only one PDF was attached');
+}
+{
+  const p = plan({ prompt: 'find the pages about diabetes in this 1000 page pdf', files: [pdfFile('book.pdf')] });
+  const s = pdfSteps(p).find(x => x.params?.op === 'sections');
+  assert.ok(s && s.auto, 'a topic + a big PDF becomes a real page search, not a hand-off');
+}
+{
+  const p = plan({ prompt: 'sign this pdf', files: [pdfFile()] });
+  const s = pdfSteps(p).find(x => x.tool === 'sign-pdf');
+  assert.ok(s, 'signing is surfaced');
+  assert.equal(s.action, 'open', 'signing needs a human, so it stays an honest hand-off');
+  assert.equal(s.auto, false, 'and is never claimed as automatic');
+}
+{
+  const p = plan({ prompt: 'make a pdf from these images', files: [{ id: 'i1', name: 'page.png', size: 90000, type: 'image/png' }] });
+  const ops = pdfSteps(p).filter(s => s.params?.op === 'images');
+  assert.equal(ops.length, 1, 'JPG/PNG/WEBP-to-PDF are aliases of one operation and queue once');
+}
+{
+  // The honest invariant across a spread of PDF asks.
+  for (const prompt of ['rotate this pdf', 'crop pdf margins', 'add a watermark to this pdf', 'extract images from this pdf',
+    'flatten this pdf', 'repair this broken pdf', 'convert epub to pdf', 'rotate this pdf 90 degrees']) {
+    const p = plan({ prompt, files: [pdfFile()] });
+    for (const s of p.steps) {
+      assert.ok(!s.auto || canRun(s.executor), `"${prompt}" queued an automatic step with no executor`);
+    }
+  }
+}
+
 /* ---------- determinism ---------- */
 const a = plan({ prompt: 'turn the attached notes into a pdf', files: [{ name: 'notes.txt' }] });
 const b = plan({ prompt: 'turn the attached notes into a pdf', files: [{ name: 'notes.txt' }] });

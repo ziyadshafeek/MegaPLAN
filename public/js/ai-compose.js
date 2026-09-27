@@ -21,6 +21,25 @@ const SECTION_RE = /^\s*(?:#{1,3}\s+)?((?:chapter|unit|module|section|part|lesso
 
 export const STOP_WORDS = STOP;
 
+/**
+ * Only http(s) links are allowed out of this product.
+ *
+ * The server already refuses to emit anything else, but source records also
+ * arrive from browser-side tools, transcript payloads and pasted links, so the
+ * sink checks for itself: an escaped `javascript:` href would still run on
+ * click, because escaping quotes stops the injection but not the scheme.
+ */
+export function safeUrl(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw) return '';
+  try {
+    const u = new URL(raw);
+    return u.protocol === 'http:' || u.protocol === 'https:' ? u.href : '';
+  } catch {
+    return '';
+  }
+}
+
 export function words(text) {
   return String(text || '')
     .toLowerCase()
@@ -66,10 +85,46 @@ export function termScores(text) {
 }
 
 /**
+ * Credential-shaped strings are replaced before anything is echoed back.
+ *
+ * Research records, article text and pasted notes are quoted verbatim by
+ * design — that is what makes the output traceable. But a summary, a PDF or
+ * a prompt pack is exactly the kind of thing a person copies into another
+ * tool, so a token that looks like a real key must not ride along. The
+ * patterns are deliberately narrow: a well-known vendor prefix, or
+ * NAME=value where the name ends in a secret-ish word.
+ */
+const SECRET_PATTERNS = [
+  /\b(?:sk|nvapi|rk|pk)-(?:live|test|prod|secret|admin)?[-_][A-Za-z0-9_-]{16,}\b/g,
+  /\bsk-[A-Za-z0-9_-]{20,}\b/g,
+  /\bgh[pousr]_[A-Za-z0-9]{30,}\b/g,
+  /\bgithub_pat_[A-Za-z0-9_]{30,}\b/g,
+  /\bAKIA[0-9A-Z]{16}\b/g,
+  /\bAIza[0-9A-Za-z_-]{30,}\b/g,
+  /\bxox[baprs]-[0-9A-Za-z-]{10,}\b/g,
+  /\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b/g,
+  /\b[A-Z][A-Z0-9_]{2,}(?:API_?KEY|SECRET|TOKEN|PASSWORD|PASSWD)[A-Z0-9_]*\s*[=:]\s*["']?[^\s"']{8,}/g
+];
+
+/** Replace credential-shaped substrings with a visible marker. */
+export function redactSecrets(value) {
+  let text = String(value ?? '');
+  if (!text) return text;
+  for (const re of SECRET_PATTERNS) {
+    text = text.replace(re, m => {
+      // Keep the variable name so the reader still knows what was removed.
+      const named = m.match(/^([A-Z][A-Z0-9_]{2,}(?:API_?KEY|SECRET|TOKEN|PASSWORD|PASSWD)[A-Z0-9_]*\s*[=:]\s*)/);
+      return named ? `${named[1]}[redacted]` : '[redacted]';
+    });
+  }
+  return text;
+}
+
+/**
  * @returns {{summary:string, picks:Array<{text:string,index:number,score:number}>, terms:Array<[string,number]>}}
  */
 export function summarize(text, { maxSentences = 6, title = '' } = {}) {
-  const body = String(text || '').replace(/\s+/g, ' ').trim();
+  const body = redactSecrets(String(text || '')).replace(/\s+/g, ' ').trim();
   const sents = sentences(body);
   if (!sents.length) return { summary: '', picks: [], terms: [] };
   const counts = termScores(body);
@@ -167,7 +222,7 @@ export function revisionQuestions(text, count = 8, { includeAnswers = true } = {
  * @param {{style?:'summary'|'notes'|'translate', heading?:string, maxChars?:number}} opts
  */
 export function buildNotes(text, { style = 'notes', heading = 'Notes', maxChars = 6000 } = {}) {
-  const source = String(text || '').trim();
+  const source = redactSecrets(String(text || '')).trim();
   if (!source) return '';
   const { summary } = summarize(source, { maxSentences: style === 'summary' ? 5 : 8 });
   const phrases = keyPhrases(source, 10);

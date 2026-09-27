@@ -16,7 +16,7 @@ import {
   planRequest, buildIndex, planToText, normalizeRequest, draftToolSpec, PLANNER_VERSION
 } from './planner.js';
 import { runStep, buildBatchesLocally, batchToMarkdown, triggerDownload, canExecute, readFileText } from './ai-executors.js';
-import { citationList, renderCitationsText, summarize, truncate, revisionQuestions } from './ai-compose.js';
+import { citationList, renderCitationsText, summarize, truncate, revisionQuestions, safeUrl } from './ai-compose.js';
 import { GUIDE } from './ai-guide.js';
 
 const LS = {
@@ -744,8 +744,12 @@ export function mountAIMode(root, tool) {
     el.sources.innerHTML = items.map((item, i) => {
       const meta = [item.source, item.authors || item.artist, item.journal, item.year, item.pmid ? `PMID ${item.pmid}` : null, item.doi ? `doi:${item.doi}` : null]
         .filter(Boolean).join(' · ');
+      // Escaping stops markup injection; it does not stop a javascript: scheme.
+      const href = safeUrl(item.url);
+      const label = esc(item.title || item.url || 'Source');
       return `<div class="mai-src-item"><span class="n">${String(i + 1).padStart(2, '0')}</span>
-        <div class="b">${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title || item.url)}</a>` : esc(item.title || 'Source')}
+        <div class="b">${href ? `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${label}</a>` : label}
+        ${href ? '' : item.url ? '<small>link withheld — not an http(s) address</small>' : ''}
         ${meta ? `<small>${esc(meta)}</small>` : ''}</div></div>`;
     }).join('');
   }

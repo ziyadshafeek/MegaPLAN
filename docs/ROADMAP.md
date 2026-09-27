@@ -46,9 +46,9 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 - [x] Security hardening: `safeUrl`, secret redaction, WinAnsi PDF folding, `X-MegaPLAN-Folded`, DOM-sink suite
 - [x] New `tests/ai-mode-hardening.mjs` green
 - [x] New `public/js/ai-pdf-ops.js` — 27 PDF operations run on the attached file
-- [ ] Register the hardening suite in `npm test`
-- [ ] Wire `pdf-ops` into the planner's PDF branch + tests
-- [ ] Full `npm test` green, commit and push
+- [x] Register the hardening suite in `npm test`
+- [x] Wire `pdf-ops` into the planner's PDF branch + tests
+- [x] Full `npm test` green (29 suites, exit 0)
 
 ## Phase 1 — The tool contract table
 - [ ] `tests/ai-mode-tool-contracts.mjs` mounts and runs all 590 tools in jsdom
@@ -64,7 +64,10 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 - [ ] Catalogued 3: keep refused, name the gap, offer transcript retrieval instead
 
 ## Phase 3 — PDF depth (54 tools)
-- [x] 27 operations runnable from the browser (merge, split, rotate, delete, numbers, watermark, crop, n-up, text, forms, sections…)
+- [x] 27 operations runnable from the browser (merge, split, rotate, delete, numbers, watermark, crop, n-up, text, forms, sections…) — `public/js/ai-pdf-ops.js`, 23 behavioural tests
+- [x] A matched PDF job **runs** on the attached file instead of only offering to open the studio
+- [x] Page ranges read out of the sentence ("delete pages 5 to 9"); alias slugs queue once
+- [x] Large-PDF keyword page search (`op: sections`) for the 1000-page ask
 - [ ] In-browser OCR so scans become searchable
 - [ ] Large-PDF handling: TOC/bookmark detection + keyword page ranking (the 1000-page ask)
 - [ ] RAG-lite: section chunking, in-browser BM25, answers only from cited pages

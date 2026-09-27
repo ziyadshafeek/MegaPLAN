@@ -44,9 +44,15 @@ for (const name of [
 define('getComputedStyle', window.getComputedStyle.bind(window));
 define('requestAnimationFrame', cb => setTimeout(() => cb(Date.now()), 0));
 define('cancelAnimationFrame', id => clearTimeout(id));
-define('URL', Object.assign(Object.create(window.URL), {
-  createObjectURL: () => 'blob:stub', revokeObjectURL: () => {}, href: 'https://megaplan.test/'
-}));
+// A real URL constructor, with only the object-URL methods stubbed. Using an
+// object instead of a function here breaks `new URL(...)` in any code that
+// validates a link, which is a test-harness fault, not a product one.
+const RealURL = window.URL;
+const URLStub = function URLShim(input, base) { return new RealURL(input, base); };
+URLStub.createObjectURL = () => 'blob:stub';
+URLStub.revokeObjectURL = () => {};
+URLStub.canParse = (...args) => RealURL.canParse?.(...args) ?? true;
+define('URL', URLStub);
 
 /* ---------- stubbed backend ---------- */
 const calls = [];

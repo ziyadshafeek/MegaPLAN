@@ -17,6 +17,7 @@ import {
 import { draftToolSpec, normalizeRequest } from './planner.js';
 import { loadPdfJs } from './kit.js';
 import { runTool } from './toolbus.js';
+import { runPdfOp, pdfOpForSlug, PDF_OP_TITLES } from './ai-pdf-ops.js';
 
 const PENDING = Symbol('pending');
 
@@ -521,9 +522,16 @@ async function runArticlePdf(step) {
   const blob = await res.blob();
   const name = `megaplan-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 48) || 'document'}.pdf`;
   triggerDownload(blob, name);
-  return ok(`Wrote ${name} (${Math.round(blob.size / 1024)} KB)${sources.length ? ` with ${sources.length} source(s)` : ''}`, {
+  // The standard PDF fonts cannot draw every script. Never hand back a file
+  // that quietly lost characters without saying so on the step.
+  const folded = Number(res.headers?.get?.('X-MegaPLAN-Folded') || 0);
+  const note = folded
+    ? ` ${folded} character run(s) outside the standard PDF fonts appear as [?] in the file — the answer above and the prompt pack keep the original script.`
+    : '';
+  return ok(`Wrote ${name} (${Math.round(blob.size / 1024)} KB)${sources.length ? ` with ${sources.length} source(s)` : ''}.${note}`, {
     artifact: { name, size: blob.size, kind: 'pdf' },
-    sources
+    sources,
+    folded
   });
 }
 
@@ -536,6 +544,41 @@ export function triggerDownload(blob, name) {
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+/**
+ * PDF operations executor — runs the common PDF jobs on the attached file
+ * instead of only offering to open the studio. Anything the module cannot do
+ * honestly (signing, filling, redaction review) is not routed here.
+ */
+async function runPdfOps(step) {
+  const ctx = step.ctx || {};
+  const op = step.params?.op || pdfOpForSlug(step.tool);
+  if (!op) return fail('That PDF job needs the PDF studio, so it has been left for the tool itself.');
+  const files = Array.isArray(step.params?.fileIndexes)
+    ? step.params.fileIndexes.map(i => ctx.files?.[i]).filter(Boolean)
+    : (ctx.files || []);
+  try {
+    const res = await runPdfOp({ op, files, params: { ...(step.params || {}), prompt: step.params?.prompt || ctx.prompt || '' } });
+    if (res.needsOcr) {
+      return fail(
+        res.text || 'This PDF has no text layer, so its pages cannot be searched yet. The OCR PDF tool reads scans in your browser.',
+        { needsOcr: true, op }
+      );
+    }
+    const artifacts = [];
+    for (const f of res.files || []) {
+      const blob = new Blob([f.bytes], { type: 'application/pdf' });
+      triggerDownload(blob, f.name);
+      artifacts.push({ name: f.name, size: f.bytes.length, kind: 'pdf' });
+    }
+    const summary = artifacts.length
+      ? `${PDF_OP_TITLES[op] || 'PDF job'} — saved ${artifacts.length} file(s) (${res.detail}).`
+      : `${PDF_OP_TITLES[op] || 'PDF job'} — ${res.detail}.`;
+    return ok(summary, { text: res.text || '', artifact: artifacts[0] || null, artifacts, pdfOp: op });
+  } catch (err) {
+    return fail(err?.message || 'The PDF operation could not be completed.', { op });
+  }
 }
 
 function runToolbus(step) {
@@ -623,6 +666,7 @@ const EXECUTORS = {
   presentation: runPresentation,
   'article-pdf': runArticlePdf,
   toolbus: runToolbus,
+  'pdf-ops': runPdfOps,
   'new-tool': runNewTool
 };
 

@@ -1058,6 +1058,7 @@ export const CAPABILITIES = {
   assistant: { title: 'Optional writing-assistant pass', stage: 'transform', executor: 'assistant', output: 'text', optional: true },
   presentation: { title: 'Create the .pptx', stage: 'output', executor: 'presentation', output: 'file' },
   toolbus: { title: 'Run a MegaPLAN tool', stage: 'transform', executor: 'toolbus', output: 'text' },
+  'pdf-ops': { title: 'PDF operation on your file', stage: 'transform', executor: 'pdf-ops', output: 'file' },
   'new-tool': { title: 'Draft a private tool', stage: 'output', executor: 'new-tool', output: 'json' }
 };
 
@@ -1075,8 +1076,61 @@ export const IMPLEMENTED_EXECUTORS = [
   'research', 'article', 'web-read', 'youtube-transcript', 'youtube-playlist',
   'file-read', 'pdf-read', 'map-place', 'map-nearby', 'map-route', 'map-weather',
   'outline', 'combine', 'prompts', 'assistant', 'presentation', 'article-pdf',
-  'toolbus', 'new-tool'
+  'toolbus', 'pdf-ops', 'new-tool'
 ];
+
+/**
+ * PDF tools AI Mode can genuinely run itself, mapped to the operation
+ * `ai-pdf-ops.js` implements. Slugs that are absent (sign, fill, redact, OCR,
+ * repair) deliberately keep the "open the studio" behaviour — those need a
+ * human or a scanner and must never be faked.
+ * Kept as a literal list so this pure planner never imports the executor module.
+ */
+export const PDF_RUNNABLE_OPS = {
+  'merge-pdfs': 'merge', 'split-pdf': 'split', 'compress-pdf': 'compress', 'rotate-pdf': 'rotate',
+  'extract-pdf-pages': 'extract', 'pdf-page-extractor': 'extract', 'delete-pdf-pages': 'delete',
+  'reorder-pdf-pages': 'reorder', 'add-pdf-page-numbers': 'numbers', 'add-pdf-watermark': 'watermark',
+  'remove-pdf-metadata': 'metadata', 'pdf-metadata-viewer': 'metadata', 'crop-pdf': 'crop',
+  'pages-per-sheet': 'nup', 'two-pages-per-sheet': 'nup2', 'booklet-pdf-maker': 'nup2',
+  'overlay-pdfs': 'overlay', 'compare-pdfs': 'compare', 'images-to-pdf': 'images',
+  'jpg-to-pdf': 'images', 'png-to-pdf': 'images', 'webp-to-pdf': 'images',
+  'pdf-page-counter': 'count', 'pdf-to-text': 'text', 'pdf-to-markdown': 'text',
+  'pdf-form-field-viewer': 'forms', 'agentic-pdf-splitter': 'sections'
+};
+
+export function pdfOpFor(tool) {
+  return PDF_RUNNABLE_OPS[String(tool?.slug || '')] || null;
+}
+
+/** How each runnable PDF op reads, so the planner only claims what it can do. */
+export const PDF_OP_VERB = {
+  merge: 'Merge', split: 'Split', compress: 'Compress', rotate: 'Rotate', extract: 'Extract from',
+  delete: 'Delete pages of', reorder: 'Reorder', numbers: 'Number', watermark: 'Watermark',
+  metadata: 'Read', crop: 'Crop', nup: 'Arrange 4-up', nup2: 'Arrange 2-up', overlay: 'Overlay',
+  compare: 'Compare', images: 'Build a PDF from', count: 'Count pages of', text: 'Read',
+  forms: 'List the form fields of', sections: 'Search'
+};
+
+/**
+ * Does the request carry the input this operation needs?
+ * Pure guesswork from the request shape — the executor still fails honestly
+ * when the file itself turns out to be unusable.
+ */
+export function pdfOpHasInput(op, files = []) {
+  const pdfs = files.filter(f => /\.pdf$/i.test(f?.name || '') || f?.type === 'application/pdf');
+  const images = files.filter(f => /^image\//.test(f?.type || '') || /\.(png|jpe?g|webp|gif|bmp)$/i.test(f?.name || ''));
+  if (op === 'merge' || op === 'overlay') return pdfs.length >= 2;
+  if (op === 'images') return images.length >= 1;
+  if (op === 'count' || op === 'text' || op === 'sections' || op === 'compare') return pdfs.length >= 1;
+  return pdfs.length >= 1;
+}
+
+/** Pull a page range the user typed out of their own request, for the executor. */
+function pdfRangeFrom(prompt) {
+  const m = String(prompt || '').match(/\b(?:pages?|page)\s+([\d\s,;&.\-–—to]+)/i);
+  if (!m) return '';
+  return m[1].replace(/\bto\b/gi, '-').replace(/\s*-\s*/g, '-').replace(/[.,;]+$/, '').trim();
+}
 
 /** True when AI Mode can really execute this capability on the client. */
 export function canRun(executor) {
@@ -1270,6 +1324,8 @@ export function planRequest(raw = {}) {
   const MAX_AUTO_TOOLS = 4;
   let bespokeOpenSteps = 0;
   const coveredSignals = new Set();
+  // PDF operations already spoken for, so alias slugs do not pile up.
+  const coveredOps = new Set();
   for (const m of ranked) {
     const tool = m.tool;
     if (covered.has(tool.slug) || isSelfReferential(tool)) continue;
@@ -1300,12 +1356,21 @@ export function planRequest(raw = {}) {
     if (capCoversResearch && /^(wikipedia|research)/i.test(String(tool.slug))) { alsoMatched.push(summariseMatch(m)); continue; }
     if (/\b(compress|smaller|shrink)\b/i.test(ctx.prompt) && /\b(photo|image|jpg|png|picture)\b/i.test(ctx.prompt) &&
         /size-calculator|print-size|data-size|passport|photo-strip|collage/i.test(String(tool.slug))) { alsoMatched.push(summariseMatch(m)); continue; }
-    const isAuto = !bespoke && toolSteps.filter(x => x.auto).length < MAX_AUTO_TOOLS;
-    const isTopBespoke = bespoke && !steps.some(s2 => s2.tool === tool.slug) &&
+    // A PDF tool is normally "bespoke" (the studio is its own app), but AI Mode
+    // can run the unambiguous operations itself on the attached file. That is
+    // the difference between "open this app" and "this is already done".
+    const pdfOp = bespoke && tool.category === 'PDF' ? pdfOpFor(tool) : null;
+    // Several slugs are aliases of the same operation (Images to PDF, JPG to
+    // PDF, PNG to PDF, WEBP to PDF). Queueing all of them is noise, so coverage
+    // is tracked per operation as well as per tool.
+    if (pdfOp && coveredOps.has(pdfOp)) { alsoMatched.push(summariseMatch(m)); continue; }
+    const canRunPdf = pdfOp && pdfOpHasInput(pdfOp, ctx.files);
+    const isAuto = (!bespoke || canRunPdf) && toolSteps.filter(x => x.auto).length < MAX_AUTO_TOOLS;
+    const isTopBespoke = bespoke && !canRunPdf && !steps.some(s2 => s2.tool === tool.slug) &&
       (m === ranked[0] || m.score >= cut * 1.8) && bespokeOpenSteps < 2 && !capCoversMap;
     if (isTopBespoke) bespokeOpenSteps++;
     const payload = {
-      executor: isAuto ? 'toolbus' : null,
+      executor: canRunPdf ? 'pdf-ops' : (isAuto ? 'toolbus' : null),
       kind: 'tool',
       title: isAuto ? `Run ${tool.title}` : `Open ${tool.title}`,
       detail: tool.description || '',
@@ -1313,14 +1378,21 @@ export function planRequest(raw = {}) {
       action: isAuto ? 'run' : 'open',
       auto: isAuto,
       input: needsFile(tool) ? 'file' : (transforms.length || gathered.length ? 'prev' : 'request'),
-      params: { matchScore: m.score, matched: m.matched, text: ctx.topic || ctx.prompt },
-      why: `Matched ${(m.matched || []).join(', ') || tool.category} in the ${index.size}-tool library${m.verbHits ? ` (operation: ${ctx.verbs.join('/')})` : ''}.`,
-      outputKind: isAuto ? 'text' : 'link',
+      params: canRunPdf
+        ? { op: pdfOp, prompt: ctx.prompt, range: pdfRangeFrom(ctx.prompt), text: ctx.topic || ctx.prompt }
+        : { matchScore: m.score, matched: m.matched, text: ctx.topic || ctx.prompt },
+      why: canRunPdf
+        ? `AI Mode runs this itself on the attached file (${PDF_OP_VERB[pdfOp]?.toLowerCase() || pdfOp})${ctx.files.length ? `: ${ctx.files.map(f => f.name).join(', ')}` : ''} — no need to open the studio.`
+        : `Matched ${(m.matched || []).join(', ') || tool.category} in the ${index.size}-tool library${m.verbHits ? ` (operation: ${ctx.verbs.join('/')})` : ''}.`,
+      outputKind: isAuto ? (canRunPdf ? 'file' : 'text') : 'link',
       stage: isAuto ? 'transform' : 'output',
-      optional: toolSteps.length >= 2 || bespoke
+      // A step that genuinely runs is not a "maybe" — only hand-offs and the
+      // surplus companion step are optional.
+      optional: toolSteps.length >= 2 || (bespoke && !canRunPdf)
     };
     if (isAuto || isTopBespoke) {
       covered.add(tool.slug);
+      if (canRunPdf) coveredOps.add(pdfOp);
       toolSteps.push(push(payload));
       signals.forEach(x => coveredSignals.add(x));
     } else alsoMatched.push(summariseMatch(m));
@@ -1328,6 +1400,12 @@ export function planRequest(raw = {}) {
 
   /* ---- 3b. purpose-built tools for well-known workflows ---- */
   const PURPOSE_BUILT = [
+    // A big attached PDF plus a topic is the "1000-page" ask: find the pages
+    // that matter first, then read only those. Nothing is uploaded.
+    { when: () => ctx.hasKind('pdf') && /\b(find|search|locate|which pages?|relevant pages?|about|regarding|regarding)\b/i.test(ctx.prompt)
+        && /\b(page|pages|section|chapter|part|topic|subject|diabetes|information|answer|question|note)\b/i.test(ctx.prompt)
+        && !/\b(split|cut|separate|rotate|merge|watermark|number|compress|crop|delete|remove)\b/i.test(ctx.prompt),
+      slugs: ['agentic-pdf-splitter'], why: 'The splitter reads the text layer in your browser and ranks the pages against your own words, then saves the matching ones as one PDF.' },
     { when: () => wantsNotes && /\b(question paper|questions?|exam|textbook|chapter|syllabus|assignment)\b/i.test(ctx.prompt),
       slugs: ctx.hasKind('pdf') ? ['agentic-pdf-splitter', 'question-paper-to-notes'] : ['question-paper-to-notes', 'pdf-study-pack-maker'],
       why: 'Per-question study work is what these tools were built for; your files stay on this device.' },
@@ -1370,14 +1448,23 @@ export function planRequest(raw = {}) {
       const tool = doc.tool;
       covered.add(slug);
       const bespoke = isBespoke(tool);
+      // A purpose-built PDF tool is still runnable in place when the request
+      // carries the file it needs — same rule as the generic matcher.
+      const op = bespoke && tool.category === 'PDF' ? pdfOpFor(tool) : null;
+      const canRun = op && pdfOpHasInput(op, ctx.files) && !coveredOps.has(op);
+      if (canRun) coveredOps.add(op);
       toolSteps.push(push({
-        executor: bespoke ? null : 'toolbus', kind: 'tool',
-        title: bespoke ? `Open ${tool.title}` : `Run ${tool.title}`,
+        executor: canRun ? 'pdf-ops' : (bespoke ? null : 'toolbus'), kind: 'tool',
+        title: bespoke && !canRun ? `Open ${tool.title}` : `Run ${tool.title}`,
         detail: tool.description || '', tool: tool.slug, toolTitle: tool.title, category: tool.category,
-        action: bespoke ? 'open' : 'run', auto: !bespoke,
+        action: bespoke && !canRun ? 'open' : 'run', auto: !bespoke || canRun,
         input: needsFile(tool) ? 'file' : 'prev',
-        params: { mode: ctx.options.mode, target: ctx.options.target, purpose: true },
-        why: rule.why, outputKind: bespoke ? 'link' : 'text', stage: bespoke ? 'output' : 'transform'
+        params: canRun
+          ? { op, prompt: ctx.prompt, range: pdfRangeFrom(ctx.prompt), purpose: true, mode: ctx.options.mode, target: ctx.options.target }
+          : { mode: ctx.options.mode, target: ctx.options.target, purpose: true },
+        why: canRun ? `${rule.why} AI Mode runs it on the attached file directly.` : rule.why,
+        outputKind: bespoke && !canRun ? 'link' : (canRun ? 'file' : 'text'),
+        stage: bespoke && !canRun ? 'output' : 'transform'
       }));
       break;                                    // first existing slug wins
     }
