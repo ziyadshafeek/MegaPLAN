@@ -239,7 +239,7 @@ runnable step nor a specific, honest explanation.
 **Acceptance:** the agent can plan, preview, save locally, and deploy or
 explain precisely why it cannot.
 
-### Phase 8 — Interface, guide, mobile, polish
+### Phase 8 — Interface, guide, mobile, polish — done
 
 - [ ] Keep the flat/quiet language: one accent, no gradients/blur/glow,
       square-ish radii, one type scale

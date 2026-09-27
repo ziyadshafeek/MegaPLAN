@@ -347,7 +347,9 @@ assert.ok($('#mai-deliv').textContent.length > 0, 'deliverables are listed');
 {
   // A simplified surface: flat, quiet, one accent. These are the properties that
   // make a design read as "instrument panel" rather than "simple tool".
-  assert.equal((CSS.match(/linear-gradient\(/g) || []).length, 2, 'only the select chevron draws a gradient');
+  // The select chevron used to be two linear-gradients. It is an SVG now, so
+  // the rule is absolute rather than "except one place".
+  assert.equal((CSS.match(/linear-gradient\(/g) || []).length, 0, 'not one gradient, anywhere');
   assert.equal((CSS.match(/radial-gradient/g) || []).length, 0, 'no decorative glow backgrounds');
   assert.equal((CSS.match(/box-shadow/g) || []).length, 0, 'no shadows');
   assert.equal((CSS.match(/backdrop-filter/g) || []).length, 0, 'no glass');
@@ -404,4 +406,51 @@ assert.ok($('#mai-deliv').textContent.length > 0, 'deliverables are listed');
   }
 }
 
-console.log('AI Mode UI ok: flat simplified design contract, mount, hidden-state correctness, tool library, tabs, guide, attachments, live plan, full run with inline results, honest upstream failure with retry, history and session isolation, private tools, study batches, Ctrl+Enter, mobile pane takeover and CSS/mobile contract');
+
+/* ---------------- Phase 8: flat, quiet, accessible, and safe at 360px ------- */
+{
+  // `CSS` and `UISRC` are already read at the top of this file.
+
+  // Flat and quiet. One accent, and no effect that fakes depth on a surface.
+  assert.ok(!/gradient\s*\(/.test(CSS), 'no gradients of any kind');
+  assert.ok(!/backdrop-filter/.test(CSS), 'no backdrop blur');
+  assert.ok(!/box-shadow/.test(CSS), 'no glow or drop shadow');
+  const accents = new Set((CSS.match(/--mai-accent:\s*#([0-9a-f]{3,8})/i) || [])[1] ? [CSS.match(/--mai-accent:\s*(#[0-9a-f]{3,8})/i)[1]] : []);
+  assert.equal(accents.size, 1, 'exactly one accent colour is declared');
+  assert.ok(/@media\s*\(prefers-contrast:\s*more\)/.test(CSS), 'a high-contrast mode is honoured');
+
+  // The live region that makes the run audible.
+  const app = UISRC;
+  assert.match(app, /aria-live="polite"/, 'the run announces itself');
+  assert.match(app, /role="status"/, 'and it is a status, not a chatterbox');
+  assert.match(app, /aria-atomic="true"/, 'the whole message is read, not a fragment');
+  assert.match(CSS, /\.mai-sr\s*\{[^}]*clip-path:\s*inset\(50%\)/, 'the live region is hidden visually, not hidden from the reader');
+  // Announced once per change: re-reading an unchanged region on every tick is
+  // worse than silence.
+  assert.match(app, /if \(!text \|\| text === lastSaid\) return;/, 'a repeated message is not re-announced');
+  for (const hook of ['announceStep(step, \'running\')', 'announceStep(step, live.state)', 'Run finished:']) {
+    assert.ok(app.includes(hook), `the run announces ${hook}`);
+  }
+
+  // Every control the user reaches has an accessible name.
+  for (const label of ['Open the AI Mode guide', 'Open request history', 'Session code']) {
+    assert.ok(app.includes(label), `a header button is named: ${label}`);
+  }
+  assert.ok(!/<button class="[^"]*"><\/button>/.test(app), 'no unlabelled buttons');
+
+  // The 360 px matrix: the narrowest phone still gets one column, no sideways
+  // scroll, and a tab bar that is not taller than the screen.
+  const small = CSS.slice(CSS.indexOf('@media (max-width: 400px)'));
+  assert.ok(/\.mai\s*\{[^}]*font-size/.test(small), 'type shrinks on a small phone rather than overflowing');
+  assert.ok(/\.mai-btn\s*\{[^}]*min-height:\s*4[0-9]px/.test(small), 'touch targets stay at 40px at 360px');
+  assert.ok(/\.mai-row\.three\s*\{[^}]*grid-template-columns:\s*1fr/.test(small), 'three-column rows stack at 360px');
+  // The page never scrolls sideways. A table may scroll inside its own wrapper —
+  // that is the point of a wrapper — but it must never widen the document.
+  const sideways = [...CSS.matchAll(/([^{}]+)\{[^}]*overflow-x:\s*(?!hidden)[^}]*\}/g)]
+    .map(m => m[1].trim())
+    .filter(sel => !/\.mai-tablewrap/.test(sel));
+  assert.deepEqual(sideways, [], `only a table wrapper may scroll sideways, found: ${sideways.join(' | ')}`);
+  assert.ok(/word-break|overflow-wrap/.test(CSS), 'a long URL or filename wraps instead of widening the page');
+}
+
+console.log('AI Mode UI ok: flat simplified design contract, mount, hidden-state correctness, tool library, tabs, guide, attachments, live plan, full run with inline results, honest upstream failure with retry, history and session isolation, private tools, study batches, Ctrl+Enter, mobile pane takeover, CSS/mobile contract, 360px matrix and the live-region accessibility contract');

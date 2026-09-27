@@ -10,7 +10,7 @@
  *  - AI Studio / NotebookLM are described as the user's own external assistants
  */
 
-export const GUIDE_VERSION = '3.0.0';
+export const GUIDE_VERSION = '4.0.0';
 
 export const GUIDE = {
   version: GUIDE_VERSION,
@@ -53,7 +53,12 @@ export const GUIDE = {
       recipes: [
         { task: 'PDF', request: 'Research <topic> from Wikipedia and give me a PDF with a source list', does: 'Searches open sources, fetches the full article text, then writes megaplan-<topic>.pdf with numbered pages and an attributed source list.' },
         { task: 'PDF', request: 'Turn the attached notes into a formatted PDF', does: 'Your uploaded text becomes the document body. Nothing is invented; nothing is sent anywhere.' },
+        { task: 'Document', request: 'What dose is recommended in this PDF?', does: 'Reads the attached file — running OCR on any scanned page — ranks every page by your question, and quotes the sentences that answer it, each with the page it came from. A question the document does not answer is reported as unanswered rather than guessed at.' },
+        { task: 'Document', request: 'Find the termination clause in this 1000-page contract', does: 'Uses the document\u2019s own bookmarks to label and boost its sections, then answers from the pages that match. The evidence pages can be saved as their own PDF without re-uploading anything.' },
+        { task: 'Document', request: 'Sign this contract / redact the bank details from this PDF', does: 'Opens the dedicated studio with your file ready, and says plainly that it cannot do this unattended — a signature and a redaction both need a person deciding what is covered.' },
         { task: 'PPT', request: 'Create a PowerPoint about <topic> with 8 slides', does: 'Researches first, then builds a real .pptx where every sourced line keeps its link and the last slide lists the references.' },
+        { task: 'PPT', request: 'Make a slide deck from these images', does: 'Reads the text in the photos first, then builds the deck from what they actually say. A prescription scan becomes a real table — medicine, strength, dose, how often, for how long — and a cell the text never stated stays empty rather than being filled in.' },
+        { task: 'News', request: 'What is the latest news on Kerala?', does: 'Reads publisher feeds, newest first, and shows the publisher, the desk and the timestamp the publisher itself gave. A feed that could not be reached is named with the reason instead of quietly dropped.' },
         { task: 'Wikipedia', request: 'Who was Rosalind Franklin / tell me about the Kerala backwaters from Wikipedia', does: 'Returns the article title, revision id, canonical link and the full plain-text extract, which the next steps can turn into notes, a PDF or a deck.' },
         { task: 'PubMed', request: 'Find recent PubMed papers on <condition> and summarise the findings', does: 'Queries PubMed for PMIDs, DOIs, journals and years, falls back to Europe PMC if NCBI rate-limits, and produces a numbered reference list you can paste into a review.' },
         { task: 'YouTube', request: '<video or playlist link> → transcript, chapters and study notes', does: 'Fetches real captions, timestamps them, and derives chapters plus notes. Playlist links are expanded to a video list with CSV export.' },
@@ -96,8 +101,8 @@ export const GUIDE = {
       title: 'What runs where',
       body: ['Knowing this matters: it is the difference between "it is broken" and "that is on purpose".'],
       table: [
-        { where: 'This device (your browser)', what: 'PDF reading and writing, merging, splitting, compression, OCR, image and audio work, CSV/JSON conversion, every calculator, YouTube transcript parsing, notes and summary construction, all downloads.' },
-        { where: 'MegaPLAN server (no API key needed)', what: 'Open-source research: Wikipedia, PubMed/Europe PMC, arXiv, Crossref, OpenAlex, Semantic Scholar, Open Library, Project Gutenberg, Stack Exchange, MusicBrainz, Open-Meteo, geocoding and routing.' },
+        { where: 'This device (your browser)', what: 'PDF reading and writing, merging, splitting, compression, page ranking and quoted answers with page citations, OCR of scans, image and audio work, CSV/JSON conversion, every calculator, YouTube transcript parsing, notes and summary construction, all downloads.' },
+        { where: 'MegaPLAN server (no API key needed)', what: 'Open-source research: Wikipedia, PubMed/Europe PMC, arXiv, Crossref, OpenAlex, Semantic Scholar, Open Library, Project Gutenberg, Stack Exchange, MusicBrainz, Open-Meteo, publisher news feeds, geocoding and routing.' },
         { where: 'MegaPLAN server (hosted key)', what: 'An optional writing/summarising pass over text you explicitly submit. If the deployment has no key, this step is skipped and everything else still runs — you are told, not shown a fake answer.' },
         { where: 'Your own account', what: 'AI Studio, NotebookLM and the Self Agent. Their keys stay in your browser and their traffic never reaches MegaPLAN.' }
       ]
@@ -115,7 +120,10 @@ export const GUIDE = {
         { no: 'Private messages, follower lists, stories, or any credential or login work', instead: 'Public pages and public metadata only.' },
         { no: 'Live WHOIS registry lookups', instead: 'The WHOIS interface, which tells you where to look and formats whatever you paste in.' },
         { no: 'Full video transcoding', instead: 'Frame, thumbnail, duration, bitrate and metadata tools.' },
-        { no: 'Medical diagnosis, prescriptions or legal advice', instead: 'Educational calculators and formatters, with a note to check against an authoritative source.' }
+        { no: 'Medical diagnosis, prescriptions or legal advice', instead: 'Educational calculators and formatters, with a note to check against an authoritative source.' },
+        { no: 'Getting into an account, phone or device that is not yours', instead: 'It will read the documents, images and links you already have.' },
+        { no: 'Signing, filling in, redacting or repairing a PDF on your behalf', instead: 'It opens the dedicated studio with your file ready and tells you what that tool does there.' },
+        { no: 'Ordering, booking or delivering anything, and anything involving gambling', instead: 'This is a file desk: it reads, converts and builds documents, decks, notes and PDFs.' }
       ]
     },
     {
@@ -149,6 +157,8 @@ export const GUIDE = {
     { term: 'Gather / Transform / Output', def: 'The three phases. Gather pulls material in, Transform works on it, Output produces a file or a finished answer.' },
     { term: 'Auto step', def: 'A step with a real executor. If it has no executor, AI Mode marks it OPEN or OPT instead of pretending.' },
     { term: 'Session code', def: 'Four digits that identify your private tools and history on this device.' },
-    { term: 'Prompt pack', def: 'Copy-paste instructions for AI Studio, NotebookLM or any assistant you already use. Generated locally; sent nowhere.' }
+    { term: 'Prompt pack', def: 'Copy-paste instructions for AI Studio, NotebookLM or any assistant you already use. Generated locally; sent nowhere.' },
+    { term: 'Cited answer', def: 'An answer quoted from the pages of the document you attached, with the page number on every sentence. No language model is involved, so there is nothing in it that was not in your file.' },
+    { term: 'Hand-off', def: 'A step AI Mode will not fake. It opens the dedicated tool with your file ready and names what that tool does there.' }
   ]
 };

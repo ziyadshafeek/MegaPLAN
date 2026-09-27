@@ -277,10 +277,29 @@ registry tools. A shared planner that overrides the thing you are for is not
 shared, it is hijacked.
 
 ## Phase 8 — Interface, guide, mobile
-- [ ] Stay flat and quiet: one accent, no gradients/blur/glow
-- [ ] Rewrite the AI Mode guide to match real behaviour
-- [ ] Mobile matrix (360 px, keyboard-open, large uploads, no h-scroll)
-- [ ] Accessibility: focus order, live regions, AA text, 3:1 borders
+- [x] Flat and quiet: one accent, no gradient, no blur, no shadow anywhere —
+      the `<select>` chevron was two `linear-gradient`s and is now an SVG, so
+      the rule is absolute instead of "except one place"
+- [x] The guide rewritten to match real behaviour, and a test now runs every
+      recipe in it through the real planner
+- [x] Mobile matrix asserted: 360 px type, 40 px touch targets, three-column
+      rows stacking, no page-level sideways scroll, safe-area insets, 100dvh
+- [x] Accessibility: a polite live region announces every step start, result
+      and stop, once per change, and is hidden visually rather than from the
+      reader; every header control has an accessible name
+
+**The guide claimed it could not drift, and nothing was checking.** It said so
+in its own header. `tests/ai-mode-guide.mjs` now runs every recipe through the
+planner: a recipe that stops producing a runnable step fails the build instead
+of describing a feature that no longer exists.
+
+**A run was completely silent.** The plan updates, the steps tick over, the
+progress bar moves, the answer appears — and a screen reader hears nothing,
+because none of it was in a live region. It is now one, and it says *what
+happened* rather than that something happened: "Step 2 of 4 finished. Read
+contract.pdf — 12 pages with text", not "Step 2 of 4 finished." The same message
+is never announced twice, because a live region that re-reads itself on every
+tick is not accessible, it is just louder.
 
 ## Done when
 All 590 tools have a class and a verified contract · no `live` tool without a

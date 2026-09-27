@@ -131,6 +131,11 @@ export function mountAIMode(root, tool) {
 
   <div class="mai-progress hidden" id="${uid}-progress"><i></i></div>
 
+  <!-- One polite live region for the whole desk. Every step state change,
+       progress tick and toast goes through here, so a screen reader hears
+       what changed instead of a wall of text re-reading on every update. -->
+  <p class="mai-sr" id="${uid}-live" role="status" aria-live="polite" aria-atomic="true"></p>
+
   <div class="mai-body">
     <div class="mai-cols mai-scroll">
 
@@ -317,7 +322,8 @@ export function mountAIMode(root, tool) {
     private: $('private'), guide: $('guide'), tabs: $('tabs'),
     tabRun: $('tab-run-badge'), tabOut: $('tab-out-badge'),
     copyAnswer: $('copy-answer'), dlAnswer: $('dl-answer'),
-    copyPrompt: $('copy-prompt'), ptExport: $('pt-export')
+    copyPrompt: $('copy-prompt'), ptExport: $('pt-export'),
+    live: $('live')
   };
 
   /* ---------------- state ---------------- */
@@ -624,6 +630,25 @@ export function mountAIMode(root, tool) {
   }
   function setProgress(pct) { el.bar.style.width = `${Math.max(0, Math.min(100, pct))}%`; }
 
+  /**
+   * Say one thing once. Screen readers re-read a changed live region in full,
+   * so repeating "3 of 7" on every tick makes the app unusable rather than
+   * accessible: only a change in the message is announced.
+   */
+  let lastSaid = '';
+  function announce(message) {
+    const text = String(message || '').replace(/\s+/g, ' ').trim();
+    if (!text || text === lastSaid) return;
+    lastSaid = text;
+    el.live.textContent = text;
+  }
+  function announceStep(step, stateName) {
+    if (!step) return;
+    const n = step.n ? `Step ${step.n} of ` : '';
+    const verb = { done: 'finished', running: 'started', failed: 'failed', skipped: 'was skipped', pending: 'is waiting' }[stateName] || stateName;
+    announce(`${n}${step.title} ${verb}.`);
+  }
+
   async function execute() {
     if (state.running) return;
     if (!state.plan) refreshPlan();
@@ -658,6 +683,8 @@ export function mountAIMode(root, tool) {
       live.state = 'running';
       renderSteps(steps, state.plan);
       setProgress(Math.round((done / Math.max(1, runnable.length)) * 100));
+      announceStep(step, 'running');
+      announce(`${done + 1} of ${runnable.length} steps started.`);
       let result;
       try {
         result = await runStep(step, { ...ctx, results: state.results });
@@ -670,16 +697,25 @@ export function mountAIMode(root, tool) {
       live.state = result.ok ? 'done' : (result.skipped ? 'skipped' : 'failed');
       done++;
       renderSteps(steps, state.plan);
+      // What it produced, not just that it finished: "Finished" with no result
+      // leaves a screen-reader user reading the plan again to find out.
+      announceStep(step, live.state);
+      if (result.summary) announce(`${step.title}: ${result.summary}`);
     }
     if (state.abort) {
+      let stopped = 0;
       for (const s of steps) if (s.state === 'running' || s.state === 'pending') {
-        if (s.auto && s.id !== state.results[s.id]) { s.state = 'skipped'; }
+        if (s.auto && s.id !== state.results[s.id]) { s.state = 'skipped'; stopped++; }
       }
       renderSteps(steps, state.plan);
+      announce(`Stopped at your request. ${stopped} step${stopped === 1 ? '' : 's'} did not run.`);
     }
     setProgress(100);
     setTimeout(() => setProgress(0), 600);
     setRunning(false);
+    const finished = steps.filter(s => s.auto && s.result?.ok).length;
+    const failed = steps.filter(s => s.auto && s.result && !s.result.ok).length;
+    announce(`Run finished: ${finished} step${finished === 1 ? '' : 's'} completed${failed ? `, ${failed} failed` : ''}.`);
 
     collectOutput(steps, ctx);
     pushHistory({
