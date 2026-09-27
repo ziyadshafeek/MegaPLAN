@@ -16,6 +16,7 @@ import {
 const registry = JSON.parse(fs.readFileSync(new URL('../data/tools.json', import.meta.url), 'utf8'));
 const index = buildIndex(registry);
 const plan = (raw) => planRequest({ tools: registry, index, ...raw });
+
 const ids = p => p.steps.map(s => s.id);
 const execs = p => p.steps.filter(s => s.executor).map(s => s.executor);
 const toolsIn = p => p.steps.filter(s => s.tool).map(s => s.tool);
@@ -211,5 +212,47 @@ const a = plan({ prompt: 'turn the attached notes into a pdf', files: [{ name: '
 const b = plan({ prompt: 'turn the attached notes into a pdf', files: [{ name: 'notes.txt' }] });
 assert.deepEqual(ids(a), ids(b), 'the same request always yields the same chain');
 assert.deepEqual(a.steps.map(s => s.executor), b.steps.map(s => s.executor));
+
+// The three catalogued tools must never be queued, but a request for one must
+// still get an answer: the refusal is named and a lawful route is offered.
+/* ---------- catalogued tools: refused in words, with a way forward ---------- */
+{
+  // The three listed-but-not-runnable tools are never queued, and a request for
+  // one still gets an answer: the refusal in plain words, plus a tool that does
+  // the lawful part of the job.
+  const forbidden = ['youtube-video-downloader', 'youtube-audio-extractor', 'slideshare-downloader'];
+  for (const [prompt, title] of [
+    ['download this youtube video as an mp4', 'youtube-video-downloader'],
+    ['extract the audio from this youtube video', 'youtube-audio-extractor'],
+    ['download the slides from slideshare', 'slideshare-downloader']
+  ]) {
+    const p = plan({ prompt });
+    const queued = p.steps.filter(s => s.tool).map(s => s.tool);
+    for (const slug of forbidden) assert.ok(!queued.includes(slug), `${slug} must never be queued: ${queued.join(', ')}`);
+    assert.ok(!p.steps.some(s => s.tool && /youtube-video-downloader|slideshare-downloader|youtube-audio-extractor/.test(s.tool)));
+    const said = p.notes.join(' ');
+    assert.match(said, new RegExp(title.slice(0, 6).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), `the refusal is stated for ${title}: ${said}`);
+    assert.ok(p.steps.some(s => s.tool), 'and a tool that can do the lawful part is queued: ' + queued.join(', '));
+    void title;
+  }
+  // The reason travels with the match, so nothing downstream invents a runner.
+  for (const prompt of ['youtube video downloader', 'slideshare downloader', 'youtube audio extractor']) {
+    const p = plan({ prompt });
+    const held = [...p.alsoMatched, ...p.library].filter(m => forbidden.includes(m.slug));
+    assert.ok(held.length, `the catalogued tool is still listed for "${prompt}"`);
+    assert.ok(held.every(m => typeof m.unavailable === 'string' && m.unavailable.length > 10),
+      `every surface that lists it carries the reason: ${JSON.stringify(held.map(m => m.unavailable))}`);
+    assert.ok(!p.steps.some(s => forbidden.includes(s.tool)), 'and it is still never queued');
+  }
+}
+
+{
+  // A gap message that is no longer true must not survive: the video desk
+  // transcodes in the browser now.
+  const p = plan({ prompt: 'transcode this video to 4k to 1080' });
+  assert.doesNotMatch(p.notes.join(' '), /not available in the browser/i);
+  const q = plan({ prompt: 'download the slides from slideshare' });
+  assert.match(q.notes.join(' '), /will not take those/i, 'a SlideShare request is answered, not ignored');
+}
 
 console.log(`ai-mode planner ok: ${PLANNER_VERSION}; ${index.size} tools indexed; ${Object.keys(CAPABILITIES).length} capabilities; PDF/PPT/YouTube/literature/prompt-pack chains and honest refusals verified`);

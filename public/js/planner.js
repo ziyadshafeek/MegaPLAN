@@ -1014,7 +1014,7 @@ export function detectIntents(ctx) {
  * ------------------------------------------------------------------ */
 
 const GAPS = [
-  { test: /\b(download|save|grab|rip)\b[^\n]{0,40}\b(youtube|video|netflix|prime|hotstar|spotify|instagram|facebook|tiktok)\b/i,
+  { test: /\b(download|save|grab|rip|extract (?:the )?audio|strip (?:the )?audio|mp3)\b[^\n]{0,40}\b(youtube|netflix|prime|hotstar|spotify|instagram|facebook|tiktok)\b/i,
     message: 'Downloading streams from YouTube/Netflix/Spotify/Instagram bypasses platform controls, so AI Mode will not do it. It can fetch public captions, thumbnails, playlists and metadata instead.',
     suggest: ['youtube-transcript', 'youtube-playlist-lister', 'youtube-thumbnail-downloader'] },
   { test: /\b(private|dm|dms|direct message|chat log|story|stories|followers list|password|login|hack|bypass|crack)\b[^\n]{0,40}\b(instagram|facebook|whatsapp|twitter|x|telegram|account)\b/i,
@@ -1023,9 +1023,9 @@ const GAPS = [
   { test: /\b(whois)\b/i,
     message: 'Live WHOIS needs a registry API MegaPLAN does not proxy. The WHOIS interface explains where to look and formats what you paste in.',
     suggest: ['domain-whois-interface'] },
-  { test: /\b(transcode|4k to 1080|full video convert|render video|ffmpeg)\b/i,
-    message: 'Full video transcoding is not available in the browser. Frame, thumbnail, duration, bitrate and metadata tools are.',
-    suggest: ['video-metadata-viewer', 'video-thumbnail-extractor', 'frame-rate-calculator'] },
+  { test: /\b(slideshare|scribd|issuu|docdroid|pdfdrive|slides? from (?:a )?(?:presentation|deck))\b|\b(download|save|get)\b[^\n]{0,30}\b(slideshare|scribd|issuu)\b/i,
+    message: 'SlideShare and its neighbours host other people\'s documents. AI Mode will not take those. Upload the file you have and the text extractors, the note tools and the PDF desk will read it here.',
+    suggest: ['smart-note-maker', 'transcript-summarizer', 'pdf-text-extractor'] },
   { test: /\b(medical diagnosis|diagnose me|prescribe|dose for patient|legal advice|court|buy (?:guns?|weapons?|drugs?))\b/i,
     message: 'AI Mode will not give diagnoses, prescriptions or legal advice. Calculators and formatters are educational helpers only.',
     suggest: [] }
@@ -1307,6 +1307,8 @@ export function planRequest(raw = {}) {
 
   /* ---- 3. tool steps from the universal registry match ---- */
   const toolSteps = [];
+  // Why a listed tool cannot run, so no surface has to invent a reason.
+  const refusals = new Map();
   const alsoMatched = [];
   const covered = new Set(steps.map(s => s.tool).filter(Boolean));
   const topScore = ranked[0]?.score || 0;
@@ -1329,8 +1331,12 @@ export function planRequest(raw = {}) {
   for (const m of ranked) {
     const tool = m.tool;
     if (covered.has(tool.slug) || isSelfReferential(tool)) continue;
-    if (tool.status === 'catalogued') {                       // listed, no runner: never pretend
-      if (m.score >= cut) alsoMatched.push({ ...summariseMatch(m), unavailable: 'catalogued — no working runner yet' });
+    if (tool.status === 'catalogued') {
+      // Listed, and deliberately not runnable. It is never queued, and the
+      // reason travels with it so nothing downstream invents a capability.
+      const why = REFUSALS[tool.slug] || 'listed for reference; there is no runner behind it here';
+      refusals.set(tool.slug, why);
+      if (m.score >= cut) alsoMatched.push({ ...summariseMatch(m), unavailable: why });
       continue;
     }
     // A tool must actually touch the request: the operation, the format, or the subject.
@@ -1577,7 +1583,7 @@ export function planRequest(raw = {}) {
     },
     intents, gaps, steps: all, notes: dedupe([...notes, ...gaps.map(g => g.message)]),
     alsoMatched: alsoMatched.slice(0, 12),
-    library: ranked.slice(0, 12).map(summariseMatch),
+    library: ranked.slice(0, 12).map(m => ({ ...summariseMatch(m), ...(refusals.has(m.tool.slug) ? { unavailable: refusals.get(m.tool.slug) } : {}) })),
     needsNewTool: Boolean(newTool), newTool,
     prompts, summary,
     stats: {
@@ -1590,6 +1596,17 @@ export function planRequest(raw = {}) {
     }
   };
 }
+
+/**
+ * What each catalogued tool will not do, in words a person can act on, and the
+ * tool that does the same job lawfully. A refusal without an alternative is a
+ * dead end; these are the answers, not the refusals.
+ */
+const REFUSALS = {
+  'youtube-video-downloader': 'MegaPLAN does not download or re-host hosted video, and will not work around a site that does not want it downloaded. If you have the file, Video Trimmer, Video Compressor and Extract Audio will work on it here.',
+  'youtube-audio-extractor': 'MegaPLAN does not pull the audio out of someone else\'s video. If you already have the file, Extract Audio turns it into a WAV on this device.',
+  'slideshare-downloader': 'SlideShare hosts other people\'s documents; this desk will not take them. Upload the file you have and Text Extractor, CSV to XLSX and the summarisers will read it.'
+};
 
 /** Which of the request's own words this tool covers — used to keep chains complementary. */
 function toolSignals(tool, ctx) {
@@ -1604,7 +1621,8 @@ function toolSignals(tool, ctx) {
 
 function summariseMatch(m) {
   return { slug: m.tool.slug, title: m.tool.title, category: m.tool.category, status: m.tool.status || 'beta',
-    description: m.tool.description || '', score: m.score, matched: m.matched || [], bespoke: isBespoke(m.tool) };
+    description: m.tool.description || '', score: m.score, matched: m.matched || [], bespoke: isBespoke(m.tool),
+    ...(m.unavailable ? { unavailable: m.unavailable } : {}) };
 }
 
 function targetLabel(target) {

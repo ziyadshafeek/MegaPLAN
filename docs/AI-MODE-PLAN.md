@@ -133,7 +133,7 @@ Ordered by how much dead surface each removes.
 | **Business** | 24 of the 40 | **done** — one generator with a schema per document | shipped: `public/js/business-docs.js`, numbering series, tax/total maths, Indian amount-in-words, a PDF that paginates; 29 tests |
 | **Video** | 26 (16 were beta) | **done** — no ffmpeg download; the browser's own decoders and `MediaRecorder` | shipped: `public/js/video-engine.js` + `public/js/video-tools.js`, a real GIF89a encoder, 44 tests; all 16 promises kept |
 | **Audio** | 34 (5 beta) | good, 5 beta | close the 5 or state why not | `public/js/audio-studio.js` |
-| **Catalogued** | 3 | refused | keep refused; AI Mode must name the gap and offer YouTube *transcripts* instead | `planner.js` messaging |
+| **Catalogued** | 3 | **done** — refused, with the reason attached and a lawful route queued | shipped: refusal table in `planner.js`; SlideShare gained the refusal rule it never had, and a stale "no transcoding in the browser" message was removed |
 
 **Acceptance:** every tool in the table is either verified by the Phase 1
 harness, or its status is honestly downgraded in `data/tools.json`.

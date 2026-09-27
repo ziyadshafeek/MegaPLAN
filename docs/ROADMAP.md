@@ -105,6 +105,13 @@ and `Voice Isolation` run a noise gate. A gate removes hiss between words; it
 cannot remove echo or separate a voice from a backing track, so they stay beta
 and say so.
 
+**Phase 2 is done.** Two gaps in the honesty of the refusals were found while
+closing it, and both mattered more than the cluster itself: a request for a
+SlideShare downloader met no rule at all and was simply ignored, and a
+transcoding request was told "full video transcoding is not available in the
+browser" — which stopped being true when the video engine shipped. A refusal
+that is out of date is worse than no refusal.
+
 Each phase is a checkbox; do them in order, `npm test` green at every step.
 
 ## Phase 0 — Land the in-flight batch
@@ -128,7 +135,7 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 - [x] Notes/extractors: 12 deterministic engines (20 tests); 3 keep the assistant and say why
 - [x] Business (24 of the 40 Business tools): real generators with numbering series, per-document fields, tax maths and a paginating PDF — `public/js/business-docs.js`, 29 tests
 - [x] Video (26 tools, all 16 betas promoted): a real in-browser engine — `public/js/video-engine.js` records with the platform's own decoders and `MediaRecorder`, and a GIF89a encoder with its own LZW; 44 tests
-- [ ] Catalogued 3: keep refused, name the gap, offer transcript retrieval instead
+- [x] Catalogued 3: never queued, the reason travels with the match, and a request for one is answered with the lawful route — including SlideShare, which had no refusal at all
 
 ## Phase 3 — PDF depth (54 tools)
 - [x] 27 operations runnable from the browser (merge, split, rotate, delete, numbers, watermark, crop, n-up, text, forms, sections…) — `public/js/ai-pdf-ops.js`, 23 behavioural tests
