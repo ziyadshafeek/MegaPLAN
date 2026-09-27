@@ -18,6 +18,7 @@ import { draftToolSpec, normalizeRequest } from './planner.js';
 import { loadPdfJs } from './kit.js';
 import { runTool } from './toolbus.js';
 import { runPdfOp, pdfOpForSlug, PDF_OP_TITLES } from './ai-pdf-ops.js';
+import { extractMedicines, medicinesToText, describeMedicines } from './med-table.js';
 
 const PENDING = Symbol('pending');
 
@@ -479,15 +480,61 @@ async function runAssistant(step) {
  * Output executors
  * ------------------------------------------------------------------ */
 
+/**
+ * Read the images the user attached. A deck built from photos of a prescription
+ * or a whiteboard needs the words in those photos; without this step the deck
+ * engine was handed nothing and either refused or invented slides.
+ */
+async function runImageRead(step) {
+  const files = (step.ctx?.files || []).filter(f => f?.kind === 'image' && f.file);
+  if (!files.length) return fail('No attached image was found to read.');
+  if (typeof step.ctx?.readScanText !== 'function') {
+    return fail('The text reader is not available in this browser, so the images cannot be read here.');
+  }
+  step.onStatus?.(`Reading ${files.length} image${files.length === 1 ? '' : 's'}…`);
+  let pages;
+  try {
+    const res = await step.ctx.readScanText(files, { onProgress: (p, note) => step.onStatus?.(note || `Reading… ${p}%`) });
+    pages = res?.pages || [];
+  } catch (err) {
+    return fail(`The images could not be read: ${err?.message || 'the reader failed'}`);
+  }
+  const read = pages.filter(p => p.text);
+  if (!read.length) return fail('No text was recognised in the attached images. A clearer photo, or a typed note, would work.');
+  const text = read.map(p => (read.length > 1 ? `[${p.name}]\n${p.text}` : p.text)).join('\n\n');
+  const meds = extractMedicines(text);
+  const conf = pages.map(p => p.confidence).filter(n => typeof n === 'number');
+  const mean = conf.length ? Math.round(conf.reduce((a, b) => a + b, 0) / conf.length) : null;
+  const parts = [`Read ${read.length} of ${pages.length} image${pages.length === 1 ? '' : 's'}`];
+  if (mean != null) parts.push(`mean confidence ${mean}%`);
+  if (meds.rows.length) parts.push(`${meds.rows.length} medicine line${meds.rows.length === 1 ? '' : 's'}`);
+  return ok(`${parts.join(' · ')}. ${describeMedicines(meds)}`, {
+    text, pages: read.length, confidence: mean, medicines: meds, medText: medicinesToText(meds)
+  });
+}
+
 async function runPresentation(step) {
   const items = collect(step);
   const topic = String(step.params?.topic || step.ctx?.plan?.request?.topic || 'Presentation').slice(0, 150);
   const notes = textOf(step);
   const outline = buildOutline(topic, items, notes);
+  // A read prescription or notes page becomes a real table slide, because
+  // "drug / strength / dose / frequency / duration" is a table, not a list.
+  const table = upstream(step)
+    .map(r => (r && typeof r === 'object' ? r.medicines : null))
+    .find(m => m?.rows?.length) || null;
+  const outlineWithTable = table && !outline.some(s => s.table)
+    ? [{ title: 'Medicines read from the text', table: { columns: table.columns, rows: table.rows } }, ...outline]
+    : outline;
   const res = await fetch('/api/presentation', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ topic, notes: outline ? '' : notes, outline, slideCount: Math.max(4, Math.min(14, outline.length + 2)) })
+    body: JSON.stringify({
+      topic,
+      notes: outlineWithTable.length ? '' : notes,
+      outline: outlineWithTable,
+      slideCount: Math.max(4, Math.min(14, outlineWithTable.length + 2))
+    })
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
@@ -496,7 +543,8 @@ async function runPresentation(step) {
   const blob = await res.blob();
   const name = `${topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40) || 'presentation'}.pptx`;
   triggerDownload(blob, name);
-  return ok(`Built ${name} (${Math.round(blob.size / 1024)} KB) with ${outline.length} sourced section(s)`, {
+  const t = table ? `, including a ${table.rows.length}-row table` : '';
+  return ok(`Built ${name} (${Math.round(blob.size / 1024)} KB) with ${outlineWithTable.length} sourced section(s)${t}`, {
     artifact: { name, size: blob.size, kind: 'pptx' },
     items
   });
@@ -706,6 +754,7 @@ const EXECUTORS = {
   prompts: runPrompts,
   assistant: runAssistant,
   presentation: runPresentation,
+  'image-read': runImageRead,
   'article-pdf': runArticlePdf,
   toolbus: runToolbus,
   'pdf-ops': runPdfOps,

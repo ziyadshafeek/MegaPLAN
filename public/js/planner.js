@@ -1259,6 +1259,7 @@ export function planRequest(raw = {}) {
   /* ---- 1. gather: things we can pull in automatically ---- */
   const gathered = [];
   let routeRequest = null;
+  let imagesReadHere = false;
 
   if (wantsYouTube) {
     for (const link of ctx.youtube) {
@@ -1307,10 +1308,19 @@ export function planRequest(raw = {}) {
       } else if (f.kind === 'text' || f.kind === 'csv' || f.kind === 'json') {
         gathered.push(push({ executor: 'file-read', title: `Read “${f.name}”`, detail: `Load the ${f.kind.toUpperCase()} contents into the chain.`,
           params: { fileIndex: f.index, name: f.name }, why: 'A readable text file was uploaded.', outputKind: 'text' }));
-      } else if (f.kind === 'image' && (wantsOcr || /\b(text|read|extract|ocr|words)\b/i.test(ctx.prompt))) {
-        gathered.push(push({ executor: 'toolbus', title: `Read text from “${f.name}”`, tool: 'ocr-image-to-text', toolTitle: 'OCR Image to Text', category: 'OCR & AI',
-          params: { fileIndexes: [f.index] }, why: 'An image was uploaded and text was requested.', outputKind: 'text' }));
       }
+    }
+    // Images are read here rather than handed to a studio tool: a deck built
+    // from photos of a prescription needs the words, and the deck engine
+    // cannot invent them.
+    const imageFiles = ctx.files.filter(f => f.kind === 'image');
+    imagesReadHere = imageFiles.length > 0 && (wantsOcr || wantsPresentation || /\b(text|read|extract|ocr|words|notes?|medicine|dose|prescription)\b/i.test(ctx.prompt));
+    if (imagesReadHere) {
+      gathered.push(push({ executor: 'image-read',
+        title: `Read the text in ${imageFiles.length} image${imageFiles.length === 1 ? '' : 's'}`,
+        detail: 'In-browser OCR, then a drug/strength/dose/frequency/duration table for any medicine lines it finds.',
+        params: { fileIndexes: imageFiles.map(f => f.index), names: imageFiles.map(f => f.name) },
+        why: 'An image was uploaded and its text is needed downstream.', outputKind: 'text' }));
     }
     if (answerFromFile) {
       gathered.push(push({
@@ -1421,6 +1431,19 @@ export function planRequest(raw = {}) {
     const fresh = signals.filter(x => !coveredSignals.has(x));
     const relevant = m.score >= cut || (fresh.length > 0 && m.score >= Math.max(FLOOR, cut * 0.34));
     if (!relevant) { alsoMatched.push(summariseMatch(m)); continue; }
+    // "Make a deck from these photos" is a deck. A photo-strip maker is a
+    // different artifact that happens to share the word "photo", and queueing
+    // it produces two half-answers to one question.
+    if (wantsPresentation && !/\b(slide|deck|pptx?|powerpoint|presentation)\b/i.test(tool.title)) {
+      alsoMatched.push(summariseMatch(m));
+      continue;
+    }
+    // The images were already read in the page, so a second OCR tool would
+    // produce the same text twice and the deck would read the wrong copy.
+    if (imagesReadHere && /^(ocr-image-to-text|image-ocr)$/.test(tool.slug)) { alsoMatched.push(summariseMatch(m)); continue; }
+    // And the deck is built below, so opening the deck studio as well gives
+    // the user two ways to do one job and no way to tell which one ran.
+    if (wantsPresentation && tool.slug === 'presentation-creator') { alsoMatched.push(summariseMatch(m)); continue; }
     // Wrong-domain tools are out: a jpg request must not queue a video tool.
     const wantCats = new Set([...ctx.formats].map(f => FORMAT_CATEGORY[f]).filter(Boolean));
     if (wantCats.size && !wantCats.has(tool.category) && m.subjectHits === 0) { alsoMatched.push(summariseMatch(m)); continue; }
@@ -1503,7 +1526,7 @@ export function planRequest(raw = {}) {
       why: 'Per-question study work is what these tools were built for; your files stay on this device.' },
     { when: () => wantsOcr && (ctx.hasKind('pdf') || /\bpdfs?\b/i.test(ctx.prompt)), slugs: ['ocr-pdf'],
       why: 'Scanned PDFs need the in-browser OCR reader.' },
-    { when: () => wantsOcr && ctx.hasKind('image'), slugs: ['ocr-image-to-text', 'image-ocr'],
+    { when: () => wantsOcr && ctx.hasKind('image') && !imagesReadHere, slugs: ['ocr-image-to-text', 'image-ocr'],
       why: 'Images are read with in-browser OCR.' },
     { when: () => intentIds.has('osint') && /\b(instagram|username|handle|profile)\b/i.test(ctx.prompt),
       slugs: ['osint-advanced', 'public-profile-url-checker'], why: 'Public-profile lookups only; nothing private is touched.' },

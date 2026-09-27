@@ -164,10 +164,34 @@ which mixes a citation with a summary and answers from the wrong document. And
 because "bank" is a place word.
 
 ## Phase 4 — Images → OCR → deck
-- [ ] Composed chain: images → OCR → facts → outline → real `.pptx`
-- [ ] Structured outline path in `lib/presentation-deck.js`
-- [ ] Medicine-shaped extraction (drug, strength, dose, frequency, duration) as a labelled table
-- [ ] Generalises to any "deck from these images/notes" request
+- [x] Composed chain: images → OCR → facts → outline → real `.pptx`. The deck
+      step declares the read as a dependency, so it cannot run on nothing
+- [x] Table slides in `lib/presentation-deck.js`, sized to fit and capped with
+      "N more lines not shown" rather than dropping rows
+- [x] Medicine-shaped extraction (`public/js/med-table.js`): drug, strength,
+      dose, frequency, duration — read, never inferred
+- [x] Generalises: any "deck from these images" reads them first, and an image
+      the chain does not need is not read at all
+
+**A deck from a photo of a prescription.** The chain used to end at the deck
+engine with nothing in its hands: the images were never read, the engine
+threw its "no source text" error, or it filled the gap with something that
+looked like slides. Now the photos are read in the page, and what they say is
+arranged into a table — one row per medicine, five columns, each cell filled
+only where the text actually filled it.
+
+The last part is the point. A dose is not a thing to infer, so `med-table.js`
+does not infer one. "Vitamin D3 60,000 IU once weekly" has no dose in it, and
+the cell stays empty with a dash where a value would have gone; the table
+reports how many lines arrived without one. What made this work was refusing to
+be helpful: the parser starts a drug name only at a word, stops it at the first
+number, and treats a line that opens with a strength as a continuation of the
+drug above it — which is how a scan of a prescription actually reads.
+
+Two planning mistakes went with it. "Make a deck from these photos" also queued
+a photo-strip maker, because "photo" matched, giving one request two different
+artifacts. And the presentation studio was opened *and* the deck built, so there
+was no way to tell which one ran.
 
 ## Phase 5 — Search, news and links
 - [ ] `web-search` over licensed/keyless sources (Wikipedia, Europe PMC, Open-Meteo, optional Brave key)

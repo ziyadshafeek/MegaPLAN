@@ -168,7 +168,14 @@ contact on nights?” are both read-then-answer. “Summarise this contract” a
 “merge these two PDFs” and “find the pages about diabetes in this 1000-page
 PDF” all produce a real file from the browser alone.
 
-### Phase 4 — Images → OCR → deck (the medicine-PPT workload)
+### Phase 4 — Images → OCR → deck (done)
+
+- [x] `image-read` executor: in-browser OCR on the attached images, then a
+      medicine table (drug, strength, dose, frequency, duration) read out of
+      the text rather than inferred from it
+- [x] Table slides in the deck engine, with a row cap that says what it left
+      off instead of silently truncating
+- [x] The deck step depends on the read, so it cannot be built from nothing (the medicine-PPT workload)
 
 - [ ] A composed plan: images → OCR → fact extraction → outline → `.pptx`,
       chained through the real executors rather than one opaque step
