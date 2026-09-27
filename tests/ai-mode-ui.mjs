@@ -12,6 +12,7 @@ import { JSDOM } from 'jsdom';
 
 const TOOLS = JSON.parse(await readFile(new URL('../data/tools.json', import.meta.url), 'utf8'));
 const CSS = await readFile(new URL('../public/ai-mode.css', import.meta.url), 'utf8');
+const UISRC = await readFile(new URL('../public/js/ai-mode.js', import.meta.url), 'utf8');
 
 const dom = new JSDOM('<!doctype html><html><head></head><body><div id="app"></div></body></html>', {
   url: 'https://megaplan.test/', pretendToBeVisual: true
@@ -121,6 +122,32 @@ for (const b of root.querySelectorAll('.mai-btn')) {
 await waitFor(() => txt().includes('tools ready'), 'the tool library to load');
 assert.match(txt(), new RegExp(`${TOOLS.length} tools ready`), 'the real registry size is shown, not a made-up one');
 assert.match(txt(), /on-device only/, 'no hosted key is reported as a feature');
+
+/* ---------- nothing to hide is shown ---------- */
+{
+  // jsdom does not fetch the linked stylesheet, so prove the hiding works from
+  // the source: `.hidden` must out-specify every component rule that sets display.
+  const specificity = sel => {
+    const one = sel.trim();
+    return (one.match(/\.hidden\b/g) || []).length * 100
+      + (one.match(/\[class\]/g) || []).length * 10
+      + (one.match(/\.[a-z][a-z0-9-]*/g) || []).length
+      + (one.match(/#[a-z0-9-]+/g) || []).length;
+  };
+  const hiddenRule = (CSS.match(/^([^\n{]*\.hidden)\s*\{([^}]*)\}/m) || []);
+  assert.equal(hiddenRule.length, 3, 'a .hidden rule exists');
+  assert.match(hiddenRule[2], /display:\s*none/, '.hidden sets display:none');
+  assert.ok(!/!important/.test(hiddenRule[2]), 'without resorting to !important');
+  const hidden = specificity(hiddenRule[1]);
+  for (const rival of ['.mai-btn', '.mai-tabs .badge', '.mai-progress', '.mai-drop']) {
+    assert.ok(hidden > specificity(rival), `.hidden (${hidden}) out-specifies ${rival} (${specificity(rival)})`);
+  }
+  const badge = $('#mai-tab-run-badge');
+  assert.ok(badge.classList.contains('hidden'), 'a zero count badge carries .hidden');
+  assert.equal(root.querySelectorAll('#mai-stop:not(.hidden)').length, 0, 'the Stop button stays hidden until a run starts');
+  assert.ok($('#mai-file').classList.contains('hidden'), 'the file input is hidden behind the drop zone');
+  assert.equal($('#mai-run').classList.contains('hidden'), false, 'the Run button is visible');
+}
 
 /* ---------- tabs ---------- */
 const tab = name => root.querySelector(`#mai-tabs button[data-pane="${name}"]`);
@@ -310,6 +337,34 @@ assert.ok($('#mai-deliv').textContent.length > 0, 'deliverables are listed');
   assert.ok(calls.length > callsBefore, 'Ctrl/⌘+Enter runs the request');
 }
 
+/* ---------- the design stays plain ---------- */
+{
+  // A simplified surface: flat, quiet, one accent. These are the properties that
+  // make a design read as "instrument panel" rather than "simple tool".
+  assert.equal((CSS.match(/linear-gradient\(/g) || []).length, 2, 'only the select chevron draws a gradient');
+  assert.equal((CSS.match(/radial-gradient/g) || []).length, 0, 'no decorative glow backgrounds');
+  assert.equal((CSS.match(/box-shadow/g) || []).length, 0, 'no shadows');
+  assert.equal((CSS.match(/backdrop-filter/g) || []).length, 0, 'no glass');
+  assert.equal((CSS.match(/text-transform/g) || []).length, 0, 'no shouted micro-labels');
+  assert.equal((CSS.match(/999px/g) || []).length, 0, 'no pill shapes');
+  const radii = new Set((CSS.match(/border-radius: [^;]+/g) || []).map(v => v.trim()));
+  assert.ok(radii.size <= 3, `three corner radii or fewer (one for the sheet, one for small marks, one for the dot), found ${radii.size}: ${[...radii].join(' / ')}`);
+  assert.ok(radii.has('border-radius: 50%') || (CSS.match(/border-radius: 50%/g) || []).length === 1, 'a circle is only used for the status dot');
+  const sizes = new Set((CSS.match(/font-size: [0-9.]+px/g) || []).map(v => parseFloat(v)));
+  assert.ok(sizes.size <= 6, `six type sizes or fewer, found ${sizes.size}: ${[...sizes].sort((a, b) => a - b).join(', ')}`);
+  const vars = new Set((CSS.match(/--mai-[a-z0-9-]+(?=:)/g) || []));
+  assert.ok(vars.size <= 14, `${vars.size} custom properties`);
+  assert.ok(!/@keyframes mai-shimmer|animation:.*shimmer/.test(CSS), 'no decorative shimmer');
+  // Layout belongs in the stylesheet. The only inline styles left are runtime values
+  // (the progress width and the off-screen textarea used to copy text).
+  assert.equal(UISRC.match(/style="/g), null, 'no ad-hoc inline styles in the markup templates');
+  assert.equal(root.querySelectorAll('style').length, 0, 'no <style> block injected into the page');
+  for (const el of root.querySelectorAll('[style]')) {
+    assert.ok(/^position:fixed;left:-9999px$/.test(el.getAttribute('style')) || el === $('#mai-progress').querySelector('i'),
+      `the only inline styles are the copy helper and the progress width, found "${el.getAttribute('style')}"`);
+  }
+}
+
 /* ---------- the CSS keeps the promises the class names make ---------- */
 {
   const rule = sel => (CSS.match(new RegExp(`(?:^|\\})\\s*${sel.replace('.', '\\.')}\\s*\\{([^}]*)\\}`, 'm')) || ['', ''])[1];
@@ -343,4 +398,4 @@ assert.ok($('#mai-deliv').textContent.length > 0, 'deliverables are listed');
   }
 }
 
-console.log('AI Mode UI ok: mount, tool library, tabs, guide, attachments, live plan, full run with inline results, honest upstream failure with retry, history and session isolation, private tools, study batches, Ctrl+Enter, mobile pane takeover and CSS/mobile contract');
+console.log('AI Mode UI ok: flat simplified design contract, mount, hidden-state correctness, tool library, tabs, guide, attachments, live plan, full run with inline results, honest upstream failure with retry, history and session isolation, private tools, study batches, Ctrl+Enter, mobile pane takeover and CSS/mobile contract');

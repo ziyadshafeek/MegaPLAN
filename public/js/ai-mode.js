@@ -127,7 +127,7 @@ export function mountAIMode(root, tool) {
               <div class="mai-field">
                 <div class="mai-drop" id="${uid}-drop" role="button" tabindex="0" aria-label="Add files">
                   <strong>Attach files</strong>
-                  PDF · images · audio · CSV · Word · text — drop here, tap to browse
+                  Drop them here, or tap to choose
                   <input type="file" multiple id="${uid}-file" class="hidden"
                     accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.md,.csv,.tsv,.json,.xml,.html,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.mp3,.wav,.m4a,.mp4,.webm,.svg,.epub">
                 </div>
@@ -136,7 +136,7 @@ export function mountAIMode(root, tool) {
 
               <div class="mai-field">
                 <label class="mai-label" for="${uid}-links">Links <span class="mai-hint">YouTube, playlists, articles</span></label>
-                <div style="display:flex;gap:8px">
+                <div class="mai-field-inline">
                   <input class="mai-input" id="${uid}-link" placeholder="https://www.youtube.com/watch?v=…" inputmode="url" autocomplete="off">
                   <button class="mai-btn sm" id="${uid}-link-add">Add</button>
                 </div>
@@ -146,14 +146,14 @@ export function mountAIMode(root, tool) {
               <div class="mai-field">
                 <label class="mai-label" for="${uid}-prompt">What do you want? <span class="mai-hint">Ctrl/⌘ + Enter to run</span></label>
                 <textarea class="mai-textarea" id="${uid}-prompt" rows="3"
-                  placeholder="e.g. Research <topic> on Wikipedia, list 6 PubMed papers on <condition>, and deliver one PDF with every source listed."></textarea>
+                  placeholder="Research solar power in Kerala from Wikipedia, then make a PDF with every source listed."></textarea>
               </div>
 
               <div class="mai-row">
                 <div class="mai-field">
                   <label class="mai-label" for="${uid}-mode">Study mode</label>
                   <select class="mai-select" id="${uid}-mode">
-                    <option value="auto">Auto — decide for me</option>
+                    <option value="auto">Auto</option>
                     <option value="batch">Batch — one prompt for many questions</option>
                     <option value="per">Per question — NotebookLM shape</option>
                   </select>
@@ -220,7 +220,7 @@ export function mountAIMode(root, tool) {
               <button class="mai-btn sm ghost" id="${uid}-dl-answer">Download</button>
             </header>
             <div class="mai-card-body">
-              <pre class="mai-step-pre" id="${uid}-answer" style="max-height:300px">Nothing yet — run a request.</pre>
+              <pre class="mai-step-pre mai-answer" id="${uid}-answer">Nothing yet — run a request.</pre>
             </div>
           </div>
 
@@ -240,12 +240,12 @@ export function mountAIMode(root, tool) {
               <button class="mai-btn sm ghost" id="${uid}-copy-prompt">Copy</button>
             </header>
             <div class="mai-card-body">
-              <div class="mai-row three" style="margin-bottom:8px">
+              <div class="mai-row three mb">
                 <button class="mai-btn sm" data-prompt="gemini">AI Studio</button>
                 <button class="mai-btn sm" data-prompt="notebooklm">NotebookLM</button>
                 <button class="mai-btn sm" data-prompt="assistant">Assistant</button>
               </div>
-              <pre class="mai-step-pre" id="${uid}-promptpack" style="max-height:220px">Runs with the request.</pre>
+              <pre class="mai-step-pre mai-promptbox" id="${uid}-promptpack">Runs with the request.</pre>
             </div>
           </div>
 
@@ -399,7 +399,7 @@ export function mountAIMode(root, tool) {
   }
   function renderFiles() {
     el.files.innerHTML = state.files.map((f, i) =>
-      `<span class="mai-chip"><b>${esc(f.name)}</b><span style="color:var(--mai-text-3)">${Math.max(1, Math.round(f.size / 1024))} KB</span><button class="x" data-rm="${i}" aria-label="Remove ${esc(f.name)}">×</button></span>`
+      `<span class="mai-chip"><b>${esc(f.name)}</b><small>${Math.max(1, Math.round(f.size / 1024))} KB</small><button class="x" data-rm="${i}" aria-label="Remove ${esc(f.name)}">×</button></span>`
     ).join('');
     el.files.querySelectorAll('[data-rm]').forEach(b => {
       b.onclick = () => { state.files.splice(Number(b.dataset.rm), 1); renderFiles(); refreshPlan(); };
@@ -490,7 +490,7 @@ export function mountAIMode(root, tool) {
       <div class="mai-empty">
         <div class="glyph" aria-hidden="true">MP</div>
         <h3>Nothing planned yet</h3>
-        <p>Describe an outcome, attach a file or paste a link. The chain appears here before anything runs — every step says why it is there.</p>
+        <p>Describe what you want. The chain appears here before anything runs.</p>
       </div>`;
   }
 
@@ -510,7 +510,7 @@ export function mountAIMode(root, tool) {
       <article class="mai-step is-${stateClass}" data-state="${stateClass}" data-step="${esc(s.id || '')}">
         <div class="mai-step-n">${s.n ?? '·'}</div>
         <div class="mai-step-main">
-          <div class="mai-step-title">${tag}<span>${esc(s.title || '')}</span>${s.toolTitle && s.toolTitle !== s.title ? `<span style="color:var(--mai-text-3);font-weight:400;font-size:12.5px">${esc(s.toolTitle)}</span>` : ''}</div>
+          <div class="mai-step-title">${tag}<span>${esc(s.title || '')}</span>${s.toolTitle && s.toolTitle !== s.title ? `<span class="mai-step-alt">${esc(s.toolTitle)}</span>` : ''}</div>
           ${s.why ? `<p class="mai-step-why">${esc(s.why)}</p>` : ''}
           ${s.detail && stateClass === 'pending' ? `<p class="mai-step-detail">${esc(s.detail)}</p>` : ''}
           ${res ? `<div class="mai-step-out ${res.ok ? 'ok' : 'bad'}"><span class="lbl">${res.ok ? 'Result' : 'Stopped'}</span>${esc(res.summary || '')}</div>` : ''}
@@ -938,8 +938,8 @@ export function mountAIMode(root, tool) {
         </table></div>`);
       }
       if (section.limits?.length) {
-        parts.push(section.limits.map(l => `<div class="mai-recipe"><div class="top"><span class="mai-badge" style="background:rgba(244,88,92,.14);color:#f6c0c1;border-color:rgba(244,88,92,.3)">not done</span></div>
-          <b style="font-size:13.5px">${esc(l.no)}</b><p class="does">Instead: ${esc(l.instead)}</p></div>`).join(''));
+        parts.push(section.limits.map(l => `<div class="mai-recipe"><div class="top"><span class="mai-badge off">not done</span></div>
+          <b class="mai-lead">${esc(l.no)}</b><p class="does">Instead: ${esc(l.instead)}</p></div>`).join(''));
       }
       parts.push('</section>');
     }
