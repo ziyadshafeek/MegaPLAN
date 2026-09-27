@@ -1,4 +1,6 @@
 import * as kit from './kit.js';
+import { mountVideoTool } from './video-tools.js';
+import { repairSubtitles, subtitleText, subtitleStats } from './subtitle-tools.js';
 import { HANDLERS, textTool, calcTool, fileTool, aiTool, imageOp, audioBufferTool, wavFromBuffer, businessDoc, qrDataUrl } from './engines.js';
 import { mountAudioStudio } from './audio-studio.js';
 import { mountYouTubeTranscript, mountYouTubePlaylist, mountYouTubeChapter } from './youtube-tools.js';
@@ -368,90 +370,69 @@ Object.assign(HANDLERS, {
 });
 
 Object.assign(HANDLERS, {
-  'Video Duration': (r, t) => fileTool(r, t, { accept: 'video/*', label: 'Choose a video', run: 'Inspect' }, async files => {
-    if (!files[0]) throw Error('Choose a video.');
-    const v = document.createElement('video'); v.src = URL.createObjectURL(files[0]); await v.play().catch(() => {}); v.pause();
-    return `${files[0].name}\nDuration: ${Number.isFinite(v.duration) ? v.duration.toFixed(2) : '?'} s\nSize: ${Math.round(files[0].size / 1024)} KB`;
-  }),
-  'Video Metadata Viewer': (r, t) => HANDLERS['Video Duration'](r, t),
-  'Video Thumbnail Extractor': (r, t) => fileTool(r, t, { accept: 'video/*', label: 'Choose a video', run: 'Capture frame' }, async files => {
-    if (!files[0]) throw Error('Choose a video.');
-    const v = document.createElement('video'); v.src = URL.createObjectURL(files[0]); v.muted = true; await v.play().catch(() => {}); v.pause(); v.currentTime = 0.1;
-    await new Promise(res => v.onseeked = res);
-    const c = document.createElement('canvas'); c.width = v.videoWidth; c.height = v.videoHeight; c.getContext('2d').drawImage(v, 0, 0);
-    await canvasToFile(c, 'image/jpeg', 0.9, 'frame.jpg'); return `${c.width}×${c.height}`;
-  }),
-  'Extract Frames': (r, t) => HANDLERS['Video Thumbnail Extractor'](r, t),
-  'Video to GIF': (r, t) => HANDLERS['Video Thumbnail Extractor'](r, t),
-  'Mute Video': (r, t) => fileTool(r, t, { accept: 'video/*', label: 'Choose a video', run: 'Note' }, async () => 'This browser desk can inspect and capture frames. Re-encoding a muted MP4 needs a heavier encoder than this page ships.'),
-  'Video Compressor': (r, t) => HANDLERS['Mute Video'](r, t),
-  'Video Trimmer': (r, t) => HANDLERS['Mute Video'](r, t),
-  'Video Cutter': (r, t) => HANDLERS['Mute Video'](r, t),
-  'Video Merger': (r, t) => HANDLERS['Mute Video'](r, t),
-  'Extract Audio': (r, t) => HANDLERS['Mute Video'](r, t),
-  'GIF to MP4': (r, t) => HANDLERS['Mute Video'](r, t),
-  'MP4 to WebM': (r, t) => HANDLERS['Mute Video'](r, t),
-  'WebM to MP4': (r, t) => HANDLERS['Mute Video'](r, t),
-  'Resize Video': (r, t) => HANDLERS['Mute Video'](r, t),
-  'Crop Video': (r, t) => HANDLERS['Mute Video'](r, t),
-  'Rotate Video': (r, t) => HANDLERS['Mute Video'](r, t),
-  'Video Contact Sheet': (r, t) => HANDLERS['Video Thumbnail Extractor'](r, t),
-  'Subtitle Extractor': (r, t) => textTool(r, t, s => s.split(/\r?\n/).map(x => x.trim()).filter(x => x && x !== 'WEBVTT' && !/^\d+$/.test(x) && !/-->/.test(x)).join('\n'), '<p class="muted">Paste SRT/VTT captions to extract dialogue; video files are not decoded here.</p>'),
-  'Subtitle Formatter': (r, t) => textTool(r, t, s => s.replace(/\r/g, '')),
-  'Subtitle Timing Helper': (r, t) => textTool(r, t, (s, body) => {
-    // Reads SRT/VTT, shifts every cue by a signed offset, enforces a minimum
-    // gap and a per-line cap, and writes a valid file back. It reports the
-    // collisions it could not fix instead of silently shipping them.
-    const shift = Number(body.querySelector('#shift').value) || 0;
-    const gap = Number(body.querySelector('#gap').value) || 0;
-    const maxChars = Number(body.querySelector('#cps').value) || 0;
-    const toMs = (t, sep) => {
-      const m = String(t).trim().match(/^(?:(\d+):)?(\d+):(\d+)[.,](\d+)$/);
-      if (!m) return null;
-      return ((Number(m[1] || 0) * 60 + Number(m[2])) * 60 + Number(m[3])) * 1000 + Number(m[4].padEnd(3, '0').slice(0, 3));
-    };
-    const fmt = (ms, comma) => {
-      const s = Math.max(0, ms) / 1000;
-      const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, sec = Math.floor(s % 60), milli = Math.round((s % 1) * 1000);
-      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}${comma ? ',' : '.'}${String(milli).padStart(3, '0')}`;
-    };
-    const blocks = s.replace(/\r/g, '').split(/\n\s*\n/).map(b => b.trim()).filter(Boolean);
-    const cues = [];
-    for (const block of blocks) {
-      const lines = block.split('\n');
-      const ti = lines.findIndex(l => l.includes('-->'));
-      if (ti < 0) continue;
-      const [from, rest] = lines[ti].split('-->').map(x => x.trim());
-      const to = (rest || '').split(/\s+/)[0];
-      const a = toMs(from), z = toMs(to);
-      if (a == null || z == null) continue;
-      cues.push({ a, z, text: lines.slice(ti + 1).join('\n').trim(), comma: /,/.test(from) });
-    }
-    if (!cues.length) throw Error('No SRT/VTT cues found. Paste captions with 00:00:00,000 --> 00:00:02,000 lines.');
-    const warnings = [];
-    const out = cues.map((c, i) => {
-      let a = c.a + shift * 1000, z = c.z + shift * 1000;
-      if (z <= a) z = a + 800;
-      const prev = cues[i - 1];
-      if (gap && prev && a - prev.z < gap) { a = prev.z + gap; z = Math.max(z, a + 400); warnings.push(`cue ${i + 1} was pushed to keep the ${gap} ms gap`); }
-      let text = c.text;
-      if (maxChars) {
-        const words = text.split(/\s+/);
-        if (words.length > maxChars) { text = `${words.slice(0, maxChars).join(' ')}…`; warnings.push(`cue ${i + 1} was cut to ${maxChars} words`); }
-      }
-      return { a, z, text, comma: c.comma, n: i + 1 };
+  // The video desk. Fourteen of these used to share one handler that printed a
+  // refusal, and "Extract Frames" and "Video to GIF" both returned a single
+  // JPEG. They now run the real engine: public/js/video-engine.js.
+  'Video Duration': (r, t) => mountVideoTool(r, t),
+  'Video Metadata Viewer': (r, t) => mountVideoTool(r, t),
+  'Video Thumbnail Extractor': (r, t) => mountVideoTool(r, t),
+  'Public Video Frame Extractor': (r, t) => mountVideoTool(r, t),
+  'Extract Frames': (r, t) => mountVideoTool(r, t),
+  'Video Contact Sheet': (r, t) => mountVideoTool(r, t),
+  'Video to GIF': (r, t) => mountVideoTool(r, t),
+  'Extract Audio': (r, t) => mountVideoTool(r, t),
+  'Video Trimmer': (r, t) => mountVideoTool(r, t),
+  'Video Cutter': (r, t) => mountVideoTool(r, t),
+  'Mute Video': (r, t) => mountVideoTool(r, t),
+  'Video Compressor': (r, t) => mountVideoTool(r, t),
+  'Resize Video': (r, t) => mountVideoTool(r, t),
+  'Crop Video': (r, t) => mountVideoTool(r, t),
+  'Rotate Video': (r, t) => mountVideoTool(r, t),
+  'Video Merger': (r, t) => mountVideoTool(r, t),
+  'MP4 to WebM': (r, t) => mountVideoTool(r, t),
+  'WebM to MP4': (r, t) => mountVideoTool(r, t),
+  'GIF to MP4': (r, t) => mountVideoTool(r, t),
+  'Subtitle Extractor': (r, t) => textTool(r, t, s => {
+    const dialogue = subtitleText(s);
+    if (!dialogue) throw Error('No subtitle cues were found. Paste captions that contain 00:00:01,000 --> 00:00:03,000 lines.');
+    const stats = subtitleStats(s);
+    return dialogue;
+  }, '<p class="muted">Paste SRT or VTT captions. The dialogue comes out without timings, ready for translation, quoting or search.</p>'),
+  'Subtitle Formatter': (r, t) => textTool(r, t, (s, body) => {
+    const vtt = body.querySelector('#asVtt')?.value === 'vtt';
+    const r = repairSubtitles(s, {
+      shiftMs: (Number(body.querySelector('#shift')?.value) || 0) * 1000,
+      minGapMs: Number(body.querySelector('#gap')?.value) || 0,
+      maxLineLength: Number(body.querySelector('#cols')?.value) || 0,
+      maxLines: Number(body.querySelector('#lines')?.value) || 0,
+      targetCps: Number(body.querySelector('#cps')?.value) || 17,
+      vtt: vtt ? true : null
     });
-    const body_text = out.map(c => `${c.n}\n${fmt(c.a, c.comma)} --> ${fmt(c.z, c.comma)}\n${c.text}`).join('\n\n');
-    const note = warnings.length ? `\n\nFixed ${warnings.length} issue(s):\n- ${warnings.slice(0, 6).join('\n- ')}` : '\n\nNo timing conflicts found.';
-    return `${shift >= 0 ? '+' : ''}${shift} ms applied to ${out.length} cue(s).${note}\n\n${body_text}`;
-  }, `<div class="field-row">
-      <label class="field-label">Shift (ms)<input id="shift" class="num" type="number" value="0" step="50"></label>
-      <label class="field-label">Min gap (ms)<input id="gap" class="num" type="number" value="0" step="100"></label>
-      <label class="field-label">Max words/cue<input id="cps" class="num" type="number" value="0" min="0"></label>
+    if (!r.cues.length) throw Error(r.notes.join(' '));
+    return r.notes.join('\n') + '\n\n' + r.text;
+  }, `<p class="muted">Repairs the timings, renumbers the cues, wraps the lines and reports what it changed. A subtitle file that players reject is almost always a timing or a line-length problem.</p>
+    <div class="field-row">
+      <label class="field-label">Shift (seconds)<input id="shift" class="num" type="number" value="0" step="0.5"></label>
+      <label class="field-label">Min gap (ms)<input id="gap" class="num" type="number" value="40" step="20"></label>
+      <label class="field-label">Characters per line<input id="cols" class="num" type="number" value="42" min="0"></label>
+    </div>
+    <div class="field-row">
+      <label class="field-label">Lines per cue<input id="lines" class="num" type="number" value="2" min="0" max="4"></label>
+      <label class="field-label">Max characters per second<input id="cps" class="num" type="number" value="17" min="5" max="40"></label>
+      <label class="field-label">Write as<select id="asVtt" class="field"><option value="keep">Keep the input format</option><option value="vtt">WebVTT</option></select></label>
     </div>`),
+  'Subtitle Timing Helper': (r, t) => HANDLERS['Subtitle Formatter'](r, t),
   'Transcript to SRT': (r, t) => textTool(r, t, s => s.split(/\n\s*\n/).map((p, i) => `${i + 1}\n00:00:${String(i * 5).padStart(2, '0')},000 --> 00:00:${String(i * 5 + 4).padStart(2, '0')},000\n${p.trim()}`).join('\n\n')),
-  'SRT to VTT': (r, t) => textTool(r, t, s => 'WEBVTT\n\n' + s.replace(/(\d+),(\d+)/g, '$1.$2')),
-  'VTT to SRT': (r, t) => textTool(r, t, s => s.replace(/^WEBVTT\s*/i, '').replace(/(\d+)\.(\d+)/g, '$1,$2').trim()),
+  'SRT to VTT': (r, t) => textTool(r, t, s => {
+    const r = repairSubtitles(s, { vtt: true, maxLineLength: 0, maxLines: 0, minGapMs: 0, minDurationMs: 0, targetCps: 0, trimIdle: false, fixOverlaps: false });
+    if (!r.cues.length) throw Error('No SRT cues were found. Paste a file with 00:00:01,000 --> 00:00:03,000 lines.');
+    return r.text;
+  }),
+  'VTT to SRT': (r, t) => textTool(r, t, s => {
+    const r = repairSubtitles(s, { vtt: false, maxLineLength: 0, maxLines: 0, minGapMs: 0, minDurationMs: 0, targetCps: 0, trimIdle: false, fixOverlaps: false });
+    if (!r.cues.length) throw Error('No VTT cues were found. Paste a file with 00:00:01.000 --> 00:00:03.000 lines.');
+    return r.text;
+  }),
   'Frame Rate Calculator': (r, t) => calcTool(r, t, ['Frames', 'Seconds'], (f, s) => s ? `${(f / s).toFixed(3)} fps` : 'Enter seconds.'),
   'Video Bitrate Calculator': (r, t) => calcTool(r, t, ['Size MB', 'Duration s'], (m, d) => d ? `${((m * 8 * 1024) / d).toFixed(1)} kbps` : 'Enter duration.'),
 });

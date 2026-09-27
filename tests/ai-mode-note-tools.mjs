@@ -9,6 +9,10 @@
  */
 import assert from 'node:assert/strict';
 import {
+  parseTimestamp, formatTimestamp, parseCues, formatCues, repairSubtitles,
+  subtitleText, subtitleStats, wrapText
+} from '../public/js/subtitle-tools.js';
+import {
   sentences, paragraphs, words, keyTerms, keyPoints, actionItems, extractCitations,
   extractEntities, detectHeadings, sectionise, makeFlashcards, makeQuiz,
   makeAbstract, cleanText, summariseLongText
@@ -224,6 +228,96 @@ test('empty input never produces invented content anywhere', () => {
   assert.deepEqual(cleanText(''), '');
   assert.equal(summariseLongText('').stats.sentences, 0);
   assert.equal(paragraphs('').length, 0);
+});
+
+/* ------------------------------------------------------------------ *
+ * Subtitles
+ *
+ * `Subtitle Formatter` used to be `input.replace(/\r/g, '')`. A player
+ * rejects a file for its timings and its line lengths, not its line endings, so
+ * these check the rules that actually matter.
+ * ------------------------------------------------------------------ */
+
+test('a subtitle timestamp is read and written back exactly', () => {
+  assert.equal(parseTimestamp('00:00:01,500'), 1500);
+  assert.equal(parseTimestamp('00:01:02.500'), 62500);
+  assert.equal(parseTimestamp('01:02.5'), 62500);
+  assert.equal(parseTimestamp('nonsense'), null);
+  assert.equal(formatTimestamp(62500, true), '00:01:02,500');
+  assert.equal(formatTimestamp(62500, false), '00:01:02.500');
+  assert.equal(formatTimestamp(-5), '00:00:00.000', 'a negative time does not print as a broken one');
+  assert.equal(formatTimestamp(Infinity, true), '00:00:00,000', 'and neither does a broken one');
+  assert.equal(formatTimestamp(3723450), '01:02:03.450');
+  assert.equal(formatTimestamp(3723450, true), '01:02:03,450');
+});
+
+test('overlapping cues are actually separated', () => {
+  const srt = '1\n00:00:01,000 --> 00:00:02,000\nFirst\n\n2\n00:00:01,500 --> 00:00:03,000\nSecond\n';
+  const out = repairSubtitles(srt).text;
+  const times = [...out.matchAll(/(\d\d:\d\d:\d\d,\d\d\d) --> (\d\d:\d\d:\d\d,\d\d\d)/g)].map(m => [m[1], m[2]]);
+  assert.equal(times.length, 2);
+  assert.ok(times[1][0] >= times[0][1], `the second cue must start after the first ends: ${JSON.stringify(times)}`);
+});
+
+test('a cue that flashes past is held, and a too-fast cue is lengthened', () => {
+  const r = repairSubtitles('1\n00:00:05,000 --> 00:00:05,100\nShort\n\n2\n00:00:10,000 --> 00:00:11,000\n' + 'word '.repeat(30).trim());
+  assert.match(r.text, /00:00:05,000 --> 00:00:05,900/, 'a 100ms cue is held to 900ms');
+  assert.ok(r.notes.join(' ').match(/lengthened/), 'the too-fast cue is reported: ' + r.notes.join(' '));
+});
+
+test('long lines are wrapped and the cue count is reported', () => {
+  const r = repairSubtitles('1\n00:00:01,000 --> 00:00:04,000\n' + 'alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu');
+  const lines = r.text.split('\n').filter(l => l && !/\d\d:\d\d/.test(l) && l !== '1');
+  assert.ok(lines.every(l => l.length <= 44), 'no line runs away: ' + JSON.stringify(lines));
+  assert.match(r.notes[0], /1 cues, SRT/);
+});
+
+test('a shift moves every cue by the same amount', () => {
+  const r = repairSubtitles('1\n00:00:10,000 --> 00:00:12,000\nHello\n', { shiftMs: -2500 });
+  assert.match(r.text, /00:00:07,500 --> 00:00:09,500/);
+  assert.match(r.notes.join(' '), /shifted -2\.50s/);
+});
+
+test('a file with no cues says so instead of returning nothing', () => {
+  const r = repairSubtitles('just some words' + String.fromCharCode(10) + 'with no timings');
+  assert.equal(r.cues.length, 0);
+  assert.match(r.notes.join(' '), /No subtitle cues/);
+});
+
+test('SRT and VTT round-trip without losing a cue or moving a time', () => {
+  const srt = '1\n00:00:01,000 --> 00:00:02,000\nFirst\n\n2\n00:00:03,250 --> 00:00:04,500\nSecond\n';
+  const vtt = repairSubtitles(srt, { vtt: true, fixOverlaps: false, minGapMs: 0, minDurationMs: 0, targetCps: 0, trimIdle: false, maxLineLength: 0, maxLines: 0 }).text;
+  assert.match(vtt, /^WEBVTT/);
+  assert.match(vtt, /00:00:01\.000 --> 00:00:02\.000/);
+  assert.match(vtt, /00:00:03\.250 --> 00:00:04\.500/);
+  const back = repairSubtitles(vtt, { vtt: false, fixOverlaps: false, minGapMs: 0, minDurationMs: 0, targetCps: 0, trimIdle: false, maxLineLength: 0, maxLines: 0 }).text;
+  assert.equal(back, srt, 'VTT to SRT is the original file again');
+});
+
+test('VTT cue settings survive a round trip', () => {
+  const vtt = 'WEBVTT\n\n00:00:01.000 --> 00:00:02.000 align:start position:10%\nHello\n';
+  const srt = repairSubtitles(vtt, { vtt: false, fixOverlaps: false, minGapMs: 0, minDurationMs: 0, targetCps: 0, trimIdle: false, maxLineLength: 0, maxLines: 0 }).text;
+  assert.match(srt, /00:00:01,000 --> 00:00:02,000/);
+  assert.doesNotMatch(srt, /align:start/, 'VTT-only settings do not end up in the SRT');
+});
+
+test('the extractor gives dialogue with no timings, and counts it', () => {
+  const srt = '1\n00:00:01,000 --> 00:00:02,000\nHello there\n\n2\n00:00:03,000 --> 00:00:04,000\nSecond line\n';
+  assert.equal(subtitleText(srt), 'Hello there\nSecond line');
+  const st = subtitleStats(srt);
+  assert.equal(st.cues, 2);
+  assert.equal(st.words, 4);
+  assert.equal(st.endMs, 4000);
+  assert.ok(st.cps > 0);
+  assert.equal(subtitleText('not a subtitle file at all'), 'not a subtitle file at all', 'plain text passes through');
+});
+
+test('line wrapping never loses a word', () => {
+  const long = 'one two three four five six seven eight nine ten eleven twelve thirteen fourteen';
+  const wrapped = wrapText(long, 20, 2);
+  assert.ok(wrapped.split('\n').length <= 2);
+  assert.match(wrapped, /…$/, 'the cut is marked rather than silent');
+  assert.equal(wrapText('short', 40).split('\n').length, 1);
 });
 
 const failed = results.filter(r => !r[0]);

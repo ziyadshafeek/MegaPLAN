@@ -37,6 +37,7 @@ registered tool — not estimated.
 | PDF tools AI Mode can run itself (`ai-pdf-ops`) | **27 / 54** |
 | **OCR & AI tools with a real engine** | **24 / 27** (the nine OCR tools and twelve note tools were rebuilt in Phase 2) |
 | **Business tools with a real engine** | **24 of 40** (the 24 document makers; the 9 calculators/trackers and 3 beta directory tools were already live) |
+| **`beta` promises kept** | **24 of 40** (was 40) — the 16 video tools now work, so they are live; what is left is the map, directory, scraper and music-search families that need a backend this desk does not have |
 
 ### 2.1 What the audit found
 
@@ -130,7 +131,7 @@ Ordered by how much dead surface each removes.
 | **OCR** | 9 tools (`ocr-image-to-text`, `handwriting-ocr`, `receipt-ocr`, `invoice-ocr`, `table-ocr`, `form-ocr`, `id-document-ocr`, `document-classifier`, `document-json-extractor`) | **done** — in-browser read + deterministic parsers | shipped: `public/js/ocr-engine.js`, 15 extraction tests |
 | **Assistant/notes** | 15 (`smart-note-maker` … `entity-extractor`) | **12 done** on `public/js/note-tools.js`; 3 keep the assistant and say so | extractive key points, action items, citations, entities, abstract, cleaning, flashcards, quiz, notes and email summaries — all verified to copy rather than invent |
 | **Business** | 24 of the 40 | **done** — one generator with a schema per document | shipped: `public/js/business-docs.js`, numbering series, tax/total maths, Indian amount-in-words, a PDF that paginates; 29 tests |
-| **Video** | 26 (16 beta) | mostly beta | promote only what ffmpeg.wasm can truly do; keep the rest honestly beta | `public/js/video-engine.js` |
+| **Video** | 26 (16 were beta) | **done** — no ffmpeg download; the browser's own decoders and `MediaRecorder` | shipped: `public/js/video-engine.js` + `public/js/video-tools.js`, a real GIF89a encoder, 44 tests; all 16 promises kept |
 | **Audio** | 34 (5 beta) | good, 5 beta | close the 5 or state why not | `public/js/audio-studio.js` |
 | **Catalogued** | 3 | refused | keep refused; AI Mode must name the gap and offer YouTube *transcripts* instead | `planner.js` messaging |
 

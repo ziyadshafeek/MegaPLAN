@@ -69,7 +69,26 @@ tools still use the assistant on purpose — `Text Rewriter`, `Study Guide Maker
 and `Transcript Summarizer` — because rewriting and sequencing genuinely need a
 model, and their copy now says so.
 
-What is left in OCR & AI: those three, and Video is 16 of the 40 `beta` tools.
+What is left in OCR & AI: those three.
+
+The video desk was the largest hole left. **Fourteen tools shared one handler
+that printed a refusal**, and `Extract Frames` and `Video to GIF` both returned
+a single JPEG called `frame.jpg` — neither extracted frames nor made a GIF. They
+now run `public/js/video-engine.js`: trimming, cutting a section out, muting,
+resizing, cropping, rotating, compressing, merging and converting all record
+through `MediaRecorder` and the browser's own decoders, with nothing uploaded;
+frames are sampled at real times and zipped; a contact sheet is one picture; and
+`Video to GIF` writes a real animated GIF from a real encoder (palette, LZW,
+loop flag — checked by reading the bytes back). `GIF to MP4` plays the GIF and
+re-records it, because a GIF is an image and not a video file. All 16 beta
+promises are now kept, and 24 `beta` tools remain — the map, directory and
+scraper families, which need a backend that this desk does not have.
+
+`Subtitle Formatter` used to be `input.replace(/\r/g, '')`. It, `Subtitle
+Timing Helper`, `SRT to VTT` and `VTT to SRT` now share a parser and a repair
+pass that separates overlapping cues, holds a cue that flashes past, slows one
+that is read too fast, wraps lines, renumbers, and reports every change — with
+the format converters leaving every timing exactly as it found it.
 
 The 24 business document tools all shared one template that fitted on a single
 page: it **silently dropped every line past the bottom of page one**, printed
@@ -80,6 +99,11 @@ delivery challan carries no tax, a payslip pays earnings less deductions — wit
 numbering series that continues, Indian amount-in-words, and a PDF that
 **paginates and repeats its column headings**. 29 tests hold the arithmetic, the
 parsing of what people actually paste, and the finished PDF bytes.
+
+Three of the 24 remaining `beta` tools are also worth naming: `Audio Dereverb`
+and `Voice Isolation` run a noise gate. A gate removes hiss between words; it
+cannot remove echo or separate a voice from a backing track, so they stay beta
+and say so.
 
 Each phase is a checkbox; do them in order, `npm test` green at every step.
 
@@ -103,7 +127,7 @@ Each phase is a checkbox; do them in order, `npm test` green at every step.
 - [x] OCR cluster (9 tools): real in-browser reader, image input, structured receipt/invoice/form/ID JSON, 15 extraction tests
 - [x] Notes/extractors: 12 deterministic engines (20 tests); 3 keep the assistant and say why
 - [x] Business (24 of the 40 Business tools): real generators with numbering series, per-document fields, tax maths and a paginating PDF — `public/js/business-docs.js`, 29 tests
-- [ ] Video (26, 16 beta): promote only what is genuinely done, keep the rest honest
+- [x] Video (26 tools, all 16 betas promoted): a real in-browser engine — `public/js/video-engine.js` records with the platform's own decoders and `MediaRecorder`, and a GIF89a encoder with its own LZW; 44 tests
 - [ ] Catalogued 3: keep refused, name the gap, offer transcript retrieval instead
 
 ## Phase 3 — PDF depth (54 tools)
