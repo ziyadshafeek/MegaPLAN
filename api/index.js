@@ -9,7 +9,7 @@
  */
 
 // Literal imports are required for Vercel @vercel/nft to bundle every handler.
-const ROUTES = ["agent-dispatch", "agent-health", "agent-plan", "agent-publish", "agent-status", "ai", "auto-master", "github-secret-setup", "inception", "inception-labs", "inspect", "kerala-ai", "kerala", "kerala-expansion", "map-auto", "map-directory", "map-scraper-v2", "map-scraper", "maps", "music-directory", "music-scraper", "open-music", "osint", "product-directory", "product-scraper", "presentation", "rate-limiter", "split-pdf", "source-status", "youtube-playlist", "youtube-transcript"];
+const ROUTES = ["agent-dispatch", "agent-health", "agent-plan", "agent-publish", "agent-status", "ai", "ai-mode", "auto-master", "github-secret-setup", "inception", "inception-labs", "inspect", "kerala-ai", "kerala", "kerala-expansion", "map-auto", "map-directory", "map-scraper-v2", "map-scraper", "maps", "music-directory", "music-scraper", "open-music", "osint", "product-directory", "product-scraper", "presentation", "pubmed", "rate-limiter", "split-pdf", "source-status", "youtube-playlist", "youtube-transcript"];
 const handlerCache = new Map();
 
 async function getHandler(route) {
@@ -23,6 +23,7 @@ async function getHandler(route) {
     case 'agent-publish': mod = await import('../lib/api/agent-publish.js'); break;
     case 'agent-status': mod = await import('../lib/api/agent-status.js'); break;
     case 'ai': mod = await import('../lib/api/ai.js'); break;
+    case 'ai-mode': mod = await import('../lib/api/ai-mode.js'); break;
     case 'auto-master': mod = await import('../lib/api/auto-master.js'); break;
     case 'github-secret-setup': mod = await import('../lib/api/github-secret-setup.js'); break;
     case 'inception': mod = await import('../lib/api/inception.js'); break;
@@ -43,6 +44,7 @@ async function getHandler(route) {
     case 'product-directory': mod = await import('../lib/api/product-directory.js'); break;
     case 'product-scraper': mod = await import('../lib/api/product-scraper.js'); break;
     case 'presentation': mod = await import('../lib/api/presentation.js'); break;
+    case 'pubmed': mod = await import('../lib/api/pubmed.js'); break;
     case 'rate-limiter': mod = await import('../lib/api/rate-limiter.js'); break;
     case 'split-pdf': mod = await import('../lib/api/split-pdf.js'); break;
     case 'source-status': mod = await import('../lib/api/source-status.js'); break;

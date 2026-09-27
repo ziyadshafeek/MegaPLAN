@@ -254,7 +254,10 @@ const SPECIFIC_VERBS = [
   'flatten', 'strip', 'purge', 'filter', 'group', 'ungroup', 'label', 'tag', 'rate', 'rank',
   'fetch', 'read', 'write', 'render', 'draw', 'plot', 'chart', 'graph', 'map', 'locate', 'search'
 ];
-const GENERIC_VERBS = ['make', 'create', 'generate', 'build', 'produce', 'prepare', 'give', 'get', 'do', 'use', 'find', 'show', 'list', 'write', 'need', 'want', 'please', 'run', 'start', 'open', 'search', 'check', 'tell', 'help', 'turn', 'change'];
+const GENERIC_VERBS = ['make', 'create', 'generate', 'build', 'produce', 'prepare', 'give', 'get', 'do', 'use', 'find', 'show', 'list', 'write', 'need', 'want', 'please', 'run', 'start', 'open', 'search', 'check', 'tell', 'help', 'turn', 'change',
+  // Operations that name a subject but are not the subject itself: "research Kerala", not "research kerala".
+  'research', 'analyse', 'analyze', 'summarise', 'summarize', 'explain', 'describe', 'compare',
+  'translate', 'extract', 'explore', 'investigate', 'collect', 'gather', 'brief'];
 const FORMAT_WORDS = [
   'pdf', 'csv', 'tsv', 'json', 'jsonl', 'xlsx', 'xls', 'docx', 'doc', 'pptx', 'ppt', 'txt', 'md',
   'markdown', 'html', 'css', 'xml', 'yaml', 'yml', 'epub', 'zip', 'rar', '7z', 'srt', 'vtt', 'jpg',
@@ -278,7 +281,9 @@ const NON_SUBJECTS = new Set([...GENERIC_VERBS, ...SPECIFIC_VERBS, ...FORMAT_WOR
   'meters', 'feet', 'inch', 'inches', 'cm', 'mm', 'kg', 'grams', 'litres', 'liters', 'gb', 'mb', 'tb',
   'rupees', 'rs', 'inr', 'usd', 'eur', 'percent', 'percentage', 'px', 'rem', 'em', 'vh', 'vw',
   'hz', 'khz', 'dpi', 'ppm', 'bit', 'bits', 'pixel', 'pixels', 'unit', 'units', 'value', 'values',
-  'big', 'small', 'large', 'tiny', 'huge'
+  'big', 'small', 'large', 'tiny', 'huge',
+  // Deliverable nouns. "with sources" asks for citations, it does not ask about sources.
+  'source', 'sources', 'citation', 'citations', 'reference', 'references', 'bibliography'
 ]);
 
 /**
@@ -299,7 +304,11 @@ const TASK_NOUNS = new Set(['question', 'paper', 'textbook', 'note', 'essay', 'r
   'today', 'tomorrow', 'yesterday', 'loan', 'interest', 'salary', 'tax', 'gst', 'profit',
   'loss', 'total', 'average', 'sum', 'count', 'size', 'weight', 'height', 'length',
   'video', 'videos', 'youtube', 'playlist', 'channel', 'caption', 'subtitle', 'qr',
-  'palette', 'website', 'profile', 'account', 'payment', 'leave', 'silence']);
+  'palette', 'website', 'profile', 'account', 'payment', 'leave', 'silence',
+  // Study-work nouns. "make notes and revision questions" operates on the material you
+  // attach; it is not a request to research "revision questions".
+  'revision', 'revisions', 'revision_note', 'revision_notes', 'recap', 'recaps',
+  'digest', 'summary', 'summaries', 'tldr', 'key_point', 'key_points', 'takeaway', 'takeaways']);
 
 const CONV_WORDS = new Set([...FORMAT_WORDS, 'word', 'excel', 'powerpoint', 'text', 'image', 'images',
   'audio', 'video', 'document', 'markdown', 'html', 'pdf', 'csv', 'json', 'yaml', 'xml', 'epub']);
@@ -560,7 +569,7 @@ const TOPIC_NOISE_WORDS = [
   'page', 'pages', 'poster', 'card', 'cards', 'list', 'table', 'chart', 'graph'
 ];
 const SOURCE_PHRASES = [
-  /from\s+(?:the\s+)?wikipedia(?:\s+(?:website|site|page|article))?/gi,
+  /(?:from|on|in|via|using)\s+(?:the\s+)?wikipedia(?:\s+(?:website|site|page|article))?/gi,
   /(?:using|via|through|from)\s+(?:the\s+)?(?:wiki|wikipedia|internet|web|online|google|openverse|osm|openstreetmap)/gi,
   /on\s+(?:the\s+)?(?:internet|web|online)/gi,
   /from\s+(?:the\s+)?(?:web|internet|online|sources?)\b/gi
@@ -587,7 +596,15 @@ export function extractTopic(prompt) {
   const subjectWords = parts.subjects.filter(w => !/^\d/.test(w));
   if (!subjectWords.length) return '';
   if (subjectWords.every(w => TASK_NOUNS.has(stem(w)))) return '';
-  return subjectWords.join(' ').slice(0, 140);
+  // "vitamin D deficiency" \u2014 a lone capital letter inside the subject belongs to it,
+  // otherwise the query quietly becomes "vitamin deficiency".
+  const glued = [];
+  for (const w of subjectWords) {
+    const prev = glued[glued.length - 1];
+    const pair = prev ? cleaned.match(new RegExp(`\\b${prev.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+([A-Z])\\s+${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`)) : null;
+    glued.push(pair ? `${prev} ${pair[1]} ${w}` : w);
+  }
+  return glued.join(' ').slice(0, 140);
 }
 
 function cleanTopic(value) {
@@ -735,13 +752,20 @@ const INTENT_RULES = [
     test: c => {
       const hits = [];
       const wiki = /\bwikipedia\b|\bwiki\b|\bwikidata\b|\bencyclopedia\b/i.test(c.prompt);
+      // Naming a scholarly source is the strongest research signal there is: the
+      // user has already chosen where the answer should come from.
+      const scholarly = /\b(pubmed|europe\s*pmc|arxiv|crossref|openalex|semantic scholar|doi|research paper|peer[- ]reviewed|papers?|articles?|journals?|literature|study|studies|systematic review|meta[- ]analysis|clinical trial|cohort study)\b/i.test(c.prompt);
+      const scholarlyVerb = /\b(find|search|look up|list|get|pull|summari[sz]e|gather|collect|review|compare)\b[^.?!\n]{0,60}\b(papers?|articles?|studies|research|literature|evidence|trials?|journals?|reviews?)\b/i.test(c.prompt)
+        || /\b(papers?|studies|research|evidence|literature|reviews?)\b[^.?!\n]{0,24}\b(on|about|regarding|for|of)\b/i.test(c.prompt);
       const infoWording = /\b(research|find (?:out|info|information|details)|tell me about|who (?:is|was)|what (?:is|are|was)|biography|life of|history of|article (?:on|about)|information (?:on|about)|details (?:on|about)|everything about|profile of|meaning of|definition of|explain|explain me|notes on|write about|report on|essay on|paragraph on)\b/i.test(c.prompt);
       const hasSubject = Boolean(c.topic) && c.subjects.length > 0;
       if (!hasSubject) return null;               // an operation on a format is not research
       const bare = !c.verbs.length && !c.genericVerbs.length && !c.files.length &&
         !c.links.length && !c.place && c.words.length <= 6;
-      if (!wiki && !infoWording && !bare) return null;
+      if (!wiki && !infoWording && !bare && !scholarly && !scholarlyVerb) return null;
       if (wiki) hits.push('mentions Wikipedia');
+      if (scholarly) hits.push('names a scholarly source');
+      if (scholarlyVerb) hits.push('asks for literature');
       if (infoWording) hits.push('asks for information');
       if (bare) hits.push('subject-only request');
       return { score: 2 + hits.length * 2, evidence: hits };
@@ -754,8 +778,10 @@ const INTENT_RULES = [
       if (/\bpdf\s+(?:to|2)\s+(?:text|json|csv|word|excel|markdown|html|image|jpg|png|epub|rtf|powerpoint)\b/i.test(c.prompt)) return null;
       if (/\b(?:to|into|as)\s+(?:a\s+)?(?:text|json|csv|xlsx|excel|word|docx|markdown|html|jpg|png|mp3|wav|srt|vtt)\b/i.test(c.prompt) &&
           !/\b(?:to|into|as)\s+(?:a\s+)?pdf\b/i.test(c.prompt)) return null;
-      const deliverable = /\b(?:to|into|as)\s+(?:a\s+)?pdf\b/i.test(c.prompt) ||
-        /\b(?:make|create|generate|build|produce|prepare|export|download|give|write)\b[^.!?\n]{0,48}\b(?:pdf|document|report|handout|ebook)\b/i.test(c.prompt) ||
+      const deliverable = /\b(?:to|into|as)\s+(?:a\s+|an\s+)?(?:\w+\s+){0,2}(?:pdf|document|report|handout|ebook)\b/i.test(c.prompt) ||
+        // "... then a PDF" / "... and a report" \u2014 the ask can sit in a later clause.
+        /\b(?:and|then|also|plus|end\s+up\s+with)\s+(?:a\s+|an\s+)?(?:\w+\s+){0,2}(?:pdf|document|report|handout|ebook)\b/i.test(c.prompt) ||
+        /\b(?:make|create|generate|build|produce|prepare|export|download|give|write|turn|render|print|save|compile|format)\b[^.!?\n]{0,80}\b(?:pdf|document|report|handout|ebook)\b/i.test(c.prompt) ||
         /\b(?:pdf|report|handout|ebook)\b[^.!?\n]{0,28}\b(?:of|about|on|for)\b/i.test(c.prompt);
       if (!deliverable) return null;
       const hits = ['wants a PDF/document as the deliverable'];
@@ -808,8 +834,10 @@ const INTENT_RULES = [
     id: 'map', label: 'Places, maps, routes, weather',
     test: c => {
       const hits = [];
-      if (/\b(map|maps|location|place|places|address|nearby|around me|directions?|route|routing|distance|latitude|longitude|geocode|pincode|area|city|town|village|weather|forecast|temperature|rain)\b/i.test(c.prompt)) hits.push('map/place wording used');
-      if (c.place) hits.push(`place detected: ${c.place.text}`);
+      if (/\b(map|maps|location|place|places|address|addresses|nearby|around me|directions?|route|routing|distance|latitude|longitude|geocode|pincode|area|city|town|village|weather|forecast|temperature|rain)\b/i.test(c.prompt)) hits.push('map/place wording used');
+      if (/\b(where (is|are)|locate|coordinates?|how far|how (do|can) i (get|reach)|show (it|them|me).*\bmap|postcode|pin ?code)\b/i.test(c.prompt)) hits.push('a place lookup was asked for');
+      // A place name on its own is not a map request \u2014 "the Kerala backwaters" is a subject, not a destination.
+      if (c.place && /\b(where|near|locat|address|map|weather|distance|direction|route|towards?)\b/i.test(c.prompt)) hits.push(`place detected: ${c.place.text}`);
       if (/\b(cafe|cafes|restaurant|hotels?|hospital|school|college|bank|atm|pharmacy|park|petrol|station|airport|temple|church|mosque|shop|stores?|mall|gym|salon|clinic)\b/i.test(c.prompt)) hits.push('point-of-interest category named');
       return hits.length ? { score: 2 + hits.length * 2, evidence: hits } : null;
     }
@@ -1035,6 +1063,26 @@ export const CAPABILITIES = {
 
 const STAGE_ORDER = { gather: 0, transform: 1, output: 2, assist: 3 };
 
+/**
+ * The executor contract.
+ *
+ * A capability in CAPABILITIES without a real implementation must not be marked
+ * `auto` — a step is only automatic when {@link canRun} says an executor
+ * exists. `public/js/ai-executors.js` implements exactly this set, and
+ * tests/ai-mode-planner.mjs asserts the two never drift apart.
+ */
+export const IMPLEMENTED_EXECUTORS = [
+  'research', 'article', 'web-read', 'youtube-transcript', 'youtube-playlist',
+  'file-read', 'pdf-read', 'map-place', 'map-nearby', 'map-route', 'map-weather',
+  'outline', 'combine', 'prompts', 'assistant', 'presentation', 'article-pdf',
+  'toolbus', 'new-tool'
+];
+
+/** True when AI Mode can really execute this capability on the client. */
+export function canRun(executor) {
+  return IMPLEMENTED_EXECUTORS.includes(String(executor || ''));
+}
+
 function step(partial) {
   const cap = CAPABILITIES[partial.executor] || {};
   return {
@@ -1053,7 +1101,7 @@ function step(partial) {
     why: partial.why || '',
     status: 'pending',
     result: null,
-    auto: partial.auto != null ? partial.auto : Boolean(partial.executor),
+    auto: partial.auto != null ? partial.auto : Boolean(partial.executor) && canRun(partial.executor),
     requires: partial.requires || [],
     outputKind: partial.outputKind || cap.output || 'text',
     optional: Boolean(partial.optional)

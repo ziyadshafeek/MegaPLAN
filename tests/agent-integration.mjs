@@ -20,9 +20,11 @@ function call(handler, method, url, body = {}, headers = {}) {
 
 const index = await call(router, 'GET', '/api');
 assert.equal(index.status, 200);
-assert.equal(index.data.count, 31);
+assert.equal(index.data.count, index.data.routes.length, 'route count must match the published list');
 assert.ok(index.data.routes.includes('presentation'));
 assert.ok(index.data.routes.includes('open-music'));
+assert.ok(index.data.routes.includes('ai-mode'), 'AI Mode orchestrator route missing');
+assert.ok(index.data.routes.includes('pubmed'), 'PubMed research route missing');
 const source = fs.readFileSync(new URL('../api/index.js', import.meta.url), 'utf8');
 assert.doesNotMatch(source, /import\(importPath\)/);
 for (const route of index.data.routes) {

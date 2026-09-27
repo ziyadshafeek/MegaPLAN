@@ -1,493 +1,972 @@
 /**
- * MegaPLAN AI Mode — Combine Tools (Future Paid, currently free)
- * Complex workflow: user gives files + complex request, AI chains tools.
- * Features:
- * - 4-digit session code to remember private tools/pages
- * - File upload (PDF, images, audio, etc)
- * - Chat with AI agent that knows about all 560+ tools
- * - AI detects deficit and can build new tool via Wiki Agent
- * - When user builds tool, it's private until they click Push for review
- * - Prompt generation for Google AI Studio (Gemini 1M) / NotebookLM
+ * MegaPLAN AI Mode — the interface.
+ *
+ * What changed and why (the previous build was replaced end to end):
+ *  - it now uses the shared deterministic planner (`planner.js`) instead of a
+ *    hard-coded prompt blob, so the chain is inspectable, reproducible and testable
+ *  - it now actually *runs* the chain (`ai-executors.js`) instead of printing
+ *    prompts and hoping
+ *  - it degrades honestly: no hosted key means the hosted step is skipped and
+ *    labelled, never faked
+ *  - the surface is a real instrument panel: mobile-first, keyboard-friendly,
+ *    no inline styles, no wall-of-text greeting
  */
-import { esc, downloadBlob, downloadText, mountShell, setOut, toast } from './kit.js';
-import { mountTool } from './engines.js';
-import { presentationTopic, createPresentation } from './presentation-tool.js';
+import { esc, toast } from './kit.js';
+import {
+  planRequest, buildIndex, planToText, normalizeRequest, draftToolSpec, PLANNER_VERSION
+} from './planner.js';
+import { runStep, buildBatchesLocally, batchToMarkdown, triggerDownload, canExecute, readFileText } from './ai-executors.js';
+import { citationList, renderCitationsText, summarize, truncate, revisionQuestions } from './ai-compose.js';
+import { GUIDE } from './ai-guide.js';
 
-const LS_SESSION = 'mp-ai-mode-session';
-const LS_HISTORY = 'mp-ai-mode-history';
+const LS = {
+  session: 'mp-ai-mode-session',
+  history: 'mp-ai-mode-history',
+  private: id => `mp-ai-private-tools-${id}`,
+  settings: 'mp-ai-mode-settings'
+};
+const HISTORY_MAX = 40;
+const PRIVATE_MAX = 40;
 
-function gen4Digit() {
-  return String(Math.floor(1000 + Math.random() * 9000));
+const EXAMPLES = [
+  'Research solar power in Kerala from Wikipedia and give me a PDF with sources',
+  'Create a PowerPoint about the Kerala backwaters with 8 slides',
+  'Find 6 recent PubMed papers on vitamin D deficiency and summarise the findings',
+  'Make notes and revision questions from this lecture video',
+  'Turn the attached notes into a formatted PDF',
+  'Coffee shops near Fort Kochi, plus the weather there'
+];
+
+/* ------------------------------------------------------------------ *
+ * Storage helpers — every one is failure-tolerant. Private browsing,
+ * quota errors and corrupted JSON must never break the app.
+ * ------------------------------------------------------------------ */
+
+function lsGet(key, fallback) {
+  try {
+    const v = localStorage.getItem(key);
+    return v == null ? fallback : JSON.parse(v);
+  } catch { return fallback; }
+}
+function lsSet(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+  catch { return false; }
+}
+function newCode() { return String(Math.floor(1000 + Math.random() * 9000)); }
+function sessionCode() {
+  const existing = lsGet(LS.session, null);
+  if (typeof existing === 'string' && /^\d{4}$/.test(existing)) return existing;
+  const code = newCode();
+  lsSet(LS.session, code);
+  return code;
+}
+function loadPrivate(code) {
+  const list = lsGet(LS.private(code), []);
+  return Array.isArray(list) ? list.slice(0, PRIVATE_MAX) : [];
+}
+function savePrivate(code, list) {
+  return lsSet(LS.private(code), list.slice(0, PRIVATE_MAX));
+}
+function loadHistory() {
+  const list = lsGet(LS.history, []);
+  return Array.isArray(list) ? list.slice(0, HISTORY_MAX) : [];
+}
+function pushHistory(entry) {
+  const list = loadHistory().filter(h => h.prompt !== entry.prompt);
+  list.unshift({ ...entry, ts: Date.now() });
+  lsSet(LS.history, list.slice(0, HISTORY_MAX));
 }
 
-function getSession() {
-  let s = localStorage.getItem(LS_SESSION);
-  if (!s) {
-    s = gen4Digit();
-    localStorage.setItem(LS_SESSION, s);
-  }
-  return s;
-}
-
-function saveHistory(entry) {
-  const h = JSON.parse(localStorage.getItem(LS_HISTORY) || '[]');
-  h.push({ ...entry, ts: Date.now(), session: getSession() });
-  localStorage.setItem(LS_HISTORY, JSON.stringify(h.slice(-50)));
-}
+/* ------------------------------------------------------------------ *
+ * Mount
+ * ------------------------------------------------------------------ */
 
 export function mountAIMode(root, tool) {
-  const sessionCode = getSession();
-  const id = 'aim-' + Math.random().toString(36).slice(2, 6);
+  const code = sessionCode();
+  const uid = 'mai';
+
+  if (!document.getElementById('mai-styles')) {
+    const link = document.createElement('link');
+    link.id = 'mai-styles';
+    link.rel = 'stylesheet';
+    link.href = '/ai-mode.css';
+    document.head.appendChild(link);
+  }
 
   root.innerHTML = `
-  <div class="tool-pane" style="padding:0;display:flex;flex-direction:column;min-height:78vh;overflow:hidden">
-    <div style="padding:14px 16px;background:#1c1916;color:#f4efe6;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
-      <div>
-        <div class="tool-kicker" style="color:#e8b44c">AI MODE · COMBINE TOOLS · FUTURE PAID (FREE NOW)</div>
-        <h1 style="margin:4px 0 2px;font-size:22px">AI Mode — Your Private Agent</h1>
-        <p class="lede" style="margin:0;color:#cbbba8;max-width:68ch">Upload files, give complex request. AI chains OCR, PDF split, YouTube transcript, audio, etc. Your session code: <b style="color:#e8b44c;font-size:18px;letter-spacing:0.1em">${sessionCode}</b> — remember it to restore private tools. Tools you build stay private until you Push for review.</p>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn secondary" id="${id}-newcode" style="background:#2a241f;color:#f4efe6;border-color:#3a322c">New code</button>
-        <button class="btn secondary" id="${id}-history" style="background:#2a241f;color:#f4efe6">History</button>
-        <button class="btn ghost" id="${id}-clear" style="color:#f4efe6;border-color:#3a322c">Clear chat</button>
-      </div>
+<div class="mai" id="${uid}">
+  <div class="mai-bar">
+    <div class="mai-mark" aria-hidden="true">MP</div>
+    <div class="mai-titles">
+      <h1 class="mai-title">AI Mode</h1>
+      <p class="mai-sub" id="${uid}-status"><span class="mai-dot"></span><span>Starting…</span></p>
     </div>
-
-    <div style="display:grid;grid-template-columns:320px 1fr;flex:1;min-height:0;overflow:hidden" id="${id}-main">
-      <aside style="background:#efe6d8;border-right:1px solid #e0d5c4;padding:12px;overflow:auto;display:flex;flex-direction:column;gap:12px">
-        <div class="panel" style="padding:12px">
-          <b style="font-size:13px">1. Upload files</b>
-          <p class="muted" style="margin:4px 0 8px">PDFs, images, audio, YouTube URL, etc. AI will OCR if scanned.</p>
-          <div class="dropzone" id="${id}-drop" style="padding:16px 10px">
-            <div>Drop files or click</div>
-            <input id="${id}-file" type="file" multiple class="hidden" accept="*/*">
-          </div>
-          <div id="${id}-filelist" class="chip-row"></div>
-          <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-            <input id="${id}-yt" class="field" placeholder="YouTube URL for transcript" style="flex:1;min-width:140px">
-            <button class="btn secondary" id="${id}-yt-add" style="font-size:12px;padding:6px 10px">+ YouTube</button>
-          </div>
-        </div>
-
-        <div class="panel" style="padding:12px">
-          <b style="font-size:13px">2. Complex request</b>
-          <p class="muted" style="margin:4px 0 8px">Example: "Question paper PDF + textbook PDF → notes per question for Gemini 1M"</p>
-          <textarea id="${id}-prompt" class="input-area" style="min-height:90px" placeholder="Describe what you want… e.g.&#10;• Transcribe YouTube video and summarize&#10;• Split PDF into chapters and make prompts for NotebookLM&#10;• OCR scanned question paper + textbook → answer per question"></textarea>
-          <div class="field-row" style="margin-top:8px">
-            <select id="${id}-mode" class="sel"><option value="auto">Auto chain tools</option><option value="batch">Batch (all at once)</option><option value="per">Per question/item</option></select>
-            <select id="${id}-target" class="sel"><option value="gemini">Google AI Studio (Gemini 1M)</option><option value="notebooklm">NotebookLM</option><option value="local">Local AI (this browser)</option></select>
-          </div>
-          <label class="muted" style="display:flex;gap:6px;align-items:center;margin-top:8px;font-size:12px"><input type="checkbox" id="${id}-has-key"> I have API key (Gemini / OpenAI)</label>
-          <div class="button-row">
-            <button class="btn primary" id="${id}-run">Run AI Agent</button>
-            <button class="btn secondary" id="${id}-build-tool">Build new tool for this</button>
-          </div>
-        </div>
-
-        <div class="panel" style="padding:12px">
-          <b style="font-size:13px">Your private tools (session ${sessionCode})</b>
-          <div id="${id}-private" style="margin-top:8px;font-size:12px;color:#6e655b">No private tools yet. When AI detects deficit, it will build one. Use 4-digit code to restore.</div>
-          <div class="button-row" style="margin-top:8px">
-            <button class="btn ghost" id="${id}-export-private" style="font-size:11px">Export private</button>
-            <button class="btn ghost" id="${id}-push-review" style="font-size:11px">Push for public review</button>
-          </div>
-        </div>
-      </aside>
-
-      <section style="display:flex;flex-direction:column;min-width:0;min-height:0;background:#fffaf2">
-        <div id="${id}-chat" style="flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px"></div>
-        <div style="padding:10px;border-top:1px solid #e0d5c4;background:#f4efe6;display:flex;gap:8px">
-          <input id="${id}-chat-in" class="field" placeholder="Chat with AI agent… e.g. 'I have a scanned PDF question paper'" style="flex:1">
-          <button class="btn primary" id="${id}-chat-send">Send</button>
-        </div>
-        <div id="${id}-result" style="padding:12px;border-top:1px solid #e0d5c4;max-height:40vh;overflow:auto;display:none"></div>
-      </section>
-    </div>
-
-    <div style="padding:8px 12px;background:#1c1916;color:#cbbba8;font-size:11px;display:flex;gap:8px;flex-wrap:wrap">
-      <span>AI Mode combines 560+ tools. Files stay on device unless you use /api/ai. Future paid — free now.</span>
-      <span style="margin-left:auto">Tip: For large PDFs, use batch mode + Gemini 1M context (free in Google AI Studio).</span>
+    <div class="mai-bar-actions">
+      <button class="mai-btn ghost icon" id="${uid}-guide-btn" title="Guide" aria-label="Open the AI Mode guide">?</button>
+      <button class="mai-btn ghost icon" id="${uid}-hist-btn" title="History" aria-label="Open request history">⟲</button>
+      <button class="mai-btn ghost icon" id="${uid}-code-btn" title="Session code" aria-label="Session code">#</button>
     </div>
   </div>
-  <style>
-    .aim-bubble { border-radius:12px; padding:10px 12px; font-size:13px; line-height:1.45; max-width:92%; white-space:pre-wrap; }
-    .aim-bubble.user { align-self:flex-end; background:#c45c26; color:#fffaf2; }
-    .aim-bubble.agent { align-self:flex-start; background:#efe6d8; color:#1c1916; border:1px solid #e0d5c4; }
-    .aim-bubble.tool { align-self:flex-start; background:#1c1916; color:#eadfce; font-family:ui-monospace,monospace; font-size:12px; }
-    @media (max-width: 900px) {
-      #${id}-main { grid-template-columns: 1fr !important; }
-      #${id}-main aside { border-right:0; border-bottom:1px solid #e0d5c4; max-height:50vh; }
-    }
-  </style>
-  `;
 
-  const $ = sid => root.querySelector('#' + id + '-' + sid);
-  const chatEl = $(`chat`);
-  const resultEl = $(`result`);
-  const fileInput = $(`file`);
-  const drop = $(`drop`);
-  const fileListEl = $(`filelist`);
-  const privateEl = $(`private`);
+  <div class="mai-progress hidden" id="${uid}-progress"><i></i></div>
 
-  let files = [];
-  let youtubeUrls = [];
-  let privateTools = JSON.parse(localStorage.getItem(`mp-private-tools-${sessionCode}`) || '[]');
+  <div class="mai-body">
+    <div class="mai-cols mai-scroll">
 
-  function renderPrivate() {
-    if (!privateTools.length) {
-      privateEl.innerHTML = 'No private tools yet. When AI detects deficit, it will build one. Use 4-digit code to restore.';
-      return;
-    }
-    privateEl.innerHTML = privateTools.map(t => `
-      <div style="padding:6px 8px;border:1px solid #e0d5c4;border-radius:8px;margin-bottom:6px;background:#fff">
-        <b>${esc(t.title)}</b><br><small>${esc(t.slug)} · ${esc(t.summary||'')}</small>
-        <div style="margin-top:4px;display:flex;gap:4px">
-          <button class="btn ghost" data-open="${esc(t.slug)}" style="font-size:10px;padding:4px 6px">Open</button>
-          <button class="btn ghost" data-del="${esc(t.slug)}" style="font-size:10px;padding:4px 6px">Delete</button>
-        </div>
+      <div class="mai-col-main">
+        <!-- ============ COMPOSE ============ -->
+        <section class="mai-pane active" id="${uid}-pane-compose" aria-label="Request">
+          <div class="mai-card">
+            <header>
+              <h2>Request</h2>
+              <span class="mai-spacer"></span>
+              <span class="mai-chip" id="${uid}-count">0 files · 0 links</span>
+            </header>
+            <div class="mai-card-body mai-compose">
+
+              <div class="mai-field">
+                <div class="mai-drop" id="${uid}-drop" role="button" tabindex="0" aria-label="Add files">
+                  <strong>Attach files</strong>
+                  PDF · images · audio · CSV · Word · text — drop here, tap to browse
+                  <input type="file" multiple id="${uid}-file" class="hidden"
+                    accept=".pdf,.png,.jpg,.jpeg,.webp,.gif,.txt,.md,.csv,.tsv,.json,.xml,.html,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.mp3,.wav,.m4a,.mp4,.webm,.svg,.epub">
+                </div>
+                <div class="mai-chips" id="${uid}-files"></div>
+              </div>
+
+              <div class="mai-field">
+                <label class="mai-label" for="${uid}-links">Links <span class="mai-hint">YouTube, playlists, articles</span></label>
+                <div style="display:flex;gap:8px">
+                  <input class="mai-input" id="${uid}-link" placeholder="https://www.youtube.com/watch?v=…" inputmode="url" autocomplete="off">
+                  <button class="mai-btn sm" id="${uid}-link-add">Add</button>
+                </div>
+                <div class="mai-chips" id="${uid}-linklist"></div>
+              </div>
+
+              <div class="mai-field">
+                <label class="mai-label" for="${uid}-prompt">What do you want? <span class="mai-hint">Ctrl/⌘ + Enter to run</span></label>
+                <textarea class="mai-textarea" id="${uid}-prompt" rows="3"
+                  placeholder="e.g. Research <topic> on Wikipedia, list 6 PubMed papers on <condition>, and deliver one PDF with every source listed."></textarea>
+              </div>
+
+              <div class="mai-row">
+                <div class="mai-field">
+                  <label class="mai-label" for="${uid}-mode">Study mode</label>
+                  <select class="mai-select" id="${uid}-mode">
+                    <option value="auto">Auto — decide for me</option>
+                    <option value="batch">Batch — one prompt for many questions</option>
+                    <option value="per">Per question — NotebookLM shape</option>
+                  </select>
+                </div>
+                <div class="mai-field">
+                  <label class="mai-label" for="${uid}-target">Deliver to</label>
+                  <select class="mai-select" id="${uid}-target">
+                    <option value="file">A file here (PDF / PPTX / text)</option>
+                    <option value="gemini">Google AI Studio prompt pack</option>
+                    <option value="notebooklm">NotebookLM prompt pack</option>
+                    <option value="assistant">Writing-assistant pass</option>
+                    <option value="local">This browser only</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mai-field">
+                <span class="mai-label">Try one</span>
+                <div class="mai-examples" id="${uid}-examples"></div>
+              </div>
+
+              <div class="mai-row">
+                <button class="mai-btn primary block" id="${uid}-run">Run</button>
+                <button class="mai-btn block" id="${uid}-batches">Study batches</button>
+              </div>
+              <button class="mai-btn block hidden" id="${uid}-stop">Stop</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ RUN ============ -->
+        <section class="mai-pane" id="${uid}-pane-run" aria-label="Plan and results">
+          <div class="mai-card">
+            <header>
+              <h2>Plan</h2>
+              <span class="mai-spacer"></span>
+              <button class="mai-btn sm ghost" id="${uid}-copy-plan">Copy plan</button>
+            </header>
+            <div class="mai-plan-head">
+              <div class="mai-plan-summary" id="${uid}-plan-summary">Type a request to see the chain before anything runs.</div>
+              <button class="mai-btn sm" id="${uid}-run2">Run</button>
+            </div>
+            <div class="mai-steps" id="${uid}-steps"></div>
+          </div>
+        </section>
       </div>
-    `).join('');
-    privateEl.querySelectorAll('[data-open]').forEach(b => b.onclick = () => {
-      const slug = b.dataset.open;
-      const spec = privateTools.find(x => x.slug === slug);
-      if (spec) {
-        addBubble('agent', `Opening private tool: ${spec.title}\nSlug: ${spec.slug}\nThis is your private build, not public yet.`);
-        // Render preview
-        resultEl.style.display = 'block';
-        resultEl.innerHTML = `<div class="panel"><h3>${esc(spec.title)}</h3><p>${esc(spec.summary||'')}</p><pre style="white-space:pre-wrap;font-size:12px">${esc(JSON.stringify(spec, null, 2).slice(0, 4000))}</pre></div>`;
-      }
-    });
-    privateEl.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
-      privateTools = privateTools.filter(x => x.slug !== b.dataset.del);
-      localStorage.setItem(`mp-private-tools-${sessionCode}`, JSON.stringify(privateTools));
-      renderPrivate();
-    });
-  }
 
-  function renderFiles() {
-    fileListEl.innerHTML = [
-      ...files.map((f,i) => `<span class="file-chip">${esc(f.name)} · ${Math.round(f.size/1024)}KB <button data-rm="${i}" style="border:0;background:transparent;cursor:pointer">×</button></span>`),
-      ...youtubeUrls.map((u,i) => `<span class="file-chip">YT: ${esc(u.slice(0,40))} <button data-rmyt="${i}" style="border:0;background:transparent">×</button></span>`)
-    ].join('') || '<span class="muted">No files yet</span>';
-    fileListEl.querySelectorAll('[data-rm]').forEach(b => b.onclick = () => { files.splice(Number(b.dataset.rm),1); renderFiles(); });
-    fileListEl.querySelectorAll('[data-rmyt]').forEach(b => b.onclick = () => { youtubeUrls.splice(Number(b.dataset.rmyt),1); renderFiles(); });
-  }
+      <div class="mai-col-side">
+        <section class="mai-pane active" id="${uid}-pane-output" aria-label="Output">
+          <div class="mai-card">
+            <header>
+              <h3>Deliverables</h3>
+              <span class="mai-spacer"></span>
+              <span class="mai-chip" id="${uid}-deliv-count">0</span>
+            </header>
+            <div class="mai-card-body mai-list" id="${uid}-deliv"></div>
+          </div>
 
-  function addBubble(kind, text) {
-    const d = document.createElement('div');
-    d.className = 'aim-bubble ' + kind;
-    d.textContent = text;
-    chatEl.appendChild(d);
-    chatEl.scrollTop = chatEl.scrollHeight;
-  }
+          <div class="mai-card">
+            <header>
+              <h3>Answer</h3>
+              <span class="mai-spacer"></span>
+              <button class="mai-btn sm ghost" id="${uid}-copy-answer">Copy</button>
+              <button class="mai-btn sm ghost" id="${uid}-dl-answer">Download</button>
+            </header>
+            <div class="mai-card-body">
+              <pre class="mai-step-pre" id="${uid}-answer" style="max-height:300px">Nothing yet — run a request.</pre>
+            </div>
+          </div>
 
-  function addToolBubble(html) {
-    const d = document.createElement('div');
-    d.className = 'aim-bubble tool';
-    d.innerHTML = html;
-    chatEl.appendChild(d);
-    chatEl.scrollTop = chatEl.scrollHeight;
-  }
+          <div class="mai-card">
+            <header>
+              <h3>Sources</h3>
+              <span class="mai-spacer"></span>
+              <span class="mai-chip" id="${uid}-src-count">0</span>
+            </header>
+            <div class="mai-card-body mai-src" id="${uid}-sources"></div>
+          </div>
 
-  // File handling
-  drop.addEventListener('click', () => fileInput.click());
-  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('has'); });
-  drop.addEventListener('dragleave', () => drop.classList.remove('has'));
-  drop.addEventListener('drop', e => {
-    e.preventDefault(); drop.classList.remove('has');
-    files.push(...e.dataTransfer.files);
-    renderFiles();
-  });
-  fileInput.addEventListener('change', () => { files.push(...fileInput.files); renderFiles(); });
+          <div class="mai-card">
+            <header>
+              <h3>Prompt pack</h3>
+              <span class="mai-spacer"></span>
+              <button class="mai-btn sm ghost" id="${uid}-copy-prompt">Copy</button>
+            </header>
+            <div class="mai-card-body">
+              <div class="mai-row three" style="margin-bottom:8px">
+                <button class="mai-btn sm" data-prompt="gemini">AI Studio</button>
+                <button class="mai-btn sm" data-prompt="notebooklm">NotebookLM</button>
+                <button class="mai-btn sm" data-prompt="assistant">Assistant</button>
+              </div>
+              <pre class="mai-step-pre" id="${uid}-promptpack" style="max-height:220px">Runs with the request.</pre>
+            </div>
+          </div>
 
-  $('yt-add').onclick = () => {
-    const v = $('yt').value.trim();
-    if (!v) return toast('Paste YouTube URL');
-    youtubeUrls.push(v);
-    $('yt').value = '';
-    renderFiles();
-    addBubble('user', `Added YouTube: ${v}`);
+          <div class="mai-card">
+            <header>
+              <h3>Private tools</h3>
+              <span class="mai-spacer"></span>
+              <button class="mai-btn sm ghost" id="${uid}-pt-export">Export</button>
+            </header>
+            <div class="mai-card-body mai-list" id="${uid}-private"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ============ GUIDE ============ -->
+      <section class="mai-pane mai-pane-wide" id="${uid}-pane-guide" aria-label="Guide">
+        <div class="mai-card">
+          <header>
+            <h2>Guide</h2>
+            <span class="mai-spacer"></span>
+            <button class="mai-btn sm ghost" id="${uid}-guide-close">Back to work</button>
+          </header>
+          <div class="mai-card-body mai-guide" id="${uid}-guide"></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <nav class="mai-tabs" id="${uid}-tabs" role="tablist" aria-label="AI Mode sections">
+    <button role="tab" data-pane="compose" aria-selected="true"><span class="ic" aria-hidden="true">✎</span>Compose</button>
+    <button role="tab" data-pane="run" aria-selected="false"><span class="ic" aria-hidden="true">▶</span>Run<span class="badge hidden" id="${uid}-tab-run-badge">0</span></button>
+    <button role="tab" data-pane="output" aria-selected="false"><span class="ic" aria-hidden="true">▤</span>Output<span class="badge hidden" id="${uid}-tab-out-badge">0</span></button>
+    <button role="tab" data-pane="guide" aria-selected="false"><span class="ic" aria-hidden="true">◈</span>Guide</button>
+  </nav>
+</div>`;
+
+  const $ = s => root.querySelector('#' + uid + '-' + s);
+  const el = {
+    status: $('status'), progress: $('progress'), bar: $('progress').querySelector('i'),
+    drop: $('drop'), file: $('file'), files: $('files'), count: $('count'),
+    link: $('link'), linkAdd: $('link-add'), linkList: $('linklist'),
+    prompt: $('prompt'), mode: $('mode'), target: $('target'), examples: $('examples'),
+    run: $('run'), run2: $('run2'), stop: $('stop'), batches: $('batches'),
+    planSummary: $('plan-summary'), steps: $('steps'), copyPlan: $('copy-plan'),
+    deliv: $('deliv'), delivCount: $('deliv-count'), answer: $('answer'),
+    sources: $('sources'), srcCount: $('src-count'), promptpack: $('promptpack'),
+    private: $('private'), guide: $('guide'), tabs: $('tabs'),
+    tabRun: $('tab-run-badge'), tabOut: $('tab-out-badge'),
+    copyAnswer: $('copy-answer'), dlAnswer: $('dl-answer'),
+    copyPrompt: $('copy-prompt'), ptExport: $('pt-export')
   };
 
-  $('newcode').onclick = () => {
-    if (!confirm('Generate new 4-digit code? You will lose access to private tools under old code unless you remember it.')) return;
-    const newCode = gen4Digit();
-    localStorage.setItem(LS_SESSION, newCode);
+  /* ---------------- state ---------------- */
+  const state = {
+    files: [],
+    links: [],
+    tools: [],
+    index: null,
+    plan: null,
+    results: {},
+    running: false,
+    abort: false,
+    privateTools: loadPrivate(code),
+    assistant: null,
+    toolCount: 0,
+    answer: '',
+    sourceItems: [],
+    prompts: { gemini: '', notebooklm: '', assistant: '' },
+    lastFileTexts: []
+  };
+
+  /* ---------------- status ---------------- */
+  function setStatus(dot, text) {
+    el.status.innerHTML = `<span class="mai-dot ${dot}"></span><span>${esc(text)}</span>`;
+  }
+  setStatus('busy', 'Loading the tool library…');
+
+  /* ---------------- panes ---------------- */
+  const panes = ['compose', 'run', 'output', 'guide'];
+  const isNarrow = () => window.matchMedia('(max-width: 899px)').matches;
+  function showPane(name) {
+    for (const p of panes) {
+      $(`pane-${p}`)?.classList.toggle('active', p === name);
+    }
+    el.tabs.querySelectorAll('button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.pane === name)));
+  }
+  el.tabs.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-pane]');
+    if (btn) showPane(btn.dataset.pane);
+  });
+  $('guide-btn').onclick = () => showPane('guide');
+  $('guide-close').onclick = () => showPane('compose');
+
+  /* ---------------- tool library ---------------- */
+  (async () => {
+    let tools = [];
+    try {
+      const cached = lsGet('mp-tools-list', null);
+      if (Array.isArray(cached) && cached.length) tools = cached;
+      else {
+        const res = await fetch('/data/tools.json', { cache: 'no-store' });
+        tools = res.ok ? await res.json() : [];
+        if (Array.isArray(tools) && tools.length) lsSet('mp-tools-list', tools.slice(0, 600));
+      }
+    } catch { tools = []; }
+    state.tools = Array.isArray(tools) ? tools : [];
+    state.toolCount = state.tools.length;
+    state.index = buildIndex(state.tools);
+    setStatus('on', `${state.toolCount} tools ready · session ${code}`);
+    refreshPlan();
+    loadHealth();
+  })();
+
+  async function loadHealth() {
+    try {
+      const res = await fetch('/api/ai-mode', { cache: 'no-store' });
+      const m = res.ok ? await res.json() : null;
+      if (!m) { setStatus('on', `${state.toolCount} tools ready · session ${code}`); return; }
+      state.assistant = m.assistant?.configured ?? null;
+      const base = `${state.toolCount} tools ready · session ${code}`;
+      setStatus('on', state.assistant ? `${base} · writing pass ready` : `${base} · on-device only`);
+    } catch {
+      setStatus('on', `${state.toolCount} tools ready · session ${code}`);
+    }
+  }
+
+  /* ---------------- attachments ---------------- */
+  const MAX_FILE_MB = 24;
+  el.drop.addEventListener('click', () => el.file.click());
+  el.drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.file.click(); } });
+  ['dragenter', 'dragover'].forEach(type => el.drop.addEventListener(type, e => { e.preventDefault(); el.drop.classList.add('has'); }));
+  ['dragleave', 'drop'].forEach(type => el.drop.addEventListener(type, e => { e.preventDefault(); el.drop.classList.remove('has'); }));
+  el.drop.addEventListener('drop', e => { addFiles([...(e.dataTransfer?.files || [])]); });
+  el.file.addEventListener('change', () => { addFiles([...(el.file.files || [])]); el.file.value = ''; });
+  el.prompt.addEventListener('paste', e => {
+    const items = [...(e.clipboardData?.items || [])].filter(i => i.kind === 'file').map(i => i.getAsFile()).filter(Boolean);
+    if (items.length) { e.preventDefault(); addFiles(items); }
+  });
+
+  function addFiles(list) {
+    let rejected = 0;
+    for (const f of list) {
+      if (f.size > MAX_FILE_MB * 1024 * 1024) { rejected++; continue; }
+      if (state.files.some(x => x.name === f.name && x.size === f.size)) continue;
+      state.files.push(f);
+    }
+    if (rejected) toast(`${rejected} file(s) over ${MAX_FILE_MB} MB were skipped`);
+    renderFiles();
+    refreshPlan();
+  }
+  function renderFiles() {
+    el.files.innerHTML = state.files.map((f, i) =>
+      `<span class="mai-chip"><b>${esc(f.name)}</b><span style="color:var(--mai-text-3)">${Math.max(1, Math.round(f.size / 1024))} KB</span><button class="x" data-rm="${i}" aria-label="Remove ${esc(f.name)}">×</button></span>`
+    ).join('');
+    el.files.querySelectorAll('[data-rm]').forEach(b => {
+      b.onclick = () => { state.files.splice(Number(b.dataset.rm), 1); renderFiles(); refreshPlan(); };
+    });
+    el.count.textContent = `${state.files.length} file${state.files.length === 1 ? '' : 's'} · ${state.links.length} link${state.links.length === 1 ? '' : 's'}`;
+  }
+
+  el.linkAdd.onclick = addLink;
+  el.link.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addLink(); } });
+  function addLink() {
+    const raw = el.link.value.trim().replace(/[<>"']/g, '');
+    if (!raw) return;
+    const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    if (!/^https:\/\/[^\s/]+\.[^\s/]+/i.test(url)) return toast('That does not look like a link');
+    if (!state.links.some(l => l.url === url)) state.links.push({ url });
+    el.link.value = '';
+    renderFiles();
+    refreshPlan();
+  }
+  function renderLinks() {
+    el.linkList.innerHTML = state.links.map((l, i) =>
+      `<span class="mai-chip"><b>${esc(l.url.replace(/^https?:\/\//, '').slice(0, 42))}</b><button class="x" data-rml="${i}" aria-label="Remove link">×</button></span>`
+    ).join('');
+    el.linkList.querySelectorAll('[data-rml]').forEach(b => {
+      b.onclick = () => { state.links.splice(Number(b.dataset.rml), 1); renderLinks(); renderFiles(); refreshPlan(); };
+    });
+  }
+
+  /* ---------------- examples ---------------- */
+  el.examples.innerHTML = EXAMPLES.map(t => `<button class="mai-example">${esc(t)}</button>`).join('');
+  el.examples.querySelectorAll('.mai-example').forEach(b => {
+    b.onclick = () => { el.prompt.value = b.textContent; el.prompt.focus(); refreshPlan(); };
+  });
+
+  /* ---------------- planning ---------------- */
+  let planTimer = null;
+  el.prompt.addEventListener('input', () => {
+    clearTimeout(planTimer);
+    planTimer = setTimeout(refreshPlan, 180);
+  });
+  [el.mode, el.target].forEach(node => node.addEventListener('change', refreshPlan));
+
+  function currentRequest() {
+    return {
+      prompt: el.prompt.value.trim(),
+      files: state.files.map(f => ({ name: f.name, size: f.size, type: f.type })),
+      links: state.links.map(l => l.url),
+      options: {
+        mode: el.mode.value,
+        target: el.target.value,
+        hasKey: false,
+        includeImages: true
+      },
+      tools: state.tools,
+      index: state.index || undefined
+    };
+  }
+
+  function refreshPlan() {
+    renderLinks();
+    const req = currentRequest();
+    if (!state.index) return;
+    try {
+      state.plan = planRequest(req);
+    } catch (err) {
+      state.plan = null;
+      renderSteps([{ n: 1, id: 'err', title: 'The request could not be planned', why: String(err?.message || err), state: 'failed', kind: 'error' }], []);
+      return;
+    }
+    if (!req.prompt && !req.files.length && !req.links.length) {
+      state.plan = null;
+      state.results = {};
+      renderEmptySteps();
+      el.planSummary.innerHTML = 'Type a request to see the chain before anything runs.';
+      return;
+    }
+    const auto = state.plan.steps.filter(s => s.auto).length;
+    const open = state.plan.steps.filter(s => s.action === 'open').length;
+    el.planSummary.innerHTML =
+      `<b>${state.plan.steps.length}</b> step${state.plan.steps.length === 1 ? '' : 's'} · ` +
+      `<b>${auto}</b> run here${open ? ` · <b>${open}</b> open a tool` : ''} · ` +
+      esc(state.plan.summary);
+    renderSteps(state.plan.steps.map(s => ({ ...s, state: 'pending' })), state.plan);
+  }
+
+  function renderEmptySteps() {
+    el.steps.innerHTML = `
+      <div class="mai-empty">
+        <div class="glyph" aria-hidden="true">MP</div>
+        <h3>Nothing planned yet</h3>
+        <p>Describe an outcome, attach a file or paste a link. The chain appears here before anything runs — every step says why it is there.</p>
+      </div>`;
+  }
+
+  function renderSteps(steps, plan) {
+    if (!steps.length) return renderEmptySteps();
+    el.steps.innerHTML = steps.map(s => {
+      const stateClass = s.state || 'pending';
+      const tag = stateClass === 'done' ? '<span class="mai-tag done">done</span>'
+        : stateClass === 'running' ? '<span class="mai-tag auto">running</span>'
+        : stateClass === 'failed' ? '<span class="mai-tag failed">failed</span>'
+        : stateClass === 'skipped' ? '<span class="mai-tag">skipped</span>'
+        : s.auto ? '<span class="mai-tag auto">run</span>'
+        : s.action === 'open' ? '<span class="mai-tag open">open</span>'
+        : '<span class="mai-tag">you</span>';
+      const res = s.result;
+      return `
+      <article class="mai-step is-${stateClass}" data-state="${stateClass}" data-step="${esc(s.id || '')}">
+        <div class="mai-step-n">${s.n ?? '·'}</div>
+        <div class="mai-step-main">
+          <div class="mai-step-title">${tag}<span>${esc(s.title || '')}</span>${s.toolTitle && s.toolTitle !== s.title ? `<span style="color:var(--mai-text-3);font-weight:400;font-size:12.5px">${esc(s.toolTitle)}</span>` : ''}</div>
+          ${s.why ? `<p class="mai-step-why">${esc(s.why)}</p>` : ''}
+          ${s.detail && stateClass === 'pending' ? `<p class="mai-step-detail">${esc(s.detail)}</p>` : ''}
+          ${res ? `<div class="mai-step-out ${res.ok ? 'ok' : 'bad'}"><span class="lbl">${res.ok ? 'Result' : 'Stopped'}</span>${esc(res.summary || '')}</div>` : ''}
+          ${res?.text ? `<pre class="mai-step-pre" data-out="${esc(s.id)}">${esc(String(res.text).slice(0, 6000))}${String(res.text).length > 6000 ? '\n\n…' : ''}</pre>` : ''}
+          <div class="mai-step-acts" data-acts></div>
+        </div>
+      </article>`;
+    }).join('');
+    wireStepActions(steps, plan);
+  }
+
+  function wireStepActions(steps, plan) {
+    for (const node of el.steps.querySelectorAll('.mai-step')) {
+      const id = node.dataset.step;
+      const step = steps.find(s => s.id === id);
+      if (!step) continue;
+      const acts = node.querySelector('[data-acts]');
+      const add = (label, fn, cls = 'sm ghost') => {
+        const b = document.createElement('button');
+        b.className = `mai-btn ${cls}`;
+        b.textContent = label;
+        b.onclick = fn;
+        acts.appendChild(b);
+      };
+      if (step.tool && step.action === 'open') {
+        add('Open tool', () => openTool(step.tool), 'sm');
+      }
+      if (step.result?.text) {
+        add('Copy', async () => { await copy(String(step.result.text)); });
+        add('Download', () => downloadText(String(step.result.text), `megaplan-${step.id}.txt`));
+      }
+      if (step.result?.artifact) {
+        add('Save again', () => toast(`${step.result.artifact.name} was written when the step ran`));
+      }
+      if (step.state === 'failed' || stateClassIsPending(step)) {
+        add('Retry', () => runStepAndRefresh(step, plan));
+      }
+    }
+  }
+  const stateClassIsPending = s => !s.state || s.state === 'pending';
+
+  function openTool(slug) {
+    const url = `/tools/${encodeURIComponent(slug)}`;
+    if (location.pathname === url) return toast('This tool is already open in another tab position');
+    location.assign(url);
+  }
+
+  /* ---------------- execution ---------------- */
+  async function copy(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast('Copied');
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;left:-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); toast('Copied'); } catch { toast('Copy is blocked in this browser'); }
+      ta.remove();
+    }
+  }
+  function downloadText(text, name) {
+    triggerDownload(new Blob([text], { type: 'text/plain;charset=utf-8' }), name);
+  }
+
+  function setRunning(on) {
+    state.running = on;
+    el.run.disabled = on;
+    el.run2.disabled = on;
+    el.batches.disabled = on;
+    el.stop.classList.toggle('hidden', !on);
+    el.progress.classList.toggle('hidden', !on);
+  }
+  function setProgress(pct) { el.bar.style.width = `${Math.max(0, Math.min(100, pct))}%`; }
+
+  async function execute() {
+    if (state.running) return;
+    if (!state.plan) refreshPlan();
+    if (!state.plan) return toast('Type a request, attach a file or add a link first');
+    state.abort = false;
+    state.results = {};
+    setRunning(true);
+    setProgress(0);
+    const steps = state.plan.steps.map(s => ({ ...s, state: 'pending', result: null }));
+    renderSteps(steps, state.plan);
+    showPaneIfNarrow('run');
+
+    const ctx = {
+      files: state.files,
+      tools: state.tools,
+      plan: state.plan,
+      steps: state.plan.steps,
+      prompt: el.prompt.value.trim(),
+      results: state.results
+    };
+
+    const runnable = steps.filter(s => s.auto && canExecute(s.executor));
+    let done = 0;
+    for (const step of runnable) {
+      if (state.abort) break;
+      const live = steps.find(s => s.id === step.id);
+      live.state = 'running';
+      renderSteps(steps, state.plan);
+      setProgress(Math.round((done / Math.max(1, runnable.length)) * 100));
+      let result;
+      try {
+        result = await runStep(step, { ...ctx, results: state.results });
+      } catch (err) {
+        result = { ok: false, summary: String(err?.message || err) };
+      }
+      if (state.abort && !result.ok) result = { ...result, summary: 'Stopped at your request.' };
+      state.results[step.id] = result;
+      live.result = result;
+      live.state = result.ok ? 'done' : (result.skipped ? 'skipped' : 'failed');
+      done++;
+      renderSteps(steps, state.plan);
+    }
+    if (state.abort) {
+      for (const s of steps) if (s.state === 'running' || s.state === 'pending') {
+        if (s.auto && s.id !== state.results[s.id]) { s.state = 'skipped'; }
+      }
+      renderSteps(steps, state.plan);
+    }
+    setProgress(100);
+    setTimeout(() => setProgress(0), 600);
+    setRunning(false);
+
+    collectOutput(steps, ctx);
+    pushHistory({
+      prompt: el.prompt.value.trim().slice(0, 400),
+      mode: el.mode.value,
+      target: el.target.value,
+      files: state.files.map(f => f.name),
+      links: state.links.map(l => l.url),
+      steps: steps.length,
+      ok: Object.values(state.results).filter(r => r?.ok).length
+    });
+    showPaneIfNarrow('output');
+  }
+
+  function showPaneIfNarrow(name) { if (isNarrow()) showPane(name); }
+
+  async function runStepAndRefresh(step, plan) {
+    const ctx = { files: state.files, tools: state.tools, plan, steps: plan?.steps || [], prompt: el.prompt.value.trim(), results: state.results };
+    const steps = (plan?.steps || []).map(s => ({ ...s, state: s.id === step.id ? 'running' : (state.results[s.id] ? (state.results[s.id].ok ? 'done' : 'failed') : 'pending'), result: state.results[s.id] || null }));
+    renderSteps(steps, plan);
+    const result = await runStep(step, ctx);
+    state.results[step.id] = result;
+    const i = steps.findIndex(s => s.id === step.id);
+    steps[i] = { ...steps[i], result, state: result.ok ? 'done' : 'failed' };
+    renderSteps(steps, plan);
+    collectOutput(steps, ctx);
+  }
+
+  /* ---------------- output aggregation ---------------- */
+  function collectOutput(steps, ctx) {
+    const artifacts = [];
+    const sources = [];
+    const texts = [];
+    let prompts = { gemini: '', notebooklm: '', assistant: '' };
+
+    for (const step of steps) {
+      const r = state.results[step.id];
+      if (!r) continue;
+      if (r.artifact) artifacts.push(r.artifact);
+      if (r.text) texts.push(`## ${step.title}\n\n${r.text}`);
+      if (r.prompts) prompts = r.prompts;
+      for (const item of [...(r.items || []), ...(r.sources || [])]) sources.push(item);
+      if (r.article) sources.push(r.article);
+    }
+
+    state.sourceItems = dedupeSources(sources);
+    state.prompts = prompts;
+
+    const answer = texts.join('\n\n---\n\n');
+    state.answer = answer;
+    el.answer.textContent = answer || 'Nothing yet — run a request.';
+
+    renderDeliverables(artifacts, steps);
+    renderSources();
+    renderPromptPack();
+    renderBadges(steps);
+  }
+
+  function dedupeSources(list) {
+    const seen = new Set();
+    const out = [];
+    for (const item of list) {
+      if (!item) continue;
+      const key = item.url || item.id || item.title;
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(item);
+    }
+    return out.slice(0, 80);
+  }
+
+  function renderDeliverables(artifacts, steps) {
+    const rows = [];
+    for (const a of artifacts) {
+      rows.push(`<div class="mai-item"><div class="ico">${esc(String(a.kind || 'file').toUpperCase())}</div>
+        <div class="body"><b>${esc(a.name)}</b><small>${Math.max(1, Math.round(a.size / 1024))} KB · saved to your downloads</small></div></div>`);
+    }
+    if (state.answer) {
+      rows.push(`<div class="mai-item"><div class="ico">TXT</div><div class="body"><b>Answer</b><small>${state.answer.length.toLocaleString('en-IN')} characters</small></div>
+        <button class="mai-btn sm ghost" data-act="dl-answer">Save</button></div>`);
+    }
+    const promptsFilled = Object.values(state.prompts).some(Boolean);
+    if (promptsFilled) {
+      rows.push(`<div class="mai-item"><div class="ico">PRM</div><div class="body"><b>Prompt pack</b><small>AI Studio · NotebookLM · assistant</small></div>
+        <button class="mai-btn sm ghost" data-act="dl-prompts">Save</button></div>`);
+    }
+    el.deliv.innerHTML = rows.join('') || `<p class="mai-note info">No file yet. Ask for a PDF, a deck or a prompt pack and it lands here.</p>`;
+    el.delivCount.textContent = String(rows.length);
+    el.deliv.querySelectorAll('[data-act]').forEach(b => {
+      b.onclick = () => {
+        if (b.dataset.act === 'dl-answer') downloadText(state.answer, 'megaplan-answer.txt');
+        else downloadText(promptPackText(), 'megaplan-prompt-pack.txt');
+      };
+    });
+  }
+
+  function renderSources() {
+    const items = state.sourceItems;
+    el.srcCount.textContent = String(items.length);
+    if (!items.length) {
+      el.sources.innerHTML = '<p class="mai-note info">No sources yet. Research, articles, transcripts and files add their links here — and every PDF or deck you download lists them.</p>';
+      return;
+    }
+    el.sources.innerHTML = items.map((item, i) => {
+      const meta = [item.source, item.authors || item.artist, item.journal, item.year, item.pmid ? `PMID ${item.pmid}` : null, item.doi ? `doi:${item.doi}` : null]
+        .filter(Boolean).join(' · ');
+      return `<div class="mai-src-item"><span class="n">${String(i + 1).padStart(2, '0')}</span>
+        <div class="b">${item.url ? `<a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title || item.url)}</a>` : esc(item.title || 'Source')}
+        ${meta ? `<small>${esc(meta)}</small>` : ''}</div></div>`;
+    }).join('');
+  }
+
+  function promptPackText() {
+    const p = state.prompts;
+    const parts = [];
+    if (p.gemini) parts.push(`# Google AI Studio — one long-context pass\n\n${p.gemini}`);
+    if (p.notebooklm) parts.push(`# NotebookLM — per-question batches\n\n${p.notebooklm}`);
+    if (p.assistant) parts.push(`# Writing assistant\n\n${p.assistant}`);
+    if (state.sourceItems.length) parts.push(`# Sources\n\n${renderCitationsText(state.sourceItems)}`);
+    return parts.join('\n\n---\n\n');
+  }
+
+  function renderPromptPack() {
+    const target = el.target.value;
+    const key = ['gemini', 'notebooklm', 'assistant'].includes(target) ? target : 'gemini';
+    el.promptpack.textContent = state.prompts[key] || 'Runs with the request.';
+  }
+  el.target.addEventListener('change', renderPromptPack);
+  el.promptpack.parentElement.querySelectorAll('[data-prompt]').forEach(b => {
+    b.onclick = () => {
+      const key = b.dataset.prompt;
+      if (!state.prompts[key]) return toast('No prompt pack yet — run a request first');
+      const ta = el.promptpack;
+      ta.textContent = state.prompts[key];
+      copy(state.prompts[key]);
+    };
+  });
+
+  function renderBadges(steps) {
+    const failed = steps.filter(s => s.state === 'failed').length;
+    const pending = steps.filter(s => s.auto && s.state === 'pending').length;
+    const runBadge = failed ? failed : pending;
+    el.tabRun.textContent = String(runBadge);
+    el.tabRun.classList.toggle('hidden', !runBadge);
+    const outs = state.sourceItems.length + (state.answer ? 1 : 0);
+    el.tabOut.textContent = String(outs);
+    el.tabOut.classList.toggle('hidden', !outs);
+  }
+
+  /* ---------------- private tools ---------------- */
+  function renderPrivate() {
+    if (!state.privateTools.length) {
+      el.private.innerHTML = '<p class="mai-note info">Nothing here yet. When no tool in the library covers a request, AI Mode drafts a private tool for this session instead of guessing. Drafts stay on this device.</p>';
+      return;
+    }
+    el.private.innerHTML = state.privateTools.map((t, i) => `
+      <div class="mai-tool">
+        <b>${esc(t.title || 'Private tool')}</b>
+        <code>${esc(t.slug || '')}</code>
+        <p>${esc(t.summary || '')}</p>
+        <div class="acts">
+          <button class="mai-btn sm" data-view="${i}">View</button>
+          <button class="mai-btn sm ghost" data-del="${i}">Delete</button>
+        </div>
+      </div>`).join('');
+    el.private.querySelectorAll('[data-view]').forEach(b => {
+      b.onclick = () => {
+        const t = state.privateTools[Number(b.dataset.view)];
+        el.answer.textContent = `${t.title} (${t.slug})\n\n${t.summary || ''}\n\n${JSON.stringify(t, null, 2)}`;
+        showPaneIfNarrow('output');
+      };
+    });
+    el.private.querySelectorAll('[data-del]').forEach(b => {
+      b.onclick = () => {
+        state.privateTools.splice(Number(b.dataset.del), 1);
+        savePrivate(code, state.privateTools);
+        renderPrivate();
+      };
+    });
+  }
+  el.ptExport.onclick = () => {
+    if (!state.privateTools.length) return toast('No private tools to export');
+    downloadText(JSON.stringify({ session: code, tools: state.privateTools }, null, 2), `megaplan-private-${code}.json`);
+  };
+
+  /* ---------------- study batches (AI Studio / NotebookLM) ---------------- */
+  el.batches.onclick = async () => {
+    if (state.running) return;
+    const gathered = Object.values(state.results).map(r => r?.text || '').join('\n\n');
+    const fileTexts = [];
+    for (const f of state.files) {
+      if (/\.(txt|md|csv|json)$/i.test(f.name) && f.size < 3_000_000) {
+        try { fileTexts.push({ name: f.name, text: await readFileText(f) }); } catch { /* unreadable */ }
+      }
+    }
+    const paperText = state.files.find(f => /question|paper|qp|test|exam/i.test(f.name)) || fileTexts[0];
+    const bookText = fileTexts.find(t => t !== paperText);
+    const source = gathered || [paperText?.text, bookText?.text].filter(Boolean).join('\n\n');
+    if (!source.trim()) {
+      return toast('Run a request first, or attach the question paper and textbook so the text is available');
+    }
+    const batches = buildBatchesLocally({
+      paper: paperText?.text || source,
+      textbook: bookText?.text || source,
+      mode: el.mode.value === 'auto' ? 'batch' : el.mode.value,
+      batchSize: 5,
+      topic: el.prompt.value.trim().slice(0, 120) || 'the syllabus'
+    });
+    if (!batches.totalQuestions) {
+      state.answer = batchToMarkdown(batches) + '\n\n_No numbered questions were detected. Paste the question paper text, or run a request that reads the PDF first._';
+      el.answer.textContent = state.answer;
+      showPaneIfNarrow('output');
+      return;
+    }
+    state.answer = batchToMarkdown(batches);
+    el.answer.textContent = state.answer;
+    showPaneIfNarrow('output');
+    toast(`${batches.groups.length} batch prompt(s) for ${batches.totalQuestions} question(s)`);
+  };
+
+  /* ---------------- buttons ---------------- */
+  el.run.onclick = execute;
+  el.run2.onclick = execute;
+  el.stop.onclick = () => { state.abort = true; toast('Stopping after the current step'); };
+  el.prompt.addEventListener('keydown', e => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); execute(); }
+  });
+  el.copyPlan.onclick = () => {
+    if (!state.plan) return toast('No plan yet');
+    copy(planToText(state.plan));
+  };
+  el.copyAnswer.onclick = () => state.answer ? copy(state.answer) : toast('Nothing to copy yet');
+  el.dlAnswer.onclick = () => state.answer ? downloadText(state.answer, 'megaplan-answer.txt') : toast('Nothing to save yet');
+  el.copyPrompt.onclick = () => {
+    const text = promptPackText();
+    text ? copy(text) : toast('No prompt pack yet');
+  };
+
+  $('hist-btn').onclick = () => {
+    const history = loadHistory();
+    if (!history.length) return toast('No history yet');
+    state.answer = history.map((h, i) =>
+      `${i + 1}. ${new Date(h.ts).toLocaleString()} · ${h.steps} steps, ${h.ok} ok\n   ${h.prompt}`
+    ).join('\n\n');
+    el.answer.textContent = state.answer;
+    showPaneIfNarrow('output');
+  };
+
+  $('code-btn').onclick = () => {
+    const next = prompt('Your 4-digit session code. Enter an existing code to restore its private tools, or press Cancel to keep this one.', code);
+    if (next == null) return;
+    const value = String(next).trim();
+    if (!/^\d{4}$/.test(value)) return toast('A session code is exactly four digits');
+    if (value === code) return toast('That is already your active session');
+    lsSet(LS.session, value);
     location.reload();
   };
 
-  $('clear').onclick = () => { chatEl.innerHTML = ''; resultEl.style.display = 'none'; resultEl.innerHTML = ''; };
+  /* ---------------- guide ---------------- */
+  function renderGuide(guide) {
+    const g = guide || GUIDE;
+    const parts = [];
+    parts.push(`<div class="mai-hero">
+      <h1>${esc(g.title)}</h1>
+      <p>${esc(g.tagline)}</p>
+      <p class="ver">guide ${esc(g.version)} · planner ${esc(PLANNER_VERSION)}</p>
+    </div>`);
 
-  $('history').onclick = () => {
-    const h = JSON.parse(localStorage.getItem(LS_HISTORY) || '[]');
-    if (!h.length) return addBubble('agent', 'No history yet.');
-    addBubble('agent', 'Recent AI Mode history:\n' + h.slice(-10).map(x => `${new Date(x.ts).toLocaleTimeString()} [${x.session}] ${x.prompt.slice(0,80)}`).join('\n'));
-  };
-
-  $('export-private').onclick = () => {
-    if (!privateTools.length) return toast('No private tools');
-    downloadText(JSON.stringify(privateTools, null, 2), `megaplan-private-${sessionCode}.json`, 'application/json');
-  };
-
-  $('push-review').onclick = async () => {
-    if (!privateTools.length) return toast('No private tools to push');
-    if (!confirm(`Push ${privateTools.length} private tool(s) for public review? They will be checked rigorously before going live.`)) return;
-    // In real app, this would POST to /api/agent-publish with review flag
-    addBubble('agent', `Pushing ${privateTools.length} tool(s) for review… (simulated)\nIn production, this calls POST /api/agent-publish with proof and review queue.\nYour tools will be tested in sandboxed browser, checked for safety, then merged.`);
-    // For demo, save to localStorage as pending
-    localStorage.setItem(`mp-review-queue-${sessionCode}`, JSON.stringify(privateTools));
-    toast('Pushed for review — admin will check');
-  };
-
-  async function runAIAgent() {
-    const prompt = $('prompt').value.trim();
-    if (!prompt && !files.length && !youtubeUrls.length) return toast('Upload files or enter request');
-    
-    const mode = $('mode').value;
-    const target = $('target').value;
-    const hasKey = $('has-key').checked;
-
-    addBubble('user', prompt || '(files only)');
-    saveHistory({ prompt, mode, target, files: files.map(f => f.name), youtubeUrls });
-
-    // Execute presentation requests instead of offering a hypothetical chain.
-    const pptTopic = presentationTopic(prompt);
-    if (pptTopic !== null) {
-      if (!pptTopic) return addBubble('agent', 'What topic should the presentation cover? Try: “Create a PPT about solar energy.”');
-      if (files.length || youtubeUrls.length) return addBubble('agent', 'Presentation creation currently accepts a topic and text notes, not attached files or YouTube URLs. Paste your notes into Presentation Creator for an attributed PPTX. I will not pretend I processed these files.');
-      addToolBubble('Researching sources and creating a real PowerPoint…');
-      try {
-        const result = await createPresentation(pptTopic);
-        addBubble('agent', `Downloaded ${result.name} (${Math.round(result.bytes / 1024)} KB). This deck uses source snippets and includes source links; check them before presenting. The presentation tool also accepts your own notes.`);
-      } catch (e) { addBubble('agent', `Presentation not created: ${e.message}. You can provide notes in Presentation Creator if online sources are unavailable.`); }
-      return;
-    }
-
-    // Step 1: Analyze files
-    addBubble('agent', `Analyzing ${files.length} file(s) + ${youtubeUrls.length} YouTube URL(s)…\nMode: ${mode} · Target: ${target} · API key: ${hasKey ? 'yes' : 'no'}\nSession: ${sessionCode}`);
-
-    // Step 2: If YouTube URLs, fetch transcripts
-    if (youtubeUrls.length) {
-      for (const yt of youtubeUrls) {
-        addToolBubble(`Fetching YouTube transcript for ${esc(yt)}…`);
-        try {
-          const r = await fetch('/api/youtube-transcript', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: yt, lang: 'en', format: 'text' })
-          });
-          const j = await r.json();
-          if (r.ok) {
-            addToolBubble(`Transcript (${j.count} segments, ${j.language}):\n${esc(j.text.slice(0, 2000))}…`);
-          } else {
-            addToolBubble(`Transcript failed: ${esc(j.error)}`);
-          }
-        } catch (e) {
-          addToolBubble(`Transcript error: ${esc(e.message)}`);
-        }
+    for (const section of g.sections) {
+      parts.push(`<section class="mai-gsec"><h2><span class="ico" aria-hidden="true">${esc(section.icon || '•')}</span>${esc(section.title)}</h2>`);
+      for (const p of section.body || []) parts.push(`<p>${esc(p)}</p>`);
+      if (section.points?.length) parts.push(`<ul>${section.points.map(p => `<li>${esc(p)}</li>`).join('')}</ul>`);
+      if (section.steps?.length) {
+        parts.push(section.steps.map(s => `<div class="mai-gnum"><span class="n">${s.n}</span><div><b>${esc(s.title)}</b><span>${esc(s.text)}</span></div></div>`).join(''));
       }
-    }
-
-    // Step 3: If PDFs, do OCR detection
-    let ocrNeeded = false;
-    for (const f of files) {
-      if (f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')) {
-        addToolBubble(`PDF detected: ${esc(f.name)} · Checking if scanned… (will use tesseract.js if needed)`);
-        ocrNeeded = true;
+      if (section.recipes?.length) {
+        parts.push(section.recipes.map(r => `<div class="mai-recipe">
+          <div class="top"><span class="mai-badge">${esc(r.task)}</span></div>
+          <code class="req">${esc(r.request)}</code>
+          <p class="does">${esc(r.does)}</p>
+        </div>`).join(''));
       }
-    }
-
-    // Step 4: Ask clarifying questions like the spec
-    if (!hasKey) {
-      addBubble('agent', `Quick questions before I chain tools:\n1. Do you have API key? You said ${hasKey ? 'yes' : 'no'}. If no, I recommend Google AI Studio free tier — Gemini 1.5 Flash / 2.0 Flash has 1M context, perfect for large PDFs. Or use NotebookLM for question batches.\n2. Do you want ${mode === 'per' ? 'per question' : mode === 'batch' ? 'batch' : 'auto'} processing? For question paper → notes, I recommend:\n   - Batch: All questions at once → 1 prompt for Gemini 1M\n   - Per question: Each question separate → better for NotebookLM\n3. Is the PDF scanned? ${ocrNeeded ? 'Looks like yes — I will OCR first with tesseract.js in browser.' : 'Probably text PDF, no OCR needed.'}\n\nReply in chat, then I will generate the final prompts.`);
-    }
-
-    // Step 5: Call /api/ai to plan tool chain
-    try {
-      addToolBubble('Planning tool chain with /api/ai…');
-      const toolList = JSON.parse(localStorage.getItem('mp-tools-list') || '[]');
-      const allTools = toolList.length ? toolList : [{ slug: 'ocr-pdf', title: 'OCR PDF' }, { slug: 'agentic-pdf-splitter', title: 'Agentic PDF Splitter' }, { slug: 'youtube-transcript', title: 'YouTube Transcript' }];
-      
-      const inventorySnippet = allToolsInventory.slice(0, 80).map(t=>`${t.title}(${t.category})`).join(', ');
-      const aiPrompt = `User request: ${prompt}\nFiles: ${files.map(f => f.name).join(', ')}\nYouTube: ${youtubeUrls.join(', ')}\nMode: ${mode}\nTarget: ${target}\nHas API key: ${hasKey}\nSession: ${sessionCode}\nInventory: ${inventorySnippet} … total ${allToolsInventory.length||570}\n\nYou are MegaPLAN AI Mode — versatile wiki multi-tool-calling AI like Codex but with 570+ premade public tools.\nSystem-level info:\n- PDF 54 tools: OCR PDF (tesseract.js), Agentic PDF Splitter (OCR + batch + prompts for Gemini 1M / NotebookLM), Merge, Compress, etc\n- YouTube: Transcript any video with captions via /api/youtube-transcript (timedtext json3 + Piped/Invidious fallback), Playlist Lister via /api/youtube-playlist (Piped + scrape), Chapter Generator\n- Maps: OSM Leaflet 1.9.4 CDN dynamic load, tile layers osm/hot/topo/sat Esri, Nominatim search free no API key, Overpass nearby cafes/restaurants/hospitals/schools/banks/parks 2km, OSRM routing driving, haversine distance, my location\n- Games: Chess with AI levels minimax easy/hard castling promotion PGN export flip undo, 2048 original, Snake canvas 20x20 score/best, TicTacToe 2p vs AI win/block/center, Minesweeper easy 8x8/10 medium 12x12/24 hard 16x16/40 flags timer flood fill — all browser processing\n- OSINT Advanced: Instagram public checker via /api/inspect metadata title/status safety note no private/bypass, username across 20 platforms (instagram,youtube,twitter/github/reddit/tiktok/medium/pinterest/linkedin/facebook/twitch/vimeo/soundcloud/dribbble/behance/deviantart/steam/patreon/producthunt/keybase) via /api/osint POST username regex + fetchWithTimeout 8s UA Mozilla redirect manual heuristic 200 exists 404 not 302 login exists\n- Audio Studio, OCR & AI 30+, Text 37, Developer 47, etc\n\nPlan the chain:\n- If PDF scanned → OCR → agentic split\n- If question paper + textbook → agentic split into chapters/questions/batches → prompts for ${target}\n- If YouTube → transcript → summarize/chapters\n- If maps → geocode/reverse/nearby/route\n- If games → open game tool directly\n- If OSINT → public only, safety\n- Detect deficit → propose private tool under 4-digit session ${sessionCode}\nReturn JSON: { steps: [{tool, reason}], needsNewTool: bool, newToolSpec: {slug, title, summary}, prompts: { gemini, notebooklm } }`;
-
-      const r = await fetch('/api/ai', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ task: 'custom', text: aiPrompt, extra: 'Return tool chain plan as JSON. Be specific about OCR, splitting, batch vs per-question.' })
-      });
-      const j = await r.json();
-      if (!r.ok) throw Error(j.error || 'AI unavailable');
-
-      const resultText = j.result || j.text || JSON.stringify(j);
-      addBubble('agent', `Tool chain plan:\n${resultText}`);
-
-      // Step 6: Generate prompts for Gemini / NotebookLM
-      const geminiPrompt = `You are given:\n- Question paper PDF (scanned, OCRed)\n- Textbook PDF\n- Request: ${prompt}\nMode: ${mode}\n\nTasks:\n1. OCR both PDFs if needed (use tesseract.js)\n2. Agentic split: Read content, split question paper into ${mode === 'per' ? 'per question' : 'batches of 5'} and map to textbook chapters\n3. For each batch, create prompt:\n   - For Gemini 1M: Include source textbook excerpt + questions + instruction "Answer based on textbook, cite page, keep concise"\n   - For NotebookLM: Just questions + prompt "Answer using the textbook as source"\n4. Recommend: Use Google AI Studio free tier Gemini 2.0 Flash (1M context) for batch, or NotebookLM for per-question\n\nGenerate final prompts now.`;
-
-      const notebookPrompt = `Answer these questions based on the textbook PDF:\n${prompt}\n\nUse textbook as only source. If scanned, OCR first.`;
-
-      resultEl.style.display = 'block';
-      resultEl.innerHTML = `
-        <div class="panel">
-          <h3>Generated Prompts for ${esc(target)}</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div>
-              <b>For Google AI Studio (Gemini 1M) — copy/paste</b>
-              <pre class="out" style="min-height:200px;max-height:300px">${esc(geminiPrompt)}</pre>
-              <button class="btn secondary" id="${id}-copy-gemini" style="margin-top:6px">Copy Gemini prompt</button>
-            </div>
-            <div>
-              <b>For NotebookLM — questions + prompt</b>
-              <pre class="out" style="min-height:200px;max-height:300px">${esc(notebookPrompt)}</pre>
-              <button class="btn secondary" id="${id}-copy-nb" style="margin-top:6px">Copy NotebookLM prompt</button>
-            </div>
+      if (section.options?.length) {
+        parts.push(section.options.map(o => `<div class="mai-opt">
+          <header><b>${esc(o.name)}</b><small>${esc(o.when)}</small></header>
+          <div>
+            <dl><dt>Why</dt><dd>${esc(o.why)}</dd><dt>Mode</dt><dd>${esc(o.mode)}</dd></dl>
+            <ol>${(o.steps || []).map(s => `<li>${esc(s)}</li>`).join('')}</ol>
           </div>
-          <div style="margin-top:12px">
-            <b>Next steps:</b>
-            <ol style="font-size:13px">
-              <li>Use <b>Agentic PDF Splitter</b> tool to intelligently split PDF into chapters/questions (uses AI + python-like logic in browser)</li>
-              <li>For large PDFs, use batch mode + Gemini 1M (free, 1M context)</li>
-              <li>For per-question, use NotebookLM (upload textbook + questions)</li>
-              <li>If you need new tool, click "Build new tool for this" — it will be private under code ${sessionCode}, push for review when ready</li>
-            </ol>
-          </div>
-          <div class="button-row">
-            <button class="btn primary" id="${id}-open-splitter">Open Agentic PDF Splitter</button>
-            <button class="btn secondary" id="${id}-open-ocr">Open OCR PDF</button>
-            <button class="btn ghost" id="${id}-dl-prompts">Download prompts</button>
-          </div>
-        </div>
-      `;
-
-      resultEl.querySelector(`#${id}-copy-gemini`).onclick = async () => { await navigator.clipboard.writeText(geminiPrompt); toast('Copied Gemini prompt'); };
-      resultEl.querySelector(`#${id}-copy-nb`).onclick = async () => { await navigator.clipboard.writeText(notebookPrompt); toast('Copied NotebookLM prompt'); };
-      resultEl.querySelector(`#${id}-dl-prompts`).onclick = () => {
-        downloadText(`GEMINI PROMPT:\n${geminiPrompt}\n\n---\nNOTEBOOKLM PROMPT:\n${notebookPrompt}`, `megaplan-prompts-${sessionCode}.txt`, 'text/plain');
-      };
-      resultEl.querySelector(`#${id}-open-splitter`).onclick = () => {
-        // Navigate to agentic pdf splitter tool
-        location.hash = '';
-        history.pushState({}, '', '/tools/agentic-pdf-splitter');
-        window.dispatchEvent(new Event('popstate'));
-        location.reload();
-      };
-      resultEl.querySelector(`#${id}-open-ocr`).onclick = () => {
-        history.pushState({}, '', '/tools/ocr-pdf');
-        window.dispatchEvent(new Event('popstate'));
-        location.reload();
-      };
-
-      // Step 7: Detect deficit and propose new tool
-      if (resultText.toLowerCase().includes('new tool') || prompt.toLowerCase().includes('build') || files.length >= 2) {
-        addBubble('agent', `I detect you need a custom workflow that combines ${files.length} files + ${youtubeUrls.length} YouTube videos.\nThis is a deficit in current tools — I can build a private tool for session ${sessionCode}.\nClick "Build new tool for this" to create it. It will stay private until you Push for public review (rigorous testing).`);
+        </div>`).join(''));
+        if (section.note) parts.push(`<p class="mai-note">${esc(section.note)}</p>`);
       }
-
-    } catch (e) {
-      addBubble('agent', `AI planning failed: ${e.message}\n\nFallback manual plan:\n1. If scanned PDF → use OCR PDF tool (tesseract.js)\n2. Use Agentic PDF Splitter to split into chapters/questions\n3. Generate prompts for ${target}\n4. For YouTube → use YouTube Transcript + Summarizer\n5. For large context, use Google AI Studio Gemini 1.5 Flash (1M, free) or NotebookLM\n\nYour session code ${sessionCode} keeps private tools.`);
+      if (section.table?.length) {
+        const rows = section.table.map(row => (Array.isArray(row) ? row : [row.where, row.what]).filter(v => v != null));
+        parts.push(`<div class="mai-tablewrap"><table class="mai-table">
+          <thead><tr>${rows[0].map((_, i) => `<th>${i === 0 ? 'Where' : 'What'}</th>`).join('')}</tr></thead>
+          <tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${esc(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table></div>`);
+      }
+      if (section.limits?.length) {
+        parts.push(section.limits.map(l => `<div class="mai-recipe"><div class="top"><span class="mai-badge" style="background:rgba(244,88,92,.14);color:#f6c0c1;border-color:rgba(244,88,92,.3)">not done</span></div>
+          <b style="font-size:13.5px">${esc(l.no)}</b><p class="does">Instead: ${esc(l.instead)}</p></div>`).join(''));
+      }
+      parts.push('</section>');
     }
+
+    if (g.faq?.length) {
+      parts.push(`<section class="mai-gsec"><h2><span class="ico" aria-hidden="true">?</span>Questions people ask</h2>
+        ${g.faq.map(f => `<details class="mai-faq"><summary>${esc(f.q)}</summary><div>${esc(f.a)}</div></details>`).join('')}</section>`);
+    }
+    if (g.glossary?.length) {
+      parts.push(`<section class="mai-gsec"><h2><span class="ico" aria-hidden="true">⌘</span>Words AI Mode uses</h2>
+        <dl class="mai-terms">${g.glossary.map(t => `<dt>${esc(t.term)}</dt><dd>${esc(t.def)}</dd>`).join('')}</dl></section>`);
+    }
+    el.guide.innerHTML = parts.join('');
   }
 
-  $('run').onclick = runAIAgent;
+  renderGuide(GUIDE);
+  fetch('/api/ai-mode?view=guide', { cache: 'no-store' })
+    .then(r => (r.ok ? r.json() : null))
+    .then(j => { if (j?.guide) renderGuide(j.guide); })
+    .catch(() => { /* the embedded copy already rendered */ });
 
-  $('build-tool').onclick = async () => {
-    const prompt = $('prompt').value.trim() || 'Combine uploaded files into new workflow';
-    addBubble('user', `Build new tool for: ${prompt}`);
-    addBubble('agent', `Building private tool for session ${sessionCode}… This uses Wiki Agent to draft, tests in sandboxed iframe, saves locally under your 4-digit code.`);
-
-    // Use Wiki Agent API to build tool spec
-    try {
-      const r = await fetch('/api/agent-plan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          prompt: `Build a tool that: ${prompt}. Files: ${files.map(f=>f.name).join(', ')}. YouTube: ${youtubeUrls.join(', ')}. This is for AI Mode session ${sessionCode}, private until pushed. Make it useful, specific, with calculator/api block if numeric.`,
-          existingPages: []
-        })
-      });
-      const j = await r.json();
-      if (!r.ok) throw Error(j.error || 'Build failed');
-      if (j.spec?.refusal) {
-        addBubble('agent', `Build refused: ${j.spec.refusal}`);
-        return;
-      }
-      const spec = j.spec;
-      privateTools.push(spec);
-      localStorage.setItem(`mp-private-tools-${sessionCode}`, JSON.stringify(privateTools));
-      renderPrivate();
-      addBubble('agent', `Built private tool: ${spec.title} (${spec.slug})\nSummary: ${spec.summary}\nIt is saved under session ${sessionCode} — not public. Click Push for public review when ready. It will be tested rigorously.`);
-      resultEl.style.display = 'block';
-      resultEl.innerHTML = `<div class="panel"><h3>Private Tool Built: ${esc(spec.title)}</h3><p>${esc(spec.summary)}</p><pre style="white-space:pre-wrap;font-size:12px">${esc(JSON.stringify(spec, null, 2).slice(0, 5000))}</pre></div>`;
-    } catch (e) {
-      addBubble('agent', `Build failed: ${e.message}\nTry Self Agent with your own key, or use Wiki Agent page directly at /agent/. Your session code ${sessionCode} will still track private tools.`);
-    }
-  };
-
-  $('chat-send').onclick = async () => {
-    const input = $('chat-in').value.trim();
-    if (!input) return;
-    addBubble('user', input);
-    $('chat-in').value = '';
-    
-    // Execute the presentation tool directly from chat as well.
-    const pptTopic = presentationTopic(input);
-    if (pptTopic !== null) {
-      if (!pptTopic) return addBubble('agent', 'Please specify a topic, for example: “Make a PPT about solar energy.”');
-      addToolBubble('Searching sources and generating a downloadable .pptx…');
-      try {
-        const result = await createPresentation(pptTopic);
-        addBubble('agent', `Downloaded ${result.name} (${Math.round(result.bytes / 1024)} KB). Sources are linked in the deck; review before reuse.`);
-      } catch (e) { addBubble('agent', `Presentation not created: ${e.message}. Try the Presentation Creator with your own notes.`); }
-      return;
-    }
-    // Simple intent detection
-    if (input.toLowerCase().includes('transcript') || input.toLowerCase().includes('youtube')) {
-      addBubble('agent', `For YouTube transcript, use the YouTube Transcript tool or add YouTube URL in upload section. It works for any video with captions (manual or auto). I can also list playlists via YouTube Playlist Lister.`);
-    } else if (input.toLowerCase().includes('pdf') && input.toLowerCase().includes('question')) {
-      addBubble('agent', `For question paper + textbook workflow:\n1. Upload both PDFs\n2. Choose mode: batch (all questions at once for Gemini 1M) or per question (for NotebookLM)\n3. I will OCR if scanned (tesseract.js)\n4. Use Agentic PDF Splitter to intelligently split into chapters/questions\n5. I generate prompts for Google AI Studio (Gemini 2.0 Flash, 1M context, free) or NotebookLM\n\nYour session code ${sessionCode} remembers private tools.`);
-    } else {
-      // Call AI for chat
-      try {
-        const r = await fetch('/api/ai', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ task: 'custom', text: input, extra: `You are MegaPLAN AI Mode, session ${sessionCode}. You combine 560+ tools. Help user with complex request. If need new tool, propose building private tool under 4-digit code ${sessionCode}.` })
-        });
-        const j = await r.json();
-        if (!r.ok) throw Error(j.error);
-        addBubble('agent', j.result || j.text || JSON.stringify(j).slice(0, 2000));
-      } catch (e) {
-        addBubble('agent', `Chat failed: ${e.message}. Try AI Mode Run button for full workflow.`);
-      }
-    }
-  };
-
-  $('chat-in').addEventListener('keydown', e => { if (e.key === 'Enter') $('chat-send').click(); });
-
-  // Load full tool inventory for system-level info
-  let allToolsInventory = [];
-  try {
-    const raw = localStorage.getItem('mp-tools-list');
-    if (raw) allToolsInventory = JSON.parse(raw);
-  } catch {}
-  // Fetch if not in LS
-  if (!allToolsInventory.length) {
-    fetch('/data/tools.json').then(r=>r.json()).then(j=>{
-      allToolsInventory = j;
-      localStorage.setItem('mp-tools-list', JSON.stringify(j.slice(0, 600)));
-    }).catch(()=>{});
-  }
-
-  function getToolsSummary() {
-    if (!allToolsInventory.length) return '570+ tools across PDF, Image, Audio, Video, OCR/AI, Text, Developer, Games, OSINT, Maps, etc.';
-    const byCat = {};
-    allToolsInventory.forEach(t => { byCat[t.category] = (byCat[t.category]||0)+1; });
-    return Object.entries(byCat).map(([c,n])=>`${c}(${n})`).join(', ') + `. Total ${allToolsInventory.length}. Examples: ${allToolsInventory.slice(0,12).map(t=>t.title).join(', ')}…`;
-  }
-
-  // Initial greet — generic versatile wiki multi-tool agent like Codex
-  addBubble('agent', `Welcome to AI Mode! Session ${sessionCode}\n\nI am a versatile wiki multi-tool-calling AI — like Codex but with ${allToolsInventory.length||570}+ premade public tools.\n\nWHAT I KNOW:\n${getToolsSummary()}\n\nHOW I WORK:\n• Same model as agent mode — I understand files + request, chain tools\n• Pinned: Wiki Agent (builds pages), Self Agent (BYOK), AI Mode (this), Audio Studio, My Wiki\n• Folders: PDF 54 tools (OCR, agentic splitter, merge), Images 50, Audio 32+studio, Video 26 (YouTube Transcript for any captioned video via timedtext + Piped/Invidious fallback, Playlist Lister, Chapter Generator), Text 37, Developer 47, Games ${allToolsInventory.filter(t=>t.category==='Games').length||5} (Chess AI levels, 2048, Snake, TicTacToe, Minesweeper), OSINT ${allToolsInventory.filter(t=>String(t.category).includes('OSINT')).length||20}+ (Instagram public checker safe no bypass, username across platforms via /api/inspect + /api/osint), Maps (Leaflet 1.9.4 + OSM Nominatim free geocoding + Overpass nearby 2km + OSRM routing driving + distance + my location)\n• For complex request: upload files → I OCR if scanned (tesseract.js), split PDF intelligently (agentic), generate prompts for Gemini 1M (Google AI Studio free) / NotebookLM\n• If deficit: I build private tool under your 4-digit code ${sessionCode} — not public until you Push for review (rigorous testing)\n\nTRY:\n• "Question paper PDF + textbook → notes per question"\n• "YouTube video → transcript + chapters + summary"\n• "Find nearby cafes in Thiruvananthapuram and route"\n• "Check Instagram username @xyz across platforms (public only)"\n• "Play chess vs AI hard"\n\nFuture: This will be paid, currently free.`);
-  renderPrivate();
+  /* ---------------- initial paint ---------------- */
   renderFiles();
+  renderLinks();
+  renderPrivate();
+  renderEmptySteps();
+  renderSources();
+  renderDeliverables([], []);
+  renderBadges([]);
 }
