@@ -143,18 +143,26 @@ harness, or its status is honestly downgraded in `data/tools.json`.
 - [x] `ai-pdf-ops.js` runs 27 operations on the attached file (merge, split,
       extract, delete, reorder, rotate, numbers, watermark, compress, crop,
       2-up/4-up, overlay, text, forms, count, metadata, images→PDF, sections)
-- [ ] Planner routes a matched PDF tool to `pdf-ops` when the right file is
+- [x] Planner routes a matched PDF tool to `pdf-ops` when the right file is
       attached, and to an honest "open the studio" step when it is not
-- [ ] **In-browser OCR of scans** so `ocr-pdf` becomes runnable and a scanned
-      PDF becomes searchable (tesseract worker + progress in the AI Mode step)
-- [ ] **Page targeting for very large PDFs** (the 1000-page ask): detect
-      bookmarks/TOC, rank pages by the user's own keywords, then let them
-      upload only the relevant pages *or* save them as one PDF —
-      the `sections` op is the first slice of this
-- [ ] **RAG-lite** for large documents: chunk by section, build an in-browser
-      BM25 index, answer only from retrieved chunks with page citations
-- [ ] Keep the remaining 27 as honest studio hand-offs (sign, fill, redact,
-      repair, rasterise, office↔PDF, HEIC)
+- [x] **In-browser OCR of scans**: a page with no text layer is rendered and
+      read in the page, so a scanned PDF is searchable like any other
+- [x] **Page targeting for very large PDFs** (the 1000-page ask): the
+      document's own bookmarks are read, sections are labelled, and a chapter
+      match boosts its pages; `save` writes the cited pages as one PDF
+- [x] **RAG-lite** for large documents: BM25 over the page text, extractive
+      answers only from retrieved chunks, every quote carrying its page
+      (`public/js/pdf-rag.js`, the `research` op, the `pdf-answer` executor)
+- [x] Keep the remaining 27 as honest studio hand-offs (sign, fill, redact,
+      repair, rasterise, office↔PDF, HEIC) — each one states what it opens,
+      what it does, and that nothing is uploaded
+
+**Answering a document, not a topic.** A question about an uploaded PDF is
+routed to the document, not to the web: the planner suppresses open-source
+research and unrelated tools so the answer can only come from the file the user
+attached. “Find the termination clause in this PDF” and “who is the escalation
+contact on nights?” are both read-then-answer. “Summarise this contract” and
+“split this PDF” are jobs, not questions, and are left alone.
 
 **Acceptance:** “rotate this PDF 90 degrees”, “delete pages 5–9”,
 “merge these two PDFs” and “find the pages about diabetes in this 1000-page
